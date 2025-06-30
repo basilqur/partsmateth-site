@@ -149,7 +149,7 @@
 document.getElementById("sheetForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
-  const scriptURL = "https://corsproxy.io/?https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
+ const scriptURL = "/api/saveToSheet";
 
   const name = e.target.name.value;
   const email = e.target.email.value;
