@@ -97,12 +97,18 @@
   <section id="contact" class="py-20 bg-gray-100 text-center px-6">
     <h3 class="text-3xl font-semibold mb-6 text-blue-600">Contact Us</h3>
     <p class="mb-6 text-gray-700">Have questions or need support? We’re here to help.</p>
-    <form class="max-w-md mx-auto space-y-4">
-      <input type="text" placeholder="Your Name" class="w-full px-4 py-2 border rounded-lg" required />
-      <input type="email" placeholder="Your Email" class="w-full px-4 py-2 border rounded-lg" required />
-      <textarea placeholder="Your Message" rows="4" class="w-full px-4 py-2 border rounded-lg" required></textarea>
-      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Send</button>
-    </form>
+    <form id="sheetForm" class="max-w-md mx-auto space-y-4">
+  <input name="name" type="text" placeholder="Your Name" required class="w-full px-4 py-2 border rounded-lg" />
+  <input name="email" type="email" placeholder="Your Email" required class="w-full px-4 py-2 border rounded-lg" />
+  <select name="plan" class="w-full px-4 py-2 border rounded-lg">
+    <option value="Basic">Basic</option>
+    <option value="Plus">Plus</option>
+    <option value="Pro">Pro</option>
+  </select>
+  <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Submit</button>
+</form>
+<p id="formResponse" class="mt-4 text-green-600 font-semibold"></p>
+
     <div class="mt-6 text-gray-600">
       <p>📞 WhatsApp: <a href="https://wa.me/971501234567" class="text-blue-500" target="_blank">+971 50 123 4567</a></p>
       <p>📧 Email: <a href="mailto:support@partsmate.com" class="text-blue-500">support@partsmate.com</a></p>
@@ -138,6 +144,33 @@
       });
     });
   </script>
+
+  <script>
+document.getElementById("sheetForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const scriptURL = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
+
+  const name = e.target.name.value;
+  const email = e.target.email.value;
+  const plan = e.target.plan.value;
+
+  // Create a fake key and dates for now
+  const key = "EF6B-" + Math.random().toString(36).substr(2, 4).toUpperCase() + "-XXXX-XXXX-XXXX";
+  const start = new Date().toISOString().split("T")[0];
+  const end = new Date(Date.now() + 30*24*60*60*1000).toISOString().split("T")[0];
+
+  fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify({ name, email, plan, key, start, end }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(res => res.text())
+  .then(msg => document.getElementById("formResponse").innerText = "✅ " + msg)
+  .catch(err => alert("Error: " + err.message));
+});
+</script>
+
 
 </body>
 </html>
