@@ -1,52 +1,143 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>PartsMateTH - Plans</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PartsMateTH</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
 </head>
-<body>
-    <h1>Welcome to PartsMateTH</h1>
-    <p>Select your subscription plan below:</p>
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="plans">
-        <div class="plan">
-            <h2>🟡 Basic</h2>
-            <ul>
-                <li>✅ Price Checker</li>
-                <li>✅ Names Generator</li>
-                <li>🚫 No weight, list cleaner, or alternates</li>
-            </ul>
-            <button>Subscribe</button>
-        </div>
-
-        <div class="plan">
-            <h2>🔵 Plus</h2>
-            <ul>
-                <li>✅ Includes everything in Basic</li>
-                <li>✅ List Cleaner</li>
-                <li>✅ Weight Checker</li>
-                <li>✅ Alternate Part Finder</li>
-            </ul>
-            <button>Subscribe</button>
-        </div>
-
-        <div class="plan">
-            <h2>🟢 Pro</h2>
-            <ul>
-                <li>✅ Everything in Plus</li>
-                <li>✅ Model Checker</li>
-                <li>✅ Part Details Extractor</li>
-                <li>✅ VIP Access + All Tools</li>
-            </ul>
-            <button>Subscribe</button>
-        </div>
+  <!-- Navbar -->
+  <header id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/50 backdrop-blur-md shadow-sm transition duration-300">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-600">PartsMateTH</h1>
+      <nav class="relative">
+        <ul id="navLinks" class="flex space-x-6 font-medium text-gray-700">
+          <li><a href="#home" class="nav-link relative hover:text-blue-500">Home</a></li>
+          <li><a href="#about" class="nav-link relative hover:text-blue-500">About</a></li>
+          <li><a href="#contact" class="nav-link relative hover:text-blue-500">Contact</a></li>
+        </ul>
+      </nav>
     </div>
-</body>
-<nav>
-  <a href="index.html">Home</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
-</nav>
+  </header>
 
+  <!-- Hero / Home -->
+  <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 text-white pt-20">
+    <div class="text-center px-6">
+      <h2 class="text-4xl font-bold mb-2">Welcome to PartsMateTH</h2>
+      <p class="text-xl font-semibold mb-6">⚡ Speed up daily work 10x faster with automation tools.</p>
+      <p class="text-lg text-white mb-10">Choose a plan based on your needs:</p>
+
+      <div class="flex flex-wrap justify-center gap-6">
+        <!-- Basic Plan -->
+        <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-green-500">
+          <h3 class="text-xl font-bold text-center mb-2">Basic Plan</h3>
+          <p class="text-center text-sm mb-4 text-gray-500">(Just Getting Started?)</p>
+          <ul class="list-disc pl-5 text-sm text-left space-y-2">
+            <li>✅ Prices Checker – Compare live prices from Dubai, Thailand, online markets</li>
+            <li>✅ Names Generator – Convert any part number into correct sticker name</li>
+            <li>⚠️ Limited tools – no weight, alternates, models, exports</li>
+            <li>🧠 Ideal for new users who want to check basics quickly</li>
+          </ul>
+        </div>
+
+        <!-- Plus Plan -->
+        <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-blue-500">
+          <h3 class="text-xl font-bold text-center mb-2">Plus Plan</h3>
+          <p class="text-center text-sm mb-4 text-gray-500">(For Growing Sellers)</p>
+          <ul class="list-disc pl-5 text-sm text-left space-y-2">
+            <li>✅ Everything in Basic</li>
+            <li>✅ Country Checker – See where parts are made</li>
+            <li>✅ Part Details – Origin, category, registration year, more</li>
+            <li>✅ List Cleaner – Paste messy data, get clean list instantly</li>
+            <li>🌍 Ideal if you sell internationally or manage more than a few parts</li>
+          </ul>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-red-500">
+          <h3 class="text-xl font-bold text-center mb-2">Pro Plan</h3>
+          <p class="text-center text-sm mb-4 text-gray-500">(For Dealers Who Mean Business)</p>
+          <ul class="list-disc pl-5 text-sm text-left space-y-2">
+            <li>✅ Everything in Plus</li>
+            <li>✅ Weight Checker – Know exact kg for pricing/shipping</li>
+            <li>✅ Alternate Part No. – Find compatible replacements</li>
+            <li>✅ Model Checker – See which cars fit which parts</li>
+            <li>✅ VIP Tools – Fastest updates, priority access</li>
+            <li>🚚 Trusted by top exporters & dealers worldwide</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section id="about" class="py-20 bg-white text-center px-6">
+    <div class="max-w-4xl mx-auto">
+      <p class="text-lg leading-8 text-gray-700">
+        <strong>PartsMateTH</strong> is an advanced autoparts intelligence platform designed for serious dealers, garages, and exporters who need speed, precision, and simplicity. We help you find correct Toyota part names, live global prices, manufacturing origins, alternates, vehicle fitment data, and much more — all in a few clicks.
+        <br><br>
+        Our team operates across multiple hubs in 🇯🇵 Japan, 🇦🇺 Australia, 🇸🇬 Singapore, and 🇦🇪 Dubai, but our main headquarters is proudly based in 🇹🇭 <strong>Thailand</strong>. From here, we power the platform used by hundreds of international customers who rely on us to streamline their parts business.
+        <br><br>
+        Whether you're managing inventory, quoting exports, or just want to stop wasting time on slow websites — <strong>PartsMateTH is built for you.</strong>
+        <br><br>
+        We're on a mission to make autoparts work faster, smarter, and simpler.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 bg-gray-100 text-center px-6">
+    <h3 class="text-3xl font-semibold mb-6 text-blue-600">Contact Us</h3>
+    <p class="mb-6 text-gray-700">Have questions or need support? We’re here to help.</p>
+    <form class="max-w-md mx-auto space-y-4">
+      <input type="text" placeholder="Your Name" class="w-full px-4 py-2 border rounded-lg" required />
+      <input type="email" placeholder="Your Email" class="w-full px-4 py-2 border rounded-lg" required />
+      <textarea placeholder="Your Message" rows="4" class="w-full px-4 py-2 border rounded-lg" required></textarea>
+      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Send</button>
+    </form>
+    <div class="mt-6 text-gray-600">
+      <p>📞 WhatsApp: <a href="https://wa.me/971501234567" class="text-blue-500" target="_blank">+971 50 123 4567</a></p>
+      <p>📧 Email: <a href="mailto:support@partsmate.com" class="text-blue-500">support@partsmate.com</a></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4 text-center">
+    <p>&copy; 2025 PartsMateTH. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById("navbar");
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    window.addEventListener("scroll", () => {
+      navbar.classList.toggle("bg-white/90", window.scrollY > 50);
+
+      let current = "";
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop - 100;
+        if (pageYOffset >= sectionTop) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach((link) => {
+        link.classList.remove("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
+        if (link.getAttribute("href") === "#" + current) {
+          link.classList.add("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
+        }
+      });
+    });
+  </script>
+
+</body>
 </html>
