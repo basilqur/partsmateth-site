@@ -199,23 +199,28 @@ async function subscribe() {
   </script>
 
   <script>
-document.getElementById("sheetForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("contactForm");
+  if (!form) return;
 
- const scriptURL = "/api/saveToSheet";
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  const name = e.target.name.value;
-  const email = e.target.email.value;
-  const plan = e.target.plan.value;
+    const scriptURL = "/api/saveToSheet";
 
-  fetch(scriptURL, {
-    method: 'POST',
-    body: JSON.stringify({ name, email, plan}),
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .then(res => res.text())
-  .then(msg => document.getElementById("formResponse").innerText = "✅ " + msg)
-  .catch(err => alert("Error: " + err.message));
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const message = e.target.message.value;
+
+    fetch(scriptURL, {
+      method: 'POST',
+      body: JSON.stringify({ name, email, plan: message }), // using message as fake plan to reuse structure
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.text())
+      .then(msg => document.getElementById("formResponse").innerText = "✅ " + msg)
+      .catch(err => alert("Error: " + err.message));
+  });
 });
 </script>
 
