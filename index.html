@@ -90,13 +90,15 @@
     const isoLabel = document.getElementById("isoLabel");
 
     function updateCountryDisplay() {
-      const selected = countryCode.options[countryCode.selectedIndex];
-      phonePrefix.textContent = selected.value;
-      isoLabel.textContent = selected.getAttribute("data-iso");
-    }
+  const selected = countryCode.options[countryCode.selectedIndex];
+  phonePrefix.textContent = selected.value;
+  isoLabel.textContent = selected.getAttribute("data-iso");
+}
 
-    countryCode.addEventListener("change", updateCountryDisplay);
-    updateCountryDisplay();
+countryCode.addEventListener("change", updateCountryDisplay);
+updateCountryDisplay();
+
+
 
     window.subscribe = async function () {
       const name = document.getElementById("nameInput").value;
