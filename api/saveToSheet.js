@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "This email already exists in our system." });
     }
 
-    // Generate random 24-character license key
+    // Generate random license key
     const licenseKey = Array.from({ length: 6 }, () =>
       Math.random().toString(16).substr(2, 4).toUpperCase()
     ).join("-");
@@ -30,18 +30,24 @@ export default async function handler(req, res) {
     const startDate = today.toISOString().split("T")[0];
     const endDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
-    // Send required fields only (exclude sessionId and sessionTime)
+    // Status formula (must match the column layout)
+    const statusFormula = `=IF(OR(ISBLANK(F2),ISBLANK(G2),NOT(ISNUMBER(DATEVALUE(F2))),NOT(ISNUMBER(DATEVALUE(G2)))),"INACTIVE",IF(AND(TODAY() >= DATEVALUE(F2),TODAY()<= DATEVALUE(G2)),"ACTIVE","INACTIVE"))`;
+
+    // Send data to Google Apps Script to write in correct order
     await fetch(GOOGLE_SCRIPT_WEBAPP, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        key: licenseKey,
-        name,
-        phone,
-        email,
-        plan,
-        start: startDate,
-        end: endDate
+        key: licenseKey,   // A
+        name,              // B
+        phone,             // C
+        email,             // D
+        plan,              // E
+        start: startDate,  // F
+        end: endDate,      // G
+        sessionId: "",     // H
+        sessionTime: "",   // I
+        status: statusFormula // J
       })
     });
 
