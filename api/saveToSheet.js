@@ -5,9 +5,9 @@ export default async function handler(req, res) {
 
   const { name, email, phone, plan } = req.body;
 
-  const SHEET_ID = "1VrfIQOzGjeUvYWftj9FgpbDxZUFkycIsb3WchIFr-KY";
-  const API_KEY = "AIzaSyAED4zu8DpbIYPpSkQWgMs1LwqAo_W83zY";
-  const GOOGLE_SCRIPT_WEBAPP = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
+  const SHEET_ID = process.env.SHEET_ID;
+  const API_KEY = process.env.API_KEY;
+  const GOOGLE_SCRIPT_WEBAPP = process.env.GOOGLE_SCRIPT_WEBAPP;
 
   try {
     // Check for duplicate email
