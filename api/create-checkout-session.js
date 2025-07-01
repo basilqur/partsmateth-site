@@ -40,7 +40,9 @@ export default async function handler(req, res) {
     res.status(200).json({ url: session.url });
   } catch (err) {
   console.error('Stripe Checkout Error:', err);
-  res.status(500).json({ error: err.message });
+  res.setHeader('Content-Type', 'application/json');
+  res.status(500).end(JSON.stringify({ error: err.message }));
 }
+
 
 }
