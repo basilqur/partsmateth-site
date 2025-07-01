@@ -39,7 +39,8 @@ export default async function handler(req, res) {
 
     res.status(200).json({ url: session.url });
   } catch (err) {
-    console.error('Stripe Checkout Error:', err);
-    res.status(500).json({ error: 'Stripe Checkout failed.' });
-  }
+  console.error('Stripe Checkout Error:', err);
+  res.status(500).json({ error: err.message });
+}
+
 }
