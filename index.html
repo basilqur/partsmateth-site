@@ -109,8 +109,7 @@ updateCountryDisplay();
       // ✅ Get country from the selected option
       const countrySelect = document.getElementById("countryCode");
       const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-      const country = selectedOption.getAttribute("data-country");
-    
+      let country = selectedOption.getAttribute("data-country") || "";    
       if (country.includes("(")) {
         country = country.split("(")[0].trim();
       }
