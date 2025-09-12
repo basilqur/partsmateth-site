@@ -7,10 +7,20 @@ export default async function handler(req, res) {
 
   const { name, email, phone, plan, country } = req.body;
 
+  // Determine mode (test or live)
+  const mode = process.env.STRIPE_MODE || 'live';
+
+  // Pick correct Price IDs
   const priceLookup = {
-    Basic: 'price_1RfLkGHI32OfAU2tsBfXhRI3',
-    Plus: 'price_1RfM4VHI32OfAU2tz0wVWGKg',
-    Pro: 'price_1RfM6OHI32OfAU2tq2ESe6tx',
+    Basic: mode === 'live'
+      ? process.env.STRIPE_PRICE_BASIC_LIVE
+      : process.env.STRIPE_PRICE_BASIC_TEST,
+    Plus: mode === 'live'
+      ? process.env.STRIPE_PRICE_PLUS_LIVE
+      : process.env.STRIPE_PRICE_PLUS_TEST,
+    Pro: mode === 'live'
+      ? process.env.STRIPE_PRICE_PRO_LIVE
+      : process.env.STRIPE_PRICE_PRO_TEST,
   };
 
   const priceId = priceLookup[plan];
@@ -19,23 +29,12 @@ export default async function handler(req, res) {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      mode: 'subscription', // recurring pricing
+      mode: 'subscription',
       customer_email: email,
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      success_url: 'https://www.partsmateth.com/success', // ✅ update to your domain
-      cancel_url: 'https://www.partsmateth.com/cancel',
-      metadata: {
-        name,
-        email,
-        phone,
-        country,
-        plan,
-      },
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
+      metadata: { name, email, phone, country, plan },
     });
 
     res.status(200).json({ url: session.url });
