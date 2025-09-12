@@ -1,14 +1,16 @@
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const mode = process.env.STRIPE_MODE || 'live';
+const stripe = new Stripe(
+  mode === 'live'
+    ? process.env.STRIPE_SECRET_KEY_LIVE
+    : process.env.STRIPE_SECRET_KEY_TEST
+);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end('Method Not Allowed');
 
   const { name, email, phone, plan, country } = req.body;
-
-  // Determine mode (test or live)
-  const mode = process.env.STRIPE_MODE || 'live';
 
   // Pick correct Price IDs
   const priceLookup = {
