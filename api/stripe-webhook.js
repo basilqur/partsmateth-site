@@ -27,14 +27,21 @@ export default async function handler(req, res) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const { name, email, phone, plan } = session.metadata;
+    const { name, email, phone, plan, country } = session.metadata;
 
     try {
       // Send data to internal API to save in Google Sheet
-      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://partsmate.com'}/api/saveToSheet`, {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'https://partsmateth.com'}/api/saveToSheet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, plan })
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          country,
+          plan,
+          stripePaymentId: session.id // Stripe session ID
+        })
       });
     } catch (err) {
       console.error('Failed to call saveToSheet:', err);

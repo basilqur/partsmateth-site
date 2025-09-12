@@ -99,24 +99,33 @@ countryCode.addEventListener("change", updateCountryDisplay);
 updateCountryDisplay();
 
 
-
     window.subscribe = async function () {
       const name = document.getElementById("nameInput").value;
       const email = document.getElementById("emailInput").value;
       const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
+    
       const plan = document.getElementById("planSelect").value;
+    
+      // ✅ Get country from the selected option
+      const countrySelect = document.getElementById("countryCode");
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      const country = selectedOption.getAttribute("data-country");
+    
+      if (country.includes("(")) {
+        country = country.split("(")[0].trim();
+      }
 
       if (!name || !email || !phone) {
         alert("Please fill in all fields.");
         return;
       }
-
+    
       const res = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, plan }),
+        body: JSON.stringify({ name, email, phone, plan, country }), // ✅ added country
       });
-
+    
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
