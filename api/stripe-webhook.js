@@ -1,9 +1,8 @@
 import Stripe from 'stripe';
-import { buffer } from 'micro';
 
 export const config = {
   api: {
-    bodyParser: false, // Required for raw body
+    bodyParser: false,
   },
 };
 
@@ -17,7 +16,7 @@ const stripe = new Stripe(
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end('Method Not Allowed');
 
-  const buf = await buffer(req);
+  const rawBody = await getRawBody(req);
   const sig = req.headers['stripe-signature'];
 
   let event;
@@ -27,7 +26,7 @@ export default async function handler(req, res) {
       : process.env.STRIPE_WEBHOOK_SECRET_TEST;
 
   try {
-    event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err) {
     console.error('❌ Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -38,7 +37,6 @@ export default async function handler(req, res) {
     const { name, email, phone, plan, country } = session.metadata;
 
     try {
-      // Send data to internal API to save in Google Sheet
       await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saveToSheet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,7 +46,7 @@ export default async function handler(req, res) {
           phone,
           country,
           plan,
-          stripePaymentId: session.id, // Stripe session ID
+          stripePaymentId: session.id,
         }),
       });
       console.log(`✅ Saved session ${session.id} to sheet`);
@@ -58,4 +56,14 @@ export default async function handler(req, res) {
   }
 
   res.json({ received: true });
+}
+
+// Helper: collect raw body for Stripe signature
+function getRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
 }
