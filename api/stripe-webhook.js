@@ -34,6 +34,7 @@ export default async function handler(req, res) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
+    const paymentIntentId = session.payment_intent;
     const { name, email, phone, plan, country } = session.metadata;
 
     try {
@@ -46,7 +47,7 @@ export default async function handler(req, res) {
           phone,
           country,
           plan,
-          stripePaymentId: session.id,
+          stripePaymentId: paymentIntentId,
         }),
       });
       console.log(`✅ Saved session ${session.id} to sheet`);
