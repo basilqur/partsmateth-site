@@ -37,6 +37,7 @@ export default async function handler(req, res) {
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment-success-page.html`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel-page.html`,
       metadata: { name, email, phone, country, plan },
+      expand: ['payment_intent'],   // 👈 add this
     });
 
     res.status(200).json({ url: session.url });
