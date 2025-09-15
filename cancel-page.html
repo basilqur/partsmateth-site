@@ -3,16 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Cancelled | PartsMateTH</title>
+  <title>Payment Canceled | PartsMateTH</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
-<body class="bg-gradient-to-br from-red-400 to-orange-300 min-h-screen flex items-center justify-center px-4 text-white">
+<body class="bg-gradient-to-br from-red-500 to-pink-400 min-h-screen flex items-center justify-center px-4 text-white">
   <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-8 text-center text-gray-800">
-    <h1 class="text-3xl font-bold text-red-600 mb-4">❌ Payment Cancelled</h1>
-    <p class="text-lg mb-2">It looks like you didn't complete the payment process.</p>
-    <p class="mb-6">No worries — you can always try again when you're ready.</p>
-    <a href="/" class="inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded">Return to Home</a>
+    <h1 class="text-3xl font-bold text-red-600 mb-4">❌ Payment Canceled</h1>
+    <p class="text-lg mb-2">Your payment was not completed.</p>
+    <p id="cancelInfo" class="mb-4 text-gray-700"></p>
+
+    <a id="retryBtn" href="/subscribe-form.html"
+       class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded">
+      Try Again
+    </a>
   </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+    const plan = params.get("plan");
+
+    if (email) {
+      document.getElementById("cancelInfo").textContent =
+        `You attempted to subscribe with: ${email}`;
+    }
+
+    // Build retry URL with email + plan
+    let retryUrl = "/subscribe-form.html";
+    const retryParams = [];
+    if (email) retryParams.push(`email=${encodeURIComponent(email)}`);
+    if (plan) retryParams.push(`plan=${encodeURIComponent(plan)}`);
+    if (retryParams.length > 0) retryUrl += "?" + retryParams.join("&");
+
+    document.getElementById("retryBtn").href = retryUrl;
+  </script>
 </body>
 </html>

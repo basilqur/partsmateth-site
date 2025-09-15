@@ -21,3 +21,30 @@
 <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" onclick="subscribe()">Subscribe</button>
 <p class="mt-4 text-green-600 font-semibold" id="formResponse"></p>
 </div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  // Prefill email
+  const email = params.get("email");
+  if (email) {
+    const emailInput = document.getElementById("emailInput");
+    if (emailInput) {
+      emailInput.value = email;
+    }
+  }
+
+  // Prefill plan (expects ?plan=Basic / Plus / Pro)
+  const plan = params.get("plan");
+  if (plan) {
+    const planSelect = document.getElementById("plan"); // adjust ID if needed
+    if (planSelect) {
+      for (const option of planSelect.options) {
+        if (option.value.toLowerCase() === plan.toLowerCase()) {
+          planSelect.value = option.value;
+          break;
+        }
+      }
+    }
+  }
+</script>
+

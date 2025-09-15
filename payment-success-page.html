@@ -5,14 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment Successful | PartsMateTH</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <style>
+    .fade-in {
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+    .fade-in.show {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body class="bg-gradient-to-br from-blue-500 to-teal-400 min-h-screen flex items-center justify-center px-4 text-white">
   <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-8 text-center text-gray-800">
     <h1 class="text-3xl font-bold text-green-600 mb-4">✅ Payment Successful</h1>
     <p class="text-lg mb-2">Thank you for subscribing to <strong>PartsMateTH</strong>.</p>
-    <p class="mb-6">Your license key will be sent shortly. You can now start using all your tools.</p>
-    <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded">Return to Home</a>
+
+    <!-- Loading spinner -->
+    <div id="loading" class="flex justify-center items-center py-6">
+      <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+    </div>
+
+    <!-- Dynamic info -->
+    <div id="orderDetails" class="fade-in hidden">
+      <p id="orderInfo" class="mb-2 text-lg font-semibold"></p>
+      <p id="planInfo" class="mb-1 text-md text-gray-700"></p>
+      <p id="dateInfo" class="mb-4 text-md text-gray-600"></p>
+
+      <!-- License Key Reveal -->
+      <button id="revealBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded">
+        Click to Reveal License Key
+      </button>
+
+      <div id="licenseContainer" class="mt-4 hidden flex items-center justify-center space-x-2">
+        <p id="licenseKey" class="text-xl font-mono text-green-600"></p>
+        <button id="copyBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-3 py-1 rounded">
+          Copy
+        </button>
+      </div>
+    </div>
+
+    <!-- Back Home -->
+    <a href="/" class="mt-6 inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded">
+      Return to Home
+    </a>
   </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+
+    if (email) {
+      fetch(`/api/get-latest-order?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("loading").classList.add("hidden");
+          const details = document.getElementById("orderDetails");
+          details.classList.remove("hidden");
+          setTimeout(() => details.classList.add("show"), 50);
+
+          if (data.orderNo) {
+            document.getElementById("orderInfo").textContent = `Your Order No: ${data.orderNo}`;
+            if (data.plan) {
+              document.getElementById("planInfo").textContent = `Selected Plan: ${data.plan}`;
+            }
+            if (data.start && data.end) {
+              document.getElementById("dateInfo").textContent = `Valid from ${data.start} to ${data.end}`;
+            }
+
+            document.getElementById("revealBtn").addEventListener("click", () => {
+              const keyEl = document.getElementById("licenseKey");
+              keyEl.textContent = data.licenseKey || "No license key found.";
+              document.getElementById("licenseContainer").classList.remove("hidden");
+            });
+
+            document.getElementById("copyBtn").addEventListener("click", () => {
+              const text = document.getElementById("licenseKey").textContent;
+              navigator.clipboard.writeText(text).then(() => {
+                alert("✅ License Key copied to clipboard!");
+              });
+            });
+          } else {
+            document.getElementById("orderInfo").textContent = "No order found.";
+          }
+        })
+        .catch(() => {
+          document.getElementById("loading").classList.add("hidden");
+          const details = document.getElementById("orderDetails");
+          details.classList.remove("hidden");
+          setTimeout(() => details.classList.add("show"), 50);
+          document.getElementById("orderInfo").textContent = "Error retrieving order info.";
+        });
+    }
+  </script>
 </body>
 </html>

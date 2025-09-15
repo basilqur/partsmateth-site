@@ -1,9 +1,7 @@
 import Stripe from 'stripe';
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  api: { bodyParser: false },
 };
 
 const mode = process.env.STRIPE_MODE || 'live';
@@ -34,11 +32,12 @@ export default async function handler(req, res) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const subscriptionId = session.subscription;
     const { name, email, phone, plan, country } = session.metadata;
+    const subscriptionId = session.subscription;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saveToSheet`, {
+      // Call saveToSheet and capture response (orderNo + licenseKey)
+      const resp = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saveToSheet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -48,8 +47,19 @@ export default async function handler(req, res) {
           country,
           plan,
           stripePaymentId: subscriptionId,
+          createdAt: new Date().toISOString(),
         }),
       });
+
+      const data = await resp.json();
+      console.log(`✅ Saved subscription ${subscriptionId} with order ${data.orderNo}`);
+
+      // Redirect user to success page with query params
+      // (Stripe Checkout handles redirect using success_url, but user-facing page needs these values)
+      // For now, just log the intended URL:
+      console.log(
+        `👉 Success Page URL: ${process.env.NEXT_PUBLIC_SITE_URL}/payment-success-page.html?orderNo=${encodeURIComponent(data.orderNo)}&licenseKey=${encodeURIComponent(data.licenseKey)}`
+      );
     } catch (err) {
       console.error('❌ Failed to call saveToSheet:', err.message);
     }
@@ -58,7 +68,7 @@ export default async function handler(req, res) {
   res.json({ received: true });
 }
 
-// Helper: collect raw body for Stripe signature
+// Helper to get raw body for signature validation
 function getRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
