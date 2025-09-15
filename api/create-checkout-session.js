@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment-success-page.html?email=${encodeURIComponent(email)}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel-page.html?email=${encodeURIComponent(email)}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel-page.html?email=${encodeURIComponent(email)}&plan=${encodeURIComponent(plan)}`,
       metadata: { name, email, phone, country, plan },
     });
 

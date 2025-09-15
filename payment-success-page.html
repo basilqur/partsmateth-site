@@ -54,51 +54,70 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const email = params.get("email");
+const params = new URLSearchParams(window.location.search);
+const email = params.get("email");
 
-    if (email) {
-      fetch(`/api/get-latest-order?email=${encodeURIComponent(email)}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("loading").classList.add("hidden");
-          const details = document.getElementById("orderDetails");
-          details.classList.remove("hidden");
-          setTimeout(() => details.classList.add("show"), 50);
+function pretty(d) {
+  // accept either 'YYYY-MM-DD' or ISO
+  const dt = new Date(d);
+  return dt.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
 
-          if (data.orderNo) {
-            document.getElementById("orderInfo").textContent = `Your Order No: ${data.orderNo}`;
-            if (data.plan) {
-              document.getElementById("planInfo").textContent = `Selected Plan: ${data.plan}`;
-            }
-            if (data.start && data.end) {
-              document.getElementById("dateInfo").textContent = `Valid from ${data.start} to ${data.end}`;
-            }
+if (email) {
+  fetch(`/api/get-latest-order?email=${encodeURIComponent(email)}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("loading").classList.add("hidden");
+      const details = document.getElementById("orderDetails");
+      details.classList.remove("hidden");
+      setTimeout(() => details.classList.add("show"), 50);
 
-            document.getElementById("revealBtn").addEventListener("click", () => {
-              const keyEl = document.getElementById("licenseKey");
-              keyEl.textContent = data.licenseKey || "No license key found.";
-              document.getElementById("licenseContainer").classList.remove("hidden");
-            });
+      if (data.orderNo) {
+        document.getElementById("orderInfo").textContent = `Your Order No: ${data.orderNo}`;
+        if (data.plan) {
+          document.getElementById("planInfo").textContent = `Selected Plan: ${data.plan}`;
+        }
+        if (data.start && data.end) {
+          document.getElementById("dateInfo").textContent =
+            `This license is valid from ${pretty(data.start)} to ${pretty(data.end)}.`;
+        }
 
-            document.getElementById("copyBtn").addEventListener("click", () => {
-              const text = document.getElementById("licenseKey").textContent;
-              navigator.clipboard.writeText(text).then(() => {
-                alert("✅ License Key copied to clipboard!");
-              });
-            });
+        // toggle reveal/hide
+        const keyEl = document.getElementById("licenseKey");
+        const container = document.getElementById("licenseContainer");
+        const btn = document.getElementById("revealBtn");
+        let shown = false;
+
+        btn.addEventListener("click", () => {
+          shown = !shown;
+          if (shown) {
+            keyEl.textContent = data.licenseKey || "No license key found.";
+            container.classList.remove("hidden");
+            btn.textContent = "Hide License Key";
           } else {
-            document.getElementById("orderInfo").textContent = "No order found.";
+            container.classList.add("hidden");
+            btn.textContent = "Click to Reveal License Key";
           }
-        })
-        .catch(() => {
-          document.getElementById("loading").classList.add("hidden");
-          const details = document.getElementById("orderDetails");
-          details.classList.remove("hidden");
-          setTimeout(() => details.classList.add("show"), 50);
-          document.getElementById("orderInfo").textContent = "Error retrieving order info.";
         });
-    }
-  </script>
+
+        document.getElementById("copyBtn").addEventListener("click", () => {
+          const text = keyEl.textContent;
+          navigator.clipboard.writeText(text).then(() => {
+            alert("✅ License Key copied to clipboard!");
+          });
+        });
+      } else {
+        document.getElementById("orderInfo").textContent = "No order found.";
+      }
+    })
+    .catch(() => {
+      document.getElementById("loading").classList.add("hidden");
+      const details = document.getElementById("orderDetails");
+      details.classList.remove("hidden");
+      setTimeout(() => details.classList.add("show"), 50);
+      document.getElementById("orderInfo").textContent = "Error retrieving order info.";
+    });
+}
+</script>
 </body>
 </html>

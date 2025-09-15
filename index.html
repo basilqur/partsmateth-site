@@ -81,7 +81,25 @@
     .then(res => res.text())
     .then(html => {
       document.getElementById("subscribeFormContainer").innerHTML = html;
-      initSubscribeForm(); // Call logic after form loads
+      initSubscribeForm();
+
+      // ✅ Prefill AFTER form exists
+     const p = new URLSearchParams(window.location.search);
+      const email = p.get("email");
+      const plan  = p.get("plan");
+
+      const emailInput = document.getElementById("emailInput");
+      if (emailInput && email) emailInput.value = email;
+
+      const planSelect = document.getElementById("planSelect");
+      if (planSelect && plan) {
+        for (const opt of planSelect.options) {
+          if (opt.value.toLowerCase() === plan.toLowerCase()) {
+            planSelect.value = opt.value;
+            break;
+          }
+        }
+      }
     });
 
   function initSubscribeForm() {
@@ -162,9 +180,30 @@ updateCountryDisplay();
     <input type="hidden" name="_subject" value="New Contact Form Submission">
     <input type="hidden" name="_autoresponse" value="✅ Thanks for contacting PartsMateTH! We received your message and will get back to you soon.">
     <input type="hidden" name="_from" value="PartsMateTH Support <support@partsmate.com>">
+    <input type="hidden" name="_replyto" id="replytoHidden" value="">
+    <input type="hidden" name="_template" value="table">
+
 
     <input name="name" type="text" placeholder="Your Name" required class="w-full px-4 py-2 border rounded-lg" />
     <input name="email" type="email" placeholder="Your Email" required class="w-full px-4 py-2 border rounded-lg" />
+    <div class="flex items-stretch gap-2 mb-4 relative">
+  <div class="relative w-[35%] h-11">
+    <select id="contactCountryCode"
+            class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
+      <!-- reuse SAME options list as subscribe-form.html -->
+      <!-- example first item: -->
+      <option data-country="Afghanistan (‫افغانستان‬‎)" data-iso="AF" value="+93">Afghanistan (‫افغانستان‬‎) (AF) +93</option>
+      <!-- ... (paste all options here; same as subscribe-form) ... -->
+    </select>
+    <div id="contactIsoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">AF</div>
+  </div>
+
+  <div class="flex items-stretch w-[65%] h-11 border border-gray-300 rounded-lg overflow-hidden">
+    <span id="contactPhonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+93</span>
+    <input id="contactPhone" type="tel" placeholder="Phone Number" required
+           class="w-full px-3 py-2 text-gray-700 focus:outline-none"/>
+  </div>
+</div>
     <textarea name="message" placeholder="Your Message" required rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
     <button id="submitBtn" type="submit" class="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
       <span id="btnText">Submit</span>
@@ -213,44 +252,76 @@ updateCountryDisplay();
   </script>
 
   <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("contactForm");
   const btnText = document.getElementById("btnText");
   const btnSpinner = document.getElementById("btnSpinner");
 
+  // country/phone UI sync
+  const cc = document.getElementById("contactCountryCode");
+  const iso = document.getElementById("contactIsoLabel");
+  const pref = document.getElementById("contactPhonePrefix");
+  const syncCountryUI = () => {
+    const opt = cc.options[cc.selectedIndex];
+    pref.textContent = opt.value;
+    iso.textContent = opt.getAttribute("data-iso") || "";
+  };
+  if (cc) { cc.addEventListener("change", syncCountryUI); syncCountryUI(); }
+
   if (!form) return;
 
-  form.addEventListener("submit", function (e) {
-    // show spinner
+  form.addEventListener("submit", () => {
+    // spinner
     btnText.textContent = "Sending...";
     btnSpinner.classList.remove("hidden");
 
-    const name = e.target.name.value;
-    const email = e.target.email.value;
-    const message = e.target.message.value;
+    // ensure autoresponse goes to the user's email
+    const emailInput = form.querySelector('input[name="email"]');
+    const replytoHidden = document.getElementById("replytoHidden");
+    if (emailInput && replytoHidden) replytoHidden.value = emailInput.value;
 
+    // data for sheet
+    const name = form.name.value;
+    const email = form.email.value;
+    const message = form.message.value;
+
+    const phoneNumber = document.getElementById("contactPhone")?.value || "";
+    const phone = (pref?.textContent || "") + phoneNumber;
+
+    // derive country name from selected option’s data-country (text before '(' if present)
+    let countryRaw = cc?.options[cc.selectedIndex]?.getAttribute("data-country") || "";
+    let country = countryRaw.includes("(") ? countryRaw.split("(")[0].trim() : countryRaw;
+
+    // background log to Google Sheet
     fetch("/api/saveToSheet", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
       body: JSON.stringify({
         sheet: "web_support_messages",
-        name,
-        email,
-        message
+        name, email, phone, country, message
       }),
     })
-      .then(() => {
-        document.getElementById("formResponse").innerText = "✅ Message sent successfully!";
-      })
-      .catch(err => {
-        console.error("❌ Failed to log message:", err);
-        document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
-      })
-      .finally(() => {
-        btnText.textContent = "Submit";
-        btnSpinner.classList.add("hidden");
-      });
-    // No preventDefault → FormSubmit.co still works
+    .then(() => {
+      document.getElementById("formResponse").innerText = "✅ Message sent successfully!";
+    })
+    .catch(err => {
+      console.error("❌ Failed to log message:", err);
+      document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
+      try {
+        navigator.sendBeacon(
+          "/api/saveToSheet",
+          new Blob([JSON.stringify({ sheet:"web_support_messages", name, email, phone, country, message })],
+            { type: "application/json" })
+        );
+      } catch {}
+
+    })
+    .finally(() => {
+      btnText.textContent = "Submit";
+      btnSpinner.classList.add("hidden");
+    });
+    // No preventDefault → FormSubmit still sends email + autoresponse
   });
 });
 </script>
