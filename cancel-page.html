@@ -1,44 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Canceled | PartsMateTH</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-red-500 to-pink-400 min-h-screen flex items-center justify-center px-4 text-white">
-  <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-8 text-center text-gray-800">
-    <h1 class="text-3xl font-bold text-red-600 mb-4">❌ Payment Canceled</h1>
-<p class="text-lg mb-2">Your payment was not completed.</p>
-<p id="cancelInfo" class="mb-6 text-gray-700"></p>
-
-<div class="flex gap-3 justify-center">
-  <a href="/" class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded">
-    Back to Home
-  </a>
-  <a id="retryBtn"
-     class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded">
-    Try Again
-  </a>
-</div>
-  </div>
-
-  <script>
-  const params = new URLSearchParams(window.location.search);
-  const email = params.get("email");
-  const plan = params.get("plan");
-
-  if (email) {
-    const el = document.getElementById("cancelInfo");
-    if (el) el.textContent = `You attempted to subscribe with: ${email}`;
-  }
-
-  // Build retry back to HOME with prefill, not /subscribe-form.html
-  const qs = new URLSearchParams();
-  if (email) qs.set("email", email);
-  if (plan) qs.set("plan", plan);
-  document.getElementById("retryBtn").href = `/${qs.toString() ? "?" + qs.toString() : ""}#home`;
-  </script>
-
-</body>
+  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Canceled | PartsMateTH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  
+  <body class="bg-gradient-to-br from-red-500 to-pink-400 min-h-screen flex items-center justify-center px-4 text-white">
+    <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-8 text-center text-gray-800">
+      <h1 class="text-3xl font-bold text-red-600 mb-4">❌ Payment Canceled</h1>
+      <p class="text-lg mb-2">Your payment was not completed.</p>
+      <p id="cancelInfo" class="mb-6 text-gray-700"></p>
+      
+      <div class="flex gap-3 justify-center">
+        <a href="/" class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded">
+          Back to Home
+        </a>
+        <a id="retryBtn" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded">
+          Try Again
+        </a>
+      </div>
+    </div>
+    
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const email = params.get("email");
+      const plan = params.get("plan");
+      if (email) {
+        const el = document.getElementById("cancelInfo");
+        if (el) el.textContent = `You attempted to subscribe with: ${email}`;
+      }
+      // Build retry back to HOME with prefill, not /subscribe-form.html
+      const qs = new URLSearchParams();
+      if (email) qs.set("email", email);
+      if (plan) qs.set("plan", plan);
+      document.getElementById("retryBtn").href = `/${qs.toString() ? "?" + qs.toString() : ""}#home`;
+    </script>
+    
+  </body>
+  
 </html>

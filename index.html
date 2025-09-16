@@ -1,396 +1,369 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PartsMateTH</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-  </style>
-</head>
-<body class="bg-gray-50 text-gray-800">
-
-  <!-- Navbar -->
-  <header id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/50 backdrop-blur-md shadow-sm transition duration-300">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-      <h1 class="text-xl font-bold text-blue-600">PartsMateTH</h1>
-      <nav class="relative">
-        <ul id="navLinks" class="flex space-x-6 font-medium text-gray-700">
-          <li><a href="#home" class="nav-link relative hover:text-blue-500">Home</a></li>
-          <li><a href="#about" class="nav-link relative hover:text-blue-500">About</a></li>
-          <li><a href="#contact" class="nav-link relative hover:text-blue-500">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Hero / Home -->
-  <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-teal-400 text-white pt-20">
-    <div class="text-center px-6">
-      <h2 class="text-4xl font-bold mb-2">Welcome to PartsMateTH</h2>
-      <p class="text-xl font-semibold mb-6">⚡ Speed up daily work 10x faster with automation tools.</p>
-      <p class="text-lg text-white mb-10">Choose a plan based on your needs:</p>
-
-      <div class="flex flex-wrap justify-center gap-6">
-        <!-- Basic Plan -->
-        <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-green-500">
-          <h3 class="text-xl font-bold text-center mb-2">Basic Plan</h3>
-          <p class="text-center text-sm mb-4 text-gray-500">(Just Getting Started?)</p>
-          <ul class="list-disc pl-5 text-sm text-left space-y-2">
-            <li>✅ Prices Checker – Compare live prices from Dubai, Thailand, online markets</li>
-            <li>✅ Names Generator – Convert any part number into correct sticker name</li>
-            <li>⚠️ Limited tools – no weight, alternates, models, exports</li>
-            <li>🧠 Ideal for new users who want to check basics quickly</li>
+  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PartsMateTH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  
+  <body class="bg-gray-50 text-gray-800">
+    
+    <!-- Navbar -->
+    <header id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/50 backdrop-blur-md shadow-sm transition duration-300">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-blue-600">PartsMateTH</h1>
+        <nav class="relative">
+          <ul id="navLinks" class="flex space-x-6 font-medium text-gray-700">
+            <li><a href="#home" class="nav-link relative hover:text-blue-500">Home</a></li>
+            <li><a href="#about" class="nav-link relative hover:text-blue-500">About</a></li>
+            <li><a href="#contact" class="nav-link relative hover:text-blue-500">Contact</a></li>
           </ul>
+        </nav>
+      </div>
+    </header>
+    
+    <!-- Hero / Home -->
+    <section id="home" class="bg-gradient-to-br from-blue-500 to-teal-400 py-20">
+      <div class="text-center px-6">
+        <h2 class="text-4xl font-bold mb-2">Welcome to PartsMateTH</h2>
+        <p class="text-xl font-semibold mb-6">⚡ Speed up daily work 10x faster with automation tools.</p>
+        <p class="text-lg text-white mb-10">Choose a plan based on your needs:</p>
+        
+        <div class="flex flex-wrap justify-center gap-6">
+          <!-- Basic Plan -->
+          <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-green-500">
+            <h3 class="text-xl font-bold text-center mb-2">Basic Plan</h3>
+            <p class="text-center text-sm mb-4 text-gray-500">(Just Getting Started?)</p>
+            <ul class="list-disc pl-5 text-sm text-left space-y-2">
+              <li>✅ Prices Checker – Compare live prices from Dubai, Thailand, online markets</li>
+              <li>✅ Names Generator – Convert any part number into correct sticker name</li>
+              <li>⚠️ Limited tools – no weight, alternates, models, exports</li>
+              <li>🧠 Ideal for new users who want to check basics quickly</li>
+            </ul>
+          </div>
+          
+          <!-- Plus Plan -->
+          <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-blue-500">
+            <h3 class="text-xl font-bold text-center mb-2">Plus Plan</h3>
+            <p class="text-center text-sm mb-4 text-gray-500">(For Growing Sellers)</p>
+            <ul class="list-disc pl-5 text-sm text-left space-y-2">
+              <li>✅ Everything in Basic</li>
+              <li>✅ Country Checker – See where parts are made</li>
+              <li>✅ Part Details – Origin, category, registration year, more</li>
+              <li>✅ List Cleaner – Paste messy data, get clean list instantly</li>
+              <li>🌍 Ideal if you sell internationally or manage more than a few parts</li>
+            </ul>
+          </div>
+          
+          <!-- Pro Plan -->
+          <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-red-500">
+            <h3 class="text-xl font-bold text-center mb-2">Pro Plan</h3>
+            <p class="text-center text-sm mb-4 text-gray-500">(For Dealers Who Mean Business)</p>
+            <ul class="list-disc pl-5 text-sm text-left space-y-2">
+              <li>✅ Everything in Plus</li>
+              <li>✅ Weight Checker – Know exact kg for pricing/shipping</li>
+              <li>✅ Alternate Part No. – Find compatible replacements</li>
+              <li>✅ Model Checker – See which cars fit which parts</li>
+              <li>✅ VIP Tools – Fastest updates, priority access</li>
+              <li>🚚 Trusted by top exporters & dealers worldwide</li>
+            </ul>
+          </div>
         </div>
-
-        <!-- Plus Plan -->
-        <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-blue-500">
-          <h3 class="text-xl font-bold text-center mb-2">Plus Plan</h3>
-          <p class="text-center text-sm mb-4 text-gray-500">(For Growing Sellers)</p>
-          <ul class="list-disc pl-5 text-sm text-left space-y-2">
-            <li>✅ Everything in Basic</li>
-            <li>✅ Country Checker – See where parts are made</li>
-            <li>✅ Part Details – Origin, category, registration year, more</li>
-            <li>✅ List Cleaner – Paste messy data, get clean list instantly</li>
-            <li>🌍 Ideal if you sell internationally or manage more than a few parts</li>
-          </ul>
-        </div>
-
-        <!-- Pro Plan -->
-        <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-red-500">
-          <h3 class="text-xl font-bold text-center mb-2">Pro Plan</h3>
-          <p class="text-center text-sm mb-4 text-gray-500">(For Dealers Who Mean Business)</p>
-          <ul class="list-disc pl-5 text-sm text-left space-y-2">
-            <li>✅ Everything in Plus</li>
-            <li>✅ Weight Checker – Know exact kg for pricing/shipping</li>
-            <li>✅ Alternate Part No. – Find compatible replacements</li>
-            <li>✅ Model Checker – See which cars fit which parts</li>
-            <li>✅ VIP Tools – Fastest updates, priority access</li>
-            <li>🚚 Trusted by top exporters & dealers worldwide</li>
-          </ul>
+        <!-- Subscribe Form -->
+        <div class="mt-10 max-w-md mx-auto bg-white shadow-lg rounded-xl p-6">
+          <h4 class="text-lg font-semibold text-center mb-4 text-gray-700">Subscribe to a Plan</h4>
+          
+          <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" id="nameInput" placeholder="Your Name" required type="text" />
+          
+          <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" id="emailInput" placeholder="Your Email" required type="email" />
+          
+          <!-- Phone + Country -->
+          <div class="flex items-stretch gap-2 mb-4 relative">
+            <div class="relative w-[20%] h-11">
+              <select id="countryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
+              </select>
+              <div id="isoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
+            </div>
+            
+            <div class="flex items-stretch w-[80%] h-11 border border-gray-300 rounded-lg overflow-hidden">
+              <span id="phonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
+              <input class="w-full px-3 py-2 text-gray-700 focus:outline-none" id="phoneInput" placeholder="Phone Number" required type="tel" />
+            </div>
+          </div>
+          
+          <!-- Plan -->
+          <select class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white focus:ring-2 focus:ring-blue-400" id="planSelect">
+            <option value="Basic">Basic</option>
+            <option value="Plus">Plus</option>
+            <option value="Pro">Pro</option>
+          </select>
+          
+          <!-- Button -->
+          <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" onclick="subscribe()">
+            Subscribe
+          </button>
+          
+          <p class="mt-4 text-green-600 font-semibold" id="formResponse"></p>
         </div>
       </div>
-      <!-- Subscribe Form -->
-      <div class="mt-10 max-w-md mx-auto bg-white shadow-lg rounded-xl p-6">
-        <h4 class="text-lg font-semibold text-center mb-4 text-gray-700">Subscribe to a Plan</h4>
-      
-        <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" 
-               id="nameInput" placeholder="Your Name" required type="text"/>
-      
-        <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" 
-               id="emailInput" placeholder="Your Email" required type="email"/>
-      
-        <!-- Phone + Country -->
+    </section>
+    
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-white text-center px-6">
+      <div class="max-w-4xl mx-auto">
+        <p class="text-lg leading-8 text-gray-700">
+          <strong>PartsMateTH</strong> is an advanced autoparts intelligence platform designed for serious dealers, garages, and exporters who need speed, precision, and simplicity. We help you find correct Toyota part names, live global prices, manufacturing origins, alternates, vehicle fitment data, and much more — all in a few clicks.
+          <br><br>
+          Our team operates across multiple hubs in 🇯🇵 Japan, 🇦🇺 Australia, 🇸🇬 Singapore, and 🇦🇪 Dubai, but our main headquarters is proudly based in 🇹🇭 <strong>Thailand</strong>. From here, we power the platform used by hundreds of international customers who rely on us to streamline their parts business.
+          <br><br>
+          Whether you're managing inventory, quoting exports, or just want to stop wasting time on slow websites — <strong>PartsMateTH is built for you.</strong>
+          <br><br>
+          We're on a mission to make autoparts work faster, smarter, and simpler.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-100 text-center px-6">
+      <h3 class="text-3xl font-semibold mb-6 text-blue-600">Contact Us</h3>
+      <p class="mb-6 text-gray-700">Have questions or need support? We’re here to help.</p>
+      <form id="contactForm" action="https://formsubmit.co/basilqur@rocketmail.com" method="POST" class="max-w-md mx-auto space-y-4">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://www.partsmateth.com/?success=1#contact">
+        <input type="hidden" name="_subject" value="New Contact Form Submission">
+        <input type="hidden" name="_autoresponse" value="✅ Thanks for contacting PartsMateTH! We received your message and will get back to you soon.">
+        <input type="hidden" name="_from" value="PartsMateTH Support <support@partsmate.com>">
+        <input type="hidden" name="_replyto" id="replytoHidden" value="">
+        <input type="hidden" name="_template" value="table">
+        
+        <input name="name" type="text" placeholder="Your Name" required class="w-full px-4 py-2 border rounded-lg" />
+        <input name="email" type="email" placeholder="Your Email" required class="w-full px-4 py-2 border rounded-lg" />
         <div class="flex items-stretch gap-2 mb-4 relative">
           <div class="relative w-[20%] h-11">
-            <select id="countryCode"
-                    class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
+            <select id="contactCountryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
             </select>
-            <div id="isoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
+            <div id="contactIsoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
           </div>
-      
+          
           <div class="flex items-stretch w-[80%] h-11 border border-gray-300 rounded-lg overflow-hidden">
-            <span id="phonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
-            <input class="w-full px-3 py-2 text-gray-700 focus:outline-none" 
-                   id="phoneInput" placeholder="Phone Number" required type="tel"/>
+            <span id="contactPhonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
+            <input id="contactPhone" type="tel" placeholder="Phone Number" required class="w-full px-3 py-2 text-gray-700 focus:outline-none" />
           </div>
         </div>
-      
-        <!-- Plan -->
-        <select class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white focus:ring-2 focus:ring-blue-400" 
-                id="planSelect">
-          <option value="Basic">Basic</option>
-          <option value="Plus">Plus</option>
-          <option value="Pro">Pro</option>
-        </select>
-      
-        <!-- Button -->
-        <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" onclick="subscribe()">
-          Subscribe
+        <textarea name="message" placeholder="Your Message" required rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
+        <button id="submitBtn" type="submit" class="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+          <span id="btnText">Submit</span>
+          <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
         </button>
+      </form>
+      <p id="formResponse" class="mt-4 text-green-600 font-semibold"></p>
       
-        <p class="mt-4 text-green-600 font-semibold" id="formResponse"></p>
+      <div class="mt-6 text-gray-600">
+        <p>📞 WhatsApp: <a href="https://wa.me/971501234567" class="text-blue-500" target="_blank">+971 50 123 4567</a></p>
+        <p>📧 Email: <a href="mailto:support@partsmate.com" class="text-blue-500">support@partsmate.com</a></p>
       </div>
-      
-      <script>
-        // initialize dropdown once page loads
-        loadCountries("countryCode", "isoLabel", "phonePrefix").then(() => {
-          initSubscribeForm(); // attach change event + run first update
-        });
-      
-        function initSubscribeForm() {
-          const countryCode = document.getElementById("countryCode");
-          const phonePrefix = document.getElementById("phonePrefix");
-          const isoLabel = document.getElementById("isoLabel");
-      
-          function updateCountryDisplay() {
-            const selected = countryCode.options[countryCode.selectedIndex];
-            phonePrefix.textContent = selected.value;
-            isoLabel.textContent = selected.getAttribute("data-iso");
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-4 text-center">
+      <p>&copy; 2025 PartsMateTH. All rights reserved.</p>
+    </footer>
+    
+    <script>
+      const navbar = document.getElementById("navbar");
+      const sections = document.querySelectorAll("section");
+      const navLinks = document.querySelectorAll(".nav-link");
+      window.addEventListener("scroll", () => {
+        navbar.classList.toggle("bg-white/90", window.scrollY > 50);
+        let current = "";
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop - 100;
+          if (pageYOffset >= sectionTop) {
+            current = section.getAttribute("id");
           }
-      
-          countryCode.addEventListener("change", updateCountryDisplay);
-          updateCountryDisplay();
+        });
+        navLinks.forEach((link) => {
+          link.classList.remove("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
+          if (link.getAttribute("href") === "#" + current) {
+            link.classList.add("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
+          }
+        });
+      });
+    </script>
+    
+    <script>
+      let __countryOptionsCache = null;
+      async function loadCountries(selectId, isoLabelId, prefixSpanId) {
+        if (!__countryOptionsCache) {
+          __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
         }
+        const html = await __countryOptionsCache;
+        const sel = document.getElementById(selectId);
+        if (!sel) return;
+        sel.innerHTML = html;
+        const update = () => {
+          const opt = sel.options[sel.selectedIndex];
+          if (isoLabelId) {
+            const isoEl = document.getElementById(isoLabelId);
+            if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
+          }
+          if (prefixSpanId) {
+            const preEl = document.getElementById(prefixSpanId);
+            if (preEl) preEl.textContent = opt?.value || "";
+          }
+        };
+        sel.addEventListener("change", update);
+        update();
+        return true; // ✅ allow .then() to work
+      }
+      // Helper to derive country name from selected option
+      function getSelectedCountryName(selectEl) {
+        const opt = selectEl.options[selectEl.selectedIndex];
+        let raw = opt?.getAttribute("data-country") || "";
+        return raw.includes("(") ? raw.split("(")[0].trim() : raw;
+      }
+    </script>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("contactForm");
+        const btnText = document.getElementById("btnText");
+        const btnSpinner = document.getElementById("btnSpinner");
+        // country/phone UI sync
+        const cc = document.getElementById("contactCountryCode");
+        loadCountries("contactCountryCode", "contactIsoLabel", "contactPhonePrefix");
+        if (!form) return;
+        form.addEventListener("submit", () => {
+          // spinner
+          btnText.textContent = "Sending...";
+          btnSpinner.classList.remove("hidden");
+          // ensure autoresponse goes to the user's email
+          const emailInput = form.querySelector('input[name="email"]');
+          const replytoHidden = document.getElementById("replytoHidden");
+          if (emailInput && replytoHidden) replytoHidden.value = emailInput.value;
+          // data for sheet
+          const name = form.name.value;
+          const email = form.email.value;
+          const message = form.message.value;
+          const phoneNumber = document.getElementById("contactPhone")?.value || "";
+          const phone = document.getElementById("contactPhonePrefix").textContent + document.getElementById("contactPhone").value;
+          // derive country name from selected option’s data-country (text before '(' if present)
+          let countryRaw = cc?.options[cc.selectedIndex]?.getAttribute("data-country") || "";
+          const ccSel = document.getElementById("contactCountryCode");
+          const country = getSelectedCountryName(ccSel);
+          // background log to Google Sheet
+          fetch("/api/saveToSheet", {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              keepalive: true,
+              body: JSON.stringify({
+                sheet: "web_support_messages",
+                name,
+                email,
+                phone,
+                country,
+                message
+              }),
+            })
+            .then(() => {
+              document.getElementById("formResponse").innerText = "✅ Message sent successfully!";
+            })
+            .catch(err => {
+              console.error("❌ Failed to log message:", err);
+              document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
+              try {
+                navigator.sendBeacon(
+                  "/api/saveToSheet",
+                  new Blob([JSON.stringify({ sheet: "web_support_messages", name, email, phone, country, message })], { type: "application/json" })
+                );
+              } catch {}
+            })
+            .finally(() => {
+              btnText.textContent = "Submit";
+              btnSpinner.classList.add("hidden");
+            });
+          // No preventDefault → FormSubmit still sends email + autoresponse
+        });
+      });
+    </script>
+    
+    <script>
+      // initialize dropdown once page loads
+      loadCountries("countryCode", "isoLabel", "phonePrefix").then(() => {
+        initSubscribeForm(); // attach change event + run first update
+      });
       
-        // Prefill from query string
-        const p = new URLSearchParams(window.location.search);
-        const email = p.get("email");
-        const plan = p.get("plan");
-      
-        if (email) {
-          const emailInput = document.getElementById("emailInput");
-          if (emailInput) emailInput.value = email;
+      function initSubscribeForm() {
+        const countryCode = document.getElementById("countryCode");
+        const phonePrefix = document.getElementById("phonePrefix");
+        const isoLabel = document.getElementById("isoLabel");
+        
+        function updateCountryDisplay() {
+          const selected = countryCode.options[countryCode.selectedIndex];
+          phonePrefix.textContent = selected.value;
+          isoLabel.textContent = selected.getAttribute("data-iso");
         }
-      
-        if (plan) {
-          const planSelect = document.getElementById("planSelect");
-          if (planSelect) {
-            for (const opt of planSelect.options) {
-              if (opt.value.toLowerCase() === plan.toLowerCase()) {
-                planSelect.value = opt.value;
-                break;
-              }
+        countryCode.addEventListener("change", updateCountryDisplay);
+        updateCountryDisplay();
+      }
+      // Prefill from query string
+      const p = new URLSearchParams(window.location.search);
+      const email = p.get("email");
+      const plan = p.get("plan");
+      if (email) {
+        const emailInput = document.getElementById("emailInput");
+        if (emailInput) emailInput.value = email;
+      }
+      if (plan) {
+        const planSelect = document.getElementById("planSelect");
+        if (planSelect) {
+          for (const opt of planSelect.options) {
+            if (opt.value.toLowerCase() === plan.toLowerCase()) {
+              planSelect.value = opt.value;
+              break;
             }
           }
         }
-      
-        // Subscribe handler
-        async function subscribe() {
-          const name = document.getElementById("nameInput").value;
-          const email = document.getElementById("emailInput").value;
-          const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
-          const plan = document.getElementById("planSelect").value;
-      
-          // Country (trim text before '(' if present)
-          const countrySelect = document.getElementById("countryCode");
-          const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-          let country = selectedOption.getAttribute("data-country") || "";
-          if (country.includes("(")) country = country.split("(")[0].trim();
-      
-          if (!name || !email || !phone) {
-            alert("Please fill in all fields.");
-            return;
-          }
-      
-          const res = await fetch("/api/create-checkout-session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, phone, plan, country }),
-          });
-      
-          const data = await res.json();
-          if (data.url) {
-            window.location.href = data.url;
-          } else {
-            alert("Something went wrong. Please try again.");
-          }
+      }
+      // Subscribe handler
+      async function subscribe() {
+        const name = document.getElementById("nameInput").value;
+        const email = document.getElementById("emailInput").value;
+        const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
+        const plan = document.getElementById("planSelect").value;
+        // Country (trim text before '(' if present)
+        const countrySelect = document.getElementById("countryCode");
+        const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+        let country = selectedOption.getAttribute("data-country") || "";
+        if (country.includes("(")) country = country.split("(")[0].trim();
+        if (!name || !email || !phone) {
+          alert("Please fill in all fields.");
+          return;
         }
-      </script>
-    </div>
-  </section>
-
-  <!-- About Us Section -->
-  <section id="about" class="py-20 bg-white text-center px-6">
-    <div class="max-w-4xl mx-auto">
-      <p class="text-lg leading-8 text-gray-700">
-        <strong>PartsMateTH</strong> is an advanced autoparts intelligence platform designed for serious dealers, garages, and exporters who need speed, precision, and simplicity. We help you find correct Toyota part names, live global prices, manufacturing origins, alternates, vehicle fitment data, and much more — all in a few clicks.
-        <br><br>
-        Our team operates across multiple hubs in 🇯🇵 Japan, 🇦🇺 Australia, 🇸🇬 Singapore, and 🇦🇪 Dubai, but our main headquarters is proudly based in 🇹🇭 <strong>Thailand</strong>. From here, we power the platform used by hundreds of international customers who rely on us to streamline their parts business.
-        <br><br>
-        Whether you're managing inventory, quoting exports, or just want to stop wasting time on slow websites — <strong>PartsMateTH is built for you.</strong>
-        <br><br>
-        We're on a mission to make autoparts work faster, smarter, and simpler.
-      </p>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-<section id="contact" class="py-20 bg-gray-100 text-center px-6">
-  <h3 class="text-3xl font-semibold mb-6 text-blue-600">Contact Us</h3>
-  <p class="mb-6 text-gray-700">Have questions or need support? We’re here to help.</p>
-  <form id="contactForm" action="https://formsubmit.co/basilqur@rocketmail.com" method="POST" class="max-w-md mx-auto space-y-4">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_next" value="https://www.partsmateth.com/?success=1#contact">
-    <input type="hidden" name="_subject" value="New Contact Form Submission">
-    <input type="hidden" name="_autoresponse" value="✅ Thanks for contacting PartsMateTH! We received your message and will get back to you soon.">
-    <input type="hidden" name="_from" value="PartsMateTH Support <support@partsmate.com>">
-    <input type="hidden" name="_replyto" id="replytoHidden" value="">
-    <input type="hidden" name="_template" value="table">
-
-
-    <input name="name" type="text" placeholder="Your Name" required class="w-full px-4 py-2 border rounded-lg" />
-    <input name="email" type="email" placeholder="Your Email" required class="w-full px-4 py-2 border rounded-lg" />
-    <div class="flex items-stretch gap-2 mb-4 relative">
-  <div class="relative w-[35%] h-11">
-    <select id="contactCountryCode"
-          class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
-  </select>
-    <div id="contactIsoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
-</div>
-
-  <div class="flex items-stretch w-[65%] h-11 border border-gray-300 rounded-lg overflow-hidden">
-    <span id="contactPhonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
-    <input id="contactPhone" type="tel" placeholder="Phone Number" required
-           class="w-full px-3 py-2 text-gray-700 focus:outline-none"/>
-  </div>
-</div>
-    <textarea name="message" placeholder="Your Message" required rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
-    <button id="submitBtn" type="submit" class="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-      <span id="btnText">Submit</span>
-      <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-      </svg>
-    </button>
-  </form>
-  <p id="formResponse" class="mt-4 text-green-600 font-semibold"></p>
-
-  <div class="mt-6 text-gray-600">
-    <p>📞 WhatsApp: <a href="https://wa.me/971501234567" class="text-blue-500" target="_blank">+971 50 123 4567</a></p>
-    <p>📧 Email: <a href="mailto:support@partsmate.com" class="text-blue-500">support@partsmate.com</a></p>
-  </div>
-</section>
-
-  <!-- Footer -->
-  <footer class="bg-blue-600 text-white py-4 text-center">
-    <p>&copy; 2025 PartsMateTH. All rights reserved.</p>
-  </footer>
-
-  <script>
-    const navbar = document.getElementById("navbar");
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-link");
-
-    window.addEventListener("scroll", () => {
-      navbar.classList.toggle("bg-white/90", window.scrollY > 50);
-
-      let current = "";
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop - 100;
-        if (pageYOffset >= sectionTop) {
-          current = section.getAttribute("id");
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, phone, plan, country }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert("Something went wrong. Please try again.");
         }
-      });
-
-      navLinks.forEach((link) => {
-        link.classList.remove("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
-        if (link.getAttribute("href") === "#" + current) {
-          link.classList.add("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
-        }
-      });
-    });
-  </script>
-
-  <script>
-let __countryOptionsCache = null;
-
-async function loadCountries(selectId, isoLabelId, prefixSpanId) {
-  if (!__countryOptionsCache) {
-    __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
-  }
-  const html = await __countryOptionsCache;
-
-  const sel = document.getElementById(selectId);
-  if (!sel) return;
-  sel.innerHTML = html;
-
-  const update = () => {
-    const opt = sel.options[sel.selectedIndex];
-    if (isoLabelId) {
-      const isoEl = document.getElementById(isoLabelId);
-      if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
-    }
-    if (prefixSpanId) {
-      const preEl = document.getElementById(prefixSpanId);
-      if (preEl) preEl.textContent = opt?.value || "";
-    }
-  };
-  sel.addEventListener("change", update);
-  update();
-}
-
-// Helper to derive country name from selected option
-function getSelectedCountryName(selectEl) {
-  const opt = selectEl.options[selectEl.selectedIndex];
-  let raw = opt?.getAttribute("data-country") || "";
-  return raw.includes("(") ? raw.split("(")[0].trim() : raw;
-}
-</script>
-
-
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("contactForm");
-  const btnText = document.getElementById("btnText");
-  const btnSpinner = document.getElementById("btnSpinner");
-
-  // country/phone UI sync
-  const cc = document.getElementById("contactCountryCode");
-  loadCountries("contactCountryCode", "contactIsoLabel", "contactPhonePrefix");
-  if (!form) return;
-
-  form.addEventListener("submit", () => {
-    // spinner
-    btnText.textContent = "Sending...";
-    btnSpinner.classList.remove("hidden");
-
-    // ensure autoresponse goes to the user's email
-    const emailInput = form.querySelector('input[name="email"]');
-    const replytoHidden = document.getElementById("replytoHidden");
-    if (emailInput && replytoHidden) replytoHidden.value = emailInput.value;
-
-    // data for sheet
-    const name = form.name.value;
-    const email = form.email.value;
-    const message = form.message.value;
-
-    const phoneNumber = document.getElementById("contactPhone")?.value || "";
-    const phone = document.getElementById("contactPhonePrefix").textContent + document.getElementById("contactPhone").value;
-
-    // derive country name from selected option’s data-country (text before '(' if present)
-    let countryRaw = cc?.options[cc.selectedIndex]?.getAttribute("data-country") || "";
-    const ccSel = document.getElementById("contactCountryCode");
-    const country = getSelectedCountryName(ccSel);
+      }
+    </script>
     
-    // background log to Google Sheet
-    fetch("/api/saveToSheet", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      keepalive: true,
-      body: JSON.stringify({
-        sheet: "web_support_messages",
-        name, email, phone, country, message
-      }),
-    })
-    .then(() => {
-      document.getElementById("formResponse").innerText = "✅ Message sent successfully!";
-    })
-    .catch(err => {
-      console.error("❌ Failed to log message:", err);
-      document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
-      try {
-        navigator.sendBeacon(
-          "/api/saveToSheet",
-          new Blob([JSON.stringify({ sheet:"web_support_messages", name, email, phone, country, message })],
-            { type: "application/json" })
-        );
-      } catch {}
-
-    })
-    .finally(() => {
-      btnText.textContent = "Submit";
-      btnSpinner.classList.add("hidden");
-    });
-    // No preventDefault → FormSubmit still sends email + autoresponse
-  });
-});
-</script>
-
-</body>
+  </body>
+  
 </html>
