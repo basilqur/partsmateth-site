@@ -75,33 +75,51 @@
           </ul>
         </div>
       </div>
-      <div id="subscribeFormContainer"></div>
+      <!-- Subscribe Form -->
+      <div class="mt-10 max-w-md mx-auto bg-white shadow-lg rounded-xl p-6">
+        <h4 class="text-lg font-semibold text-center mb-4 text-gray-700">Subscribe to a Plan</h4>
+      
+        <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" 
+               id="nameInput" placeholder="Your Name" required type="text"/>
+      
+        <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" 
+               id="emailInput" placeholder="Your Email" required type="email"/>
+      
+        <!-- Phone + Country -->
+        <div class="flex items-stretch gap-2 mb-4 relative">
+          <div class="relative w-[20%] h-11">
+            <select id="countryCode"
+                    class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
+            </select>
+            <div id="isoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
+          </div>
+      
+          <div class="flex items-stretch w-[80%] h-11 border border-gray-300 rounded-lg overflow-hidden">
+            <span id="phonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
+            <input class="w-full px-3 py-2 text-gray-700 focus:outline-none" 
+                   id="phoneInput" placeholder="Phone Number" required type="tel"/>
+          </div>
+        </div>
+      
+        <!-- Plan -->
+        <select class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white focus:ring-2 focus:ring-blue-400" 
+                id="planSelect">
+          <option value="Basic">Basic</option>
+          <option value="Plus">Plus</option>
+          <option value="Pro">Pro</option>
+        </select>
+      
+        <!-- Button -->
+        <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" onclick="subscribe()">
+          Subscribe
+        </button>
+      
+        <p class="mt-4 text-green-600 font-semibold" id="formResponse"></p>
+      </div>
+      
       <script>
-        fetch("subscribe-form.html")
-          .then(res => res.text())
-          .then(html => {
-            document.getElementById("subscribeFormContainer").innerHTML = html;
-            initSubscribeForm();
-            loadCountries("countryCode", "isoLabel", "phonePrefix");
-
-            // ✅ Prefill AFTER form exists
-           const p = new URLSearchParams(window.location.search);
-            const email = p.get("email");
-            const plan  = p.get("plan");
-
-            const emailInput = document.getElementById("emailInput");
-            if (emailInput && email) emailInput.value = email;
-
-            const planSelect = document.getElementById("planSelect");
-            if (planSelect && plan) {
-              for (const opt of planSelect.options) {
-                if (opt.value.toLowerCase() === plan.toLowerCase()) {
-                  planSelect.value = opt.value;
-                  break;
-                }
-              }
-            }
-          });
+        // initialize dropdown once page loads
+        loadCountries("countryCode", "isoLabel", "phonePrefix");
       
         function initSubscribeForm() {
           const countryCode = document.getElementById("countryCode");
@@ -116,40 +134,61 @@
       
           countryCode.addEventListener("change", updateCountryDisplay);
           updateCountryDisplay();
+        }
       
+        initSubscribeForm();
       
-          window.subscribe = async function () {
-            const name = document.getElementById("nameInput").value;
-            const email = document.getElementById("emailInput").value;
-            const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
-          
-            const plan = document.getElementById("planSelect").value;
-          
-            // ✅ Get country from the selected option
-            const countrySelect = document.getElementById("countryCode");
-            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-            let country = selectedOption.getAttribute("data-country") || "";    
-            if (country.includes("(")) {
-              country = country.split("(")[0].trim();
-            }
+        // Prefill from query string
+        const p = new URLSearchParams(window.location.search);
+        const email = p.get("email");
+        const plan = p.get("plan");
       
-            if (!name || !email || !phone) {
-              alert("Please fill in all fields.");
-              return;
+        if (email) {
+          const emailInput = document.getElementById("emailInput");
+          if (emailInput) emailInput.value = email;
+        }
+      
+        if (plan) {
+          const planSelect = document.getElementById("planSelect");
+          if (planSelect) {
+            for (const opt of planSelect.options) {
+              if (opt.value.toLowerCase() === plan.toLowerCase()) {
+                planSelect.value = opt.value;
+                break;
+              }
             }
-          
-            const res = await fetch("/api/create-checkout-session", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name, email, phone, plan, country }), // ✅ added country
-            });
-          
-            const data = await res.json();
-            if (data.url) {
-              window.location.href = data.url;
-            } else {
-              alert("Something went wrong. Please try again.");
-            }
+          }
+        }
+      
+        // Subscribe handler
+        async function subscribe() {
+          const name = document.getElementById("nameInput").value;
+          const email = document.getElementById("emailInput").value;
+          const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
+          const plan = document.getElementById("planSelect").value;
+      
+          // Country (trim text before '(' if present)
+          const countrySelect = document.getElementById("countryCode");
+          const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+          let country = selectedOption.getAttribute("data-country") || "";
+          if (country.includes("(")) country = country.split("(")[0].trim();
+      
+          if (!name || !email || !phone) {
+            alert("Please fill in all fields.");
+            return;
+          }
+      
+          const res = await fetch("/api/create-checkout-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, phone, plan, country }),
+          });
+      
+          const data = await res.json();
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            alert("Something went wrong. Please try again.");
           }
         }
       </script>
