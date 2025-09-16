@@ -119,7 +119,9 @@
       
       <script>
         // initialize dropdown once page loads
-        loadCountries("countryCode", "isoLabel", "phonePrefix");
+        loadCountries("countryCode", "isoLabel", "phonePrefix").then(() => {
+          initSubscribeForm(); // attach change event + run first update
+        });
       
         function initSubscribeForm() {
           const countryCode = document.getElementById("countryCode");
@@ -135,8 +137,6 @@
           countryCode.addEventListener("change", updateCountryDisplay);
           updateCountryDisplay();
         }
-      
-        initSubscribeForm();
       
         // Prefill from query string
         const p = new URLSearchParams(window.location.search);
