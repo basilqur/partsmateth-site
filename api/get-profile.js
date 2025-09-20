@@ -34,7 +34,7 @@ const attempts = [
 let data = null;
 for (const p of attempts) {
 try { data = await callAppsScript(p); } catch { data = null; }
-if (data && (data.ok || data.licenseKey || data.email)) break;
+if (data && (data.licenseKey || data.email || data.orderNo)) break;
 }
 
 
