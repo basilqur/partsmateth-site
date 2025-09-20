@@ -1,48 +1,45 @@
 import Stripe from "stripe";
 
-
 const APPS_SCRIPT_URL2 = process.env.GOOGLE_SCRIPT_WEBAPP;
 
-
 function getStripe() {
-const mode = (process.env.STRIPE_MODE || "test").toLowerCase();
-const key = mode === "live" ? process.env.STRIPE_LIVE_SECRET_KEY : process.env.STRIPE_SECRET_KEY;
-if (!key) throw new Error("Missing Stripe secret key env");
-return new Stripe(key, { apiVersion: "2024-06-20" });
+  const mode = (process.env.STRIPE_MODE || "test").toLowerCase();
+  const key = mode === "live" ? process.env.STRIPE_LIVE_SECRET_KEY : process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("Missing Stripe secret key env");
+  return new Stripe(key, { apiVersion: "2024-06-20" });
 }
-
 
 async function fetchProfileByKey(key) {
-const qs = new URLSearchParams({ mode: "profileByKey", licenseKey: key });
-const url = `${APPS_SCRIPT_URL2}?${qs.toString()}`;
-const r = await fetch(url);
-if (!r.ok) throw new Error("Profile lookup failed");
-return r.json();
+  const qs = new URLSearchParams({ mode: "profileByKey", licenseKey: key });
+  const url = `${APPS_SCRIPT_URL2}?${qs.toString()}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error("Profile lookup failed");
+  const data = await r.json();
+  console.log("DEBUG profileByKey:", data);
+  return data;
 }
 
+export default async function handler(req, res) {
+  try {
+    if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
+    if (!APPS_SCRIPT_URL2) return res.status(500).json({ ok: false, error: "Missing GOOGLE_SCRIPT_WEBAPP env" });
 
-export async function handler(req, res) {
-try {
-if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
-if (!APPS_SCRIPT_URL2) return res.status(500).json({ ok: false, error: "Missing GOOGLE_SCRIPT_WEBAPP env" });
+    const { licenseKey } = req.body || {};
+    if (!licenseKey) return res.status(400).json({ ok: false, error: "Missing licenseKey" });
 
+    const profile = await fetchProfileByKey(licenseKey).catch(() => ({}));
+    console.log("DEBUG fetched profile:", profile);
 
-const { licenseKey } = req.body || {};
-if (!licenseKey) return res.status(400).json({ ok: false, error: "Missing licenseKey" });
+    const subId = profile.stripeSubscriptionId || profile.subscriptionId || profile.stripePaymentId || "";
+    if (!subId) {
+      return res.status(400).json({ ok: false, error: "No recurring subscription for this license", profile });
+    }
 
+    const stripe = getStripe();
+    const updated = await stripe.subscriptions.update(subId, { cancel_at_period_end: true });
 
-const profile = await fetchProfileByKey(licenseKey).catch(() => ({}));
-const subId = profile.stripeSubscriptionId || profile.subscriptionId || "";
-if (!subId) return res.status(400).json({ ok: false, error: "No recurring subscription for this license" });
-
-
-const stripe = getStripe();
-const updated = await stripe.subscriptions.update(subId, { cancel_at_period_end: true });
-
-
-return res.status(200).json({ ok: true, subscription: { id: updated.id, cancel_at_period_end: updated.cancel_at_period_end, current_period_end: updated.current_period_end } });
-} catch (e) {
-return res.status(500).json({ ok: false, error: e.message || "Server error" });
+    return res.status(200).json({ ok: true, subscription: { id: updated.id, cancel_at_period_end: updated.cancel_at_period_end, current_period_end: updated.current_period_end } });
+  } catch (e) {
+    return res.status(500).json({ ok: false, error: e.message || "Server error" });
+  }
 }
-}
-export default handler;
