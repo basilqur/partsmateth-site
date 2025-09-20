@@ -4,7 +4,13 @@ const APPS_SCRIPT_URL2 = process.env.GOOGLE_SCRIPT_WEBAPP;
 
 function getStripe() {
   const mode = (process.env.STRIPE_MODE || "test").toLowerCase();
-  const key = mode === "live" ? process.env.STRIPE_LIVE_SECRET_KEY : process.env.STRIPE_SECRET_KEY;
+  let key;
+  if (mode === "live") {
+    key = process.env.STRIPE_SECRET_KEY_LIVE;
+  } else {
+    // fall back to STRIPE_SECRET_KEY or STRIPE_SECRET_KEY_TEST
+    key = process.env.STRIPE_SECRET_KEY_LIVE || process.env.STRIPE_SECRET_KEY_TEST;
+  }
   if (!key) throw new Error("Missing Stripe secret key env");
   return new Stripe(key, { apiVersion: "2024-06-20" });
 }
@@ -14,9 +20,7 @@ async function fetchProfileByKey(key) {
   const url = `${APPS_SCRIPT_URL2}?${qs.toString()}`;
   const r = await fetch(url);
   if (!r.ok) throw new Error("Profile lookup failed");
-  const data = await r.json();
-  console.log("DEBUG profileByKey:", data);
-  return data;
+  return r.json();
 }
 
 export default async function handler(req, res) {
