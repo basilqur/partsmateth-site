@@ -1,39 +1,31 @@
-import fetch from "node-fetch";
-
-
-const APPS_SCRIPT_URL = process.env.GOOGLE_SCRIPT_WEBAPP; // e.g. https://script.google.com/macros/s/XXXXX/exec
+const APPS_SCRIPT_URL = process.env.GOOGLE_SCRIPT_WEBAPP;
 
 
 async function callAppsScript(params) {
-  if (!APPS_SCRIPT_URL) {
-    throw new Error("Missing GOOGLE_SCRIPT_WEBAPP env");
-  }
-  const qs = new URLSearchParams(params);
-  const url = `${APPS_SCRIPT_URL}?${qs.toString()}`;
-  console.log("DEBUG calling Apps Script:", url);   // <— will show in Vercel logs
-  const r = await fetch(url, { method: "GET", headers: { "cache-control": "no-store" } });
-  const txt = await r.text();
-  console.log("DEBUG raw response:", txt);
-  return JSON.parse(txt);
+if (!APPS_SCRIPT_URL) {
+throw new Error("Missing GOOGLE_SCRIPT_WEBAPP env");
 }
-
+const qs = new URLSearchParams(params);
+const url = `${APPS_SCRIPT_URL}?${qs.toString()}`;
+console.log("DEBUG calling Apps Script:", url);
+const r = await fetch(url, { method: "GET", headers: { "cache-control": "no-store" } });
+const txt = await r.text();
+console.log("DEBUG raw response:", txt);
+return JSON.parse(txt);
+}
 
 
 export default async function handler(req, res) {
 try {
-if (!APPS_SCRIPT_URL) return res.status(500).json({ ok: false, error: "Missing GOOGLE_SCRIPT_WEBAPP env" });
-
-
 const key = (req.query.key || req.query.licenseKey || "").toString().trim();
 if (!key) return res.status(400).json({ ok: false, error: "Missing license key" });
 
 
-// Try a few modes to stay compatible with your existing Apps Script
 const attempts = [
 { mode: "profileByKey", licenseKey: key },
 { mode: "lookupByKey", licenseKey: key },
 { mode: "profile", licenseKey: key },
-{ mode: "lookup", licenseKey: key }, // some scripts use a generic mode name
+{ mode: "lookup", licenseKey: key }
 ];
 
 
@@ -47,7 +39,6 @@ if (data && (data.licenseKey || data.email || data.orderNo)) break;
 if (!data) return res.status(404).json({ ok: false, error: "Profile not found" });
 
 
-// Normalize payload keys
 const out = {
 ok: true,
 name: data.name || data.fullName || "",
@@ -63,7 +54,7 @@ licenseKey: data.licenseKey || key,
 stripeCustomerId: data.stripeCustomerId || data.customerId || "",
 stripeSubscriptionId: data.stripeSubscriptionId || data.subscriptionId || "",
 stripePaymentId: data.stripePaymentId || data.paymentIntentId || "",
-customerPortalUrl: data.customerPortalUrl || "",
+customerPortalUrl: data.customerPortalUrl || ""
 };
 
 

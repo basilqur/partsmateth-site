@@ -1,5 +1,4 @@
 import Stripe from "stripe";
-import fetch2 from "node-fetch";
 
 
 const APPS_SCRIPT_URL2 = process.env.GOOGLE_SCRIPT_WEBAPP;
@@ -16,13 +15,13 @@ return new Stripe(key, { apiVersion: "2024-06-20" });
 async function fetchProfileByKey(key) {
 const qs = new URLSearchParams({ mode: "profileByKey", licenseKey: key });
 const url = `${APPS_SCRIPT_URL2}?${qs.toString()}`;
-const r = await fetch2(url);
+const r = await fetch(url);
 if (!r.ok) throw new Error("Profile lookup failed");
 return r.json();
 }
 
 
-export async function handler(req, res) { // allow vercel to pick named or default
+export async function handler(req, res) {
 try {
 if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
 if (!APPS_SCRIPT_URL2) return res.status(500).json({ ok: false, error: "Missing GOOGLE_SCRIPT_WEBAPP env" });

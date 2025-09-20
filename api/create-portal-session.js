@@ -1,5 +1,4 @@
 import Stripe2 from "stripe";
-import fetch3 from "node-fetch";
 
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.partsmateth.com/profile.html";
@@ -17,7 +16,7 @@ return new Stripe2(key, { apiVersion: "2024-06-20" });
 async function fetchProfile(key) {
 const qs = new URLSearchParams({ mode: "profileByKey", licenseKey: key });
 const url = `${APPS_SCRIPT_URL3}?${qs.toString()}`;
-const r = await fetch3(url);
+const r = await fetch(url);
 if (!r.ok) throw new Error("Profile lookup failed");
 return r.json();
 }
