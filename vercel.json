@@ -3,6 +3,7 @@
   "builds": [
   { "src": "index.html", "use": "@vercel/static" },
   { "src": "country-options.html", "use": "@vercel/static" },
+  { "src": "profile.html", "use": "@vercel/static" },
   { "src": "payment-success-page.html", "use": "@vercel/static" },
   { "src": "cancel-page.html", "use": "@vercel/static" },
   { "src": "api/*.js", "use": "@vercel/node" }
@@ -10,6 +11,7 @@
 "routes": [
   { "src": "/api/(.*)", "dest": "/api/$1.js" },
   { "src": "/country-options.html", "dest": "/country-options.html" },
+  { "src": "/profile", "dest": "/profile.html" },
   { "src": "/payment-success-page.html", "dest": "/payment-success-page.html" },
   { "src": "/cancel-page.html", "dest": "/cancel-page.html" },
   { "src": "/(.*)", "dest": "/index.html" }

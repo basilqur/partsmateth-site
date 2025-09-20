@@ -182,24 +182,39 @@
     
     <script>
       const navbar = document.getElementById("navbar");
-      const sections = document.querySelectorAll("section");
-      const navLinks = document.querySelectorAll(".nav-link");
-      window.addEventListener("scroll", () => {
-        navbar.classList.toggle("bg-white/90", window.scrollY > 50);
+      const sections = Array.from(document.querySelectorAll("section[id]"));
+      const navLinksHash = Array.from(document.querySelectorAll('.nav-link[href^="#"]'));
+      
+      function setActiveByScroll() {
+        if (navbar) navbar.classList.toggle("bg-white/90", window.scrollY > 50);
         let current = "";
-        sections.forEach((section) => {
-          const sectionTop = section.offsetTop - 100;
-          if (pageYOffset >= sectionTop) {
-            current = section.getAttribute("id");
-          }
-        });
-        navLinks.forEach((link) => {
+        const y = window.pageYOffset || document.documentElement.scrollTop || 0;
+        for (const section of sections) {
+          const top = section.offsetTop - 100;
+          if (y >= top) current = section.id;
+        }
+        navLinksHash.forEach(link => {
           link.classList.remove("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
-          if (link.getAttribute("href") === "#" + current) {
+          if (current && link.getAttribute("href") === `#${current}`) {
             link.classList.add("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
           }
         });
+      }
+      // Smooth-scroll ONLY for hash links
+      navLinksHash.forEach(link => {
+        link.addEventListener("click", e => {
+          const href = link.getAttribute("href");
+          const target = href && document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({
+              behavior: "smooth"
+            });
+          }
+        });
       });
+      window.addEventListener("scroll", setActiveByScroll);
+      window.addEventListener("load", setActiveByScroll);
     </script>
     
     <script>
@@ -265,7 +280,9 @@
           // background log to Google Sheet
           fetch("/api/saveToSheet", {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json'
+              },
               keepalive: true,
               body: JSON.stringify({
                 sheet: "web_support_messages",
@@ -285,7 +302,16 @@
               try {
                 navigator.sendBeacon(
                   "/api/saveToSheet",
-                  new Blob([JSON.stringify({ sheet: "web_support_messages", name, email, phone, country, message })], { type: "application/json" })
+                  new Blob([JSON.stringify({
+                    sheet: "web_support_messages",
+                    name,
+                    email,
+                    phone,
+                    country,
+                    message
+                  })], {
+                    type: "application/json"
+                  })
                 );
               } catch {}
             })
@@ -353,8 +379,16 @@
         }
         const res = await fetch("/api/create-checkout-session", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, phone, plan, country }),
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            plan,
+            country
+          }),
         });
         const data = await res.json();
         if (data.url) {
