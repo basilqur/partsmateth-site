@@ -11,7 +11,7 @@
 "routes": [
   { "src": "/api/(.*)", "dest": "/api/$1.js" },
   { "src": "/country-options.html", "dest": "/country-options.html" },
-  { "src": "/profile", "dest": "/profile.html" },
+  { "src": "/profile.html", "dest": "/profile.html" },
   { "src": "/payment-success-page.html", "dest": "/payment-success-page.html" },
   { "src": "/cancel-page.html", "dest": "/cancel-page.html" },
   { "src": "/(.*)", "dest": "/index.html" }
