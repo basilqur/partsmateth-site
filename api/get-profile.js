@@ -5,12 +5,18 @@ const APPS_SCRIPT_URL = process.env.GOOGLE_SCRIPT_WEBAPP; // e.g. https://script
 
 
 async function callAppsScript(params) {
-const qs = new URLSearchParams(params);
-const url = `${APPS_SCRIPT_URL}?${qs.toString()}`;
-const r = await fetch(url, { method: "GET", headers: { "cache-control": "no-store" } });
-if (!r.ok) throw new Error(`Apps Script error ${r.status}`);
-return r.json();
+  if (!APPS_SCRIPT_URL) {
+    throw new Error("Missing GOOGLE_SCRIPT_WEBAPP env");
+  }
+  const qs = new URLSearchParams(params);
+  const url = `${APPS_SCRIPT_URL}?${qs.toString()}`;
+  console.log("DEBUG calling Apps Script:", url);   // <— will show in Vercel logs
+  const r = await fetch(url, { method: "GET", headers: { "cache-control": "no-store" } });
+  const txt = await r.text();
+  console.log("DEBUG raw response:", txt);
+  return JSON.parse(txt);
 }
+
 
 
 export default async function handler(req, res) {
