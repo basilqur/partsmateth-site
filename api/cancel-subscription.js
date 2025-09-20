@@ -3,17 +3,18 @@ import Stripe from "stripe";
 const APPS_SCRIPT_URL2 = process.env.GOOGLE_SCRIPT_WEBAPP;
 
 function getStripe() {
-  const mode = (process.env.STRIPE_MODE || "test").toLowerCase();
-  let key;
-  if (mode === "live") {
-    key = process.env.STRIPE_SECRET_KEY_LIVE;
-  } else {
-    // fall back to STRIPE_SECRET_KEY or STRIPE_SECRET_KEY_TEST
-    key = process.env.STRIPE_SECRET_KEY_LIVE || process.env.STRIPE_SECRET_KEY_TEST;
-  }
-  if (!key) throw new Error("Missing Stripe secret key env");
-  return new Stripe(key, { apiVersion: "2024-06-20" });
+const mode = (process.env.STRIPE_MODE || "live").toLowerCase();
+let key;
+if (mode === "live") {
+key = process.env.STRIPE_SECRET_KEY_LIVE;
+} else {
+key = process.env.STRIPE_SECRET_KEY_TEST;
 }
+if (!key) throw new Error("Missing Stripe secret key env");
+return new Stripe(key, { apiVersion: "2024-06-20" });
+}
+
+export { getStripe };
 
 async function fetchProfileByKey(key) {
   const qs = new URLSearchParams({ mode: "profileByKey", licenseKey: key });
