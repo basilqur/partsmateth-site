@@ -42,9 +42,18 @@ export default async function handler(req, res) {
 
     const stripe = getStripe();
     const updated = await stripe.subscriptions.update(subId, { cancel_at_period_end: true });
+    await fetch(APPS_SCRIPT_URL2, {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    mode: "markCancelled",
+    licenseKey
+  })
+});
 
     return res.status(200).json({ ok: true, subscription: { id: updated.id, cancel_at_period_end: updated.cancel_at_period_end, current_period_end: updated.current_period_end } });
-  } catch (e) {
+  
+} catch (e) {
     return res.status(500).json({ ok: false, error: e.message || "Server error" });
   }
 }

@@ -121,6 +121,11 @@
         els.error.classList.remove('hidden');
         return;
       }
+      if (data.status && data.status.toUpperCase().includes("TILL END DATE")) {
+  els.cancel.disabled = true;
+  els.cancel.textContent = "Already Cancelled";
+}
+
 
       els.name.textContent=data.name||'';
       els.email.textContent=data.email||'';
@@ -150,7 +155,9 @@
       const out=await res.json().catch(()=>({}));
       if(res.ok&&out.ok){
         alert('Subscription cancelled. Your license remains active until its end date.');
-        els.status.textContent='INACTIVE (scheduled)';
+        els.status.textContent='ACTIVE TILL END DATE';
+        els.cancel.disabled = true;
+        els.cancel.textContent = "Already Cancelled";
       }else{
         alert(out.error||'Could not cancel. Please try again or contact support.');
         els.cancel.disabled=false;
