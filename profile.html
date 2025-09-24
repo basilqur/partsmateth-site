@@ -58,7 +58,7 @@
           <button id="btnCancel" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded disabled:opacity-50" disabled>
             Cancel Subscription
           </button>
-          <button id="btnResume" class="bg-gray-800 hover:bg-black text-white px-5 py-2 rounded disabled:opacity-50" disabled>
+          <button id="btnResume" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded disabled:opacity-50" disabled>
             Resume Subscription
           </button>
         </div>
@@ -122,19 +122,18 @@
         return;
       }
       if (data.status && data.status.toUpperCase().includes("TILL END DATE")) {
-  els.cancel.disabled = true;
-  els.cancel.textContent = "Already Cancelled";
-}else if (data.status && data.status.toUpperCase().includes("INACTIVE")) {
-  els.cancel.disabled = true;
-  els.cancel.textContent = "Already Cancelled";
-}else if (data.status && data.status.toUpperCase().includes("ACTIVE")) {
-  els.cancel.disabled = false;
-  els.cancel.textContent = "Cancel Subscription";
-}
-else {
-  els.cancel.disabled = !(data.stripeSubscriptionId || data.stripePaymentId);
-}
-
+        els.cancel.disabled = true;
+        els.cancel.textContent = "Already Cancelled";
+        els.resume.classList.remove('hidden');
+      } else if (data.status && data.status.toUpperCase().includes("ACTIVE")) {
+        els.cancel.disabled = false;
+        els.cancel.textContent = "Cancel Subscription";
+        els.resume.classList.add('hidden');
+      } else {
+        els.cancel.disabled = true;
+        els.cancel.textContent = "Cancel Subscription";
+        els.resume.classList.add('hidden');
+      }
 
       els.name.textContent=data.name||'';
       els.email.textContent=data.email||'';
@@ -171,13 +170,38 @@ else {
         els.status.textContent = 'ACTIVE TILL END DATE';
         els.cancel.disabled = true;
         els.cancel.textContent = 'Already Cancelled';
-        els.portal.classList.add('hidden');     // hide billing portal button
         els.resume.classList.remove('hidden');  // show resume button
       } else {
         alert(out.error || 'Could not cancel. Please try again or contact support.');
         els.cancel.disabled = false;
       }
     });
+
+    els.resume.addEventListener('click', async () => {
+      if (!confirm('Resume the subscription for this license?')) return;
+      els.resume.disabled = true;
+      const key = els.key.textContent;
+
+      const res = await fetch('/api/resume-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ licenseKey: key })
+      });
+
+      const out = await res.json().catch(() => ({}));
+
+      if (res.ok && out.ok) {
+        alert('Subscription resumed. Auto-renew is active again.');
+        els.status.textContent = 'ACTIVE';
+        els.cancel.disabled = false;
+        els.cancel.textContent = 'Cancel Subscription';
+        els.resume.classList.add('hidden');   // hide resume
+      } else {
+        alert(out.error || 'Could not resume. Please try again or contact support.');
+        els.resume.disabled = false;
+      }
+    });
+
   </script>
 </body>
 </html>
