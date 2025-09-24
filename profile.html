@@ -124,7 +124,11 @@
       if (data.status && data.status.toUpperCase().includes("TILL END DATE")) {
   els.cancel.disabled = true;
   els.cancel.textContent = "Already Cancelled";
-}else {
+}else if (data.status && data.status.toUpperCase().includes("INACTIVE")) {
+  els.cancel.disabled = true;
+  els.cancel.textContent = "Already Cancelled";
+}
+else {
   els.cancel.disabled = !(data.stripeSubscriptionId || data.stripePaymentId);
 }
 
