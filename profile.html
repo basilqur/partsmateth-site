@@ -58,8 +58,8 @@
           <button id="btnCancel" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded disabled:opacity-50" disabled>
             Cancel Subscription
           </button>
-          <button id="btnPortal" class="bg-gray-800 hover:bg-black text-white px-5 py-2 rounded disabled:opacity-50" disabled>
-            Open Billing Portal
+          <button id="btnResume" class="bg-gray-800 hover:bg-black text-white px-5 py-2 rounded disabled:opacity-50" disabled>
+            Resume Subscription
           </button>
         </div>
       </div>
@@ -97,7 +97,7 @@
       key:document.getElementById('pKey'),
       order:document.getElementById('pOrder'),
       cancel:document.getElementById('btnCancel'),
-      portal:document.getElementById('btnPortal')
+      resume:document.getElementById('btnResume')
     };
 
     async function lookupProfile(){
@@ -139,7 +139,6 @@
       els.order.textContent=data.orderNo||'';
 
       els.cancel.disabled=!(data.stripeSubscriptionId||data.stripePaymentId);
-      els.portal.disabled=!(data.customerPortalUrl||data.stripeCustomerId);
 
       els.card.classList.remove('hidden');
       requestAnimationFrame(()=>els.card.classList.add('show'));
@@ -147,28 +146,30 @@
 
     els.lookup.addEventListener('click',lookupProfile);
 
-    els.cancel.addEventListener('click',async()=>{
-      if(!confirm('Cancel the recurring subscription for this license?')) return;
-      els.cancel.disabled=true;
-      const key=els.key.textContent;
-      const res=await fetch('/api/cancel-subscription',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({licenseKey:key})});
-      const out=await res.json().catch(()=>({}));
-      if(res.ok&&out.ok){
-        alert('Subscription cancelled. Your license remains active until its end date.');
-        els.status.textContent='ACTIVE TILL END DATE';
-        els.cancel.disabled = true;
-        els.cancel.textContent = "Already Cancelled";
-      }else{
-        alert(out.error||'Could not cancel. Please try again or contact support.');
-        els.cancel.disabled=false;
-      }
-    });
+    els.cancel.addEventListener('click', async () => {
+      if (!confirm('Cancel the recurring subscription for this license?')) return;
+      els.cancel.disabled = true;
+      const key = els.key.textContent;
 
-    els.portal.addEventListener('click',async()=>{
-      const key=els.key.textContent;
-      const r=await fetch(`/api/create-portal-session?licenseKey=${encodeURIComponent(key)}`);
-      const j=await r.json().catch(()=>({}));
-      if(r.ok&&j.url){window.location.href=j.url}else{alert(j.error||'Unable to open billing portal.')}
+      const res = await fetch('/api/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ licenseKey: key })
+      });
+    
+      const out = await res.json().catch(() => ({}));
+    
+      if (res.ok && out.ok) {
+        alert('Subscription cancelled. Your license remains active until its end date.');
+        els.status.textContent = 'ACTIVE TILL END DATE';
+        els.cancel.disabled = true;
+        els.cancel.textContent = 'Already Cancelled';
+        els.portal.classList.add('hidden');     // hide billing portal button
+        els.resume.classList.remove('hidden');  // show resume button
+      } else {
+        alert(out.error || 'Could not cancel. Please try again or contact support.');
+        els.cancel.disabled = false;
+      }
     });
   </script>
 </body>
