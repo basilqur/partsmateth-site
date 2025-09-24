@@ -127,6 +127,9 @@
 }else if (data.status && data.status.toUpperCase().includes("INACTIVE")) {
   els.cancel.disabled = true;
   els.cancel.textContent = "Already Cancelled";
+}else if (data.status && data.status.toUpperCase().includes("ACTIVE")) {
+  els.cancel.disabled = false;
+  els.cancel.textContent = "Cancel Subscription";
 }
 else {
   els.cancel.disabled = !(data.stripeSubscriptionId || data.stripePaymentId);
