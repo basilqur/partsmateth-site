@@ -124,6 +124,8 @@
       if (data.status && data.status.toUpperCase().includes("TILL END DATE")) {
   els.cancel.disabled = true;
   els.cancel.textContent = "Already Cancelled";
+}else {
+  els.cancel.disabled = !(data.stripeSubscriptionId || data.stripePaymentId);
 }
 
 
@@ -137,8 +139,6 @@
       els.end.textContent=pretty(data.end||'');
       els.key.textContent=data.licenseKey||key;
       els.order.textContent=data.orderNo||'';
-
-      els.cancel.disabled=!(data.stripeSubscriptionId||data.stripePaymentId);
 
       els.card.classList.remove('hidden');
       requestAnimationFrame(()=>els.card.classList.add('show'));
