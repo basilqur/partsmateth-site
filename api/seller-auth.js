@@ -22,12 +22,16 @@ export default async function handler(req, res) {
     }
 
     if (mode === "login") {
-      // Login → verify from sellers sheet
-      const qs = new URLSearchParams({ mode: "sellerLogin", sellerCode, password });
-      const r = await fetch(`${SCRIPT_URL}?${qs}`);
-      const data = await r.json();
-      return res.status(200).json(data);
-    }
+  const payload = { mode: "sellerLogin", sellerCode, password };
+  const r = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  const data = await r.json();
+  return res.status(200).json(data);
+}
+
 
     return res.status(400).json({ ok: false, error: "Invalid mode" });
   } catch (e) {
