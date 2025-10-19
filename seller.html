@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Portal | PartsMateTH</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white border-b">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl font-semibold text-gray-800">PartsMateTH</a>
+      <nav class="space-x-4 text-sm">
+        <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
+        <a href="/profile.html" class="text-gray-600 hover:text-gray-900">My Profile</a>
+        <a href="/seller.html" class="text-blue-600 font-medium">Seller Portal</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="max-w-3xl mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-4 text-center text-blue-600">Seller Portal</h1>
+    <p class="text-center text-gray-600 mb-10">Login or sign up to manage your seller account.</p>
+
+    <div id="seller-container" class="bg-white rounded-xl shadow p-6">
+      <!-- Tabs -->
+<div class="flex justify-center mb-6 space-x-6">
+  <button id="tabLogin" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Login</button>
+  <button id="tabSignup" class="text-gray-600 hover:text-blue-600 pb-1">Sign Up</button>
+</div>
+
+<!-- Login Form -->
+<form id="sellerLogin" class="space-y-4">
+  <input type="text" id="loginCode" placeholder="Seller Code" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="password" id="loginPassword" placeholder="Password" required class="w-full border rounded-lg px-4 py-2" />
+  <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Login</button>
+</form>
+
+<!-- Signup Form -->
+<form id="sellerSignup" class="space-y-4 hidden">
+  <input type="text" id="signupCode" placeholder="Seller Code" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="email" id="signupEmail" placeholder="Email" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="password" id="signupPassword" placeholder="Password" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="tel" id="signupPhone" placeholder="Phone Number" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="text" id="authCode" placeholder="Authorization Code" required class="w-full border rounded-lg px-4 py-2" />
+  <p class="text-xs text-gray-500">You need an authorization code to become a seller. Contact us to get one.</p>
+  <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Sign Up</button>
+</form>
+
+<script>
+  const tabLogin = document.getElementById("tabLogin");
+  const tabSignup = document.getElementById("tabSignup");
+  const formLogin = document.getElementById("sellerLogin");
+  const formSignup = document.getElementById("sellerSignup");
+
+  tabLogin.onclick = () => {
+    formLogin.classList.remove("hidden");
+    formSignup.classList.add("hidden");
+    tabLogin.classList.add("text-blue-600","font-semibold","border-b-2","border-blue-600");
+    tabSignup.classList.remove("text-blue-600","border-blue-600");
+  };
+
+  tabSignup.onclick = () => {
+    formSignup.classList.remove("hidden");
+    formLogin.classList.add("hidden");
+    tabSignup.classList.add("text-blue-600","font-semibold","border-b-2","border-blue-600");
+    tabLogin.classList.remove("text-blue-600","border-blue-600");
+  };
+</script>
+    </div>
+  </main>
+<script>
+async function postSeller(data) {
+  const res = await fetch("/api/seller-auth", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  return res.json();
+}
+
+// --- Signup handler ---
+document.getElementById("sellerSignup").addEventListener("submit", async e => {
+  e.preventDefault();
+  const payload = {
+    mode: "signup",
+    sellerCode: document.getElementById("signupCode").value.trim(),
+    email: document.getElementById("signupEmail").value.trim(),
+    password: document.getElementById("signupPassword").value.trim(),
+    phone: document.getElementById("signupPhone").value.trim(),
+    authCode: document.getElementById("authCode").value.trim()
+  };
+  const res = await postSeller(payload);
+  alert(res.ok ? "✅ Signup successful!" : "❌ " + res.error);
+});
+
+// --- Login handler ---
+document.getElementById("sellerLogin").addEventListener("submit", async e => {
+  e.preventDefault();
+  const payload = {
+    mode: "login",
+    sellerCode: document.getElementById("loginCode").value.trim(),
+    password: document.getElementById("loginPassword").value.trim()
+  };
+  const res = await postSeller(payload);
+  if (res.ok) {
+    alert("✅ Login successful!");
+    localStorage.setItem("sellerData", JSON.stringify(res.seller));
+    window.location.href = "/seller-dashboard.html";
+  } else {
+    alert("❌ " + res.error);
+  }
+});
+</script>
+
+</body>
+</html>

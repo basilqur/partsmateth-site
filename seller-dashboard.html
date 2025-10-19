@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Dashboard | PartsMateTH</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white border-b">
+    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl font-semibold text-gray-800">PartsMateTH</a>
+      <nav class="space-x-4 text-sm">
+        <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
+        <a href="/seller.html" class="text-gray-600 hover:text-gray-900">Seller Portal</a>
+        <a href="#" id="logoutBtn" class="text-red-500 hover:text-red-600">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Dashboard -->
+  <main class="max-w-4xl mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-6 text-center text-blue-600">Seller Dashboard</h1>
+    <div id="sellerInfo" class="bg-white rounded-xl shadow p-6 mb-6 text-center">
+      <p id="sellerCode" class="text-lg font-semibold"></p>
+      <p id="sellerTier" class="text-gray-600"></p>
+      <p id="sellerSales" class="mt-2"></p>
+      <p id="sellerRevenue" class="text-green-600 font-semibold"></p>
+    </div>
+
+    <!-- Actions -->
+    <div class="grid md:grid-cols-3 gap-4">
+      <button id="btnCreateInvite" class="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">Create Invite Code</button>
+      <button id="btnViewInvites" class="bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700">View Invites</button>
+      <button id="btnWithdraw" class="bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">Request Withdraw</button>
+    </div>
+
+    <p id="actionMsg" class="text-center mt-6 text-blue-600 font-semibold"></p>
+  </main>
+
+<script>
+const seller = JSON.parse(localStorage.getItem("sellerData") || "{}");
+if (!seller.code) window.location.href = "/seller.html";
+
+document.getElementById("sellerCode").textContent = "Seller Code: " + seller.code;
+document.getElementById("sellerTier").textContent = "Tier: " + (seller.tier || "Silver");
+document.getElementById("sellerSales").textContent = "Total Subscriptions Sold: " + (seller.sales || 0);
+document.getElementById("sellerRevenue").textContent = "Total Revenue: AED " + (seller.revenue || 0);
+
+document.getElementById("logoutBtn").onclick = () => {
+  localStorage.removeItem("sellerData");
+  window.location.href = "/seller.html";
+};
+
+async function postInvite(data) {
+  const res = await fetch("/api/seller-invites", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  return res.json();
+}
+
+document.getElementById("btnCreateInvite").onclick = async () => {
+  const custom = prompt("Enter custom invite code (leave blank for random):")?.trim().toUpperCase();
+  const res = await postInvite({
+    mode: "create",
+    sellerCode: seller.code,
+    inviteCode: custom || "",
+    random: !custom
+  });
+  document.getElementById("actionMsg").textContent = res.ok
+    ? `✅ Created: ${res.inviteCode}`
+    : `❌ ${res.error}`;
+};
+
+document.getElementById("btnViewInvites").onclick = async () => {
+  const res = await postInvite({ mode: "list", sellerCode: seller.code });
+  if (!res.ok) return alert("❌ " + res.error);
+  const list = res.invites || [];
+  if (!list.length) return alert("No invites yet.");
+  const msg = list.map(i => `${i.code} — ${i.status} — Uses: ${i.uses}`).join("\n");
+  alert("📋 Your Invites:\n\n" + msg);
+};
+
+document.getElementById("btnWithdraw").onclick = () => {
+  alert("💸 Withdraw system coming next phase");
+};
+</script>
+
+
+</body>
+</html>
