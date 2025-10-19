@@ -18,11 +18,16 @@ export default async function handler(req, res) {
     }
 
     if (mode === "list") {
-      const qs = new URLSearchParams({ mode: "sellerInviteList", sellerCode });
-      const r = await fetch(`${SCRIPT_URL}?${qs}`);
-      const data = await r.json();
-      return res.status(200).json(data);
-    }
+  const payload = { mode: "sellerInviteList", sellerCode };
+  const r = await fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  const data = await r.json();
+  return res.status(200).json(data);
+}
+
 
     res.status(400).json({ ok: false, error: "Invalid mode" });
   } catch (e) {
