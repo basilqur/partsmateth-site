@@ -1,208 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Profile | PartsMateTH</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .fade-in{opacity:0;transition:opacity .5s ease}.fade-in.show{opacity:1}
-  </style>
-</head>
-<body class="bg-gray-100 min-h-screen">
-  <!-- Header -->
-  <header class="bg-white border-b">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="/" class="text-xl font-semibold text-gray-800">PartsMateTH</a>
-      <nav class="space-x-4 text-sm">
-        <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
-        <a href="/profile.html" class="text-blue-600 font-medium">My Profile</a>
-        <a href="/seller.html" class="text-gray-600 hover:text-gray-900">Seller Portal</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main -->
-  <main class="max-w-3xl mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
-    <p class="text-gray-600 mb-8">Enter your license key to view subscription details and manage billing.</p>
-
-    <div class="bg-white rounded-xl shadow p-6">
-      <div class="grid gap-3 sm:flex sm:items-center">
-        <input id="licenseInput" type="text" placeholder="EF6B-1855-C66D-3493-D947-D98E" class="flex-1 w-full px-4 py-3 border rounded-lg" />
-        <button id="btnLookup" class="mt-2 sm:mt-0 sm:ml-3 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg">Lookup</button>
+  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile | PartsMateTH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --c1: 0, 166, 201;
+        /* turquoise */
+        --c2: 16, 185, 129;
+        /* emerald */
+      }
+      
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, rgba(var(--c1), 0.9), rgba(var(--c2), 0.95));
+        background-attachment: fixed;
+        overflow-x: hidden;
+        color: white;
+        font-family: 'Poppins', 'Inter', sans-serif;
+      }
+      
+      #bgParticles {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        filter: contrast(120%) brightness(110%);
+      }
+      
+      .glass {
+        background: rgba(255, 255, 255, .14);
+        border: 1px solid rgba(255, 255, 255, .25);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 24px 40px rgba(0, 0, 0, .25);
+      }
+      
+      .nav-glass {
+        background: rgba(255, 255, 255, .12);
+        border-bottom: 1px solid rgba(255, 255, 255, .25);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      
+      .brand-pill {
+        background: linear-gradient(90deg, rgba(var(--c1), 1), rgba(var(--c2), 1));
+      }
+      
+      .btn {
+        transition: all .22s ease;
+        border-radius: .75rem;
+        padding: .8rem 1.1rem;
+        font-weight: 500;
+      }
+      
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .20);
+      }
+      
+      .fade-in {
+        opacity: 0;
+        transition: opacity .5s ease
+      }
+      
+      .fade-in.show {
+        opacity: 1
+      }
+      
+      input::placeholder {
+        color: #94a3b8
+      }
+    </style>
+  </head>
+  
+  <body>
+    <canvas id="bgParticles"></canvas>
+    
+    <!-- Header -->
+    <header class="nav-glass sticky top-0 z-10">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between text-white">
+        <a href="/" class="flex items-center gap-2 text-xl font-semibold">
+          <span>PartsMateTH</span>
+        </a>
+        <nav class="space-x-4 text-sm">
+          <a href="/" class="text-white/80 hover:text-white">Home</a>
+          <a href="/profile.html" class="text-white font-medium underline underline-offset-4">My Profile</a>
+          <a href="/seller.html" class="text-white/80 hover:text-white">Seller Portal</a>
+        </nav>
       </div>
-
-      <div id="profileLoading" class="hidden flex justify-center items-center py-8">
-        <svg class="animate-spin h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-        </svg>
+    </header>
+    
+    <!-- Main -->
+    <main class="relative z-10 max-w-3xl mx-auto px-4 py-10">
+      <div class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-semibold tracking-tight">My Profile</h1>
+        <p class="text-white/80 mt-1">Enter your license key to view subscription details and manage billing.</p>
       </div>
-
-      <p id="profileError" class="hidden text-red-600 font-medium mt-4"></p>
-
-      <div id="profileCard" class="hidden fade-in mt-6 text-left bg-gray-50 border rounded-xl p-5">
-        <div class="grid sm:grid-cols-2 gap-x-6 gap-y-2">
-          <p><span class="font-semibold">Name:</span> <span id="pName"></span></p>
-          <p><span class="font-semibold">Email:</span> <span id="pEmail"></span></p>
-          <p><span class="font-semibold">Phone:</span> <span id="pPhone"></span></p>
-          <p><span class="font-semibold">Country:</span> <span id="pCountry"></span></p>
-          <p><span class="font-semibold">Plan:</span> <span id="pPlan"></span></p>
-          <p><span class="font-semibold">Status:</span> <span id="pStatus"></span></p>
-          <p><span class="font-semibold">Start Date:</span> <span id="pStart"></span></p>
-          <p><span class="font-semibold">End Date:</span> <span id="pEnd"></span></p>
-          <p class="sm:col-span-2"><span class="font-semibold">License Key:</span> <span id="pKey" class="font-mono"></span></p>
-          <p class="sm:col-span-2"><span class="font-semibold">Order No:</span> <span id="pOrder"></span></p>
+      
+      <div class="glass rounded-2xl p-6 md:p-8">
+        <div class="grid gap-3 md:flex md:items-center">
+          <input id="licenseInput" type="text" placeholder="EF6B-1855-C66D-3493-D947-D98E" class="flex-1 w-full px-4 py-3 rounded-lg bg-white/10 border border-white/25 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+          <button id="btnLookup" class="btn mt-2 md:mt-0 md:ml-3 bg-white text-gray-900 hover:bg-gray-100">Lookup</button>
         </div>
-        <div class="mt-5 flex flex-wrap gap-3">
-          <button id="btnCancel" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded disabled:opacity-50" disabled>
-            Cancel Subscription
-          </button>
-          <button id="btnResume" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded disabled:opacity-50" disabled>
-            Resume Subscription
-          </button>
+        
+        <div id="profileLoading" class="hidden flex justify-center items-center py-8">
+          <svg class="animate-spin h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          </svg>
+        </div>
+        
+        <p id="profileError" class="hidden text-red-200 font-medium mt-4"></p>
+        
+        <div id="profileCard" class="hidden fade-in mt-6 text-left rounded-xl p-5 bg-white/5 border border-white/20">
+          <div class="grid sm:grid-cols-2 gap-x-6 gap-y-2 text-white">
+            <p><span class="font-semibold">Name:</span> <span id="pName"></span></p>
+            <p><span class="font-semibold">Email:</span> <span id="pEmail"></span></p>
+            <p><span class="font-semibold">Phone:</span> <span id="pPhone"></span></p>
+            <p><span class="font-semibold">Country:</span> <span id="pCountry"></span></p>
+            <p><span class="font-semibold">Plan:</span> <span id="pPlan"></span></p>
+            <p><span class="font-semibold">Status:</span> <span id="pStatus"></span></p>
+            <p><span class="font-semibold">Start Date:</span> <span id="pStart"></span></p>
+            <p><span class="font-semibold">End Date:</span> <span id="pEnd"></span></p>
+            <p class="sm:col-span-2"><span class="font-semibold">License Key:</span> <span id="pKey" class="font-mono"></span></p>
+            <p class="sm:col-span-2"><span class="font-semibold">Order No:</span> <span id="pOrder"></span></p>
+          </div>
+          <div class="mt-5 flex flex-wrap gap-3">
+            <button id="btnCancel" class="btn bg-red-600 hover:bg-red-700 text-white disabled:opacity-50" disabled>Cancel Subscription</button>
+            <button id="btnResume" class="btn bg-emerald-500 hover:bg-emerald-600 text-white disabled:opacity-50" disabled>Resume Subscription</button>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="mt-10 py-6 text-center text-sm text-gray-500">
-    © <span id="year"></span> PartsMateTH. All rights reserved.
-  </footer>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Pretty date
-    function pretty(d){const dt=new Date(d);return isNaN(dt)?d:dt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
-
-    // Backoff fetch
-    async function backoff(url, opts={}, tries=5){let delay=500;for(let i=1;i<=tries;i++){try{const r=await fetch(url,{cache:'no-store',...opts});if(r.ok) return await r.json()}catch{}if(i<tries) await new Promise(res=>setTimeout(res,delay));delay=Math.min(delay*2,4000)}return null}
-
-    const els={
-      license:document.getElementById('licenseInput'),
-      lookup:document.getElementById('btnLookup'),
-      loading:document.getElementById('profileLoading'),
-      error:document.getElementById('profileError'),
-      card:document.getElementById('profileCard'),
-      name:document.getElementById('pName'),
-      email:document.getElementById('pEmail'),
-      phone:document.getElementById('pPhone'),
-      country:document.getElementById('pCountry'),
-      plan:document.getElementById('pPlan'),
-      status:document.getElementById('pStatus'),
-      start:document.getElementById('pStart'),
-      end:document.getElementById('pEnd'),
-      key:document.getElementById('pKey'),
-      order:document.getElementById('pOrder'),
-      cancel:document.getElementById('btnCancel'),
-      resume:document.getElementById('btnResume')
-    };
-
-    async function lookupProfile(){
-      const key=els.license.value.trim();
-      if(!key||key.length<10){
-        els.error.textContent='Please enter a valid license key.';
-        els.error.classList.remove('hidden');
+      
+      <footer class="mt-10 py-6 text-center text-sm text-white/70">
+        © <span id="year"></span> PartsMateTH. All rights reserved.
+      </footer>
+    </main>
+    
+    <!-- Particles -->
+    <script>
+      (() => {
+        const canvas = document.getElementById('bgParticles');
+        const ctx = canvas.getContext('2d');
+        let w, h, dpr, particles = [],
+          pointer = { x: null, y: null };
+        
+        function resize() { dpr = window.devicePixelRatio || 1;
+          w = canvas.width = innerWidth * dpr;
+          h = canvas.height = innerHeight * dpr;
+          canvas.style.width = innerWidth + 'px';
+          canvas.style.height = innerHeight + 'px'; }
+        addEventListener('resize', resize);
+        resize();
+        const COUNT = Math.min(130, Math.floor((innerWidth * innerHeight) / 13000));
+        const rand = (a, b) => a + Math.random() * (b - a);
+        
+        function init() { particles = Array.from({ length: COUNT }).map(() => ({ x: rand(0, w), y: rand(0, h), vx: rand(-.2, .2), vy: rand(-.2, .2), r: rand(1, 2.2) * dpr, hue: rand(170, 195) })); }
+        init();
+        addEventListener('pointermove', e => { const r = canvas.getBoundingClientRect();
+          pointer.x = (e.clientX - r.left) * dpr;
+          pointer.y = (e.clientY - r.top) * dpr; });
+        addEventListener('pointerleave', () => { pointer.x = pointer.y = null });
+        
+        function step() { ctx.clearRect(0, 0, w, h); for (const p of particles) { if (pointer.x) { const dx = p.x - pointer.x,
+                dy = p.y - pointer.y,
+                d2 = dx * dx + dy * dy,
+                f = Math.min(100000 / (d2 + 10000), .6);
+              p.vx += (dx / d2) * f;
+              p.vy += (dy / d2) * f; } p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= .985;
+            p.vy *= .985; if (p.x < 0) p.x = w; if (p.x > w) p.x = 0; if (p.y < 0) p.y = h; if (p.y > h) p.y = 0; } ctx.globalCompositeOperation = 'lighter'; for (const p of particles) { ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${p.hue},70%,60%,.8)`;
+            ctx.fill(); } ctx.globalCompositeOperation = 'source-over';
+          requestAnimationFrame(step); } requestAnimationFrame(step);
+      })();
+    </script>
+    
+    <!-- Original page logic preserved -->
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      
+      function pretty(d) { const dt = new Date(d); return isNaN(dt) ? d : dt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }
+      async function backoff(url, opts = {}, tries = 5) { let delay = 500; for (let i = 1; i <= tries; i++) { try { const r = await fetch(url, { cache: 'no-store', ...opts }); if (r.ok) return await r.json() } catch {} if (i < tries) await new Promise(res => setTimeout(res, delay));
+          delay = Math.min(delay * 2, 4000) } return null }
+      const els = { license: document.getElementById('licenseInput'), lookup: document.getElementById('btnLookup'), loading: document.getElementById('profileLoading'), error: document.getElementById('profileError'), card: document.getElementById('profileCard'), name: document.getElementById('pName'), email: document.getElementById('pEmail'), phone: document.getElementById('pPhone'), country: document.getElementById('pCountry'), plan: document.getElementById('pPlan'), status: document.getElementById('pStatus'), start: document.getElementById('pStart'), end: document.getElementById('pEnd'), key: document.getElementById('pKey'), order: document.getElementById('pOrder'), cancel: document.getElementById('btnCancel'), resume: document.getElementById('btnResume') };
+      async function lookupProfile() {
+        const key = els.license.value.trim();
+        if (!key || key.length < 10) { els.error.textContent = 'Please enter a valid license key.';
+          els.error.classList.remove('hidden');
+          els.card.classList.add('hidden'); return; } els.error.classList.add('hidden');
         els.card.classList.add('hidden');
-        return;
+        els.loading.classList.remove('hidden');
+        const data = await backoff(`/api/get-profile?key=${encodeURIComponent(key)}`);
+        els.loading.classList.add('hidden');
+        if (!data || !data.ok) { els.error.textContent = (data && data.error) || 'Profile not found for this key.';
+          els.error.classList.remove('hidden'); return; }
+        if (data.status && data.status.toUpperCase().includes('TILL END DATE')) { els.cancel.disabled = true;
+          els.cancel.textContent = 'Already Cancelled';
+          els.resume.classList.remove('hidden'); } else if (data.status && data.status.toUpperCase().includes('ACTIVE')) { els.cancel.disabled = false;
+          els.cancel.textContent = 'Cancel Subscription';
+          els.resume.classList.add('hidden'); } else { els.cancel.disabled = true;
+          els.cancel.textContent = 'Cancel Subscription';
+          els.resume.classList.add('hidden'); }
+        els.name.textContent = data.name || '';
+        els.email.textContent = data.email || '';
+        els.phone.textContent = data.phone || '';
+        els.country.textContent = data.country || '';
+        els.plan.textContent = data.plan || '';
+        els.status.textContent = data.status || '';
+        els.start.textContent = pretty(data.start || '');
+        els.end.textContent = pretty(data.end || '');
+        els.key.textContent = data.licenseKey || key;
+        els.order.textContent = data.orderNo || '';
+        els.card.classList.remove('hidden');
+        requestAnimationFrame(() => els.card.classList.add('show'));
       }
-      els.error.classList.add('hidden');
-      els.card.classList.add('hidden');
-      els.loading.classList.remove('hidden');
-
-      // TODO: implement this API on server (Apps Script/Sheets lookup by licenseKey)
-      const data=await backoff(`/api/get-profile?key=${encodeURIComponent(key)}`);
-
-      els.loading.classList.add('hidden');
-      if(!data||!data.ok){
-        els.error.textContent=(data&&data.error)||'Profile not found for this key.';
-        els.error.classList.remove('hidden');
-        return;
-      }
-      if (data.status && data.status.toUpperCase().includes("TILL END DATE")) {
-        els.cancel.disabled = true;
-        els.cancel.textContent = "Already Cancelled";
-        els.resume.classList.remove('hidden');
-      } else if (data.status && data.status.toUpperCase().includes("ACTIVE")) {
-        els.cancel.disabled = false;
-        els.cancel.textContent = "Cancel Subscription";
-        els.resume.classList.add('hidden');
-      } else {
-        els.cancel.disabled = true;
-        els.cancel.textContent = "Cancel Subscription";
-        els.resume.classList.add('hidden');
-      }
-
-      els.name.textContent=data.name||'';
-      els.email.textContent=data.email||'';
-      els.phone.textContent=data.phone||'';
-      els.country.textContent=data.country||'';
-      els.plan.textContent=data.plan||'';
-      els.status.textContent=data.status||'';
-      els.start.textContent=pretty(data.start||'');
-      els.end.textContent=pretty(data.end||'');
-      els.key.textContent=data.licenseKey||key;
-      els.order.textContent=data.orderNo||'';
-
-      els.card.classList.remove('hidden');
-      requestAnimationFrame(()=>els.card.classList.add('show'));
-    }
-
-    els.lookup.addEventListener('click',lookupProfile);
-
-    els.cancel.addEventListener('click', async () => {
-      if (!confirm('Cancel the recurring subscription for this license?')) return;
-      els.cancel.disabled = true;
-      const key = els.key.textContent;
-
-      const res = await fetch('/api/cancel-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ licenseKey: key })
-      });
-    
-      const out = await res.json().catch(() => ({}));
-    
-      if (res.ok && out.ok) {
-        alert('Subscription cancelled. Your license remains active until its end date.');
-        els.status.textContent = 'ACTIVE TILL END DATE';
-        els.cancel.disabled = true;
-        els.cancel.textContent = 'Already Cancelled';
-        els.resume.classList.remove('hidden');  // show resume button
-      } else {
-        alert(out.error || 'Could not cancel. Please try again or contact support.');
-        els.cancel.disabled = false;
-      }
-    });
-
-    els.resume.addEventListener('click', async () => {
-      if (!confirm('Resume the subscription for this license?')) return;
-      els.resume.disabled = true;
-      const key = els.key.textContent;
-
-      const res = await fetch('/api/resume-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ licenseKey: key })
-      });
-
-      const out = await res.json().catch(() => ({}));
-
-      if (res.ok && out.ok) {
-        alert('Subscription resumed. Auto-renew is active again.');
-        els.status.textContent = 'ACTIVE';
-        els.cancel.disabled = false;
-        els.cancel.textContent = 'Cancel Subscription';
-        els.resume.classList.add('hidden');   // hide resume
-      } else {
-        alert(out.error || 'Could not resume. Please try again or contact support.');
-        els.resume.disabled = false;
-      }
-    });
-
-  </script>
-</body>
+      els.lookup.addEventListener('click', lookupProfile);
+      els.cancel.addEventListener('click', async () => { if (!confirm('Cancel the recurring subscription for this license?')) return;
+        els.cancel.disabled = true; const key = els.key.textContent; const res = await fetch('/api/cancel-subscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ licenseKey: key }) }); const out = await res.json().catch(() => ({})); if (res.ok && out.ok) { alert('Subscription cancelled. Your license remains active until its end date.');
+          els.status.textContent = 'ACTIVE TILL END DATE';
+          els.cancel.disabled = true;
+          els.cancel.textContent = 'Already Cancelled';
+          els.resume.classList.remove('hidden'); } else { alert(out.error || 'Could not cancel. Please try again or contact support.');
+          els.cancel.disabled = false; } });
+      els.resume.addEventListener('click', async () => { if (!confirm('Resume the subscription for this license?')) return;
+        els.resume.disabled = true; const key = els.key.textContent; const res = await fetch('/api/resume-subscription', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ licenseKey: key }) }); const out = await res.json().catch(() => ({})); if (res.ok && out.ok) { alert('Subscription resumed. Auto-renew is active again.');
+          els.status.textContent = 'ACTIVE';
+          els.cancel.disabled = false;
+          els.cancel.textContent = 'Cancel Subscription';
+          els.resume.classList.add('hidden'); } else { alert(out.error || 'Could not resume. Please try again or contact support.');
+          els.resume.disabled = false; } });
+    </script>
+  </body>
+  
 </html>

@@ -2,142 +2,229 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment Successful | PartsMateTH</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      .fade-in { opacity: 0; transition: opacity 0.8s ease-in-out; }
-      .fade-in.show { opacity: 1; }
+      :root {
+        --c1: 0,166,201; /* bright turquoise */
+        --c2: 16,185,129; /* emerald */
+      }
+      body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, rgba(var(--c1),0.9), rgba(var(--c2),0.95));
+        background-attachment: fixed;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Poppins','Inter',sans-serif;
+        color: white;
+      }
+      #bgParticles {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        filter: contrast(120%) brightness(110%);
+      }
+      .glass {
+        position: relative;
+        z-index: 10;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        box-shadow: 0 25px 40px rgba(0,0,0,0.25);
+        text-align: center;
+      }
+      .accent-pill {
+        background: linear-gradient(90deg, rgba(var(--c1),1), rgba(var(--c2),1));
+      }
+      .btn {
+        transition: all 0.25s ease;
+        font-weight: 500;
+        border-radius: 0.75rem;
+        padding: 0.8rem 1.25rem;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      }
     </style>
   </head>
+  <body>
+    <canvas id="bgParticles"></canvas>
 
-  <body class="bg-gradient-to-br from-blue-500 to-teal-400 min-h-screen flex items-center justify-center px-4 text-white">
-    <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-8 text-center text-gray-800">
-      <h1 class="text-3xl font-bold text-green-600 mb-4">✅ Payment Successful</h1>
-      <p class="text-lg mb-2">Thank you for subscribing to <strong>PartsMateTH</strong>.</p>
+    <div class="glass max-w-lg w-full text-gray-900">
+      <div class="flex justify-center items-center gap-3 mb-6">
+        <div class="accent-pill w-12 h-12 rounded-xl grid place-items-center shadow-md">
+          <span class="text-2xl text-white">✔</span>
+        </div>
+        <h1 class="text-3xl font-semibold text-white">Payment Successful</h1>
+      </div>
+      <p class="text-white/90 text-lg mb-4">Thank you for subscribing to <strong>PartsMateTH</strong>.</p>
 
       <!-- Loading spinner -->
       <div id="loading" class="flex justify-center items-center py-6">
-        <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
         </svg>
       </div>
 
       <!-- Dynamic info -->
-      <div id="orderDetails" class="fade-in hidden">
-        <p id="orderInfo" class="mb-2 text-lg font-semibold"></p>
-        <p id="planInfo" class="mb-1 text-md text-gray-700"></p>
-        <p id="dateInfo" class="mb-4 text-md text-gray-600"></p>
+      <div id="orderDetails" class="hidden opacity-0 transition-opacity duration-700">
+        <p id="orderInfo" class="mb-2 text-lg font-semibold text-white"></p>
+        <p id="planInfo" class="mb-1 text-md text-white/80"></p>
+        <p id="dateInfo" class="mb-4 text-md text-white/70"></p>
 
-        <!-- License Key Reveal -->
-        <button id="revealBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded">
-          Click to Reveal License Key
-        </button>
+        <button id="revealBtn" class="btn bg-white text-gray-900 hover:bg-gray-100">Click to Reveal License Key</button>
 
         <div id="licenseContainer" class="mt-4 hidden flex items-center justify-center space-x-2">
-          <p id="licenseKey" class="text-xl font-mono text-green-600"></p>
-          <button id="copyBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-3 py-1 rounded">
-            Copy
-          </button>
+          <p id="licenseKey" class="text-xl font-mono text-lime-400"></p>
+          <button id="copyBtn" class="bg-white/20 hover:bg-white/30 text-white text-sm px-3 py-1 rounded">Copy</button>
         </div>
       </div>
 
-      <!-- Back Home -->
-      <a href="/" class="mt-6 inline-block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-6 rounded">
-        Return to Home
-      </a>
+      <a href="/" class="mt-6 inline-block btn bg-white text-gray-900 hover:bg-gray-100">Return to Home</a>
     </div>
 
     <script>
-      // Pretty date helper (supports ISO or YYYY-MM-DD)
-      function pretty(d) {
-        const dt = new Date(d);
-        if (isNaN(dt)) return d;
-        return dt.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+      (() => {
+        const canvas = document.getElementById('bgParticles');
+        const ctx = canvas.getContext('2d');
+        let w,h,dpr,particles=[],pointer={x:null,y:null};
+
+        function resize(){
+          dpr = window.devicePixelRatio || 1;
+          w = canvas.width = innerWidth * dpr;
+          h = canvas.height = innerHeight * dpr;
+          canvas.style.width = innerWidth + 'px';
+          canvas.style.height = innerHeight + 'px';
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const COUNT = Math.min(120, Math.floor((innerWidth * innerHeight) / 14000));
+        function rand(a,b){return a + Math.random()*(b-a)}
+        function init(){
+          particles = Array.from({length: COUNT}).map(()=>({
+            x: rand(0,w), y: rand(0,h),
+            vx: rand(-0.2,0.2), vy: rand(-0.2,0.2),
+            r: rand(1,2.2)*dpr,
+            hue: rand(160,190)
+          }));
+        }
+        init();
+
+        window.addEventListener('pointermove', e=>{
+          const rect = canvas.getBoundingClientRect();
+          pointer.x = (e.clientX - rect.left) * dpr;
+          pointer.y = (e.clientY - rect.top) * dpr;
+        });
+        window.addEventListener('pointerleave', ()=>{pointer.x=pointer.y=null});
+
+        function step(){
+          ctx.clearRect(0,0,w,h);
+          for(const p of particles){
+            if(pointer.x){
+              const dx=p.x-pointer.x, dy=p.y-pointer.y;
+              const d2=dx*dx+dy*dy;
+              const force=Math.min(100000/(d2+10000),0.6);
+              p.vx+=(dx/d2)*force; p.vy+=(dy/d2)*force;
+            }
+            p.x+=p.vx; p.y+=p.vy;
+            p.vx*=0.985; p.vy*=0.985;
+            if(p.x<0)p.x=w; if(p.x>w)p.x=0; if(p.y<0)p.y=h; if(p.y>h)p.y=0;
+          }
+          ctx.globalCompositeOperation='lighter';
+          for(const p of particles){
+            ctx.beginPath();
+            ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+            ctx.fillStyle=`hsla(${p.hue},70%,60%,0.8)`;
+            ctx.fill();
+          }
+          ctx.globalCompositeOperation='source-over';
+          requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      })();
+
+      // existing page logic kept intact
+      function pretty(d){
+        const dt=new Date(d);
+        if(isNaN(dt))return d;
+        return dt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
       }
 
-      // Exponential backoff fetch helper
-      async function fetchWithBackoff(url, tries = 6) {
-        let delay = 500; // start at 0.5s
-        for (let i = 1; i <= tries; i++) {
-          try {
-            const r = await fetch(url, { cache: "no-store" });
-            if (r.ok) return await r.json();
-          } catch (e) { /* retry */ }
-          if (i < tries) {
-            await new Promise(res => setTimeout(res, delay));
-            delay = Math.min(delay * 2, 4000); // cap at 4s
-          }
+      async function fetchWithBackoff(url, tries=6){
+        let delay=500;
+        for(let i=1;i<=tries;i++){
+          try{
+            const r=await fetch(url,{cache:'no-store'});
+            if(r.ok)return await r.json();
+          }catch(e){}
+          if(i<tries){await new Promise(res=>setTimeout(res,delay)); delay=Math.min(delay*2,4000);}
         }
         return null;
       }
 
-      window.onload = async () => {
-        const params = new URLSearchParams(window.location.search);
-        const email = params.get("email");
+      window.onload=async()=>{
+        const params=new URLSearchParams(window.location.search);
+        const email=params.get('email');
+        document.getElementById('loading').classList.remove('hidden');
+        document.getElementById('orderDetails').classList.add('hidden');
 
-        // Show loading state
-        document.getElementById("loading").classList.remove("hidden");
-        document.getElementById("orderDetails").classList.add("hidden");
-
-        if (!email) {
-          // No email in query
-          document.getElementById("loading").classList.add("hidden");
-          const details = document.getElementById("orderDetails");
-          details.classList.remove("hidden");
-          setTimeout(() => details.classList.add("show"), 50);
-          document.getElementById("orderInfo").textContent = "Missing email. Please return to Home and try again.";
+        if(!email){
+          document.getElementById('loading').classList.add('hidden');
+          const details=document.getElementById('orderDetails');
+          details.classList.remove('hidden');
+          setTimeout(()=>details.classList.remove('opacity-0'),50);
+          document.getElementById('orderInfo').textContent='Missing email. Please return to Home and try again.';
           return;
         }
 
-        // Fetch with backoff to avoid race with webhook/AppScript write
-        const data = await fetchWithBackoff(`/api/get-latest-order?email=${encodeURIComponent(email)}`);
+        const data=await fetchWithBackoff(`/api/get-latest-order?email=${encodeURIComponent(email)}`);
+        document.getElementById('loading').classList.add('hidden');
+        const details=document.getElementById('orderDetails');
+        details.classList.remove('hidden');
+        setTimeout(()=>details.classList.remove('opacity-0'),50);
 
-        // Reveal UI
-        document.getElementById("loading").classList.add("hidden");
-        const details = document.getElementById("orderDetails");
-        details.classList.remove("hidden");
-        setTimeout(() => details.classList.add("show"), 50);
+        const orderInfoEl=document.getElementById('orderInfo');
+        const planInfoEl=document.getElementById('planInfo');
+        const dateInfoEl=document.getElementById('dateInfo');
 
-        // Render result
-        const orderInfoEl = document.getElementById("orderInfo");
-        const planInfoEl = document.getElementById("planInfo");
-        const dateInfoEl = document.getElementById("dateInfo");
+        if(data&&data.orderNo){
+          orderInfoEl.textContent=`Your Order No: ${data.orderNo}`;
+          if(data.plan)planInfoEl.textContent=`Selected Plan: ${data.plan}`;
+          if(data.start&&data.end){dateInfoEl.textContent=`This license is valid from ${pretty(data.start)} to ${pretty(data.end)}.`;}
 
-        if (data && data.orderNo) {
-          orderInfoEl.textContent = `Your Order No: ${data.orderNo}`;
-          if (data.plan) planInfoEl.textContent = `Selected Plan: ${data.plan}`;
-          if (data.start && data.end) {
-            dateInfoEl.textContent = `This license is valid from ${pretty(data.start)} to ${pretty(data.end)}.`;
-          }
-
-          // Reveal/hide license
-          const keyEl = document.getElementById("licenseKey");
-          const container = document.getElementById("licenseContainer");
-          const btn = document.getElementById("revealBtn");
-          let shown = false;
-          btn.onclick = () => {
-            shown = !shown;
-            if (shown) {
-              keyEl.textContent = data.licenseKey || "No license key found.";
-              container.classList.remove("hidden");
-              btn.textContent = "Hide License Key";
-            } else {
-              container.classList.add("hidden");
-              btn.textContent = "Click to Reveal License Key";
+          const keyEl=document.getElementById('licenseKey');
+          const container=document.getElementById('licenseContainer');
+          const btn=document.getElementById('revealBtn');
+          let shown=false;
+          btn.onclick=()=>{
+            shown=!shown;
+            if(shown){
+              keyEl.textContent=data.licenseKey||'No license key found.';
+              container.classList.remove('hidden');
+              btn.textContent='Hide License Key';
+            }else{
+              container.classList.add('hidden');
+              btn.textContent='Click to Reveal License Key';
             }
           };
 
-          document.getElementById("copyBtn").onclick = () => {
-            const text = keyEl.textContent;
-            if (!text) return;
-            navigator.clipboard.writeText(text).then(() => {
-              alert("✅ License Key copied to clipboard!");
-            });
+          document.getElementById('copyBtn').onclick=()=>{
+            const text=keyEl.textContent;
+            if(!text)return;
+            navigator.clipboard.writeText(text).then(()=>{alert('✅ License Key copied to clipboard!');});
           };
-        } else {
-          orderInfoEl.textContent = "No order found yet. Please wait a moment and refresh.";
+        }else{
+          orderInfoEl.textContent='No order found yet. Please wait a moment and refresh.';
         }
       };
     </script>

@@ -2,120 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seller Portal | PartsMateTH</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --c1: 0,166,201; /* turquoise */ --c2: 16,185,129; /* emerald */ }
+    body { min-height: 100vh; background: linear-gradient(135deg, rgba(var(--c1),0.9), rgba(var(--c2),0.95)); font-family: 'Poppins','Inter',sans-serif; color: white; overflow-x:hidden; }
+    #bgParticles { position: fixed; inset: 0; z-index: 0; pointer-events: none; filter: contrast(120%) brightness(110%); }
+    .glass { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 1.5rem; box-shadow: 0 25px 40px rgba(0,0,0,0.25); }
+    .btn { transition: all 0.25s ease; border-radius: 0.75rem; padding: 0.8rem 1.25rem; font-weight: 500; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    input::placeholder{color:#b9e3f7}
+  </style>
 </head>
-
-<body class="bg-gray-50 text-gray-800">
-
-  <!-- Header -->
-  <header class="bg-white border-b">
+<body>
+  <canvas id="bgParticles"></canvas>
+  <header class="relative z-10 bg-white/10 backdrop-blur-md border-b border-white/20">
     <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="/" class="text-xl font-semibold text-gray-800">PartsMateTH</a>
+      <a href="/" class="text-xl font-semibold text-white">PartsMateTH</a>
       <nav class="space-x-4 text-sm">
-        <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
-        <a href="/profile.html" class="text-gray-600 hover:text-gray-900">My Profile</a>
-        <a href="/seller.html" class="text-blue-600 font-medium">Seller Portal</a>
+        <a href="/" class="text-white/80 hover:text-white">Home</a>
+        <a href="/profile.html" class="text-white/80 hover:text-white">My Profile</a>
+        <a href="/seller.html" class="text-white font-semibold border-b-2 border-white pb-1">Seller Portal</a>
       </nav>
     </div>
   </header>
 
-  <!-- Content -->
-  <main class="max-w-3xl mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold mb-4 text-center text-blue-600">Seller Portal</h1>
-    <p class="text-center text-gray-600 mb-10">Login or sign up to manage your seller account.</p>
+  <main class="relative z-10 max-w-3xl mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-4 text-center">Seller Portal</h1>
+    <p class="text-center text-white/80 mb-10">Login or sign up to manage your seller account.</p>
 
-    <div id="seller-container" class="bg-white rounded-xl shadow p-6">
-      <!-- Tabs -->
-<div class="flex justify-center mb-6 space-x-6">
-  <button id="tabLogin" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Login</button>
-  <button id="tabSignup" class="text-gray-600 hover:text-blue-600 pb-1">Sign Up</button>
-</div>
+    <div id="seller-container" class="glass p-8">
+      <div class="flex justify-center mb-6 space-x-8">
+        <button id="tabLogin" class="text-white font-semibold border-b-2 border-white pb-1">Login</button>
+        <button id="tabSignup" class="text-white/70 hover:text-white pb-1">Sign Up</button>
+      </div>
 
-<!-- Login Form -->
-<form id="sellerLogin" class="space-y-4">
-  <input type="text" id="loginCode" placeholder="Seller Code" required class="w-full border rounded-lg px-4 py-2" />
-  <input type="password" id="loginPassword" placeholder="Password" required class="w-full border rounded-lg px-4 py-2" />
-  <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Login</button>
-</form>
+      <form id="sellerLogin" class="space-y-4">
+        <input type="text" id="loginCode" placeholder="Seller Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <input type="password" id="loginPassword" placeholder="Password" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <button type="submit" class="btn w-full bg-white text-gray-900 hover:bg-gray-100">Login</button>
+      </form>
 
-<!-- Signup Form -->
-<form id="sellerSignup" class="space-y-4 hidden">
-  <input type="text" id="signupCode" placeholder="Seller Code" required class="w-full border rounded-lg px-4 py-2" />
-  <input type="email" id="signupEmail" placeholder="Email" required class="w-full border rounded-lg px-4 py-2" />
-  <input type="password" id="signupPassword" placeholder="Password" required class="w-full border rounded-lg px-4 py-2" />
-  <input type="tel" id="signupPhone" placeholder="Phone Number" required class="w-full border rounded-lg px-4 py-2" />
-  <input type="text" id="authCode" placeholder="Authorization Code" required class="w-full border rounded-lg px-4 py-2" />
-  <p class="text-xs text-gray-500">You need an authorization code to become a seller. Contact us to get one.</p>
-  <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Sign Up</button>
-</form>
-
-<script>
-  const tabLogin = document.getElementById("tabLogin");
-  const tabSignup = document.getElementById("tabSignup");
-  const formLogin = document.getElementById("sellerLogin");
-  const formSignup = document.getElementById("sellerSignup");
-
-  tabLogin.onclick = () => {
-    formLogin.classList.remove("hidden");
-    formSignup.classList.add("hidden");
-    tabLogin.classList.add("text-blue-600","font-semibold","border-b-2","border-blue-600");
-    tabSignup.classList.remove("text-blue-600","border-blue-600");
-  };
-
-  tabSignup.onclick = () => {
-    formSignup.classList.remove("hidden");
-    formLogin.classList.add("hidden");
-    tabSignup.classList.add("text-blue-600","font-semibold","border-b-2","border-blue-600");
-    tabLogin.classList.remove("text-blue-600","border-blue-600");
-  };
-</script>
+      <form id="sellerSignup" class="space-y-4 hidden">
+        <input type="text" id="signupCode" placeholder="Seller Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <input type="email" id="signupEmail" placeholder="Email" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <input type="password" id="signupPassword" placeholder="Password" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <input type="tel" id="signupPhone" placeholder="Phone Number" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <input type="text" id="authCode" placeholder="Authorization Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <p class="text-xs text-white/70">You need an authorization code to become a seller. Contact us to get one.</p>
+        <button type="submit" class="btn w-full bg-emerald-500 hover:bg-emerald-600 text-white">Sign Up</button>
+      </form>
     </div>
   </main>
-<script>
-async function postSeller(data) {
-  const res = await fetch("/api/seller-auth", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
-  return res.json();
-}
 
-// --- Signup handler ---
-document.getElementById("sellerSignup").addEventListener("submit", async e => {
-  e.preventDefault();
-  const payload = {
-    mode: "signup",
-    sellerCode: document.getElementById("signupCode").value.trim(),
-    email: document.getElementById("signupEmail").value.trim(),
-    password: document.getElementById("signupPassword").value.trim(),
-    phone: document.getElementById("signupPhone").value.trim(),
-    authCode: document.getElementById("authCode").value.trim()
-  };
-  const res = await postSeller(payload);
-  alert(res.ok ? "✅ Signup successful!" : "❌ " + res.error);
-});
+  <script>
+    const tabLogin = document.getElementById("tabLogin");
+    const tabSignup = document.getElementById("tabSignup");
+    const formLogin = document.getElementById("sellerLogin");
+    const formSignup = document.getElementById("sellerSignup");
 
-// --- Login handler ---
-document.getElementById("sellerLogin").addEventListener("submit", async e => {
-  e.preventDefault();
-  const payload = {
-    mode: "login",
-    sellerCode: document.getElementById("loginCode").value.trim(),
-    password: document.getElementById("loginPassword").value.trim()
-  };
-  const res = await postSeller(payload);
-  if (res.ok) {
-    alert("✅ Login successful!");
-    localStorage.setItem("sellerData", JSON.stringify(res.seller));
-    window.location.href = "/seller-dashboard.html";
-  } else {
-    alert("❌ " + res.error);
-  }
-});
-</script>
+    tabLogin.onclick = () => {
+      formLogin.classList.remove("hidden");
+      formSignup.classList.add("hidden");
+      tabLogin.classList.add("font-semibold","border-b-2","border-white");
+      tabSignup.classList.remove("font-semibold","border-b-2","border-white");
+    };
 
+    tabSignup.onclick = () => {
+      formSignup.classList.remove("hidden");
+      formLogin.classList.add("hidden");
+      tabSignup.classList.add("font-semibold","border-b-2","border-white");
+      tabLogin.classList.remove("font-semibold","border-b-2","border-white");
+    };
+
+    async function postSeller(data) {
+      const res = await fetch("/api/seller-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      return res.json();
+    }
+
+    document.getElementById("sellerSignup").addEventListener("submit", async e => {
+      e.preventDefault();
+      const payload = {
+        mode: "signup",
+        sellerCode: document.getElementById("signupCode").value.trim(),
+        email: document.getElementById("signupEmail").value.trim(),
+        password: document.getElementById("signupPassword").value.trim(),
+        phone: document.getElementById("signupPhone").value.trim(),
+        authCode: document.getElementById("authCode").value.trim()
+      };
+      const res = await postSeller(payload);
+      alert(res.ok ? "✅ Signup successful!" : "❌ " + res.error);
+    });
+
+    document.getElementById("sellerLogin").addEventListener("submit", async e => {
+      e.preventDefault();
+      const payload = {
+        mode: "login",
+        sellerCode: document.getElementById("loginCode").value.trim(),
+        password: document.getElementById("loginPassword").value.trim()
+      };
+      const res = await postSeller(payload);
+      if (res.ok) {
+        alert("✅ Login successful!");
+        localStorage.setItem("sellerData", JSON.stringify(res.seller));
+        window.location.href = "/seller-dashboard.html";
+      } else {
+        alert("❌ " + res.error);
+      }
+    });
+  </script>
+
+  <script>
+    (()=>{
+      const canvas=document.getElementById('bgParticles');
+      const ctx=canvas.getContext('2d');
+      let w,h,dpr,particles=[],pointer={x:null,y:null};
+      function resize(){dpr=window.devicePixelRatio||1;w=canvas.width=innerWidth*dpr;h=canvas.height=innerHeight*dpr;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';}
+      addEventListener('resize',resize);resize();
+      const COUNT=Math.min(120,Math.floor((innerWidth*innerHeight)/15000));
+      const rand=(a,b)=>a+Math.random()*(b-a);
+      function init(){particles=Array.from({length:COUNT}).map(()=>({x:rand(0,w),y:rand(0,h),vx:rand(-.2,.2),vy:rand(-.2,.2),r:rand(1,2.2)*dpr,hue:rand(160,190)}));}
+      init();
+      addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)*dpr;pointer.y=(e.clientY-r.top)*dpr;});
+      addEventListener('pointerleave',()=>{pointer.x=pointer.y=null});
+      function step(){ctx.clearRect(0,0,w,h);for(const p of particles){if(pointer.x){const dx=p.x-pointer.x,dy=p.y-pointer.y,d2=dx*dx+dy*dy,f=Math.min(100000/(d2+10000),.6);p.vx+=(dx/d2)*f;p.vy+=(dy/d2)*f;}p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.vy*=.985;if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;}ctx.globalCompositeOperation='lighter';for(const p of particles){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`hsla(${p.hue},70%,60%,.8)`;ctx.fill();}ctx.globalCompositeOperation='source-over';requestAnimationFrame(step);}requestAnimationFrame(step);
+    })();
+  </script>
 </body>
 </html>
