@@ -48,13 +48,62 @@
         <input type="text" id="signupCode" placeholder="Seller Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
         <input type="email" id="signupEmail" placeholder="Email" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
         <input type="password" id="signupPassword" placeholder="Password" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
-        <input type="tel" id="signupPhone" placeholder="Phone Number" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
+        <div class="flex items-stretch gap-2 mb-4 relative">
+          <div class="relative w-[30%] h-11">
+            <select id="signupCountryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400"></select>
+            <div id="signupIsoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
+          </div>
+          <div class="flex items-stretch w-[70%] h-11 border border-gray-300 rounded-lg overflow-hidden">
+            <span id="signupPhonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
+            <input id="signupPhone" type="tel" placeholder="Phone Number" required class="w-full px-3 py-2 text-gray-700 focus:outline-none" />
+          </div>
+        </div>
         <input type="text" id="authCode" placeholder="Authorization Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
         <p class="text-xs text-white/70">You need an authorization code to become a seller. Contact us to get one.</p>
         <button type="submit" class="btn w-full bg-emerald-500 hover:bg-emerald-600 text-white">Sign Up</button>
       </form>
     </div>
   </main>
+
+    <script>
+      let __countryOptionsCache = null;
+      async function loadCountries(selectId, isoLabelId, prefixSpanId) {
+        if (!__countryOptionsCache) {
+          __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
+        }
+        const html = await __countryOptionsCache;
+        const sel = document.getElementById(selectId);
+        if (!sel) return;
+        sel.innerHTML = html;
+        const update = () => {
+          const opt = sel.options[sel.selectedIndex];
+          if (isoLabelId) {
+            const isoEl = document.getElementById(isoLabelId);
+            if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
+          }
+          if (prefixSpanId) {
+            const preEl = document.getElementById(prefixSpanId);
+            if (preEl) preEl.textContent = opt?.value || "";
+          }
+        };
+        sel.addEventListener("change", update);
+        update();
+        return true; // ✅ allow .then() to work
+      }
+      // Helper to derive country name from selected option
+      function getSelectedCountryName(selectEl) {
+        const opt = selectEl.options[selectEl.selectedIndex];
+        let raw = opt?.getAttribute("data-country") || "";
+        return raw.includes("(") ? raw.split("(")[0].trim() : raw;
+      }
+    </script>
+
+  <script>
+  loadCountries("signupCountryCode", "signupIsoLabel", "signupPhonePrefix").then(() => {
+    console.log("✅ Country options loaded for signup");
+  });
+</script>
+
 
   <script>
     const tabLogin = document.getElementById("tabLogin");
@@ -85,19 +134,23 @@
       return res.json();
     }
 
-    document.getElementById("sellerSignup").addEventListener("submit", async e => {
-      e.preventDefault();
-      const payload = {
-        mode: "signup",
-        sellerCode: document.getElementById("signupCode").value.trim(),
-        email: document.getElementById("signupEmail").value.trim(),
-        password: document.getElementById("signupPassword").value.trim(),
-        phone: document.getElementById("signupPhone").value.trim(),
-        authCode: document.getElementById("authCode").value.trim()
-      };
-      const res = await postSeller(payload);
-      alert(res.ok ? "✅ Signup successful!" : "❌ " + res.error);
-    });
+document.getElementById("sellerSignup").addEventListener("submit", async e => {
+  e.preventDefault();
+  const country = getSelectedCountryName(document.getElementById("signupCountryCode"));
+  const phone = document.getElementById("signupPhonePrefix").textContent + document.getElementById("signupPhone").value.trim();
+  const payload = {
+    mode: "signup",
+    sellerCode: document.getElementById("signupCode").value.trim(),
+    email: document.getElementById("signupEmail").value.trim(),
+    password: document.getElementById("signupPassword").value.trim(),
+    phone,
+    country,
+    authCode: document.getElementById("authCode").value.trim()
+  };
+  const res = await postSeller(payload);
+  alert(res.ok ? "✅ Signup successful!" : "❌ " + res.error);
+});
+
 
     document.getElementById("sellerLogin").addEventListener("submit", async e => {
       e.preventDefault();
