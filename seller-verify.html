@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Verifying Seller Account...</title>
+  <script>
+    (async ()=>{
+      const params = new URLSearchParams(location.search);
+      const code = params.get("code");
+      const token = params.get("token");
+      if (!code || !token) {
+        document.body.innerHTML = "Invalid verification link.";
+        return;
+      }
+      const url = `${"https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec"}?mode=verifySeller&code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
+      const res = await fetch(url);
+      const txt = await res.text();
+      document.body.innerHTML = txt;
+    })();
+  </script>
+</head>
+<body style="font-family:sans-serif;text-align:center;padding:40px;color:#333;">
+  Verifying your account...
+</body>
+</html>
