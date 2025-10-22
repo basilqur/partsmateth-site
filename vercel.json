@@ -2,7 +2,6 @@
   "version": 2,
   "builds": [
     { "src": "index.html", "use": "@vercel/static" },
-    { "src": "app-tabs-images/**/*", "use": "@vercel/static" },
     { "src": "country-options.html", "use": "@vercel/static" },
     { "src": "profile.html", "use": "@vercel/static" },
     { "src": "seller.html", "use": "@vercel/static" },
