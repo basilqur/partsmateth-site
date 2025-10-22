@@ -13,6 +13,7 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    { "src": "/(.*)\\.(png|jpg|jpeg|gif|svg|webp)$", "dest": "/$1.$2" },
     { "src": "/country-options.html", "dest": "/country-options.html" },
     { "src": "/profile.html", "dest": "/profile.html" },
     { "src": "/seller.html", "dest": "/seller.html" },
