@@ -1,0 +1,298 @@
+function doPost(e) {
+  var data = {};
+  try {
+  if (e.postData && e.postData.contents) {
+  data = JSON.parse(e.postData.contents);
+  }
+  } catch (err) {
+  // If not JSON, fallback to parameters
+  data = e.parameter;
+  }
+  var obj = data || e.parameter;
+  var sheetName = e.parameter.sheet || "licensekeys";
+
+  if (e.parameter.mode === "markCancelled" && e.parameter.licenseKey) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+  var data = sheet.getDataRange().getValues();
+
+  for (var i = 1; i < data.length; i++) {
+    if ((data[i][1] || "").toString().trim() === e.parameter.licenseKey.trim()) {
+      sheet.getRange(i + 1, 15).setValue("Cancelled"); // col O = 15
+
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: false, error: "License not found" }))
+    .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (e.parameter.mode === "markResumed" && e.parameter.licenseKey) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+  var rows = sheet.getDataRange().getValues();
+  for (var i = 1; i < rows.length; i++) {
+    if ((rows[i][1] || "").toString().trim() === e.parameter.licenseKey.trim()) {
+      sheet.getRange(i + 1, 15).setValue(""); // clear Notes (col O)
+      return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+  return ContentService.createTextOutput(JSON.stringify({ ok: false, error: "License not found" }))
+    .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (obj.mode === "sellerSignup" || obj.mode === "sellerLogin")
+  {return ContentService.createTextOutput(JSON.stringify(handleSellerAuth(obj))).setMimeType(ContentService.MimeType.JSON);}
+
+  if (obj.mode === "sellerInviteCreate" || obj.mode === "sellerInviteList")
+  {return ContentService.createTextOutput(JSON.stringify(handleSellerInvites(obj))).setMimeType(ContentService.MimeType.JSON);}
+  
+  if (sheetName === "web_support_messages") {
+  var ws = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("web_support_messages");
+
+  // Determine next OrderNo like MSG-000001
+  var lastRow = ws.getLastRow();
+  var nextNo;
+  if (lastRow < 2) {
+    nextNo = "MSG-000001";
+  } else {
+    var lastOrder = ws.getRange(lastRow, 1).getValue(); // col A
+    var n = parseInt(String(lastOrder).split("-")[1], 10) || 0;
+    nextNo = "MSG-" + Utilities.formatString("%06d", n + 1);
+  }
+
+  // Expect: A:OrderNo, B:Name, C:Email, D:Phone, E:Country, F:Message
+  ws.appendRow([
+    nextNo,
+    data.name || "",
+    data.email || "",
+    "'" + data.phone || "",
+    data.country || "",
+    data.message || ""
+  ]);
+
+  return ContentService
+    .createTextOutput("Success")
+    .setMimeType(ContentService.MimeType.TEXT);
+  }
+
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+
+  // Determine next OrderNo
+  var lastRow = sheet.getLastRow();
+  var nextOrderNo;
+  if (lastRow < 2) {
+    nextOrderNo = "PM-469225";
+  } else {
+    var lastOrderNo = sheet.getRange(lastRow, 1).getValue();
+    var lastNumber = parseInt(lastOrderNo.split("-")[1], 10);
+    nextOrderNo = "PM-" + (lastNumber + 1);
+  }
+
+  // Append row values (A–O)
+  sheet.appendRow([
+    nextOrderNo,              // A = OrderNo
+    data.key || "",           // B = LicenseKey
+    data.name || "",          // C = Name
+    data.email || "",         // D = Email
+    "'" + data.phone || "",         // E = Phone
+    data.country || "",       // F = Country
+    data.plan || "",          // G = Plan
+    data.start || "",         // H = StartDate
+    data.end || "",           // I = EndDate
+    "",                       // J = Status
+    data.stripePaymentId || "", // K = StripePaymentID
+    data.createdAt || "",     // L = CreatedAt
+    data.sessionId || "",     // M = SessionID
+    data.sessionTime || "",   // N = SessionTime
+    data.notes || ""          // O = Notes
+  ]);
+
+  // Insert the status formula in column J
+  var newRow = sheet.getLastRow();
+  var formula = `=IF(OR(ISBLANK(H${newRow}),ISBLANK(I${newRow}),NOT(ISNUMBER(DATEVALUE(H${newRow}))),NOT(ISNUMBER(DATEVALUE(I${newRow})))),"INACTIVE",IF(AND(TODAY() >= DATEVALUE(H${newRow}),TODAY()<= DATEVALUE(I${newRow})),IF(O${newRow}="Cancelled","ACTIVE TILL END DATE","ACTIVE"),"INACTIVE"))`;
+  sheet.getRange(newRow, 10).setFormula(formula);
+
+  return ContentService.createTextOutput(
+    JSON.stringify({ orderNo: nextOrderNo, licenseKey: data.key })
+  ).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+  var email = e.parameter.email;
+
+  if (e.parameter.mode === "lookup" && email) {
+    var data = sheet.getDataRange().getValues();
+    var latest = null;
+
+    // Loop through rows, find last matching email
+    for (var i = data.length - 1; i >= 1; i--) { // skip header row
+      if (data[i][3] === email) { // Column D = Email (adjust index if needed)
+        latest = {
+          orderNo: data[i][0],     // A = OrderNo
+          licenseKey: data[i][1],  // B = LicenseKey
+          plan: data[i][6],        // G = Plan
+          start: data[i][7],       // H = StartDate
+          end: data[i][8]          // I = EndDate
+        };
+        break;
+      }
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify(latest || {}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (e.parameter.mode === "verifySeller" && e.parameter.code && e.parameter.token) {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("sellers");
+    const rows = sheet.getDataRange().getValues();
+  
+    for (let i = 1; i < rows.length; i++) {
+      const [code, , , , , status, , , , , , , , , token] = rows[i];
+      if (code === e.parameter.code && token === e.parameter.token) {
+        sheet.getRange(i + 1, 6).setValue("ACTIVE"); // F = Status
+        sheet.getRange(i + 1, 15).setValue("");      // O = VerifyToken (clear token)
+        return ContentService.createTextOutput("✅ Your seller account has been verified successfully!").setMimeType(ContentService.MimeType.TEXT);
+      }
+    }
+  
+    return ContentService.createTextOutput("❌ Invalid or expired verification link.").setMimeType(ContentService.MimeType.TEXT);
+  }
+
+
+  
+  if (e.parameter.mode === "profileByKey" && e.parameter.licenseKey) {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+    var data = sheet.getDataRange().getValues();
+    var key = e.parameter.licenseKey.trim().toUpperCase();
+    var found = null;
+  
+    for (var i = 1; i < data.length; i++) {
+      var sheetKey = (data[i][1] || "").toString().trim().toUpperCase(); // Col B = LicenseKey
+      if (sheetKey === key) {
+        found = {
+        orderNo: data[i][0],
+        licenseKey: data[i][1],
+        name: data[i][2],
+        email: data[i][3],
+        phone: data[i][4],
+        country: data[i][5],
+        plan: data[i][6],
+        start: data[i][7],
+        end: data[i][8],
+        status: data[i][9],
+        stripePaymentId: data[i][10],
+        sessionId: data[i][11],
+        sessionTime: data[i][12],
+        notes: data[i][13]
+      };
+      break;
+      }
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify(found || {}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function handleSellerAuth(obj) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("sellers");
+  const mode = obj.mode;
+  const now = new Date();
+
+  if (mode === "sellerSignup") {
+    const { sellerCode, email, password, phone, country, authCode } = obj;
+    const adminSheet = SpreadsheetApp.getActive().getSheetByName("adminsettings");
+    const authCodes = adminSheet.getRange("A2").getValue().split(",");
+    if (!authCodes.includes(authCode))
+      return { ok: false, error: "Invalid authorization code" };
+  
+    const sellers = sheet.getDataRange().getValues();
+    const exists = sellers.some(r => r[0] === sellerCode || r[1] === email);
+    if (exists) return { ok: false, error: "Seller already exists" };
+  
+    const token = Utilities.getUuid();
+    sheet.appendRow([
+      sellerCode, email, password, "'" + phone, country || "",
+      "PENDING", "Silver", 0, 0, 0, 0, 50, "", new Date(), token
+    ]);
+  
+    const verifyUrl = `https://partsmateth.com/seller-verify.html?code=${encodeURIComponent(sellerCode)}&token=${encodeURIComponent(token)}`;
+    const subject = "Verify your PartsMateTH Seller Account";
+    const body = `Hello ${sellerCode},\n\nPlease verify your seller account by clicking the link below:\n\n${verifyUrl}\n\nIf you didn’t sign up, ignore this email.\n\nPartsMateTH Team`;
+  
+    GmailApp.sendEmail(email, subject, body, {
+      from: "support@partsmateth.com",
+      name: "PartsMateTH Team",
+      replyTo: "support@partsmateth.com",
+      noReply: true
+    });
+
+    return { ok: true, message: "Signup successful. Please check your email to verify your account." };
+  }
+  
+  if (mode === "sellerLogin") {
+    const { sellerCode, password } = obj;
+    const sellers = sheet.getDataRange().getValues();
+    const match = sellers.find(r => r[0] === sellerCode && r[2] === password);
+    if (!match) return { ok: false, error: "Invalid seller code or password" };
+    if (match[5] !== "ACTIVE") return { ok: false, error: "Account not active yet" };
+    return { ok: true, seller: { code: match[0], email: match[1], tier: match[6], sales: match[7], revenue: match[8] } };
+  }
+  return { ok: false, error: "Invalid mode" };
+}
+
+function handleSellerInvites(obj) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("invites");
+  const mode = obj.mode;
+  const now = new Date();
+
+  if (mode === "sellerInviteCreate") {
+    const { sellerCode, inviteCode, random } = obj;
+    if (!sellerCode) return { ok: false, error: "Missing seller code" };
+
+    const data = sheet.getDataRange().getValues();
+    const sellerInvites = data.filter(r => r[1] === sellerCode);
+    if (sellerInvites.length >= 5)
+      return { ok: false, error: "Max 5 invites allowed" };
+
+    let code = inviteCode;
+    if (random === true || random === "true" || !code) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      code = Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    }
+
+    const exists = data.some(r => r[0] === code);
+    if (exists) return { ok: false, error: "Invite code already exists" };
+
+    sheet.appendRow([code, sellerCode, random ? "RANDOM" : "CUSTOM", now, 0, "", "ACTIVE"]);
+    return { ok: true, inviteCode: code, message: "Invite created successfully" };
+  }
+
+  if (mode === "sellerInviteList") {
+    const { sellerCode } = obj;
+    if (!sellerCode) return { ok: false, error: "Missing seller code" };
+
+    const data = sheet.getDataRange().getValues().slice(1);
+    const list = data
+      .filter(r => r[1] === sellerCode)
+      .map(r => ({
+        code: r[0],
+        created: r[3],
+        uses: r[4],
+        status: r[6]
+      }));
+
+    return { ok: true, invites: list };
+  }
+
+  return { ok: false, error: "Invalid invite mode" };
+}
+
+

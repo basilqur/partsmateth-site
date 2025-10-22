@@ -115,6 +115,53 @@
         </div>
       </div>
     </section>
+
+    <!-- App Tabs Slideshow -->
+<section id="app-tabs" class="relative py-10 md:py-16 bg-gradient-to-b from-white via-white to-slate-50">
+<div class="mx-auto max-w-6xl px-4">
+<div class="mb-6 flex items-end justify-between">
+<h2 class="text-2xl md:text-3xl font-semibold tracking-tight">Explore PartsMateTH Tabs</h2>
+<div class="hidden md:flex gap-2">
+<button id="prevBtn" class="rounded-xl border px-3 py-2 text-sm hover:bg-slate-100 active:scale-95">Prev</button>
+<button id="nextBtn" class="rounded-xl border px-3 py-2 text-sm hover:bg-slate-100 active:scale-95">Next</button>
+</div>
+</div>
+
+
+<!-- Slider wrapper -->
+<div class="relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-slate-200 group">
+<!-- Slides container -->
+<div id="slides" class="flex transition-transform duration-500 ease-in-out">
+<!-- 10 slides; update paths if you rename images/folder -->
+<img loading="lazy" src="app tabs images/1 Home Tab.png" alt="Home Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/2 Prices Tab.png" alt="Prices Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/3 Names Tab.png" alt="Names Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/4 Country Tab.png" alt="Country Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/5 Details Tab.png" alt="Details Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/6 Lists Tab.png" alt="Lists Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/7 Weights Tab.png" alt="Weights Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/8 Alternates Tab.png" alt="Alternates Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/9 Model Tab.png" alt="Model Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<img loading="lazy" src="app tabs images/10 Stock Tab.png" alt="Stock Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+</div>
+
+
+<!-- Prev/Next (mobile floating) -->
+<button id="prevBtnMobile" class="md:hidden absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow hover:bg-white">‹</button>
+<button id="nextBtnMobile" class="md:hidden absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow hover:bg-white">›</button>
+
+
+<!-- Dots -->
+<div id="dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-white/70 rounded-full px-2 py-1">
+<!-- JS will render dots -->
+</div>
+</div>
+
+
+<!-- Small caption -->
+<p class="mt-4 text-center text-sm text-slate-600">Auto‑slides every 3s • Hover to pause • Swipe on mobile • Use arrows to navigate</p>
+</div>
+</section>
     
     <!-- About Us Section -->
     <section id="about" class="py-20 bg-white text-center px-6">
@@ -152,7 +199,7 @@
             </select>
             <div id="contactIsoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
           </div>
-            
+
           <div class="flex items-stretch w-[80%] h-11 border border-gray-300 rounded-lg overflow-hidden">
             <span id="contactPhonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
             <input id="contactPhone" type="tel" placeholder="Phone Number" required class="w-full px-3 py-2 text-gray-700 focus:outline-none" />
@@ -398,6 +445,76 @@
         }
       }
     </script>
+
+    <script>
+(function(){
+const slidesEl = document.getElementById('slides');
+const images = Array.from(slidesEl.querySelectorAll('img'));
+const count = images.length;
+let index = 0;
+
+
+// Build dots
+const dotsEl = document.getElementById('dots');
+const dots = images.map((_, i) => {
+const b = document.createElement('button');
+b.className = 'h-2 w-2 rounded-full bg-slate-300 hover:bg-slate-500 transition-colors';
+b.setAttribute('aria-label', 'Go to slide ' + (i+1));
+b.addEventListener('click', () => goTo(i));
+dotsEl.appendChild(b);
+return b;
+});
+
+
+function update(){
+slidesEl.style.transform = `translateX(-${index * 100}%)`;
+dots.forEach((d, i) => d.className = 'h-2 w-2 rounded-full transition-colors ' + (i === index ? 'bg-slate-800' : 'bg-slate-300 hover:bg-slate-500'));
+}
+
+
+function next(){ index = (index + 1) % count; update(); }
+function prev(){ index = (index - 1 + count) % count; update(); }
+function goTo(i){ index = i % count; update(); resetAuto(); }
+
+
+// Wire buttons
+const prevBtns = [document.getElementById('prevBtn'), document.getElementById('prevBtnMobile')].filter(Boolean);
+const nextBtns = [document.getElementById('nextBtn'), document.getElementById('nextBtnMobile')].filter(Boolean);
+prevBtns.forEach(b => b.addEventListener('click', () => { prev(); resetAuto(); }));
+nextBtns.forEach(b => b.addEventListener('click', () => { next(); resetAuto(); }));
+
+
+// Auto‑slide every 3s (pause on hover)
+let timer = setInterval(next, 3000);
+function resetAuto(){ clearInterval(timer); timer = setInterval(next, 3000); }
+
+
+const wrapper = slidesEl.parentElement; // slider container
+wrapper.addEventListener('mouseenter', () => clearInterval(timer));
+wrapper.addEventListener('mouseleave', () => resetAuto());
+
+
+// Swipe support (mobile)
+let startX = 0, dx = 0;
+wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; dx = 0; }, {passive:true});
+wrapper.addEventListener('touchmove', (e) => { dx = e.touches[0].clientX - startX; }, {passive:true});
+wrapper.addEventListener('touchend', () => {
+if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); resetAuto(); }
+});
+
+
+// Init widths
+function setWidths(){
+//const w = wrapper.clientWidth;
+//slidesEl.style.width = (count * 100) + '%';
+//images.forEach(img => img.style.width = (100 / count) + '%');
+update();
+}
+window.addEventListener('resize', setWidths);
+setWidths();
+update();
+})();
+</script>
     
   </body>
   
