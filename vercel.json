@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "public": true,
   "builds": [
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "country-options.html", "use": "@vercel/static" },
@@ -22,5 +23,6 @@
     { "src": "/payment-success-page.html", "dest": "/payment-success-page.html" },
     { "src": "/cancel-page.html", "dest": "/cancel-page.html" },
     { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  ],
+  "outputDirectory": "public"
 }
