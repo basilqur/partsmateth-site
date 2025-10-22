@@ -9,6 +9,7 @@
     { "src": "seller-verify.html", "use": "@vercel/static" },
     { "src": "payment-success-page.html", "use": "@vercel/static" },
     { "src": "cancel-page.html", "use": "@vercel/static" },
+    { "src": "app-tabs-images/**/*", "use": "@vercel/static" },
     { "src": "api/*.js", "use": "@vercel/node" }
   ],
   "routes": [
