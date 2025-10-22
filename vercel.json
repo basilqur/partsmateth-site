@@ -13,7 +13,6 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "/app-tabs-images/(.*)", "dest": "/app-tabs-images/$1" },
     { "src": "/country-options.html", "dest": "/country-options.html" },
     { "src": "/profile.html", "dest": "/profile.html" },
     { "src": "/seller.html", "dest": "/seller.html" },
