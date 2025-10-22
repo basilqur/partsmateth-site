@@ -2,6 +2,7 @@
   "version": 2,
   "builds": [
     { "src": "index.html", "use": "@vercel/static" },
+    { "src": "app-tabs-images/**/*", "use": "@vercel/static" },
     { "src": "country-options.html", "use": "@vercel/static" },
     { "src": "profile.html", "use": "@vercel/static" },
     { "src": "seller.html", "use": "@vercel/static" },
@@ -9,7 +10,6 @@
     { "src": "seller-verify.html", "use": "@vercel/static" },
     { "src": "payment-success-page.html", "use": "@vercel/static" },
     { "src": "cancel-page.html", "use": "@vercel/static" },
-    { "src": "app-tabs-images/**/*", "use": "@vercel/static" },
     { "src": "api/*.js", "use": "@vercel/node" }
   ],
   "routes": [
