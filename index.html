@@ -446,8 +446,7 @@ let timer;
 
 
 function showImage(i, fade=true){
-const basePath = "";
-const newSrc = `${basePath}app-tabs-images/${images[i]}`;
+const newSrc = `/app-tabs-images/${images[i]}`;
 
 if(fade){
 mainImage.classList.add('opacity-0');
@@ -463,7 +462,7 @@ t.classList.toggle('ring-4', j===i);
 t.classList.toggle('ring-blue-500', j===i);
 });
 }
-
+mainImage.onerror = () => console.log('404:', mainImage.src);
 
 // build thumbnails
 images.forEach((name, i) => {
