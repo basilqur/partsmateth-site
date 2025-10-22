@@ -446,7 +446,8 @@ let timer;
 
 
 function showImage(i, fade=true){
-const newSrc = `/app-tabs-images/${images[i]}`;
+const basePath = window.location.hostname.includes("vercel.app") ? "" : "public/";
+const newSrc = `${basePath}app-tabs-images/${images[i]}`;
 
 if(fade){
 mainImage.classList.add('opacity-0');
@@ -467,7 +468,7 @@ t.classList.toggle('ring-blue-500', j===i);
 // build thumbnails
 images.forEach((name, i) => {
 const el = template.content.cloneNode(true).firstElementChild;
-el.querySelector('img').src = `/app-tabs-images/${name}`;
+el.querySelector('img').src = `public/app-tabs-images/${name}`;
 el.addEventListener('click', () => {
 index = i;
 showImage(index);
