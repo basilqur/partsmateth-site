@@ -117,51 +117,32 @@
     </section>
 
     <!-- App Tabs Slideshow -->
-<section id="app-tabs" class="relative py-10 md:py-16 bg-gradient-to-b from-white via-white to-slate-50">
-<div class="mx-auto max-w-6xl px-4">
-<div class="mb-6 flex items-end justify-between">
-<h2 class="text-2xl md:text-3xl font-semibold tracking-tight">Explore PartsMateTH Tabs</h2>
-<div class="hidden md:flex gap-2">
-<button id="prevBtn" class="rounded-xl border px-3 py-2 text-sm hover:bg-slate-100 active:scale-95">Prev</button>
-<button id="nextBtn" class="rounded-xl border px-3 py-2 text-sm hover:bg-slate-100 active:scale-95">Next</button>
-</div>
-</div>
+<section id="app-tabs" class="relative py-16 bg-gradient-to-b from-white via-white to-slate-50 text-center">
+<div class="max-w-5xl mx-auto px-4">
+<h2 class="text-3xl md:text-4xl font-semibold mb-10 tracking-tight">Explore PartsMateTH Tabs</h2>
 
 
-<!-- Slider wrapper -->
-<div class="relative overflow-hidden rounded-2xl shadow-lg ring-1 ring-slate-200 group">
-<!-- Slides container -->
-<div id="slides" class="flex transition-transform duration-500 ease-in-out">
-<!-- 10 slides; update paths if you rename images/folder -->
-<img loading="lazy" src="app tabs images/1 Home Tab.png" alt="Home Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/2 Prices Tab.png" alt="Prices Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/3 Names Tab.png" alt="Names Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/4 Country Tab.png" alt="Country Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/5 Details Tab.png" alt="Details Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/6 Lists Tab.png" alt="Lists Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/7 Weights Tab.png" alt="Weights Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/8 Alternates Tab.png" alt="Alternates Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/9 Model Tab.png" alt="Model Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
-<img loading="lazy" src="app tabs images/10 Stock Tab.png" alt="Stock Tab" class="w-full shrink-0 basis-full object-contain bg-white aspect-video" />
+<!-- Main Image -->
+<div class="relative w-full overflow-hidden rounded-2xl shadow-lg bg-white">
+<img id="mainImage" src="app-tabs-images/1 Home Tab.png" alt="Home Tab" class="w-full object-contain aspect-video transition-opacity duration-700 opacity-100">
 </div>
 
 
-<!-- Prev/Next (mobile floating) -->
-<button id="prevBtnMobile" class="md:hidden absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow hover:bg-white">‹</button>
-<button id="nextBtnMobile" class="md:hidden absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow hover:bg-white">›</button>
-
-
-<!-- Dots -->
-<div id="dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 bg-white/70 rounded-full px-2 py-1">
-<!-- JS will render dots -->
-</div>
+<!-- Thumbnails -->
+<div class="flex justify-center gap-4 mt-6 flex-wrap">
+<template id="thumbTemplate">
+<button class="thumb w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent hover:scale-105 transition">
+<img src="" alt="tab thumb" class="w-full h-full object-cover">
+</button>
+</template>
 </div>
 
 
-<!-- Small caption -->
-<p class="mt-4 text-center text-sm text-slate-600">Auto‑slides every 3s • Hover to pause • Swipe on mobile • Use arrows to navigate</p>
+<!-- Toggle Auto Slide -->
+<button id="toggleAuto" class="mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 active:scale-95 transition">⏸️ Pause Auto Slide</button>
 </div>
 </section>
+
     
     <!-- About Us Section -->
     <section id="about" class="py-20 bg-white text-center px-6">
@@ -446,74 +427,74 @@
       }
     </script>
 
-    <script>
-(function(){
-const slidesEl = document.getElementById('slides');
-const images = Array.from(slidesEl.querySelectorAll('img'));
-const count = images.length;
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+const mainImage = document.getElementById('mainImage');
+const thumbsContainer = document.querySelector('#app-tabs .flex');
+const template = document.getElementById('thumbTemplate');
+
+
+const images = [
+'1 Home Tab.png','2 Prices Tab.png','3 Names Tab.png','4 Country Tab.png','5 Details Tab.png',
+'6 Lists Tab.png','7 Weights Tab.png','8 Alternates Tab.png','9 Model Tab.png','10 Stock Tab.png'
+];
+
+
 let index = 0;
+let auto = true;
+let timer;
 
 
-// Build dots
-const dotsEl = document.getElementById('dots');
-const dots = images.map((_, i) => {
-const b = document.createElement('button');
-b.className = 'h-2 w-2 rounded-full bg-slate-300 hover:bg-slate-500 transition-colors';
-b.setAttribute('aria-label', 'Go to slide ' + (i+1));
-b.addEventListener('click', () => goTo(i));
-dotsEl.appendChild(b);
-return b;
+function showImage(i, fade=true){
+const newSrc = `app-tabs-images/${images[i]}`;
+if(fade){
+mainImage.classList.add('opacity-0');
+setTimeout(()=>{
+mainImage.src = newSrc;
+mainImage.classList.remove('opacity-0');
+},300);
+} else {
+mainImage.src = newSrc;
+}
+document.querySelectorAll('.thumb').forEach((t,j)=>{
+t.classList.toggle('ring-4', j===i);
+t.classList.toggle('ring-blue-500', j===i);
 });
-
-
-function update(){
-slidesEl.style.transform = `translateX(-${index * 100}%)`;
-dots.forEach((d, i) => d.className = 'h-2 w-2 rounded-full transition-colors ' + (i === index ? 'bg-slate-800' : 'bg-slate-300 hover:bg-slate-500'));
 }
 
 
-function next(){ index = (index + 1) % count; update(); }
-function prev(){ index = (index - 1 + count) % count; update(); }
-function goTo(i){ index = i % count; update(); resetAuto(); }
-
-
-// Wire buttons
-const prevBtns = [document.getElementById('prevBtn'), document.getElementById('prevBtnMobile')].filter(Boolean);
-const nextBtns = [document.getElementById('nextBtn'), document.getElementById('nextBtnMobile')].filter(Boolean);
-prevBtns.forEach(b => b.addEventListener('click', () => { prev(); resetAuto(); }));
-nextBtns.forEach(b => b.addEventListener('click', () => { next(); resetAuto(); }));
-
-
-// Auto‑slide every 3s (pause on hover)
-let timer = setInterval(next, 3000);
-function resetAuto(){ clearInterval(timer); timer = setInterval(next, 3000); }
-
-
-const wrapper = slidesEl.parentElement; // slider container
-wrapper.addEventListener('mouseenter', () => clearInterval(timer));
-wrapper.addEventListener('mouseleave', () => resetAuto());
-
-
-// Swipe support (mobile)
-let startX = 0, dx = 0;
-wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; dx = 0; }, {passive:true});
-wrapper.addEventListener('touchmove', (e) => { dx = e.touches[0].clientX - startX; }, {passive:true});
-wrapper.addEventListener('touchend', () => {
-if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); resetAuto(); }
+// build thumbnails
+images.forEach((name, i) => {
+const el = template.content.cloneNode(true).firstElementChild;
+el.querySelector('img').src = `app-tabs-images/${name}`;
+el.addEventListener('click', () => {
+index = i;
+showImage(index);
+resetAuto();
+});
+thumbsContainer.appendChild(el);
 });
 
 
-// Init widths
-function setWidths(){
-//const w = wrapper.clientWidth;
-//slidesEl.style.width = (count * 100) + '%';
-//images.forEach(img => img.style.width = (100 / count) + '%');
-update();
-}
-window.addEventListener('resize', setWidths);
-setWidths();
-update();
-})();
+function next(){ index = (index + 1) % images.length; showImage(index); }
+
+
+function startAuto(){ timer = setInterval(next, 3000); }
+function stopAuto(){ clearInterval(timer); }
+function resetAuto(){ if(auto){ stopAuto(); startAuto(); } }
+
+
+const btn = document.getElementById('toggleAuto');
+btn.addEventListener('click', ()=>{
+auto = !auto;
+if(auto){ startAuto(); btn.textContent='⏸️ Pause Auto Slide'; }
+else { stopAuto(); btn.textContent='▶️ Resume Auto Slide'; }
+});
+
+
+showImage(index, false);
+startAuto();
+});
 </script>
     
   </body>
