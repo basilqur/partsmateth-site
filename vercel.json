@@ -1,27 +1,8 @@
 {
   "version": 2,
   "public": true,
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "country-options.html", "use": "@vercel/static" },
-    { "src": "profile.html", "use": "@vercel/static" },
-    { "src": "seller.html", "use": "@vercel/static" },
-    { "src": "seller-dashboard.html", "use": "@vercel/static" },
-    { "src": "seller-verify.html", "use": "@vercel/static" },
-    { "src": "payment-success-page.html", "use": "@vercel/static" },
-    { "src": "cancel-page.html", "use": "@vercel/static" },
-    { "src": "api/*.js", "use": "@vercel/node" }
-  ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "/(.*)\\.(png|jpg|jpeg|gif|svg|webp)$", "dest": "/$1.$2" },
-    { "src": "/country-options.html", "dest": "/country-options.html" },
-    { "src": "/profile.html", "dest": "/profile.html" },
-    { "src": "/seller.html", "dest": "/seller.html" },
-    { "src": "/seller-dashboard.html", "dest": "/seller-dashboard.html" },
-    { "src": "/seller-verify.html", "dest": "/seller-verify.html" },
-    { "src": "/payment-success-page.html", "dest": "/payment-success-page.html" },
-    { "src": "/cancel-page.html", "dest": "/cancel-page.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
