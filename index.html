@@ -124,7 +124,7 @@
 
 <!-- Main Image -->
 <div class="relative w-full overflow-hidden rounded-2xl shadow-lg bg-white">
-<img id="mainImage" src="/assets/app-tabs-images/1-Home-Tab.png" alt="Home Tab" class="w-full object-contain aspect-video transition-opacity duration-700 opacity-100">
+<img id="mainImage" src="/app-tabs-images/1-Home-Tab.png" alt="Home Tab" class="w-full object-contain aspect-video transition-opacity duration-700 opacity-100">
 </div>
 
 
@@ -446,7 +446,7 @@ let timer;
 
 
 function showImage(i, fade=true){
-const newSrc = `/assets/app-tabs-images/${images[i]}`;
+const newSrc = `/app-tabs-images/${images[i]}`;
 
 if(fade){
 mainImage.classList.add('opacity-0');
@@ -467,7 +467,7 @@ mainImage.onerror = () => console.log('404:', mainImage.src);
 // build thumbnails
 images.forEach((name, i) => {
 const el = template.content.cloneNode(true).firstElementChild;
-el.querySelector('img').src = `/assets/app-tabs-images/${name}`;
+el.querySelector('img').src = `/app-tabs-images/${name}`;
 el.addEventListener('click', () => {
 index = i;
 showImage(index);
