@@ -7,7 +7,14 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "/(.*\\.html)", "dest": "/$1" },
+    { "src": "/(.*)\\.(png|jpg|jpeg|gif|svg|webp)$", "dest": "/$1.$2" },
+    { "src": "/country-options.html", "dest": "/country-options.html" },
+    { "src": "/profile.html", "dest": "/profile.html" },
+    { "src": "/seller.html", "dest": "/seller.html" },
+    { "src": "/seller-dashboard.html", "dest": "/seller-dashboard.html" },
+    { "src": "/seller-verify.html", "dest": "/seller-verify.html" },
+    { "src": "/payment-success-page.html", "dest": "/payment-success-page.html" },
+    { "src": "/cancel-page.html", "dest": "/cancel-page.html" },
     { "src": "/", "dest": "/index.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ]
