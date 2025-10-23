@@ -23,6 +23,5 @@
     { "src": "/payment-success-page.html", "dest": "/payment-success-page.html" },
     { "src": "/cancel-page.html", "dest": "/cancel-page.html" },
     { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "outputDirectory": "public"
+  ]
 }
