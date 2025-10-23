@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plans – PartsMateTH</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-600 via-blue-500 to-teal-500 text-white min-h-screen">
+
+<body class="bg-gradient-to-br from-blue-600 via-teal-500 to-blue-400 min-h-screen text-white">
 
   <!-- Header -->
   <header class="sticky top-0 z-20 bg-white/10 backdrop-blur-md border-b border-white/10">
@@ -25,131 +26,223 @@
 
   <!-- Title -->
   <section class="text-center mt-16 mb-8">
-    <h1 class="text-5xl font-extrabold mb-4 drop-shadow-md">Choose the Perfect Plan for You</h1>
-    <p class="text-lg text-white/90">Compare all features side by side and find the plan that fits your business needs best.</p>
+    <h1 class="text-5xl font-extrabold mb-4 drop-shadow-md">Choose Your Plan</h1>
+    <p class="text-lg text-white/90">Faster, smarter, and built for professionals. Start free or subscribe anytime.</p>
   </section>
 
-  <!-- Pricing Table -->
-  <section class="max-w-7xl mx-auto px-6 overflow-x-auto">
-    <div class="min-w-[1100px] border border-white/20 rounded-2xl overflow-hidden bg-white/10 backdrop-blur-md shadow-lg">
-      <table class="w-full text-sm text-left border-collapse">
-        <thead class="bg-white/10 text-white uppercase text-xs tracking-wider">
-          <tr>
-            <th class="p-4"></th>
-            <th class="p-4 text-center text-green-400 font-bold">Basic<br><span class="text-white text-lg">99 AED/mo</span><br><span class="text-xs text-white/70 line-through">149 AED</span></th>
-            <th class="p-4 text-center text-blue-400 font-bold">Plus<br><span class="text-white text-lg">199 AED/mo</span><br><span class="text-xs text-white/70 line-through">249 AED</span></th>
-            <th class="p-4 text-center text-yellow-300 font-bold">Pro<br><span class="text-white text-lg">349 AED/mo</span><br><span class="text-xs text-white/70 line-through">399 AED</span></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-white/10">
+  <!-- Plan Cards -->
+  <section class="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto px-6">
+    
+    <!-- BASIC -->
+    <div class="w-80 rounded-3xl p-8 bg-gradient-to-br from-teal-400 to-blue-500 text-white shadow-lg hover:scale-105 transition cursor-pointer" onclick="openModal('Basic')">
+      <h3 class="text-2xl font-bold text-center mb-2">Basic</h3>
+      <p class="text-center text-white/90 mb-1 font-semibold">99 AED / month</p>
+      <p class="text-center text-sm text-white/70 line-through mb-6">149 AED</p>
+      <ul class="text-left text-sm space-y-2 mb-8">
+        <li>✔ 10 Part Numbers per Request</li>
+        <li>✔ 75 Checks per Day</li>
+        <li>⚙️ Speed: <b>Slow</b> (4s)</li>
+        <li>✔ Access to Prices & Names Checker</li>
+        <li>⚠ Limited Tools – No Weight, Alternates, Model</li>
+      </ul>
+      <div class="text-center">
+        <button class="bg-white text-teal-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">Get Started</button>
+      </div>
+    </div>
 
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Part Numbers / Input Lines</td>
-            <td class="p-4 text-center">10</td>
-            <td class="p-4 text-center">20</td>
-            <td class="p-4 text-center">50</td>
-          </tr>
+    <!-- PROFESSIONAL -->
+    <div class="w-80 rounded-3xl p-8 bg-gradient-to-br from-blue-500 to-purple-500 text-white shadow-lg hover:scale-105 transition cursor-pointer" onclick="openModal('Professional')">
+      <h3 class="text-2xl font-bold text-center mb-2">Professional</h3>
+      <p class="text-center text-white/90 mb-1 font-semibold">199 AED / month</p>
+      <p class="text-center text-sm text-white/70 line-through mb-6">249 AED</p>
+      <ul class="text-left text-sm space-y-2 mb-8">
+        <li>✔ 20 Part Numbers per Request</li>
+        <li>✔ 150 Checks per Day</li>
+        <li>⚙️ Speed: <b>Fast</b> (2.5s)</li>
+        <li>✔ Access to Prices, Names, Country, Details, List Cleaner</li>
+        <li>⚠ Some Pro Features Disabled</li>
+      </ul>
+      <div class="text-center">
+        <button class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">Get Started</button>
+      </div>
+    </div>
 
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Checks per Tab / Day</td>
-            <td class="p-4 text-center">75</td>
-            <td class="p-4 text-center">150</td>
-            <td class="p-4 text-center">300</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Delay per Request</td>
-            <td class="p-4 text-center">4 sec</td>
-            <td class="p-4 text-center">2.5 sec</td>
-            <td class="p-4 text-center">1.5 sec</td>
-          </tr>
-
-          <tr class="bg-white/5">
-            <td class="p-4 font-semibold text-white">Access Includes</td>
-            <td class="p-4">Prices & Names Checker</td>
-            <td class="p-4">Prices, Names, Country, Details, List Cleaner</td>
-            <td class="p-4">All Tools – Prices, Names, Country, Details, Weight, Alternates, Model</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Prices Checker</td>
-            <td class="p-4 text-center">1 result @3.5s</td>
-            <td class="p-4 text-center">3 results @4s</td>
-            <td class="p-4 text-center">5 results @3.5s</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Names Checker</td>
-            <td class="p-4 text-center">1 result @3.5s</td>
-            <td class="p-4 text-center">3 results @4s</td>
-            <td class="p-4 text-center">5 results @3.5s</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Country Checker</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center">3 results @4s</td>
-            <td class="p-4 text-center">5 results @3.5s</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Part Details</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center">Single part only</td>
-            <td class="p-4 text-center">Up to 5 parts</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">List Cleaner</td>
-            <td class="p-4 text-center">✅ Unlimited</td>
-            <td class="p-4 text-center">✅ Unlimited</td>
-            <td class="p-4 text-center">✅ Unlimited</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Weight Checker</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center">✅ 20 checks @4.5s</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Alternates Checker</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center">✅ Quick (10) / Deep (5)</td>
-          </tr>
-
-          <tr>
-            <td class="p-4 font-semibold text-white/90">Model Checker</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center text-white/40">—</td>
-            <td class="p-4 text-center">✅ No limits</td>
-          </tr>
-
-          <tr class="bg-white/5">
-            <td class="p-4 font-semibold text-white/90">Upgrade Prompt</td>
-            <td class="p-4 text-center">⚠️ Shown on Pro features</td>
-            <td class="p-4 text-center">⚠️ Shown on Pro features</td>
-            <td class="p-4 text-center">—</td>
-          </tr>
-
-        </tbody>
-      </table>
+    <!-- BUSINESS -->
+    <div class="w-80 rounded-3xl p-8 bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-lg hover:scale-105 transition cursor-pointer" onclick="openModal('Business')">
+      <h3 class="text-2xl font-bold text-center mb-2">Business</h3>
+      <p class="text-center text-white/90 mb-1 font-semibold">349 AED / month</p>
+      <p class="text-center text-sm text-white/70 line-through mb-6">399 AED</p>
+      <ul class="text-left text-sm space-y-2 mb-8">
+        <li>✔ 50 Part Numbers per Request</li>
+        <li>✔ 300 Checks per Day</li>
+        <li>⚙️ Speed: <b>Fastest</b> (1.5s)</li>
+        <li>✔ Access to All Tools – Prices, Names, Country, Details, Weight, Alternates, Model</li>
+        <li>🚀 VIP Priority, No Limits</li>
+      </ul>
+      <div class="text-center">
+        <button class="bg-white text-yellow-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-100">Get Started</button>
+      </div>
     </div>
   </section>
 
-  <!-- Buttons -->
-  <div class="flex justify-center gap-6 mt-10 mb-20">
-    <a href="/api/create-checkout-session?plan=Basic" class="bg-green-500 hover:bg-green-400 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition">Get Basic</a>
-    <a href="/api/create-checkout-session?plan=Plus" class="bg-blue-500 hover:bg-blue-400 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition">Get Plus</a>
-    <a href="/api/create-checkout-session?plan=Pro" class="bg-yellow-400 hover:bg-yellow-300 text-black font-bold px-8 py-3 rounded-lg shadow-lg transition">Get Pro</a>
+  <!-- Modal -->
+  <div id="subscribeModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-8 w-[95%] max-w-md text-gray-800 shadow-2xl">
+      <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-center text-blue-600">Subscribe</h2>
+
+      <input id="nameInput" type="text" placeholder="Your Name" class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg">
+      <input id="emailInput" type="email" placeholder="Your Email" class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg">
+
+      <div class="flex gap-2 mb-4">
+        <select id="countryCode" class="w-[30%] px-2 py-2 border border-gray-300 rounded-lg bg-white text-gray-700">
+          <option>+971</option>
+          <option>+66</option>
+          <option>+92</option>
+        </select>
+        <input id="phoneInput" type="tel" placeholder="Phone Number" class="w-[70%] px-3 py-2 border border-gray-300 rounded-lg">
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <button onclick="startTrial()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg">Start 7-Day Free Trial</button>
+        <button onclick="subscribeNow()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg">Subscribe Now</button>
+        <button onclick="closeModal()" class="text-gray-600 hover:text-black mt-2 text-sm">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
-  <footer class="bg-white/10 backdrop-blur-md border-t border-white/10 py-4 text-center text-white/80">
+  <footer class="mt-20 bg-white/10 backdrop-blur-md border-t border-white/10 py-4 text-center text-white/80">
     © 2025 PartsMateTH. All rights reserved.
   </footer>
+
+  <!-- JS -->
+  <script>
+    let selectedPlan = "";
+    function openModal(plan) {
+      selectedPlan = plan;
+      document.getElementById("modalTitle").innerText = `${plan} Plan`;
+      document.getElementById("subscribeModal").classList.remove("hidden");
+    }
+    function closeModal() {
+      document.getElementById("subscribeModal").classList.add("hidden");
+    }
+    function startTrial() {
+      alert(`✅ Starting 7-Day Free Trial for ${selectedPlan} Plan`);
+      closeModal();
+    }
+    function subscribeNow() {
+      alert(`💳 Redirecting to payment for ${selectedPlan} Plan`);
+      closeModal();
+    }
+  </script>
+
+    <script>
+      let __countryOptionsCache = null;
+      async function loadCountries(selectId, isoLabelId, prefixSpanId) {
+        if (!__countryOptionsCache) {
+          __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
+        }
+        const html = await __countryOptionsCache;
+        const sel = document.getElementById(selectId);
+        if (!sel) return;
+        sel.innerHTML = html;
+        const update = () => {
+          const opt = sel.options[sel.selectedIndex];
+          if (isoLabelId) {
+            const isoEl = document.getElementById(isoLabelId);
+            if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
+          }
+          if (prefixSpanId) {
+            const preEl = document.getElementById(prefixSpanId);
+            if (preEl) preEl.textContent = opt?.value || "";
+          }
+        };
+        sel.addEventListener("change", update);
+        update();
+        return true; // ✅ allow .then() to work
+      }
+      // Helper to derive country name from selected option
+      function getSelectedCountryName(selectEl) {
+        const opt = selectEl.options[selectEl.selectedIndex];
+        let raw = opt?.getAttribute("data-country") || "";
+        return raw.includes("(") ? raw.split("(")[0].trim() : raw;
+      }
+    </script>
+    
+    <script>
+      // initialize dropdown once page loads
+      loadCountries("countryCode", "isoLabel", "phonePrefix").then(() => {
+        initSubscribeForm(); // attach change event + run first update
+      });
+      
+      function initSubscribeForm() {
+        const countryCode = document.getElementById("countryCode");
+        const phonePrefix = document.getElementById("phonePrefix");
+        const isoLabel = document.getElementById("isoLabel");
+        
+        function updateCountryDisplay() {
+          const selected = countryCode.options[countryCode.selectedIndex];
+          phonePrefix.textContent = selected.value;
+          isoLabel.textContent = selected.getAttribute("data-iso");
+        }
+        countryCode.addEventListener("change", updateCountryDisplay);
+        updateCountryDisplay();
+      }
+      // Prefill from query string
+      const p = new URLSearchParams(window.location.search);
+      const email = p.get("email");
+      const plan = p.get("plan");
+      if (email) {
+        const emailInput = document.getElementById("emailInput");
+        if (emailInput) emailInput.value = email;
+      }
+      if (plan) {
+        const planSelect = document.getElementById("planSelect");
+        if (planSelect) {
+          for (const opt of planSelect.options) {
+            if (opt.value.toLowerCase() === plan.toLowerCase()) {
+              planSelect.value = opt.value;
+              break;
+            }
+          }
+        }
+      }
+      // Subscribe handler
+      async function subscribe() {
+        const name = document.getElementById("nameInput").value;
+        const email = document.getElementById("emailInput").value;
+        const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
+        const plan = document.getElementById("planSelect").value;
+        // Country (trim text before '(' if present)
+        const countrySelect = document.getElementById("countryCode");
+        const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+        let country = selectedOption.getAttribute("data-country") || "";
+        if (country.includes("(")) country = country.split("(")[0].trim();
+        if (!name || !email || !phone) {
+          alert("Please fill in all fields.");
+          return;
+        }
+        const res = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            phone,
+            plan,
+            country
+          }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert("Something went wrong. Please try again.");
+        }
+      }
+    </script>
 
 </body>
 </html>
