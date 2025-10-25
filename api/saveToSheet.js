@@ -39,9 +39,8 @@ export default async function handler(req, res) {
       licenseKey = generateLicenseKey();
       const today = new Date();
       startDate = today.toISOString().split("T")[0];
-      endDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .split("T")[0];
+      const days = (plan?.toLowerCase() === "trial") ? 7 : 30;   // ✅ trial = 7
+      endDate = new Date(today.getTime() + days*24*60*60*1000).toISOString().split("T")[0];
     }
 
     // payload for Google Apps Script
@@ -75,6 +74,9 @@ export default async function handler(req, res) {
     );
 
     const data = await resp.json().catch(() => ({}));
+    if (!resp.ok || data.ok === false) {
+      return res.status(400).json({ error: data.error || "Save failed" }); // ✅ propagate
+    }
 
     return res.status(200).json({
       message: "Success",
