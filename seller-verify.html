@@ -5,19 +5,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Verifying Seller Account...</title>
   <script>
-    (async () => {
+    (async ()=>{
       const params = new URLSearchParams(location.search);
       const code = params.get("code");
       const token = params.get("token");
-      document.body.innerHTML = "Verifying your PartsMateTH seller account...";
-
       if (!code || !token) {
-        document.body.innerHTML = "❌ Invalid verification link.";
+        document.body.innerHTML = "Invalid verification link.";
         return;
       }
-
-      const scriptURL = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
-      const verifyUrl = `${scriptURL}?mode=verifySeller&code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
+      const url = `${"https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec"}?mode=verifySeller&code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
+      const res = await fetch(url);
+      const txt = await res.text();
+      document.body.innerHTML = txt;
     })();
   </script>
 </head>
