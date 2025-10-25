@@ -86,15 +86,20 @@
       <input id="nameInput" type="text" placeholder="Your Name" class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg">
       <input id="emailInput" type="email" placeholder="Your Email" class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg">
 
-      <div class="flex items-stretch gap-2 mb-3 relative">
-        <div class="relative w-[30%] h-11">
-          <select id="countryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-gray-700 text-sm focus:ring-2 focus:ring-blue-400"></select>
-        </div>
-        <div class="flex items-stretch w-[70%] h-11 border border-gray-300 rounded-lg overflow-hidden">
-          <span id="phonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
-          <input id="phoneInput" type="tel" placeholder="Phone Number" class="w-full px-3 py-2 text-gray-700 focus:outline-none" />
-        </div>
-      </div>
+          <!-- Phone + Country -->
+          <div class="flex items-stretch gap-2 mb-4 relative">
+            <div class="relative w-[20%] h-11">
+              <select id="countryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
+              </select>
+              <div id="isoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
+            </div>
+            
+            <div class="flex items-stretch w-[80%] h-11 border border-gray-300 rounded-lg overflow-hidden">
+              <span id="phonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
+              <input class="w-full px-3 py-2 text-gray-700 focus:outline-none" id="phoneInput" placeholder="Phone Number" required type="tel" />
+            </div>
+          </div>
+      
 
       <!-- Invite Code -->
       <input id="invCodeInput" type="text" placeholder="Invite Code (Required)" class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg" required>
@@ -204,7 +209,7 @@
     let __countryOptionsCache = null;
     async function loadCountries(selectId, isoLabelId, prefixSpanId) {
       if (!__countryOptionsCache) {
-        __countryOptionsCache = fetch('/country-options.html').then(r => r.text());
+        __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
       }
       const html = await __countryOptionsCache;
       const sel = document.getElementById(selectId);
@@ -212,16 +217,25 @@
       sel.innerHTML = html;
       const update = () => {
         const opt = sel.options[sel.selectedIndex];
+        if (isoLabelId) {
+          const isoEl = document.getElementById(isoLabelId);
+          if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
+        }
         if (prefixSpanId) {
           const preEl = document.getElementById(prefixSpanId);
-          if (preEl) preEl.textContent = opt?.value || '';
+          if (preEl) preEl.textContent = opt?.value || "";
         }
       };
-      sel.addEventListener('change', update);
+      sel.addEventListener("change", update);
       update();
       return true;
+      function getSelectedCountryName(selectEl) {
+        const opt = selectEl.options[selectEl.selectedIndex];
+        let raw = opt?.getAttribute("data-country") || "";
+        return raw.includes("(") ? raw.split("(")[0].trim() : raw;
+      }
     }
-    loadCountries('countryCode', null, 'phonePrefix');
+    loadCountries("countryCode", "isoLabel", "phonePrefix");
   </script>
 
 </body>
