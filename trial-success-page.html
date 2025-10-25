@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trial Activated | PartsMateTH</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --c1: 56,189,248; /* sky blue */
+      --c2: 16,185,129; /* emerald */
+    }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, rgba(var(--c1),0.9), rgba(var(--c2),0.95));
+      background-attachment: fixed;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins','Inter',sans-serif;
+      color: white;
+    }
+    #bgParticles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .glass {
+      position: relative;
+      z-index: 10;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(20px);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      text-align: center;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.25);
+    }
+    .accent-pill {
+      background: linear-gradient(90deg, rgba(var(--c1),1), rgba(var(--c2),1));
+    }
+    .btn {
+      transition: all 0.25s ease;
+      font-weight: 500;
+      border-radius: 0.75rem;
+      padding: 0.8rem 1.25rem;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgParticles"></canvas>
+
+  <div class="glass max-w-lg w-full text-gray-900">
+    <div class="flex justify-center items-center gap-3 mb-6">
+      <div class="accent-pill w-12 h-12 rounded-xl grid place-items-center shadow-md">
+        <span class="text-2xl text-white">⭐</span>
+      </div>
+      <h1 class="text-3xl font-semibold text-white">7-Day Trial Activated</h1>
+    </div>
+    <p class="text-white/90 text-lg mb-4">Welcome to <strong>PartsMateTH</strong>! Your trial has been successfully activated.</p>
+
+    <div id="trialDetails" class="opacity-0 transition-opacity duration-700">
+      <p id="licenseKey" class="mb-2 text-lg font-mono text-lime-400"></p>
+      <p id="planInfo" class="mb-1 text-md text-white/90"></p>
+      <p id="dateInfo" class="mb-3 text-md text-white/80"></p>
+      <p class="text-white/80 text-sm mb-4">A verification email has been sent. Please verify your email to start using PartsMateTH.</p>
+    </div>
+
+    <a href="/" class="mt-6 inline-block btn bg-white text-gray-900 hover:bg-gray-100">Return to Home</a>
+  </div>
+
+  <script>
+    // simple animated particle background (same as payment-success)
+    (() => {
+      const c=document.getElementById('bgParticles'),x=c.getContext('2d');
+      let w,h,dpr,parts=[];
+      function resize(){dpr=window.devicePixelRatio||1;w=c.width=innerWidth*dpr;h=c.height=innerHeight*dpr;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';}
+      window.addEventListener('resize',resize);resize();
+      const COUNT=Math.min(100,Math.floor((innerWidth*innerHeight)/16000));
+      function rand(a,b){return a+Math.random()*(b-a);}
+      function init(){parts=Array.from({length:COUNT}).map(()=>({x:rand(0,w),y:rand(0,h),vx:rand(-0.2,0.2),vy:rand(-0.2,0.2),r:rand(1,2)*dpr,hue:rand(160,200)}));}
+      init();
+      function step(){x.clearRect(0,0,w,h);for(const p of parts){p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
+      x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=`hsla(${p.hue},70%,60%,0.8)`;x.fill();}
+      requestAnimationFrame(step);}requestAnimationFrame(step);
+    })();
+
+    // read query params and show license info
+    window.onload=()=>{
+      const p=new URLSearchParams(location.search);
+      const key=p.get('key')||'';
+      const email=p.get('email')||'';
+      const plan=p.get('plan')||'Trial';
+      const start=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      const end=new Date(Date.now()+7*86400000).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+      document.getElementById('licenseKey').textContent=`License Key: ${key||'Pending...'}`;
+      document.getElementById('planInfo').textContent=`Plan: ${plan}`;
+      document.getElementById('dateInfo').textContent=`Valid from ${start} to ${end}.`;
+      setTimeout(()=>document.getElementById('trialDetails').classList.remove('opacity-0'),100);
+    };
+  </script>
+</body>
+</html>

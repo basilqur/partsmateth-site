@@ -78,46 +78,120 @@ function doPost(e) {
     .setMimeType(ContentService.MimeType.TEXT);
   }
 
+// === main licensekeys entry ===
+var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+var invitesSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("invites");
 
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+// Generate next OrderNo
+var lastRow = sheet.getLastRow();
+var nextOrderNo = lastRow < 2 ? "PM-469225" : "PM-" + (parseInt(sheet.getRange(lastRow, 1).getValue().split("-")[1], 10) + 1);
 
-  // Determine next OrderNo
-  var lastRow = sheet.getLastRow();
-  var nextOrderNo;
-  if (lastRow < 2) {
-    nextOrderNo = "PM-469225";
-  } else {
-    var lastOrderNo = sheet.getRange(lastRow, 1).getValue();
-    var lastNumber = parseInt(lastOrderNo.split("-")[1], 10);
-    nextOrderNo = "PM-" + (lastNumber + 1);
+// Generate verification token
+var verifyToken = Utilities.getUuid();
+
+// Validate invite code
+var invCode = data.invCode || "";
+var inviteValid = false, inviteRowIndex = -1;
+if (invCode) {
+  var invData = invitesSheet.getDataRange().getValues();
+  for (var i = 1; i < invData.length; i++) {
+    if ((invData[i][0] || "").trim() === invCode && (invData[i][6] || "").trim() === "ACTIVE") {
+      inviteValid = true;
+      inviteRowIndex = i + 1; // store row for later increment
+      break;
+    }
   }
+}
+if (!inviteValid && invCode) {
+  return ContentService.createTextOutput(JSON.stringify({ ok:false, error:"Invalid or inactive invite code" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
 
-  // Append row values (A–O)
-  sheet.appendRow([
-    nextOrderNo,              // A = OrderNo
-    data.key || "",           // B = LicenseKey
-    data.name || "",          // C = Name
-    data.email || "",         // D = Email
-    "'" + data.phone || "",         // E = Phone
-    data.country || "",       // F = Country
-    data.plan || "",          // G = Plan
-    data.start || "",         // H = StartDate
-    data.end || "",           // I = EndDate
-    "",                       // J = Status
-    data.stripePaymentId || "", // K = StripePaymentID
-    data.createdAt || "",     // L = CreatedAt
-    data.sessionId || "",     // M = SessionID
-    data.sessionTime || "",   // N = SessionTime
-    data.notes || ""          // O = Notes
-  ]);
 
-  // Insert the status formula in column J
-  var newRow = sheet.getLastRow();
-  var formula = `=IF(OR(ISBLANK(H${newRow}),ISBLANK(I${newRow}),NOT(ISNUMBER(DATEVALUE(H${newRow}))),NOT(ISNUMBER(DATEVALUE(I${newRow})))),"INACTIVE",IF(AND(TODAY() >= DATEVALUE(H${newRow}),TODAY()<= DATEVALUE(I${newRow})),IF(O${newRow}="Cancelled","ACTIVE TILL END DATE","ACTIVE"),"INACTIVE"))`;
-  sheet.getRange(newRow, 10).setFormula(formula);
+// Determine if trial or paid
+var trialUsed = data.trialUsed || (data.plan && data.plan.toLowerCase() === "trial" ? "YES" : "NO");
+
+// === Prevent multiple trials per user (email or phone) ===
+if (trialUsed === "YES") {
+  var today = new Date();
+  if (!data.start) data.start = Utilities.formatDate(today, Session.getScriptTimeZone(), "yyyy-MM-dd");
+  if (!data.end) {
+    var end = new Date(today.getTime() + 7*24*60*60*1000);
+    data.end = Utilities.formatDate(end, Session.getScriptTimeZone(), "yyyy-MM-dd");
+  }
+  var existing = sheet.getDataRange().getValues();
+  for (var i = 1; i < existing.length; i++) {
+    var oldEmail = (existing[i][3] || "").trim().toLowerCase();
+    var oldPhone = (existing[i][4] || "").replace(/^'/, "").trim();
+    var oldTrial = (existing[i][16] || "").trim().toUpperCase(); // Q = TrialUsed
+    if ((data.email && data.email.trim().toLowerCase() === oldEmail || data.phone && data.phone.trim() === oldPhone) && oldTrial === "YES") {
+      return ContentService.createTextOutput(JSON.stringify({
+        ok: false,
+        error: "Trial already used for this email or phone number."
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+}
+
+// Append row (A–S)
+sheet.appendRow([
+nextOrderNo, // A OrderNo
+data.key || "", // B LicenseKey
+data.name || "", // C Name
+data.email || "", // D Email
+"'" + data.phone || "", // E Phone
+data.country || "", // F Country
+data.plan || "", // G Plan
+data.start || "", // H StartDate
+data.end || "", // I EndDate
+"", // J Status (formula below)
+data.stripePaymentId || "", // K StripePaymentID
+data.createdAt || "", // L CreatedAt
+data.sessionId || "", // M SessionID
+data.sessionTime || "", // N SessionTime
+data.notes || "", // O Notes
+invCode, // P InvCode
+trialUsed, // Q TrialUsed
+verifyToken, // R VerifyToken
+"Pending" // S EmailStatus
+]);
+
+var newRow = sheet.getLastRow();
+
+// Insert status formula in col J
+var formula = `=IF(OR(ISBLANK(H${newRow}),ISBLANK(I${newRow}),NOT(ISNUMBER(DATEVALUE(H${newRow}))),NOT(ISNUMBER(DATEVALUE(I${newRow})))) ,"INACTIVE", IF(AND(TODAY() >= DATEVALUE(H${newRow}),TODAY() <= DATEVALUE(I${newRow})), IF(O${newRow}="Cancelled","ACTIVE TILL END DATE","ACTIVE"), "INACTIVE"))`;
+sheet.getRange(newRow, 10).setFormula(formula);
+
+// Send verification email
+try {
+if (data.email) {
+var verifyUrl = `https://partsmateth.com/user-verify.html?key=${encodeURIComponent(data.key)}&token=${encodeURIComponent(verifyToken)}`;
+var subject = "Verify your PartsMateTH Account";
+var body = `Hello ${data.name || "User"},\n\nPlease verify your PartsMateTH account by clicking the link below:\n\n${verifyUrl}\n\nIf you didn’t sign up, ignore this email.\n\nPartsMateTH Team`;
+GmailApp.sendEmail(data.email, subject, body, {
+from: "support@partsmateth.com",
+name: "PartsMateTH Team",
+replyTo: "support@partsmateth.com",
+noReply: true
+});}} 
+catch (mailErr) {
+Logger.log("Email send failed: " + mailErr.message);
+}
+
+if (inviteValid && inviteRowIndex > 0) {
+  if (trialUsed === "YES") {
+    // F = TrialUses
+    var current = invitesSheet.getRange(inviteRowIndex, 6).getValue() || 0;
+    invitesSheet.getRange(inviteRowIndex, 6).setValue(Number(current) + 1);
+  } else {
+    // E = PaidUses
+    var currentP = invitesSheet.getRange(inviteRowIndex, 5).getValue() || 0;
+    invitesSheet.getRange(inviteRowIndex, 5).setValue(Number(currentP) + 1);
+  }
+}
 
   return ContentService.createTextOutput(
-    JSON.stringify({ orderNo: nextOrderNo, licenseKey: data.key })
+    JSON.stringify({ ok: true, orderNo: nextOrderNo, licenseKey: data.key })
   ).setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -164,7 +238,24 @@ function doGet(e) {
     return ContentService.createTextOutput("❌ Invalid or expired verification link.").setMimeType(ContentService.MimeType.TEXT);
   }
 
+if (e.parameter.mode === "verifyUser" && e.parameter.key && e.parameter.token) {
+var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+var rows = sheet.getDataRange().getValues();
+var key = e.parameter.key.trim();
+var token = e.parameter.token.trim();
 
+
+for (var i = 1; i < rows.length; i++) {
+var rowKey = (rows[i][1] || "").trim(); // col B LicenseKey
+var rowToken = (rows[i][17] || "").trim(); // col R VerifyToken
+if (rowKey === key && rowToken === token) {
+sheet.getRange(i + 1, 18).setValue(""); // clear token col R
+sheet.getRange(i + 1, 19).setValue("Verified"); // S EmailStatus
+return ContentService.createTextOutput("✅ Your PartsMateTH account has been verified successfully!").setMimeType(ContentService.MimeType.TEXT);
+}
+}
+return ContentService.createTextOutput("❌ Invalid or expired verification link.").setMimeType(ContentService.MimeType.TEXT);
+}
   
   if (e.parameter.mode === "profileByKey" && e.parameter.licenseKey) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
@@ -271,7 +362,8 @@ function handleSellerInvites(obj) {
     const exists = data.some(r => r[0] === code);
     if (exists) return { ok: false, error: "Invite code already exists" };
 
-    sheet.appendRow([code, sellerCode, random ? "RANDOM" : "CUSTOM", now, 0, "", "ACTIVE"]);
+    sheet.appendRow([code, sellerCode, random ? "RANDOM" : "CUSTOM", now, 0, 0, "ACTIVE"]);
+
     return { ok: true, inviteCode: code, message: "Invite created successfully" };
   }
 

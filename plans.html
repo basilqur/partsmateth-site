@@ -155,8 +155,8 @@
         });
         const result = await res.json().catch(() => ({}));
         if (res.ok && result.ok) {
-          alert('✅ 7-Day Free Trial Activated! Check your email for verification.');
-          closeModal();
+          // redirect to trial success page
+          window.location.href = `/trial-success-page.html?key=${encodeURIComponent(result.licenseKey)}&email=${encodeURIComponent(email)}&plan=Trial`;
         } else {
           const msg = result.error || '⚠️ Something went wrong while starting your trial.';
           alert(msg);
