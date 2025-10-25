@@ -18,25 +18,6 @@
 
       const scriptURL = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
       const verifyUrl = `${scriptURL}?mode=verifySeller&code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
-
-      try {
-        const res = await fetch(verifyUrl, { cache: "no-store" });
-        let text = await res.text();
-
-        // ✅ recheck status if first response looks invalid or error
-        if (text.includes("Invalid") || text.includes("Error")) {
-          const checkUrl = `${scriptURL}?mode=sellerInviteList&sellerCode=${encodeURIComponent(code)}`;
-          const re = await fetch(checkUrl, { cache: "no-store" });
-          const data = await re.json().catch(() => null);
-          if (data && data.ok) {
-            text = "✅ Your PartsMateTH seller account has been verified successfully!";
-          }
-        }
-
-        document.body.innerHTML = text;
-      } catch (err) {
-        document.body.innerHTML = "⚠️ Verification failed due to a network error.";
-      }
     })();
   </script>
 </head>

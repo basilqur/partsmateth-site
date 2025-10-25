@@ -18,25 +18,6 @@
 
       const scriptURL = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
       const verifyUrl = `${scriptURL}?mode=verifyUser&key=${encodeURIComponent(key)}&token=${encodeURIComponent(token)}`;
-
-      try {
-        const res = await fetch(verifyUrl, { cache: "no-store" });
-        let text = await res.text();
-
-        // if text looks invalid but token was probably cleared, recheck user
-        if (text.includes("Invalid") || text.includes("Error")) {
-          const checkUrl = `${scriptURL}?mode=profileByKey&licenseKey=${encodeURIComponent(key)}`;
-          const re = await fetch(checkUrl, { cache: "no-store" });
-          const data = await re.json().catch(() => null);
-          if (data && data.status && data.status.toUpperCase().includes("ACTIVE")) {
-            text = "✅ Your PartsMateTH account has been verified successfully!";
-          }
-        }
-
-        document.body.innerHTML = text;
-      } catch (err) {
-        document.body.innerHTML = "⚠️ Verification failed due to a network error.";
-      }
     })();
   </script>
 </head>
