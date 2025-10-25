@@ -175,6 +175,8 @@
       window.onload=async()=>{
         const params=new URLSearchParams(window.location.search);
         const email=params.get('email');
+        const plan=params.get('plan');
+        const invCode=params.get('invCode')||''; // ✅ capture invite code
         document.getElementById('loading').classList.remove('hidden');
         document.getElementById('orderDetails').classList.add('hidden');
 
@@ -186,6 +188,14 @@
           document.getElementById('orderInfo').textContent='Missing email. Please return to Home and try again.';
           return;
         }
+
+        try {
+          await fetch('/api/saveToSheet',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({email,plan,invCode,trialUsed:'NO'}) // paid plan always NO
+          });
+        }catch(err){console.error('SaveToSheet failed',err)}
 
         const data=await fetchWithBackoff(`/api/get-latest-order?email=${encodeURIComponent(email)}`);
         document.getElementById('loading').classList.add('hidden');

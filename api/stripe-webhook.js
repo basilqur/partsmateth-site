@@ -32,11 +32,11 @@ export default async function handler(req, res) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const { name, email, phone, plan, country } = session.metadata;
+    const { name, email, phone, country, plan, invCode } = session.metadata; // ✅ added invCode
     const subscriptionId = session.subscription;
 
     try {
-      // Call saveToSheet and capture response (orderNo + licenseKey)
+      // ✅ Call saveToSheet with invCode + trialUsed flags
       const resp = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/saveToSheet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,18 +48,14 @@ export default async function handler(req, res) {
           plan,
           stripePaymentId: subscriptionId,
           createdAt: new Date().toISOString(),
+          invCode: invCode || '', // ✅ pass invite code
+          trialUsed: 'NO',       // ✅ mark as paid plan
         }),
       });
 
       const data = await resp.json();
       console.log(`✅ Saved subscription ${subscriptionId} with order ${data.orderNo}`);
-
-      // Redirect user to success page with query params
-      // (Stripe Checkout handles redirect using success_url, but user-facing page needs these values)
-      // For now, just log the intended URL:
-      console.log(
-        `👉 Success Page URL: ${process.env.NEXT_PUBLIC_SITE_URL}/payment-success-page.html?orderNo=${encodeURIComponent(data.orderNo)}&licenseKey=${encodeURIComponent(data.licenseKey)}`
-      );
+      console.log(`👉 Success Page: ${process.env.NEXT_PUBLIC_SITE_URL}/payment-success-page.html?orderNo=${encodeURIComponent(data.orderNo)}&licenseKey=${encodeURIComponent(data.licenseKey)}&plan=${encodeURIComponent(plan)}&invCode=${encodeURIComponent(invCode || '')}`);
     } catch (err) {
       console.error('❌ Failed to call saveToSheet:', err.message);
     }

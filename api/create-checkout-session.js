@@ -10,7 +10,11 @@ const stripe = new Stripe(
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end('Method Not Allowed');
 
-  const { name, email, phone, plan, country } = req.body;
+  const { name, email, phone, plan, country, invCode } = req.body;
+
+  if (!invCode || invCode.trim() === '') {
+  return res.status(400).json({ error: 'Invite code is required.' });
+  }
 
   // Pick correct Price IDs
   const priceLookup = {
@@ -34,9 +38,9 @@ export default async function handler(req, res) {
       mode: 'subscription',
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment-success-page.html?email=${encodeURIComponent(email)}`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment-success-page.html?email=${encodeURIComponent(email)}&plan=${encodeURIComponent(plan)}&invCode=${encodeURIComponent(invCode)}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel-page.html?email=${encodeURIComponent(email)}&plan=${encodeURIComponent(plan)}`,
-      metadata: { name, email, phone, country, plan },
+      metadata: { name, email, phone, country, plan, invCode },
     });
 
     res.status(200).json({ url: session.url });

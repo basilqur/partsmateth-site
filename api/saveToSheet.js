@@ -22,6 +22,8 @@ export default async function handler(req, res) {
       message,
       stripePaymentId,
       createdAt,
+      invCode,          // ✅ new
+      trialUsed,        // ✅ new
     } = req.body;
 
     // default to licensekeys sheet
@@ -57,6 +59,8 @@ export default async function handler(req, res) {
       sessionId: "",        // M
       sessionTime: "",      // N
       notes: message || "", // O
+      invCode: invCode || "", // P
+      trialUsed: trialUsed || (plan?.toLowerCase() === "trial" ? "YES" : "NO"), //Q
     };
 
     const scriptUrl = process.env.GOOGLE_SCRIPT_WEBAPP;

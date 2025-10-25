@@ -32,8 +32,7 @@
 
   <!-- Plan Cards -->
   <section class="flex flex-wrap justify-center gap-8 max-w-6xl mx-auto px-6">
-    
-    <!-- BASIC -->
+    <!-- Basic -->
     <div class="w-80 rounded-3xl p-8 bg-gradient-to-br from-teal-400 to-blue-500 text-white shadow-lg hover:scale-105 transition cursor-pointer" onclick="openModal('Basic')">
       <h3 class="text-2xl font-bold text-center mb-2">Basic</h3>
       <p class="text-center text-white/90 mb-1 font-semibold">99 AED / month</p>
@@ -42,15 +41,13 @@
         <li>✔ 10 Part Numbers per Request</li>
         <li>✔ 75 Checks per Day</li>
         <li>⚙️ Speed: <b>Slow</b> (4s)</li>
-        <li>✔ Access to Prices & Names Checker</li>
-        <li>⚠ Limited Tools – No Weight, Alternates, Model</li>
+        <li>✔ Prices & Names Checker</li>
+        <li>⚠ Limited Tools</li>
       </ul>
-      <div class="text-center">
-        <button class="bg-white text-teal-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">Get Started</button>
-      </div>
+      <div class="text-center"><button class="bg-white text-teal-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">Get Started</button></div>
     </div>
 
-    <!-- PROFESSIONAL -->
+    <!-- Professional -->
     <div class="w-80 rounded-3xl p-8 bg-gradient-to-br from-blue-500 to-purple-500 text-white shadow-lg hover:scale-105 transition cursor-pointer" onclick="openModal('Professional')">
       <h3 class="text-2xl font-bold text-center mb-2">Professional</h3>
       <p class="text-center text-white/90 mb-1 font-semibold">199 AED / month</p>
@@ -59,15 +56,13 @@
         <li>✔ 20 Part Numbers per Request</li>
         <li>✔ 150 Checks per Day</li>
         <li>⚙️ Speed: <b>Fast</b> (2.5s)</li>
-        <li>✔ Access to Prices, Names, Country, Details, List Cleaner</li>
+        <li>✔ Prices, Names, Country, Details, List Cleaner</li>
         <li>⚠ Some Pro Features Disabled</li>
       </ul>
-      <div class="text-center">
-        <button class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">Get Started</button>
-      </div>
+      <div class="text-center"><button class="bg-white text-blue-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100">Get Started</button></div>
     </div>
 
-    <!-- BUSINESS -->
+    <!-- Business -->
     <div class="w-80 rounded-3xl p-8 bg-gradient-to-br from-yellow-400 to-orange-500 text-white shadow-lg hover:scale-105 transition cursor-pointer" onclick="openModal('Business')">
       <h3 class="text-2xl font-bold text-center mb-2">Business</h3>
       <p class="text-center text-white/90 mb-1 font-semibold">349 AED / month</p>
@@ -76,12 +71,10 @@
         <li>✔ 50 Part Numbers per Request</li>
         <li>✔ 300 Checks per Day</li>
         <li>⚙️ Speed: <b>Fastest</b> (1.5s)</li>
-        <li>✔ Access to All Tools – Prices, Names, Country, Details, Weight, Alternates, Model</li>
-        <li>🚀 VIP Priority, No Limits</li>
+        <li>✔ All Tools: Prices, Names, Country, Details, Weight, Alternates, Model</li>
+        <li>🚀 VIP Priority</li>
       </ul>
-      <div class="text-center">
-        <button class="bg-white text-yellow-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-100">Get Started</button>
-      </div>
+      <div class="text-center"><button class="bg-white text-yellow-700 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-100">Get Started</button></div>
     </div>
   </section>
 
@@ -93,14 +86,18 @@
       <input id="nameInput" type="text" placeholder="Your Name" class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg">
       <input id="emailInput" type="email" placeholder="Your Email" class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg">
 
-      <div class="flex gap-2 mb-4">
-        <select id="countryCode" class="w-[30%] px-2 py-2 border border-gray-300 rounded-lg bg-white text-gray-700">
-          <option>+971</option>
-          <option>+66</option>
-          <option>+92</option>
-        </select>
-        <input id="phoneInput" type="tel" placeholder="Phone Number" class="w-[70%] px-3 py-2 border border-gray-300 rounded-lg">
+      <div class="flex items-stretch gap-2 mb-3 relative">
+        <div class="relative w-[30%] h-11">
+          <select id="countryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-gray-700 text-sm focus:ring-2 focus:ring-blue-400"></select>
+        </div>
+        <div class="flex items-stretch w-[70%] h-11 border border-gray-300 rounded-lg overflow-hidden">
+          <span id="phonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
+          <input id="phoneInput" type="tel" placeholder="Phone Number" class="w-full px-3 py-2 text-gray-700 focus:outline-none" />
+        </div>
       </div>
+
+      <!-- Invite Code -->
+      <input id="invCodeInput" type="text" placeholder="Invite Code (Required)" class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg" required>
 
       <div class="flex flex-col gap-3">
         <button onclick="startTrial()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg">Start 7-Day Free Trial</button>
@@ -115,7 +112,6 @@
     © 2025 PartsMateTH. All rights reserved.
   </footer>
 
-  <!-- JS -->
   <script>
     let selectedPlan = "";
     function openModal(plan) {
@@ -126,123 +122,107 @@
     function closeModal() {
       document.getElementById("subscribeModal").classList.add("hidden");
     }
-    function startTrial() {
-      alert(`✅ Starting 7-Day Free Trial for ${selectedPlan} Plan`);
-      closeModal();
-    }
-    function subscribeNow() {
-      alert(`💳 Redirecting to payment for ${selectedPlan} Plan`);
-      closeModal();
-    }
-  </script>
 
-    <script>
-      let __countryOptionsCache = null;
-      async function loadCountries(selectId, isoLabelId, prefixSpanId) {
-        if (!__countryOptionsCache) {
-          __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
-        }
-        const html = await __countryOptionsCache;
-        const sel = document.getElementById(selectId);
-        if (!sel) return;
-        sel.innerHTML = html;
-        const update = () => {
-          const opt = sel.options[sel.selectedIndex];
-          if (isoLabelId) {
-            const isoEl = document.getElementById(isoLabelId);
-            if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
-          }
-          if (prefixSpanId) {
-            const preEl = document.getElementById(prefixSpanId);
-            if (preEl) preEl.textContent = opt?.value || "";
-          }
-        };
-        sel.addEventListener("change", update);
-        update();
-        return true; // ✅ allow .then() to work
+    // --- Trial ---
+    async function startTrial() {
+      const name = document.getElementById('nameInput').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const phone = document.getElementById('phonePrefix').textContent + document.getElementById('phoneInput').value.trim();
+      const countrySelect = document.getElementById('countryCode');
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      let country = selectedOption?.getAttribute('data-country') || '';
+      if (country.includes('(')) country = country.split('(')[0].trim();
+      const invCode = document.getElementById('invCodeInput').value.trim();
+
+      if (!name || !email || !phone || !invCode) {
+        alert('Please fill all fields including Invite Code.');
+        return;
       }
-      // Helper to derive country name from selected option
-      function getSelectedCountryName(selectEl) {
-        const opt = selectEl.options[selectEl.selectedIndex];
-        let raw = opt?.getAttribute("data-country") || "";
-        return raw.includes("(") ? raw.split("(")[0].trim() : raw;
-      }
-    </script>
-    
-    <script>
-      // initialize dropdown once page loads
-      loadCountries("countryCode", "isoLabel", "phonePrefix").then(() => {
-        initSubscribeForm(); // attach change event + run first update
-      });
-      
-      function initSubscribeForm() {
-        const countryCode = document.getElementById("countryCode");
-        const phonePrefix = document.getElementById("phonePrefix");
-        const isoLabel = document.getElementById("isoLabel");
-        
-        function updateCountryDisplay() {
-          const selected = countryCode.options[countryCode.selectedIndex];
-          phonePrefix.textContent = selected.value;
-          isoLabel.textContent = selected.getAttribute("data-iso");
-        }
-        countryCode.addEventListener("change", updateCountryDisplay);
-        updateCountryDisplay();
-      }
-      // Prefill from query string
-      const p = new URLSearchParams(window.location.search);
-      const email = p.get("email");
-      const plan = p.get("plan");
-      if (email) {
-        const emailInput = document.getElementById("emailInput");
-        if (emailInput) emailInput.value = email;
-      }
-      if (plan) {
-        const planSelect = document.getElementById("planSelect");
-        if (planSelect) {
-          for (const opt of planSelect.options) {
-            if (opt.value.toLowerCase() === plan.toLowerCase()) {
-              planSelect.value = opt.value;
-              break;
-            }
-          }
-        }
-      }
-      // Subscribe handler
-      async function subscribe() {
-        const name = document.getElementById("nameInput").value;
-        const email = document.getElementById("emailInput").value;
-        const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
-        const plan = document.getElementById("planSelect").value;
-        // Country (trim text before '(' if present)
-        const countrySelect = document.getElementById("countryCode");
-        const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-        let country = selectedOption.getAttribute("data-country") || "";
-        if (country.includes("(")) country = country.split("(")[0].trim();
-        if (!name || !email || !phone) {
-          alert("Please fill in all fields.");
-          return;
-        }
-        const res = await fetch("/api/create-checkout-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+
+      try {
+        const res = await fetch('/api/saveToSheet', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name,
             email,
             phone,
-            plan,
-            country
-          }),
+            country,
+            plan: 'Trial',
+            invCode,
+            trialUsed: 'YES'
+          })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (res.ok && result.ok) {
+          alert('✅ 7-Day Free Trial Activated! Check your email for verification.');
+          closeModal();
+        } else {
+          const msg = result.error || '⚠️ Something went wrong while starting your trial.';
+          alert(msg);
+        }
+
+      } catch (err) {
+        console.error('Trial start error:', err);
+        alert('⚠️ Failed to start trial.');
+      }
+    }
+
+    // --- Subscribe ---
+    async function subscribeNow() {
+      const name = document.getElementById('nameInput').value.trim();
+      const email = document.getElementById('emailInput').value.trim();
+      const phone = document.getElementById('phonePrefix').textContent + document.getElementById('phoneInput').value.trim();
+      const countrySelect = document.getElementById('countryCode');
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      let country = selectedOption?.getAttribute('data-country') || '';
+      if (country.includes('(')) country = country.split('(')[0].trim();
+      const invCode = document.getElementById('invCodeInput').value.trim();
+
+      if (!name || !email || !phone || !invCode) {
+        alert('Please fill all fields including Invite Code.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, plan: selectedPlan, country, invCode })
         });
         const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert("Something went wrong. Please try again.");
-        }
+        if (data.url) window.location.href = data.url;
+        else alert('⚠️ Something went wrong, please try again.');
+      } catch (err) {
+        console.error('Subscribe error:', err);
+        alert('⚠️ Failed to start checkout.');
       }
-    </script>
+    }
+  </script>
+
+  <script>
+    let __countryOptionsCache = null;
+    async function loadCountries(selectId, isoLabelId, prefixSpanId) {
+      if (!__countryOptionsCache) {
+        __countryOptionsCache = fetch('/country-options.html').then(r => r.text());
+      }
+      const html = await __countryOptionsCache;
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = html;
+      const update = () => {
+        const opt = sel.options[sel.selectedIndex];
+        if (prefixSpanId) {
+          const preEl = document.getElementById(prefixSpanId);
+          if (preEl) preEl.textContent = opt?.value || '';
+        }
+      };
+      sel.addEventListener('change', update);
+      update();
+      return true;
+    }
+    loadCountries('countryCode', null, 'phonePrefix');
+  </script>
 
 </body>
 </html>
