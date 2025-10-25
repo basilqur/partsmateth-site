@@ -3,25 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Verifying Your Account...</title>
+  <title>Verifying Account...</title>
   <script>
-    (async () => {
+    (async ()=> {
       const params = new URLSearchParams(location.search);
       const key = params.get("key");
       const token = params.get("token");
-      document.body.innerHTML = "Verifying your PartsMateTH account...";
 
       if (!key || !token) {
         document.body.innerHTML = "❌ Invalid verification link.";
         return;
       }
 
-      const scriptURL = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
-      const verifyUrl = `${scriptURL}?mode=verifyUser&key=${encodeURIComponent(key)}&token=${encodeURIComponent(token)}`;
+      // direct call – no nested fetch or recheck
+      const url = `${"https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec"}?mode=verifyUser&key=${encodeURIComponent(key)}&token=${encodeURIComponent(token)}`;
+      try {
+        const res = await fetch(url);
+        const txt = await res.text();
+        document.body.innerHTML = txt;
+      } catch (err) {
+        document.body.innerHTML = "⚠️ Verification failed due to a network error.";
+      }
     })();
   </script>
 </head>
 <body style="font-family:sans-serif;text-align:center;padding:40px;color:#333;">
-  Verifying your account...
+  Verifying your PartsMateTH account...
 </body>
 </html>
