@@ -196,7 +196,7 @@
           body: JSON.stringify({ name, email, phone, plan: selectedPlan, country, invCode })
         });
         const data = await res.json();
-        if (data.url) window.location.href = data.url;
+        if (res.ok && result.ok && data.url) window.location.href = data.url;
         else alert('⚠️ Something went wrong, please try again.');
       } catch (err) {
         console.error('Subscribe error:', err);
