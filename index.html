@@ -11,8 +11,43 @@
         scroll-behavior: smooth;
       }
     </style>
+    <style>
+  .tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(37, 99, 235, 0.95); /* Tailwind blue-600 */
+    color: white;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .tooltip:hover::after {
+    opacity: 1;
+  }
+</style>
+
+<style>
+.floating-img {
+position: absolute;
+width: clamp(300px, 30vw, 460px);
+height: auto;
+opacity: 0;
+transform: translateY(150px);
+will-change: transform, opacity;
+}
+</style>
+
+
   </head>
   
+
   <body class="bg-gray-50 text-gray-800">
     
     <!-- Navbar -->
@@ -143,16 +178,16 @@
 <!-- Clickable Hotspots Overlay -->
 <div class="absolute top-[30px] left-0 h-[27px] w-full">
 <!-- Each tab is positioned according to provided Photoshop coordinates -->
-<div data-index="0" class="absolute top-0 left-[0%] w-[5.25%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="1" class="absolute top-0 left-[5.7%] w-[10.75%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="2" class="absolute top-0 left-[16.5%] w-[10.7%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="3" class="absolute top-0 left-[27.4%] w-[12.1%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="4" class="absolute top-0 left-[39.7%] w-[8.4%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="5" class="absolute top-0 left-[48.1%] w-[8.6%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="6" class="absolute top-0 left-[56.7%] w-[11.4%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="7" class="absolute top-0 left-[68.1%] w-[12.3%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="8" class="absolute top-0 left-[80.9%] w-[10.6%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="9" class="absolute top-0 left-[91.8%] w-[7.3%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="0" data-tooltip="Home" title="Home" class="tooltip absolute top-0 left-[0%] w-[5.69%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="1" data-tooltip="Click to view Prices tab" title="Prices Checker"class="tooltip absolute top-0 left-[5.7%] w-[10.9%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="2" data-tooltip="Click to view Names tab" title="Names Checker" class="tooltip absolute top-0 left-[16.5%] w-[10.75%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="3" data-tooltip="Click to view Country tab" title="Country Checker" class="tooltip absolute top-0 left-[27.4%] w-[12.1%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="4" data-tooltip="Click to view Details tab" title="Part Details" class="tooltip absolute top-0 left-[39.45%] w-[8.58%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="5" data-tooltip="Click to view Cleaner tab" title="List Cleaner" class="tooltip absolute top-0 left-[48.1%] w-[8.85%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="6" data-tooltip="Click to view Weights tab" title="Weights Checker" class="tooltip absolute top-0 left-[56.9%] w-[11.7%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="7" data-tooltip="Click to view Alternates tab" title="Alternates Check" class="tooltip absolute top-0 left-[68.5%] w-[12.5%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="8" data-tooltip="Click to view Model Check tab" title="Model Checker" class="tooltip absolute top-0 left-[80.8%] w-[11%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="9" data-tooltip="View Tab" title="Stock Pro" class="tooltip absolute top-0 left-[91.8%] w-[8.3%] h-full cursor-pointer hover:bg-gray-500/10"></div>
 </div>
 </div>
 
@@ -162,6 +197,31 @@
 </div>
 </section>
 
+<!-- Black Screen with Text -->
+<section class="h-[100vh] bg-[#111] flex flex-col justify-center px-10 text-left text-6xl font-extrabold tracking-tight leading-tight font-[Poppins] overflow-hidden">
+  <div class="overflow-hidden"><p class="scroll-line">THE FUTURE OF AUTOPARTS</p></div>
+  <div class="overflow-hidden"><p class="scroll-line">FOR DEALERS, GARAGES, AND EXPORTERS</p></div>
+  <div class="overflow-hidden"><p class="scroll-line">MADE IN THAILAND, CONNECTING THE WORLD</p></div>
+  <div class="overflow-hidden"><p class="scroll-line">FASTER, SMARTER, AND SIMPLER — PARTSMATETH</p></div>
+</section>
+
+<!-- Black Screen with Images and Center Text -->
+<section id="showcase" class="relative h-[300vh] bg-[#111] text-[#fffff5] overflow-hidden flex items-start justify-center pt-[20vh]">
+<h1 id="mainText" class="text-[14vw] font-extrabold tracking-tight z-10 select-none opacity-0 scale-90">
+PARTSMATE
+</h1>
+<!-- Floating images -->
+<img src="/app-tabs-images/1-Home-Tab.png" class="floating-img" style="top:50%; left:10%;">
+<img src="/app-tabs-images/2-Prices-Tab.png" class="floating-img" style="top:55%; left:60%;">
+<img src="/app-tabs-images/3-Names-Tab.png" class="floating-img" style="top:55%; left:25%;">
+<img src="/app-tabs-images/4-Country-Tab.png" class="floating-img" style="top:65%; left:68%;">
+<img src="/app-tabs-images/5-Details-Tab.png" class="floating-img" style="top:60%; left:5%;">
+<img src="/app-tabs-images/6-Lists-Tab.png" class="floating-img" style="top:70%; left:13%;">
+<img src="/app-tabs-images/7-Weights-Tab.png" class="floating-img" style="top:85%; left:8%;">
+<img src="/app-tabs-images/8-Alternates-Tab.png" class="floating-img" style="top:85%; left:65%;">
+<img src="/app-tabs-images/9-Model-Tab.png" class="floating-img" style="top:72%; left:75%;">
+<img src="/app-tabs-images/10-Stock-Tab.png" class="floating-img" style="top:78%; left:40%;">
+</section>
     
     <!-- About Us Section -->
     <section id="about" class="py-20 bg-white text-center px-6">
@@ -445,6 +505,88 @@
         }
       }
     </script>
+
+
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  const lines = gsap.utils.toArray(".scroll-line");
+
+  lines.forEach((line, i) => {
+    gsap.fromTo(line,
+      {
+        backgroundImage: "linear-gradient(to right, #fffff5 0%, #fffff5 0%, #2d2e2f 0%, #2d2e2f 100%)",
+        backgroundClip: "text",
+        textFillColor: "transparent",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent"
+      },
+      {
+        backgroundImage: "linear-gradient(to right, #fffff5 100%, #fffff5 100%, #2d2e2f 100%, #2d2e2f 100%)",
+        ease: "power1.out",
+        scrollTrigger: {
+          trigger: line,
+          start: "top 90%",   // starts earlier
+          end: "top 5%",      // ends later for that smooth lag
+          scrub: 2.5,         // softens the movement — the higher, the smoother
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+  });
+</script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+
+// --- Master timeline for PARTSMATE fade-in, hold, and release ---
+const tl = gsap.timeline({
+scrollTrigger: {
+trigger: "#showcase",
+start: "top top",
+end: "bottom 35%",
+scrub: true,
+pin: "#mainText",
+pinSpacing: true,
+anticipatePin: 1,
+}
+});
+
+
+// Fade and scale in
+tl.fromTo("#mainText", { opacity: 0, scale: 0.9, y: 0 }, { opacity: 1, scale: 1, ease: "power2.out", duration: 0.25 });
+
+
+// Hold
+tl.to("#mainText", { duration: 0.8 });
+
+
+// Glide out gently at the end
+tl.to("#mainText", { y: -300, opacity: 0.6, ease: "power2.inOut", duration: 0.25 });
+
+
+// --- Floating images animation ---
+const imgs = gsap.utils.toArray(".floating-img");
+imgs.forEach((img, i) => {
+gsap.to(img, {
+y: -650,
+opacity: 1,
+duration: 2,
+ease: "power1.out",
+scrollTrigger: {
+trigger: "#showcase",
+start: `${5 + i * 2}% top`,
+end: "bottom 15%",
+scrub: true,
+},
+});
+});
+</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
