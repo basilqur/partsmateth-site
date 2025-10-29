@@ -160,7 +160,6 @@
         });
         const result = await res.json().catch(() => ({}));
         if (res.ok && result.ok) {
-          // redirect to trial success page
           window.location.href = `/trial-success-page.html?key=${encodeURIComponent(result.licenseKey)}&email=${encodeURIComponent(email)}&plan=Trial`;
         } else {
           const msg = result.error || '⚠️ Something went wrong while starting your trial.';
@@ -196,7 +195,7 @@
           body: JSON.stringify({ name, email, phone, plan: selectedPlan, country, invCode })
         });
         const data = await res.json();
-        if (res.ok && result.ok && data.url) window.location.href = data.url;
+        if (data.url) window.location.href = data.url;
         else alert('⚠️ Something went wrong, please try again.');
       } catch (err) {
         console.error('Subscribe error:', err);

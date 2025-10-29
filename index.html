@@ -135,19 +135,25 @@
 <h2 class="text-3xl md:text-4xl font-semibold mb-10 tracking-tight">Explore PartsMateTH Tabs</h2>
 
 
-<!-- Main Image -->
-<div class="relative w-full overflow-hidden rounded-2xl shadow-lg bg-white">
-<img id="mainImage" src="/app-tabs-images/1-Home-Tab.png" alt="Home Tab" class="w-full object-contain aspect-video transition-opacity duration-700 opacity-100">
+<!-- Main Image Container -->
+<div class="relative w-full overflow-hidden rounded-2xl shadow-lg bg-white inline-block">
+<img id="mainImage" src="/app-tabs-images/1-Home-Tab.png" alt="App Tabs Demo" class="w-full object-contain aspect-video transition-opacity duration-700 opacity-100 select-none pointer-events-none">
+
+
+<!-- Clickable Hotspots Overlay -->
+<div class="absolute top-[30px] left-0 h-[27px] w-full">
+<!-- Each tab is positioned according to provided Photoshop coordinates -->
+<div data-index="0" class="absolute top-0 left-[0%] w-[5.25%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="1" class="absolute top-0 left-[5.7%] w-[10.75%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="2" class="absolute top-0 left-[16.5%] w-[10.7%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="3" class="absolute top-0 left-[27.4%] w-[12.1%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="4" class="absolute top-0 left-[39.7%] w-[8.4%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="5" class="absolute top-0 left-[48.1%] w-[8.6%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="6" class="absolute top-0 left-[56.7%] w-[11.4%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="7" class="absolute top-0 left-[68.1%] w-[12.3%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="8" class="absolute top-0 left-[80.9%] w-[10.6%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="9" class="absolute top-0 left-[91.8%] w-[7.3%] h-full cursor-pointer hover:bg-blue-500/10"></div>
 </div>
-
-
-<!-- Thumbnails -->
-<div class="flex justify-center gap-4 mt-6 flex-wrap">
-<template id="thumbTemplate">
-<button class="thumb w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent hover:scale-105 transition">
-<img src="" alt="tab thumb" class="w-full h-full object-cover">
-</button>
-</template>
 </div>
 
 
@@ -443,8 +449,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 const mainImage = document.getElementById('mainImage');
-const thumbsContainer = document.querySelector('#app-tabs .flex');
-const template = document.getElementById('thumbTemplate');
+const btn = document.getElementById('toggleAuto');
+const hotspots = document.querySelectorAll('[data-index]');
 
 
 const images = [
@@ -458,51 +464,50 @@ let auto = true;
 let timer;
 
 
-function showImage(i, fade=true){
+function showImage(i, fade = true) {
 const newSrc = `/app-tabs-images/${images[i]}`;
-
-if(fade){
+if (fade) {
 mainImage.classList.add('opacity-0');
-setTimeout(()=>{
+setTimeout(() => {
 mainImage.src = newSrc;
 mainImage.classList.remove('opacity-0');
-},300);
+}, 300);
 } else {
 mainImage.src = newSrc;
 }
-document.querySelectorAll('.thumb').forEach((t,j)=>{
-t.classList.toggle('ring-4', j===i);
-t.classList.toggle('ring-blue-500', j===i);
-});
 }
-mainImage.onerror = () => console.log('404:', mainImage.src);
 
-// build thumbnails
-images.forEach((name, i) => {
-const el = template.content.cloneNode(true).firstElementChild;
-el.querySelector('img').src = `/app-tabs-images/${name}`;
-el.addEventListener('click', () => {
-index = i;
+
+function next() {
+index = (index + 1) % images.length;
+showImage(index);
+}
+
+
+function startAuto() { timer = setInterval(next, 3000); }
+function stopAuto() { clearInterval(timer); }
+function resetAuto() { if (auto) { stopAuto(); startAuto(); } }
+
+
+// Attach click handlers to overlay zones
+hotspots.forEach(h => {
+h.addEventListener('click', () => {
+index = parseInt(h.dataset.index);
 showImage(index);
 resetAuto();
 });
-thumbsContainer.appendChild(el);
 });
 
 
-function next(){ index = (index + 1) % images.length; showImage(index); }
-
-
-function startAuto(){ timer = setInterval(next, 3000); }
-function stopAuto(){ clearInterval(timer); }
-function resetAuto(){ if(auto){ stopAuto(); startAuto(); } }
-
-
-const btn = document.getElementById('toggleAuto');
-btn.addEventListener('click', ()=>{
+btn.addEventListener('click', () => {
 auto = !auto;
-if(auto){ startAuto(); btn.textContent='⏸️ Pause Auto Slide'; }
-else { stopAuto(); btn.textContent='▶️ Resume Auto Slide'; }
+if (auto) {
+startAuto();
+btn.textContent = '⏸️ Pause Auto Slide';
+} else {
+stopAuto();
+btn.textContent = '▶️ Resume Auto Slide';
+}
 });
 
 
