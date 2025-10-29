@@ -143,16 +143,16 @@
 <!-- Clickable Hotspots Overlay -->
 <div class="absolute top-[30px] left-0 h-[27px] w-full">
 <!-- Each tab is positioned according to provided Photoshop coordinates -->
-<div data-index="0" class="absolute top-0 left-[0%] w-[5.25%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="1" class="absolute top-0 left-[5.7%] w-[10.75%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="2" class="absolute top-0 left-[16.5%] w-[10.7%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="3" class="absolute top-0 left-[27.4%] w-[12.1%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="4" class="absolute top-0 left-[39.7%] w-[8.4%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="5" class="absolute top-0 left-[48.1%] w-[8.6%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="6" class="absolute top-0 left-[56.7%] w-[11.4%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="7" class="absolute top-0 left-[68.1%] w-[12.3%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="8" class="absolute top-0 left-[80.9%] w-[10.6%] h-full cursor-pointer hover:bg-blue-500/10"></div>
-<div data-index="9" class="absolute top-0 left-[91.8%] w-[7.3%] h-full cursor-pointer hover:bg-blue-500/10"></div>
+<div data-index="0" class="absolute top-0 left-[0%] w-[5.25%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="1" class="absolute top-0 left-[5.7%] w-[10.75%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="2" class="absolute top-0 left-[16.5%] w-[10.7%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="3" class="absolute top-0 left-[27.4%] w-[12.1%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="4" class="absolute top-0 left-[39.7%] w-[8.4%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="5" class="absolute top-0 left-[48.1%] w-[8.6%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="6" class="absolute top-0 left-[56.7%] w-[11.4%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="7" class="absolute top-0 left-[68.1%] w-[12.3%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="8" class="absolute top-0 left-[80.9%] w-[10.6%] h-full cursor-pointer hover:bg-gray-500/10"></div>
+<div data-index="9" class="absolute top-0 left-[91.8%] w-[7.3%] h-full cursor-pointer hover:bg-gray-500/10"></div>
 </div>
 </div>
 
@@ -484,7 +484,7 @@ showImage(index);
 }
 
 
-function startAuto() { timer = setInterval(next, 3000); }
+function startAuto() { timer = setInterval(next, 5000); }
 function stopAuto() { clearInterval(timer); }
 function resetAuto() { if (auto) { stopAuto(); startAuto(); } }
 
@@ -495,8 +495,7 @@ h.addEventListener('click', () => {
 index = parseInt(h.dataset.index);
 showImage(index);
 resetAuto();
-});
-});
+});});
 
 
 btn.addEventListener('click', () => {
