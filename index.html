@@ -165,9 +165,10 @@ will-change: transform, opacity;
     </section>
 
     <!-- App Tabs Slideshow -->
-<section id="app-tabs" class="relative py-16 bg-gradient-to-b from-white via-white to-slate-50 text-center">
+<section id="app-tabs" class="relative py-16 bg-[#1b1c1d] text-white from-white via-white to-slate-50 text-center">
 <div class="max-w-5xl mx-auto px-4">
-<h2 class="text-3xl md:text-4xl font-semibold mb-10 tracking-tight">Explore PartsMateTH Tabs</h2>
+<h2 class="text-3xl md:text-4xl font-semibold mb-2 tracking-tight">Explore PartsMateTH Tabs</h2>
+<h2 class="text-2xl md:text-1xl font-semibold mb-10 tracking-tight">( ↓ You can click the headers to switch tabs ↓ )</h2>
 
 
 <!-- Main Image Container -->
@@ -198,7 +199,7 @@ will-change: transform, opacity;
 </section>
 
 <!-- Black Screen with Text -->
-<section class="h-[100vh] bg-[#111] flex flex-col justify-center px-10 text-left text-6xl font-extrabold tracking-tight leading-tight font-[Poppins] overflow-hidden">
+<section class="h-[120vh] bg-[#1b1c1d] flex flex-col justify-center px-10 text-left text-6xl font-extrabold tracking-tight leading-tight font-[Poppins] overflow-hidden">
   <div class="overflow-hidden"><p class="scroll-line">THE FUTURE OF AUTOPARTS</p></div>
   <div class="overflow-hidden"><p class="scroll-line">FOR DEALERS, GARAGES, AND EXPORTERS</p></div>
   <div class="overflow-hidden"><p class="scroll-line">MADE IN THAILAND, CONNECTING THE WORLD</p></div>
@@ -206,21 +207,21 @@ will-change: transform, opacity;
 </section>
 
 <!-- Black Screen with Images and Center Text -->
-<section id="showcase" class="relative h-[300vh] bg-[#111] text-[#fffff5] overflow-hidden flex items-start justify-center pt-[20vh]">
-<h1 id="mainText" class="text-[14vw] font-extrabold tracking-tight z-10 select-none opacity-0 scale-90">
-PARTSMATE
-</h1>
+<section id="showcase" class="relative h-[300vh] bg-[#1b1c1d] text-[#d1392e] overflow-hidden flex items-start justify-center pt-[20vh]">
+  <h1 id="mainText" class="text-[14vw] font-extrabold tracking-tight z-10 select-none opacity-0 scale-90">
+    PARTSMATE<span style="color: #f5f5f5;">.</span>
+  </h1>
 <!-- Floating images -->
-<img src="/app-tabs-images/1-Home-Tab.png" class="floating-img" style="top:50%; left:10%;">
-<img src="/app-tabs-images/2-Prices-Tab.png" class="floating-img" style="top:55%; left:60%;">
-<img src="/app-tabs-images/3-Names-Tab.png" class="floating-img" style="top:55%; left:25%;">
-<img src="/app-tabs-images/4-Country-Tab.png" class="floating-img" style="top:65%; left:68%;">
-<img src="/app-tabs-images/5-Details-Tab.png" class="floating-img" style="top:60%; left:5%;">
-<img src="/app-tabs-images/6-Lists-Tab.png" class="floating-img" style="top:70%; left:13%;">
-<img src="/app-tabs-images/7-Weights-Tab.png" class="floating-img" style="top:85%; left:8%;">
-<img src="/app-tabs-images/8-Alternates-Tab.png" class="floating-img" style="top:85%; left:65%;">
-<img src="/app-tabs-images/9-Model-Tab.png" class="floating-img" style="top:72%; left:75%;">
-<img src="/app-tabs-images/10-Stock-Tab.png" class="floating-img" style="top:78%; left:40%;">
+<img src="/app-tabs-images/1-Home-Tab.png" class="floating-img" style="top:50%; left:35%" data-speed="3.5">
+<img src="/app-tabs-images/2-Prices-Tab.png" class="floating-img" style="top:55%; left:3%;" data-speed="3.1">
+<img src="/app-tabs-images/3-Names-Tab.png" class="floating-img" style="top:55%; left:70%;" data-speed="2.1">
+<img src="/app-tabs-images/4-Country-Tab.png" class="floating-img" style="top:65%; left:35%;" data-speed="3">
+<img src="/app-tabs-images/5-Details-Tab.png" class="floating-img" style="top:60%; left:5%;" data-speed="1.6">
+<img src="/app-tabs-images/6-Lists-Tab.png" class="floating-img" style="top:70%; left:2%;" data-speed="1.1">
+<img src="/app-tabs-images/7-Weights-Tab.png" class="floating-img" style="top:85%; left:28%;" data-speed="3.3">
+<img src="/app-tabs-images/8-Alternates-Tab.png" class="floating-img" style="top:85%; left:45%;" data-speed="0.9">
+<img src="/app-tabs-images/9-Model-Tab.png" class="floating-img" style="top:72%; left:75%;" data-speed="1.1">
+<img src="/app-tabs-images/10-Stock-Tab.png" class="floating-img" style="top:99%; left:67%;" data-speed="3.8">
 </section>
     
     <!-- About Us Section -->
@@ -529,9 +530,9 @@ PARTSMATE
         ease: "power1.out",
         scrollTrigger: {
           trigger: line,
-          start: "top 90%",   // starts earlier
-          end: "top 5%",      // ends later for that smooth lag
-          scrub: 2.5,         // softens the movement — the higher, the smoother
+          start: "top 75%",   // starts earlier
+          end: "top 1%",      // ends later for that smooth lag
+          scrub: 1,         // softens the movement — the higher, the smoother
           toggleActions: "play none none reverse"
         }
       }
@@ -558,33 +559,34 @@ anticipatePin: 1,
 
 
 // Fade and scale in
-tl.fromTo("#mainText", { opacity: 0, scale: 0.9, y: 0 }, { opacity: 1, scale: 1, ease: "power2.out", duration: 0.25 });
-
+tl.fromTo("#mainText", { opacity: 0, scale: 0.5, y: 0 }, { opacity: 1, scale: 1, ease: "power2.out", duration: 0.25 });
 
 // Hold
 tl.to("#mainText", { duration: 0.8 });
 
-
 // Glide out gently at the end
 tl.to("#mainText", { y: -300, opacity: 0.6, ease: "power2.inOut", duration: 0.25 });
-
 
 // --- Floating images animation ---
 const imgs = gsap.utils.toArray(".floating-img");
 imgs.forEach((img, i) => {
-gsap.to(img, {
-y: -650,
-opacity: 1,
-duration: 2,
-ease: "power1.out",
-scrollTrigger: {
-trigger: "#showcase",
-start: `${5 + i * 2}% top`,
-end: "bottom 15%",
-scrub: true,
-},
+  const isFront = i % 2 === 0;
+  img.style.zIndex = isFront ? 15 : 5;
+  img.style.opacity = isFront ? 0.85 : 0.5; // brighter if in front
+
+  const speed = img.dataset.speed ? parseFloat(img.dataset.speed) : gsap.utils.random(0.6, 1.6);
+  gsap.fromTo(img, { y: 150, opacity: img.style.opacity }, {
+    y: () => -700 * speed,
+    ease: "none",
+    scrollTrigger: {
+      trigger: "#showcase",
+      start: "top 30%",
+      end: "bottom 15%",
+      scrub: true
+    }
+  });
 });
-});
+
 </script>
 
 
