@@ -27,7 +27,10 @@ export default async function handler(req, res) {
     } = req.body;
 
     // default to licensekeys sheet
-    const targetSheet = sheet || "licensekeys";
+    const targetSheet =
+      plan?.toLowerCase() === "trial" || trialUsed?.toUpperCase() === "YES"
+        ? "trialkeys"
+        : (sheet || "licensekeys");
 
     // license-related values (only for licensekeys sheet)
     let licenseKey = "";
