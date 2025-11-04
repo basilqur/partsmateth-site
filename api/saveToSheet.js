@@ -38,8 +38,8 @@ export default async function handler(req, res) {
     let endDate = "";
     let created = createdAt || new Date().toISOString();
 
+    licenseKey = generateLicenseKey();
     if (targetSheet === "licensekeys") {
-      licenseKey = generateLicenseKey();
       const today = new Date();
       startDate = today.toISOString().split("T")[0];
       const days = (plan?.toLowerCase() === "trial") ? 7 : 30;   // ✅ trial = 7
