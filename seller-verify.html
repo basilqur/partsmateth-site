@@ -13,7 +13,7 @@
         document.body.innerHTML = "Invalid verification link.";
         return;
       }
-      const scriptUrl = process.env.GOOGLE_SCRIPT_WEBAPP;
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
       const url = `${scriptUrl}?mode=verifySeller&code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
       const res = await fetch(url);
       const txt = await res.text();
