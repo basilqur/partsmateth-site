@@ -205,6 +205,38 @@
   </script>
 
   <script>
+  // Prefill from query string if plan/email passed
+  const p = new URLSearchParams(window.location.search);
+  const email = p.get("email");
+  const plan = p.get("plan");
+  if (email) {
+    const emailInput = document.getElementById("emailInput");
+    if (emailInput) emailInput.value = email;
+  }
+  if (plan) {
+    selectedPlan = plan.charAt(0).toUpperCase() + plan.slice(1);
+    document.getElementById("modalTitle").innerText = `${selectedPlan} Plan`;
+  }
+
+  // --- Initialize phone prefix display like index.html ---
+  loadCountries("countryCode", "isoLabel", "phonePrefix").then(() => {
+    const countryCode = document.getElementById("countryCode");
+    const phonePrefix = document.getElementById("phonePrefix");
+    const isoLabel = document.getElementById("isoLabel");
+
+    function updateCountryDisplay() {
+      const selected = countryCode.options[countryCode.selectedIndex];
+      phonePrefix.textContent = selected.value;
+      isoLabel.textContent = selected.getAttribute("data-iso");
+    }
+
+    countryCode.addEventListener("change", updateCountryDisplay);
+    updateCountryDisplay();
+  });
+</script>
+
+
+  <script>
     let __countryOptionsCache = null;
     async function loadCountries(selectId, isoLabelId, prefixSpanId) {
       if (!__countryOptionsCache) {
