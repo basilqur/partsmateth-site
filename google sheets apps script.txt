@@ -9,7 +9,13 @@ function doPost(e) {
   data = e.parameter;
   }
   var obj = data || e.parameter;
-  var sheetName = e.parameter.sheet || "licensekeys";
+  // ✅ automatically route trials to trialkeys sheet
+  var sheetName =
+    (e.parameter.plan && e.parameter.plan.toLowerCase() === "trial") ||
+    (e.parameter.trialUsed && e.parameter.trialUsed.toUpperCase() === "YES")
+      ? "trialkeys"
+      : (e.parameter.sheet || "licensekeys");
+
 
   if (e.parameter.mode === "markCancelled" && e.parameter.licenseKey) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
@@ -42,6 +48,21 @@ function doPost(e) {
   return ContentService.createTextOutput(JSON.stringify({ ok: false, error: "License not found" }))
     .setMimeType(ContentService.MimeType.JSON);
   }
+
+  if (e.parameter.mode === "incrementTrialUse" && e.parameter.invCode) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("invites");
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if ((data[i][0] || "").trim() === e.parameter.invCode.trim()) {
+      var current = sheet.getRange(i + 1, 6).getValue() || 0;
+      sheet.getRange(i + 1, 6).setValue(Number(current) + 1);
+      return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+  return ContentService.createTextOutput(JSON.stringify({ ok: false, error: "Invite not found" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
 
   if (obj.mode === "sellerSignup" || obj.mode === "sellerLogin")
   {return ContentService.createTextOutput(JSON.stringify(handleSellerAuth(obj))).setMimeType(ContentService.MimeType.JSON);}
@@ -79,12 +100,21 @@ function doPost(e) {
   }
 
 // === main licensekeys entry ===
-var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
+var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
 var invitesSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("invites");
 
-// Generate next OrderNo
+// ✅ Generate next OrderNo prefix based on sheet
 var lastRow = sheet.getLastRow();
-var nextOrderNo = lastRow < 2 ? "PM-469225" : "PM-" + (parseInt(sheet.getRange(lastRow, 1).getValue().split("-")[1], 10) + 1);
+var prefix = (sheetName === "trialkeys") ? "TR-" : "PM-";
+var base = 469225;
+if (lastRow > 1) {
+  var lastVal = sheet.getRange(lastRow, 1).getValue();
+  var lastNum = parseInt((lastVal + "").split("-")[1], 10) || base;
+  base = lastNum;
+}
+var nextOrderNo = prefix + (base + 1);
+
+
 
 // Generate verification token
 var verifyToken = Utilities.getUuid();
@@ -113,28 +143,63 @@ var trialUsed = data.trialUsed || (data.plan && data.plan.toLowerCase() === "tri
 
 // === Prevent multiple trials per user (email or phone) ===
 if (trialUsed === "YES") {
-  var today = new Date();
-  if (!data.start) data.start = Utilities.formatDate(today, Session.getScriptTimeZone(), "yyyy-MM-dd");
-  if (!data.end) {
-    var end = new Date(today.getTime() + 7*24*60*60*1000);
-    data.end = Utilities.formatDate(end, Session.getScriptTimeZone(), "yyyy-MM-dd");
-  }
-  var existing = sheet.getDataRange().getValues();
+  var checkSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("trialkeys");
+  var existing = checkSheet.getDataRange().getValues();
+  var emailUsed = false;
+  var phoneUsed = false;
+
   for (var i = 1; i < existing.length; i++) {
-    var oldEmail = (existing[i][3] || "").trim().toLowerCase();
-    var oldPhone = (existing[i][4] || "").replace(/^'/, "").trim();
-    var oldTrial = (existing[i][16] || "").trim().toUpperCase(); // Q = TrialUsed
-    if ((data.email && data.email.trim().toLowerCase() === oldEmail || data.phone && data.phone.trim() === oldPhone) && oldTrial === "YES") {
-      return ContentService.createTextOutput(JSON.stringify({
-        ok: false,
-        error: "Trial already used for this email or phone number."
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
+    var oldEmail = (existing[i][3] || "").toString().trim().toLowerCase(); // D = Email
+    var oldPhone = (existing[i][4] || "").toString().replace(/^'/, "").trim(); // E = Phone
+    var oldTrial = (existing[i][15] || "").toString().trim().toUpperCase(); // P = TrialUsed
+
+    var sameEmail = data.email && data.email.trim().toLowerCase() === oldEmail;
+    var samePhone = data.phone && data.phone.trim() === oldPhone;
+
+    if (oldTrial === "YES" && sameEmail) emailUsed = true;
+    if (oldTrial === "YES" && samePhone) phoneUsed = true;
+  }
+
+  if (emailUsed && phoneUsed) {
+    return ContentService.createTextOutput(JSON.stringify({
+      ok: false,
+      error: "A trial has already been registered with this email and phone."
+    })).setMimeType(ContentService.MimeType.JSON);
+  } else if (emailUsed) {
+    return ContentService.createTextOutput(JSON.stringify({
+      ok: false,
+      error: "A trial has already been registered with this email."
+    })).setMimeType(ContentService.MimeType.JSON);
+  } else if (phoneUsed) {
+    return ContentService.createTextOutput(JSON.stringify({
+      ok: false,
+      error: "A trial has already been registered with this phone."
+    })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
-// Append row (A–S)
-sheet.appendRow([
+
+if (sheetName === "trialkeys") {
+  // ✅ Trial flow (write only specific fields)
+  sheet.appendRow([
+    nextOrderNo,                // A OrderNo
+    data.key || "",             // B LicenseKey
+    data.name || "",            // C Name
+    data.email || "",           // D Email
+    "'" + (data.phone || ""),   // E Phone
+    data.country || "",         // F Country
+    data.createdAt || new Date(), // G CreatedAt
+    "", "",                     // H StartDate, I EndDate (blank)
+    "", "",                     // J Uses, K Status (formula next)
+    "", "", "",                 // L HWID, M SessionTime, N Notes
+    data.invCode || "",         // O InvCode
+    "YES",                      // P TrialUsed
+    verifyToken,                // Q VerifyToken
+    "Pending"                   // R EmailStatus
+  ]);
+} else {
+  // ✅ Paid flow (existing code)
+  sheet.appendRow([
 nextOrderNo, // A OrderNo
 data.key || "", // B LicenseKey
 data.name || "", // C Name
@@ -155,6 +220,8 @@ trialUsed, // Q TrialUsed
 verifyToken, // R VerifyToken
 "Pending" // S EmailStatus
 ]);
+}
+
 
 var newRow = sheet.getLastRow();
 
@@ -171,24 +238,18 @@ var body = `Hello ${data.name || "User"},\n\nPlease verify your PartsMateTH acco
 GmailApp.sendEmail(data.email, subject, body, {
 from: "support@partsmateth.com",
 name: "PartsMateTH Team",
-replyTo: "support@partsmateth.com",
-noReply: true
+replyTo: "support@partsmateth.com"
 });}} 
 catch (mailErr) {
 Logger.log("Email send failed: " + mailErr.message);
 }
 
-if (inviteValid && inviteRowIndex > 0) {
-  if (trialUsed === "YES") {
-    // F = TrialUses
-    var current = invitesSheet.getRange(inviteRowIndex, 6).getValue() || 0;
-    invitesSheet.getRange(inviteRowIndex, 6).setValue(Number(current) + 1);
-  } else {
-    // E = PaidUses
-    var currentP = invitesSheet.getRange(inviteRowIndex, 5).getValue() || 0;
-    invitesSheet.getRange(inviteRowIndex, 5).setValue(Number(currentP) + 1);
-  }
+if (inviteValid && inviteRowIndex > 0 && trialUsed !== "YES") {
+  // ✅ Increment only PaidUses now
+  var currentP = invitesSheet.getRange(inviteRowIndex, 5).getValue() || 0;
+  invitesSheet.getRange(inviteRowIndex, 5).setValue(Number(currentP) + 1);
 }
+
 
   return ContentService.createTextOutput(
     JSON.stringify({ ok: true, orderNo: nextOrderNo, licenseKey: data.key })
@@ -239,23 +300,63 @@ function doGet(e) {
   }
 
 if (e.parameter.mode === "verifyUser" && e.parameter.key && e.parameter.token) {
-var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
-var rows = sheet.getDataRange().getValues();
-var key = e.parameter.key.trim();
-var token = e.parameter.token.trim();
+  var key = e.parameter.key.trim();
+  var token = e.parameter.token.trim();
+
+  // ✅ now both sheets share same column order for last fields
+  var sheetsToCheck = ["licensekeys", "trialkeys"];
+
+  for (var s = 0; s < sheetsToCheck.length; s++) {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetsToCheck[s]);
+    if (!sheet) continue;
+    var rows = sheet.getDataRange().getValues();
+
+    for (var i = 1; i < rows.length; i++) {
+      var rowKey = (rows[i][1] || "").toString().trim();   // B = LicenseKey
+      var rowToken = (rows[i][16] || "").toString().trim(); // Q = VerifyToken (0-based index 16)
+      if (rowKey === key && rowToken === token) {
+
+        // ✅ Clear token (Q) and mark EmailStatus (R) = Verified
+        sheet.getRange(i + 1, 17).setValue("");        // Q (VerifyToken)
+        sheet.getRange(i + 1, 18).setValue("Verified");// R (EmailStatus)
+
+        // ✅ Extract user info
+        var user = rows[i];
+        var name = user[2];
+        var email = user[3];
+        var plan = (sheetsToCheck[s] === "trialkeys") ? "Trial" : (user[6] || "Unknown");
+        var start = user[7] || "";
+        var end = user[8] || "";
+        var keyVal = user[1];
+
+        // ✅ Send email
+        var subject = "Welcome to PartsMateTH — Your Key is Ready!";
+        var body =
+          `Hello ${name || "User"},\n\n` +
+          `Welcome to PartsMateTH!\n\n` +
+          `Your account has been verified successfully.\n\n` +
+          `License Key: ${keyVal}\nPlan: ${plan}\nStart: ${start}\nEnd: ${end}\n\n` +
+          `Enjoy your experience!\n\nPartsMateTH Team`;
+
+        GmailApp.sendEmail(email, subject, body, {
+          from: "support@partsmateth.com",
+          name: "PartsMateTH Team",
+          replyTo: "support@partsmateth.com"
+        });
+
+        return ContentService
+          .createTextOutput("✅ Your PartsMateTH account has been verified successfully!")
+          .setMimeType(ContentService.MimeType.TEXT);
+      }
+    }
+  }
+
+  return ContentService
+    .createTextOutput("❌ Invalid or expired verification link.")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
 
 
-for (var i = 1; i < rows.length; i++) {
-var rowKey = (rows[i][1] || "").trim(); // col B LicenseKey
-var rowToken = (rows[i][17] || "").trim(); // col R VerifyToken
-if (rowKey === key && rowToken === token) {
-sheet.getRange(i + 1, 18).setValue(""); // clear token col R
-sheet.getRange(i + 1, 19).setValue("Verified"); // S EmailStatus
-return ContentService.createTextOutput("✅ Your PartsMateTH account has been verified successfully!").setMimeType(ContentService.MimeType.TEXT);
-}
-}
-return ContentService.createTextOutput("❌ Invalid or expired verification link.").setMimeType(ContentService.MimeType.TEXT);
-}
   
   if (e.parameter.mode === "profileByKey" && e.parameter.licenseKey) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("licensekeys");
@@ -321,8 +422,7 @@ function handleSellerAuth(obj) {
     GmailApp.sendEmail(email, subject, body, {
       from: "support@partsmateth.com",
       name: "PartsMateTH Team",
-      replyTo: "support@partsmateth.com",
-      noReply: true
+      replyTo: "support@partsmateth.com"
     });
 
     return { ok: true, message: "Signup successful. Please check your email to verify your account." };
@@ -386,5 +486,3 @@ function handleSellerInvites(obj) {
 
   return { ok: false, error: "Invalid invite mode" };
 }
-
-

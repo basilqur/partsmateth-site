@@ -189,14 +189,6 @@
           return;
         }
 
-        try {
-          await fetch('/api/saveToSheet',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({email,plan,invCode,trialUsed:'NO'}) // paid plan always NO
-          });
-        }catch(err){console.error('SaveToSheet failed',err)}
-
         const data=await fetchWithBackoff(`/api/get-latest-order?email=${encodeURIComponent(email)}`);
         document.getElementById('loading').classList.add('hidden');
         const details=document.getElementById('orderDetails');
