@@ -83,90 +83,9 @@ will-change: transform, opacity;
       <div class="text-center px-6">
         <h2 class="text-4xl font-bold mb-2">Welcome to PartsMateTH</h2>
         <p class="text-xl font-semibold mb-6">⚡ Speed up daily work 10x faster with automation tools.</p>
-        <p class="text-lg text-white mb-10">Choose a plan based on your needs:</p>
-        
-        <div class="flex flex-wrap justify-center gap-6">
-          <!-- Basic Plan -->
-          <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-green-500">
-            <h3 class="text-xl font-bold text-center mb-2">Basic Plan</h3>
-            <p class="text-center text-sm mb-4 text-gray-500">(Just Getting Started?)</p>
-            <ul class="list-disc pl-5 text-sm text-left space-y-2">
-              <li>✅ Prices Checker – Compare live prices from Dubai, Thailand, online markets</li>
-              <li>✅ Names Generator – Convert any part number into correct sticker name</li>
-              <li>⚠️ Limited tools – no weight, alternates, models, exports</li>
-              <li>🧠 Ideal for new users who want to check basics quickly</li>
-            </ul>
-          </div>
-          
-          <!-- Plus Plan -->
-          <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-blue-500">
-            <h3 class="text-xl font-bold text-center mb-2">Plus Plan</h3>
-            <p class="text-center text-sm mb-4 text-gray-500">(For Growing Sellers)</p>
-            <ul class="list-disc pl-5 text-sm text-left space-y-2">
-              <li>✅ Everything in Basic</li>
-              <li>✅ Country Checker – See where parts are made</li>
-              <li>✅ Part Details – Origin, category, registration year, more</li>
-              <li>✅ List Cleaner – Paste messy data, get clean list instantly</li>
-              <li>🌍 Ideal if you sell internationally or manage more than a few parts</li>
-            </ul>
-          </div>
-          
-          <!-- Pro Plan -->
-          <div class="bg-white text-gray-700 rounded-xl shadow-lg w-80 p-6 border-t-4 border-red-500">
-            <h3 class="text-xl font-bold text-center mb-2">Pro Plan</h3>
-            <p class="text-center text-sm mb-4 text-gray-500">(For Dealers Who Mean Business)</p>
-            <ul class="list-disc pl-5 text-sm text-left space-y-2">
-              <li>✅ Everything in Plus</li>
-              <li>✅ Weight Checker – Know exact kg for pricing/shipping</li>
-              <li>✅ Alternate Part No. – Find compatible replacements</li>
-              <li>✅ Model Checker – See which cars fit which parts</li>
-              <li>✅ VIP Tools – Fastest updates, priority access</li>
-              <li>🚚 Trusted by top exporters & dealers worldwide</li>
-            </ul>
-          </div>
-        </div>
-        <!-- Subscribe Form -->
-        <div class="mt-10 max-w-md mx-auto bg-white shadow-lg rounded-xl p-6">
-          <h4 class="text-lg font-semibold text-center mb-4 text-gray-700">Subscribe to a Plan</h4>
-          
-          <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" id="nameInput" placeholder="Your Name" required type="text" />
-          
-          <input class="w-full mb-3 px-4 py-2 border border-gray-300 rounded-lg text-gray-700" id="emailInput" placeholder="Your Email" required type="email" />
-          
-          <!-- Phone + Country -->
-          <div class="flex items-stretch gap-2 mb-4 relative">
-            <div class="relative w-[20%] h-11">
-              <select id="countryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
-              </select>
-              <div id="isoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
-            </div>
-            
-            <div class="flex items-stretch w-[80%] h-11 border border-gray-300 rounded-lg overflow-hidden">
-              <span id="phonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
-              <input class="w-full px-3 py-2 text-gray-700 focus:outline-none" id="phoneInput" placeholder="Phone Number" required type="tel" />
-            </div>
-          </div>
-          
-          <!-- Plan -->
-          <select class="w-full mb-4 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white focus:ring-2 focus:ring-blue-400" id="planSelect">
-            <option value="Basic">Basic</option>
-            <option value="Plus">Plus</option>
-            <option value="Pro">Pro</option>
-          </select>
-          
-          <!-- Button -->
-          <button class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700" onclick="subscribe()">
-            Subscribe
-          </button>
-          
-          <p class="mt-4 text-green-600 font-semibold" id="formResponse"></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- App Tabs Slideshow -->
-<section id="app-tabs" class="relative py-16 bg-[#1b1c1d] text-white from-white via-white to-slate-50 text-center">
-<div class="max-w-5xl mx-auto px-4">
+        <p class="text-lg text-white mb-10">PartsMateTH is an all-in-one automotive parts assistant designed to help you work faster and smarter.
+From checking prices and part names to finding alternates, origins, weights, and compatible models, everything is automated in one place. Built for shops, exporters, and mechanics, PartsMateTH saves time, reduces mistakes, and makes daily work smooth and effortless. </p>
+        <div class="max-w-5xl mx-auto px-4">
 <h2 class="text-3xl md:text-4xl font-semibold mb-2 tracking-tight">Explore PartsMateTH Tabs</h2>
 <h2 class="text-2xl md:text-1xl font-semibold mb-10 tracking-tight">( ↓ You can click the headers to switch tabs ↓ )</h2>
 
@@ -196,7 +115,9 @@ will-change: transform, opacity;
 <!-- Toggle Auto Slide -->
 <button id="toggleAuto" class="mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 active:scale-95 transition">⏸️ Pause Auto Slide</button>
 </div>
-</section>
+
+      </div>
+    </section>
 
 <!-- Black Screen with Text -->
 <section class="h-[120vh] bg-[#1b1c1d] flex flex-col justify-center px-10 text-left text-6xl font-extrabold tracking-tight leading-tight font-[Poppins] overflow-hidden">
