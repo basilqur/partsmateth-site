@@ -81,8 +81,22 @@
     <p class="text-white/90 text-lg mb-4">Welcome to <strong>PartsMateTH</strong>! Your trial key has been activated successfully.</p>
 
 <div id="trialDetails" class="opacity-0 transition-opacity duration-700 text-left">
+  <p id="orderInfo" class="mb-2 text-white/90 text-md"></p>
+
   <p class="mb-2 text-lg text-white/90">License Key:</p>
-  <div id="licenseReveal" class="reveal-box" title="Click to reveal">Click to reveal license key</div>
+  <div class="flex items-center gap-2 justify-center">
+    <div id="licenseReveal" class="reveal-box" title="Click to reveal">
+      Click to reveal license key
+    </div>
+    <button
+      id="copyBtn"
+      class="btn bg-white/90 text-gray-900 text-sm hidden"
+      title="Copy license key"
+    >
+      Copy
+    </button>
+  </div>
+
   <div class="mt-4 space-y-1 text-white/90 text-md">
     <p id="planInfo"></p>
     <p>Start Date = The day you log in to the software first.</p>
@@ -118,18 +132,37 @@ window.onload = () => {
   const p = new URLSearchParams(location.search);
   const key = p.get('key') || 'Pending...';
   const plan = p.get('plan') || 'Trial';
+  const order = p.get('order') || '';
 
   const box = document.getElementById('licenseReveal');
+  const copyBtn = document.getElementById('copyBtn');
+
   document.getElementById('planInfo').textContent = `Plan = ${plan}`;
+
+  if (order) {
+    document.getElementById('orderInfo').textContent = `Order No = ${order}`;
+  }
+
   box.textContent = 'Click to reveal license key';
 
   // ✅ Reveal key toggle
   box.addEventListener('click', () => {
     box.classList.toggle('revealed');
-    if (box.classList.contains('revealed'))
+    if (box.classList.contains('revealed')) {
       box.textContent = key;
-    else
+      copyBtn.classList.remove('hidden');
+    } else {
       box.textContent = 'Click to reveal license key';
+      copyBtn.classList.add('hidden');
+    }
+  });
+
+  // ✅ Copy button
+  copyBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(key);
+    copyBtn.textContent = 'Copied';
+    setTimeout(() => (copyBtn.textContent = 'Copy'), 1200);
   });
 
   // ✅ Fade-in animation only once

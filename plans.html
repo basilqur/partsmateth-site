@@ -160,8 +160,11 @@
         });
         const result = await res.json().catch(() => ({}));
         if (res.ok && result.ok) {
-          window.location.href = `/trial-success-page.html?key=${encodeURIComponent(result.licenseKey)}&email=${encodeURIComponent(email)}&plan=Trial`;
-        } else {
+          const orderNo = result.orderNo || '';
+          window.location.href =
+            `/trial-success-page.html?key=${encodeURIComponent(result.licenseKey)}&email=${encodeURIComponent(email)}&plan=Trial&order=${encodeURIComponent(orderNo)}`;
+        }
+         else {
           const msg = result.error || '⚠️ Something went wrong while starting your trial.';
           alert(msg);
         }
