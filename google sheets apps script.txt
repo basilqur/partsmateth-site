@@ -9,12 +9,14 @@ function doPost(e) {
   data = e.parameter;
   }
   var obj = data || e.parameter;
+  var p = obj || e.parameter;
+
   // ✅ automatically route trials to trialkeys sheet
   var sheetName =
-    (e.parameter.plan && e.parameter.plan.toLowerCase() === "trial") ||
-    (e.parameter.trialUsed && e.parameter.trialUsed.toUpperCase() === "YES")
-      ? "trialkeys"
-      : (e.parameter.sheet || "licensekeys");
+  (p.plan && p.plan.toLowerCase() === "trial") ||
+  (p.trialUsed && p.trialUsed.toUpperCase() === "YES")
+    ? "trialkeys"
+    : (p.sheet || "licensekeys");
 
 
   if (e.parameter.mode === "markCancelled" && e.parameter.licenseKey) {
@@ -216,9 +218,9 @@ data.sessionId || "", // M SessionID
 data.sessionTime || "", // N SessionTime
 data.notes || "", // O Notes
 invCode, // P InvCode
-trialUsed, // Q TrialUsed
-verifyToken, // R VerifyToken
-"Pending" // S EmailStatus
+verifyToken, // Q VerifyToken
+"Pending", // R EmailStatus
+trialUsed // S TrialUsed
 ]);
 }
 
@@ -228,6 +230,10 @@ var newRow = sheet.getLastRow();
 // Insert status formula in col J
 var formula = `=IF(OR(ISBLANK(H${newRow}),ISBLANK(I${newRow}),NOT(ISNUMBER(DATEVALUE(H${newRow}))),NOT(ISNUMBER(DATEVALUE(I${newRow})))) ,"INACTIVE", IF(AND(TODAY() >= DATEVALUE(H${newRow}),TODAY() <= DATEVALUE(I${newRow})), IF(O${newRow}="Cancelled","ACTIVE TILL END DATE","ACTIVE"), "INACTIVE"))`;
 sheet.getRange(newRow, 10).setFormula(formula);
+
+// Add border to the newly added row
+const lastCol = sheet.getLastColumn();
+sheet.getRange(newRow, 1, 1, lastCol).setBorder(true, true, true, true, true, true);
 
 // Send verification email
 try {

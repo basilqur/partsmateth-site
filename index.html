@@ -332,6 +332,7 @@ From checking prices and part names to finding alternates, origins, weights, and
             .catch(err => {
               console.error("❌ Failed to log message:", err);
               document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
+              form.submit(); // ✅ still send email even if logging fails
             })
             .finally(() => {
               btnText.textContent = "Submit";
