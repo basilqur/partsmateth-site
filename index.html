@@ -290,7 +290,8 @@ From checking prices and part names to finding alternates, origins, weights, and
         const cc = document.getElementById("contactCountryCode");
         loadCountries("contactCountryCode", "contactIsoLabel", "contactPhonePrefix");
         if (!form) return;
-        form.addEventListener("submit", () => {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
           // spinner
           btnText.textContent = "Sending...";
           btnSpinner.classList.remove("hidden");
@@ -309,14 +310,13 @@ From checking prices and part names to finding alternates, origins, weights, and
           const ccSel = document.getElementById("contactCountryCode");
           const country = getSelectedCountryName(ccSel);
           // background log to Google Sheet
-          fetch("/api/saveToSheet", {
+          fetch("/api/saveSupport", {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
               },
               keepalive: true,
               body: JSON.stringify({
-                sheet: "web_support_messages",
                 name,
                 email,
                 phone,
@@ -325,26 +325,13 @@ From checking prices and part names to finding alternates, origins, weights, and
               }),
             })
             .then(() => {
-              document.getElementById("formResponse").innerText = "✅ Message sent successfully!";
+              document.getElementById("formResponse").innerText =
+              "✅ Message sent successfully! We’ll get back to you soon.";
+              form.submit();
             })
             .catch(err => {
               console.error("❌ Failed to log message:", err);
               document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
-              try {
-                navigator.sendBeacon(
-                  "/api/saveToSheet",
-                  new Blob([JSON.stringify({
-                    sheet: "web_support_messages",
-                    name,
-                    email,
-                    phone,
-                    country,
-                    message
-                  })], {
-                    type: "application/json"
-                  })
-                );
-              } catch {}
             })
             .finally(() => {
               btnText.textContent = "Submit";
