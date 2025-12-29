@@ -581,6 +581,12 @@ showImage(index, false);
 startAuto();
 });
 </script>
+
+<script>
+  const btn = document.getElementById("mobileMenuBtn");
+  const menu = document.getElementById("mobileMenu");
+  if (btn && menu) btn.onclick = () => menu.classList.toggle("hidden");
+</script>
     
   </body>
   
