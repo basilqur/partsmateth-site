@@ -36,7 +36,7 @@
 <style>
 .floating-img {
 position: absolute;
-width: clamp(300px, 30vw, 460px);
+width: clamp(220px, 70vw, 460px);
 height: auto;
 opacity: 0;
 transform: translateY(150px);
@@ -49,41 +49,54 @@ will-change: transform, opacity;
   <body class="bg-gray-50 text-gray-800">
     
     <!-- Navbar -->
-    <header id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/50 backdrop-blur-md shadow-sm transition duration-300">
+    <header id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-md shadow-sm transition duration-300">
   <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
 
     <!-- Logo + Title -->
-    <a href="/index.html" class="flex items-center space-x-4 group">
+    <a href="/index.html" class="flex items-center space-x-3">
       <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo"
-           class="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105">
-<h1 class="text-2xl font-extrabold tracking-tight 
+           class="h-10 md:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105">
+<h1 class="text-xl md:text-2xl font-extrabold tracking-tight 
            bg-gradient-to-r from-[rgb(0,166,201)] to-[rgb(16,185,129)] 
            bg-clip-text text-transparent">
   PartsMateTH
 </h1>
     </a>
 
-    <!-- Navbar Links -->
-    <nav class="relative">
-      <ul id="navLinks" class="flex space-x-6 font-medium text-gray-700">
-        <li><a href="#home" class="nav-link relative hover:text-blue-500">Home</a></li>
-        <li><a href="/plans.html" class="nav-link relative hover:text-blue-500">Plans</a></li>
-        <li><a href="#about" class="nav-link relative hover:text-blue-500">About</a></li>
-        <li><a href="#contact" class="nav-link relative hover:text-blue-500">Contact</a></li>
-        <li><a href="/profile.html" class="text-blue-600 hover:underline">Profile</a></li>
-        <li><a href="/download.html" class="text-blue-600 hover:underline">Download</a></li>
+    <!-- Desktop Nav -->
+    <nav class="hidden md:block">
+      <ul class="flex space-x-6 font-medium text-gray-700">
+        <li><a href="#home" class="hover:text-blue-500">Home</a></li>
+        <li><a href="/plans.html" class="hover:text-blue-500">Plans</a></li>
+        <li><a href="#about" class="hover:text-blue-500">About</a></li>
+        <li><a href="#contact" class="hover:text-blue-500">Contact</a></li>
+        <li><a href="/profile.html" class="text-blue-600">Profile</a></li>
+        <li><a href="/download.html" class="text-blue-600">Download</a></li>
       </ul>
     </nav>
+    <!-- Mobile Button -->
+    <button id="mobileMenuBtn" class="md:hidden text-3xl">☰</button>
+  </div>
 
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t">
+    <ul class="flex flex-col px-6 py-4 space-y-4 font-medium">
+      <li><a href="#home">Home</a></li>
+      <li><a href="/plans.html">Plans</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="/profile.html" class="text-blue-600">Profile</a></li>
+      <li><a href="/download.html" class="text-blue-600">Download</a></li>
+    </ul>
   </div>
     </header>
     
     <!-- Hero / Home -->
     <section id="home" class="bg-gradient-to-br from-blue-500 to-teal-400 py-20">
       <div class="text-center px-6">
-        <h2 class="text-4xl font-bold mb-2">Welcome to PartsMateTH</h2>
-        <p class="text-xl font-semibold mb-6">⚡ Speed up daily work 10x faster with automation tools.</p>
-        <p class="text-lg text-white mb-10">PartsMateTH is an all-in-one automotive parts assistant designed to help you work faster and smarter.
+        <h2 class="text-3xl md:text-4xl font-bold mb-2">Welcome to PartsMateTH</h2>
+        <p class="text-lg md:text-xl font-semibold mb-4 md:mb-6">⚡ Speed up daily work 10x faster with automation tools.</p>
+        <p class="text-base md:text-lg text-white mb-8 md:mb-10">PartsMateTH is an all-in-one automotive parts assistant designed to help you work faster and smarter.
 From checking prices and part names to finding alternates, origins, weights, and compatible models, everything is automated in one place. Built for shops, exporters, and mechanics, PartsMateTH saves time, reduces mistakes, and makes daily work smooth and effortless. </p>
         <div class="max-w-5xl mx-auto px-4">
 <h2 class="text-3xl md:text-4xl font-semibold mb-2 tracking-tight">Explore PartsMateTH Tabs</h2>
@@ -96,7 +109,7 @@ From checking prices and part names to finding alternates, origins, weights, and
 
 
 <!-- Clickable Hotspots Overlay -->
-<div class="absolute top-[30px] left-0 h-[27px] w-full">
+<div class="absolute top-[30px] left-0 h-[27px] w-full hidden md:block">
 <!-- Each tab is positioned according to provided Photoshop coordinates -->
 <div data-index="0" data-tooltip="Home" title="Home" class="tooltip absolute top-0 left-[0%] w-[5.69%] h-full cursor-pointer hover:bg-gray-500/10"></div>
 <div data-index="1" data-tooltip="Click to view Prices tab" title="Prices Checker"class="tooltip absolute top-0 left-[5.7%] w-[10.9%] h-full cursor-pointer hover:bg-gray-500/10"></div>
@@ -120,7 +133,7 @@ From checking prices and part names to finding alternates, origins, weights, and
     </section>
 
 <!-- Black Screen with Text -->
-<section class="h-[120vh] bg-[#1b1c1d] flex flex-col justify-center px-10 text-left text-6xl font-extrabold tracking-tight leading-tight font-[Poppins] overflow-hidden">
+<section class="h-[80vh] md:h-[120vh] bg-[#1b1c1d] flex flex-col justify-center px-10 text-left text-6xl font-extrabold tracking-tight leading-tight font-[Poppins] overflow-hidden">
   <div class="overflow-hidden"><p class="scroll-line">THE FUTURE OF AUTOPARTS</p></div>
   <div class="overflow-hidden"><p class="scroll-line">FOR DEALERS, GARAGES, AND EXPORTERS</p></div>
   <div class="overflow-hidden"><p class="scroll-line">MADE IN THAILAND, CONNECTING THE WORLD</p></div>
@@ -128,7 +141,7 @@ From checking prices and part names to finding alternates, origins, weights, and
 </section>
 
 <!-- Black Screen with Images and Center Text -->
-<section id="showcase" class="relative h-[300vh] bg-[#1b1c1d] overflow-hidden flex items-start justify-center pt-[20vh]">
+<section id="showcase" class="relative h-[180vh] md:h-[300vh] bg-[#1b1c1d] overflow-hidden flex items-start justify-center pt-[20vh]">
   <h1 id="mainText"
       class="text-[14vw] font-extrabold tracking-tight z-10 select-none opacity-0 scale-90
              bg-gradient-to-r from-[rgb(0,166,201)] to-[rgb(16,185,129)] bg-clip-text text-transparent">
