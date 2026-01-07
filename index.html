@@ -303,7 +303,6 @@ From checking prices and part names to finding alternates, origins, weights, and
         loadCountries("contactCountryCode", "contactIsoLabel", "contactPhonePrefix");
         if (!form) return;
         form.addEventListener("submit", async (e) => {
-          e.preventDefault();
           // spinner
           btnText.textContent = "Sending...";
           btnSpinner.classList.remove("hidden");
@@ -339,12 +338,10 @@ From checking prices and part names to finding alternates, origins, weights, and
             .then(() => {
               document.getElementById("formResponse").innerText =
               "✅ Message sent successfully! We’ll get back to you soon.";
-              form.submit();
             })
             .catch(err => {
               console.error("❌ Failed to log message:", err);
               document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
-              form.submit(); // ✅ still send email even if logging fails
             })
             .finally(() => {
               btnText.textContent = "Submit";
