@@ -300,6 +300,8 @@ From checking prices and part names to finding alternates, origins, weights, and
           // spinner
           btnText.textContent = "Sending...";
           btnSpinner.classList.remove("hidden");
+          document.getElementById("submitBtn").disabled = true;
+          document.getElementById("submitBtn").classList.add("opacity-60", "cursor-not-allowed");
           // data for sheet
           const name = form.name.value;
           const email = form.email.value;
@@ -325,10 +327,24 @@ From checking prices and part names to finding alternates, origins, weights, and
                 message
               }),
             })
-            .then(() => {
+            .then(async (res) => {
+              const data = await res.json();
+
+              if (!res.ok || !data.ok) {
+                throw new Error(data.error || "Failed");
+              }
+
               document.getElementById("formResponse").innerText =
-              "✅ Message sent successfully! We’ll get back to you soon.";
+                "✅ Message sent successfully! We’ll get back to you soon.";
+            
+              // 🔹 Clear form fields
+              form.reset();
+
+              // 🔹 Reset phone UI
+              document.getElementById("contactPhonePrefix").textContent = "+--";
+              document.getElementById("contactIsoLabel").textContent = "--";
             })
+
             .catch(err => {
               console.error("❌ Failed to log message:", err);
               document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
@@ -336,7 +352,13 @@ From checking prices and part names to finding alternates, origins, weights, and
             .finally(() => {
               btnText.textContent = "Submit";
               btnSpinner.classList.add("hidden");
+
+              // 🔹 Re-enable submit button
+              const btn = document.getElementById("submitBtn");
+              btn.disabled = false;
+              btn.classList.remove("opacity-60", "cursor-not-allowed");
             });
+
           // No preventDefault → FormSubmit still sends email + autoresponse
         });
       });
