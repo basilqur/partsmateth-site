@@ -19,6 +19,7 @@
   "homepage": "https://github.com/basilqur/partsmateth-site#readme",
   "description": "",
   "dependencies": {
+    "resend": "^6.6.0",
     "stripe": "^18.2.1"
   }
 }
