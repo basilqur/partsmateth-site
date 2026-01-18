@@ -4,63 +4,589 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seller Dashboard | PartsMateTH</title>
+  <meta name="description" content="Manage your seller account, create invite codes, and track your revenue." />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
-    :root { --c1: 0,166,201; /* turquoise */ --c2: 16,185,129; /* emerald */ }
-    body { min-height: 100vh; background: linear-gradient(135deg, rgba(var(--c1),0.9), rgba(var(--c2),0.95)); background-attachment:fixed; overflow-x:hidden; color:white; font-family:'Poppins','Inter',sans-serif; }
-    #bgParticles{ position:fixed; inset:0; z-index:0; pointer-events:none; filter:contrast(120%) brightness(110%); }
-    .glass{ background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 25px 40px rgba(0,0,0,.25); border-radius:1.5rem; }
-    .btn{ transition:all .25s ease; border-radius:.75rem; padding:.9rem 1.25rem; font-weight:500; }
-    .btn:hover{ transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,.2); }
+    :root {
+      --gradient-start: #3B82F6;
+      --gradient-end: #42C2BA;
+      --bg-dark: #060912;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Animated Background */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .gradient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      z-index: 0;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+      top: -150px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #42C2BA, #22D3EE);
+      bottom: -100px;
+      left: -100px;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(5deg); }
+      66% { transform: translate(-20px, 20px) rotate(-5deg); }
+    }
+
+    /* Navigation */
+    .nav-glass {
+      background: rgba(6, 9, 18, 0.8);
+      border-bottom: 1px solid var(--border-subtle);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-link.logout {
+      color: #f87171;
+    }
+
+    .nav-link.logout:hover {
+      color: #ef4444;
+    }
+
+    /* Dashboard Card */
+    .dashboard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-icon.code {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
+      color: #a78bfa;
+    }
+
+    .stat-icon.tier {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+      color: #60a5fa;
+    }
+
+    .stat-icon.sales {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+      color: #4ade80;
+    }
+
+    .stat-icon.revenue {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1));
+      color: #fbbf24;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .stat-value.revenue {
+      color: #4ade80;
+    }
+
+    /* Action Buttons */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 0 2rem 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .actions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: white;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.15));
+      border-color: rgba(34, 197, 94, 0.5);
+    }
+
+    /* Message */
+    .action-msg {
+      text-align: center;
+      padding: 1rem 2rem 2rem;
+      font-weight: 600;
+      min-height: 60px;
+    }
+
+    .action-msg.success {
+      color: #4ade80;
+    }
+
+    .action-msg.error {
+      color: #f87171;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .desktop-nav {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: rgba(6, 9, 18, 0.98);
+        border-left: 1px solid var(--border-subtle);
+        backdrop-filter: blur(20px);
+        padding: 2rem;
+        z-index: 100;
+        transition: right 0.3s ease;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .mobile-nav.open {
+        right: 0;
+      }
+
+      .mobile-nav-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        cursor: pointer;
+        font-size: 1.5rem;
+      }
+
+      .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-top: 3rem;
+      }
+
+      .mobile-nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .mobile-nav-links a:hover {
+        color: var(--text-primary);
+      }
+
+      .mobile-nav-links a.logout {
+        color: #f87171;
+      }
+
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .mobile-overlay.open {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    /* Page Title */
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title span {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
   </style>
 </head>
 <body>
-  <canvas id="bgParticles"></canvas>
+  <!-- Background -->
+  <div class="bg-grid"></div>
+  <div class="gradient-orb orb-1"></div>
+  <div class="gradient-orb orb-2"></div>
 
-  <header class="relative z-10 bg-white/10 backdrop-blur-md border-b border-white/20">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="/" class="text-xl font-semibold text-white">PartsMateTH</a>
-      <nav class="space-x-4 text-sm">
-        <a href="/" class="text-white/80 hover:text-white">Home</a>
-        <a href="/seller.html" class="text-white/80 hover:text-white">Seller Portal</a>
-        <a href="#" id="logoutBtn" class="text-red-300 hover:text-red-400">Logout</a>
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" id="mobileNavClose">×</button>
+    <div class="mobile-nav-links">
+      <a href="/">Home</a>
+      <a href="/plans.html">Plans</a>
+      <a href="/seller.html">Seller Portal</a>
+      <a href="#" id="mobileLogoutBtn" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="nav-glass sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="logo-text">PartsMateTH</a>
+      
+      <nav class="desktop-nav flex items-center gap-8">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/plans.html" class="nav-link">Plans</a>
+        <a href="/seller.html" class="nav-link">Seller Portal</a>
+        <a href="#" id="logoutBtn" class="nav-link logout">Logout</a>
       </nav>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
     </div>
   </header>
 
-  <main class="relative z-10 max-w-4xl mx-auto px-4 py-12">
-    <h1 class="text-4xl font-bold mb-8 text-center">Seller Dashboard</h1>
+  <!-- Main Content -->
+  <main class="relative z-10 max-w-4xl mx-auto px-6 py-12">
+    <h1 class="page-title">Seller <span>Dashboard</span></h1>
 
-    <div id="sellerInfo" class="glass p-6 mb-8 text-center">
-      <p id="sellerCode" class="text-lg font-semibold"></p>
-      <p id="sellerTier" class="text-white/80"></p>
-      <p id="sellerSales" class="mt-2"></p>
-      <p id="sellerRevenue" class="text-emerald-400 font-semibold"></p>
+    <!-- Dashboard Card -->
+    <div class="dashboard-card">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon code">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="stat-label">Seller Code</div>
+          <div class="stat-value" id="sellerCode">—</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon tier">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="stat-label">Tier Level</div>
+          <div class="stat-value" id="sellerTier">Silver</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon sales">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+            </svg>
+          </div>
+          <div class="stat-label">Subscriptions Sold</div>
+          <div class="stat-value" id="sellerSales">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon revenue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+          </div>
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-value revenue" id="sellerRevenue">AED 0</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-grid">
+        <button id="btnCreateInvite" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Create Invite Code
+        </button>
+        <button id="btnViewInvites" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          View Invites
+        </button>
+        <button id="btnWithdraw" class="btn btn-success">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+          </svg>
+          Request Withdraw
+        </button>
+      </div>
+
+      <!-- Action Message -->
+      <p id="actionMsg" class="action-msg"></p>
     </div>
-
-    <div class="grid md:grid-cols-3 gap-4">
-      <button id="btnCreateInvite" class="btn bg-white text-gray-900 hover:bg-gray-100">Create Invite Code</button>
-      <button id="btnViewInvites" class="btn bg-white/10 hover:bg-white/20 text-white border border-white/30">View Invites</button>
-      <button id="btnWithdraw" class="btn bg-emerald-500 hover:bg-emerald-600 text-white">Request Withdraw</button>
-    </div>
-
-    <p id="actionMsg" class="text-center mt-8 text-white font-semibold"></p>
   </main>
 
   <script>
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const mobileNavClose = document.getElementById('mobileNavClose');
+
+    function openMobileNav() {
+      mobileNav.classList.add('open');
+      mobileOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileNav() {
+      mobileNav.classList.remove('open');
+      mobileOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    mobileMenuBtn.addEventListener('click', openMobileNav);
+    mobileNavClose.addEventListener('click', closeMobileNav);
+    mobileOverlay.addEventListener('click', closeMobileNav);
+
+    // GSAP Animations
+    gsap.from('.dashboard-card', {
+      duration: 0.8,
+      y: 30,
+      opacity: 0,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+
+    gsap.from('.stat-card', {
+      duration: 0.6,
+      y: 20,
+      opacity: 0,
+      stagger: 0.1,
+      ease: 'power3.out',
+      delay: 0.4
+    });
+
+    // Seller Data
     const seller = JSON.parse(localStorage.getItem("sellerData") || "{}");
     if (!seller.code) window.location.href = "/seller.html";
 
-    document.getElementById("sellerCode").textContent = "Seller Code: " + seller.code;
-    document.getElementById("sellerTier").textContent = "Tier: " + (seller.tier || "Silver");
-    document.getElementById("sellerSales").textContent = "Total Subscriptions Sold: " + (seller.sales || 0);
-    document.getElementById("sellerRevenue").textContent = "Total Revenue: AED " + (seller.revenue || 0);
+    document.getElementById("sellerCode").textContent = seller.code;
+    document.getElementById("sellerTier").textContent = seller.tier || "Silver";
+    document.getElementById("sellerSales").textContent = seller.sales || 0;
+    document.getElementById("sellerRevenue").textContent = "AED " + (seller.revenue || 0);
 
-    document.getElementById("logoutBtn").onclick = () => {
+    // Logout
+    function logout() {
       localStorage.removeItem("sellerData");
       window.location.href = "/seller.html";
-    };
+    }
 
+    document.getElementById("logoutBtn").onclick = logout;
+    document.getElementById("mobileLogoutBtn").onclick = logout;
+
+    // API calls
     async function postInvite(data) {
       const res = await fetch("/api/seller-invites", {
         method: "POST",
@@ -70,12 +596,21 @@
       return res.json();
     }
 
+    // Create Invite
     document.getElementById("btnCreateInvite").onclick = async () => {
       const custom = prompt("Enter custom invite code (leave blank for random):")?.trim().toUpperCase();
       const res = await postInvite({ mode: "create", sellerCode: seller.code, inviteCode: custom || "", random: !custom });
-      document.getElementById("actionMsg").textContent = res.ok ? `✅ Created: ${res.inviteCode}` : `❌ ${res.error}`;
+      const msgEl = document.getElementById("actionMsg");
+      if (res.ok) {
+        msgEl.textContent = `✅ Created: ${res.inviteCode}`;
+        msgEl.className = 'action-msg success';
+      } else {
+        msgEl.textContent = `❌ ${res.error}`;
+        msgEl.className = 'action-msg error';
+      }
     };
 
+    // View Invites
     document.getElementById("btnViewInvites").onclick = async () => {
       const res = await postInvite({ mode: "list", sellerCode: seller.code });
       if (!res.ok) return alert("❌ " + res.error);
@@ -85,26 +620,10 @@
       alert("📋 Your Invites:\n\n" + msg);
     };
 
+    // Withdraw
     document.getElementById("btnWithdraw").onclick = () => {
       alert("💸 Withdraw system coming next phase");
     };
-  </script>
-
-  <script>
-    (()=>{
-      const canvas=document.getElementById('bgParticles');
-      const ctx=canvas.getContext('2d');
-      let w,h,dpr,particles=[],pointer={x:null,y:null};
-      function resize(){dpr=window.devicePixelRatio||1;w=canvas.width=innerWidth*dpr;h=canvas.height=innerHeight*dpr;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';}
-      addEventListener('resize',resize);resize();
-      const COUNT=Math.min(120,Math.floor((innerWidth*innerHeight)/15000));
-      const rand=(a,b)=>a+Math.random()*(b-a);
-      function init(){particles=Array.from({length:COUNT}).map(()=>({x:rand(0,w),y:rand(0,h),vx:rand(-.2,.2),vy:rand(-.2,.2),r:rand(1,2.2)*dpr,hue:rand(160,190)}));}
-      init();
-      addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)*dpr;pointer.y=(e.clientY-r.top)*dpr;});
-      addEventListener('pointerleave',()=>{pointer.x=pointer.y=null});
-      function step(){ctx.clearRect(0,0,w,h);for(const p of particles){if(pointer.x){const dx=p.x-pointer.x,dy=p.y-pointer.y,d2=dx*dx+dy*dy,f=Math.min(100000/(d2+10000),.6);p.vx+=(dx/d2)*f;p.vy+=(dy/d2)*f;}p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.vy*=.985;if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;}ctx.globalCompositeOperation='lighter';for(const p of particles){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`hsla(${p.hue},70%,60%,.8)`;ctx.fill();}ctx.globalCompositeOperation='source-over';requestAnimationFrame(step);}requestAnimationFrame(step);
-    })();
   </script>
 </body>
 </html>

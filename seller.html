@@ -5,106 +5,473 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seller Portal | PartsMateTH</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --c1: 0,166,201; /* turquoise */ --c2: 16,185,129; /* emerald */ }
-    body { min-height: 100vh; background: linear-gradient(135deg, rgba(var(--c1),0.9), rgba(var(--c2),0.95)); font-family: 'Poppins','Inter',sans-serif; color: white; overflow-x:hidden; }
-    #bgParticles { position: fixed; inset: 0; z-index: 0; pointer-events: none; filter: contrast(120%) brightness(110%); }
-    .glass { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 1.5rem; box-shadow: 0 25px 40px rgba(0,0,0,0.25); }
-    .btn { transition: all 0.25s ease; border-radius: 0.75rem; padding: 0.8rem 1.25rem; font-weight: 500; }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    input::placeholder{color:#b9e3f7}
+    * { font-family: 'Inter', sans-serif; }
+    body { 
+      min-height: 100vh; 
+      background: #060912; 
+      color: white; 
+      overflow-x: hidden; 
+    }
+
+    /* Animated gradient orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      top: -200px;
+      left: -200px;
+      animation: float1 20s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      bottom: -150px;
+      right: -150px;
+      animation: float2 25s ease-in-out infinite;
+    }
+    .orb-3 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: float3 18s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(100px, 50px) scale(1.1); }
+      66% { transform: translate(50px, 100px) scale(0.95); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(-80px, -40px) scale(1.05); }
+      66% { transform: translate(-40px, -80px) scale(0.9); }
+    }
+    @keyframes float3 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    /* Grid background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    /* Glass card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Gradient border effect */
+    .gradient-border {
+      position: relative;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1.5rem;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5), rgba(6, 182, 212, 0.3));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* Input styling */
+    .premium-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 0.875rem 1rem;
+      color: white;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    .premium-input:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .premium-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Button styling */
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      font-weight: 600;
+      padding: 0.875rem 1.5rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .btn-primary:hover::before {
+      opacity: 1;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.5);
+    }
+    .btn-primary span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      font-weight: 600;
+      padding: 0.875rem 1.5rem;
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-success::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #34d399, #10b981);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .btn-success:hover::before {
+      opacity: 1;
+    }
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.5);
+    }
+    .btn-success span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Tab styling */
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .tab-btn:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .tab-btn.active {
+      color: white;
+      border-color: #3b82f6;
+    }
+
+    /* Phone input special styling */
+    .phone-select {
+      appearance: none;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 0.875rem 0.75rem;
+      color: transparent;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .phone-select:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+    .phone-select option {
+      background: #1a1a2e;
+      color: white;
+    }
+
+    .phone-wrapper {
+      display: flex;
+      align-items: stretch;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+    .phone-wrapper:focus-within {
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .phone-prefix {
+      padding: 0.875rem 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
+    }
+    .phone-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0.875rem 1rem;
+      color: white;
+      font-size: 0.95rem;
+    }
+    .phone-input:focus {
+      outline: none;
+    }
+    .phone-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Icon styling */
+    .seller-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+      border-radius: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .seller-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: #3b82f6;
+    }
+
+    /* Nav link hover */
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+    .nav-link.active {
+      color: white;
+    }
+
+    /* Mobile nav */
+    .mobile-menu {
+      display: none;
+    }
+    @media (max-width: 640px) {
+      .desktop-nav { display: none; }
+      .mobile-menu { display: block; }
+    }
   </style>
 </head>
 <body>
-  <canvas id="bgParticles"></canvas>
-  <header class="relative z-10 bg-white/10 backdrop-blur-md border-b border-white/20">
+  <!-- Background elements -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-bg"></div>
+
+  <!-- Header -->
+  <header class="relative z-10 border-b border-white/10 bg-black/20 backdrop-blur-xl">
     <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="/" class="text-xl font-semibold text-white">PartsMateTH</a>
-      <nav class="space-x-4 text-sm">
-        <a href="/" class="text-white/80 hover:text-white">Home</a>
-        <a href="/profile.html" class="text-white/80 hover:text-white">My Profile</a>
-        <a href="/seller.html" class="text-white font-semibold border-b-2 border-white pb-1">Seller Portal</a>
+      <a href="/" class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        PartsMateTH
+      </a>
+      
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav flex items-center gap-6 text-sm">
+        <a href="/" class="nav-link text-white/70 hover:text-white">Home</a>
+        <a href="/profile.html" class="nav-link text-white/70 hover:text-white">My Profile</a>
+        <a href="/seller.html" class="nav-link active text-white">Seller Portal</a>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" class="mobile-menu p-2 text-white/70 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileDropdown" class="hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-xl border-b border-white/10 py-4 z-50">
+      <nav class="flex flex-col items-center gap-4 text-sm">
+        <a href="/" class="text-white/70 hover:text-white">Home</a>
+        <a href="/profile.html" class="text-white/70 hover:text-white">My Profile</a>
+        <a href="/seller.html" class="text-white font-semibold">Seller Portal</a>
       </nav>
     </div>
   </header>
 
-  <main class="relative z-10 max-w-3xl mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold mb-4 text-center">Seller Portal</h1>
-    <p class="text-center text-white/80 mb-10">Login or sign up to manage your seller account.</p>
+  <main class="relative z-10 max-w-lg mx-auto px-4 py-16">
+    <!-- Seller Icon -->
+    <div class="seller-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+    </div>
 
-    <div id="seller-container" class="glass p-8">
-      <div class="flex justify-center mb-6 space-x-8">
-        <button id="tabLogin" class="text-white font-semibold border-b-2 border-white pb-1">Login</button>
-        <button id="tabSignup" class="text-white/70 hover:text-white pb-1">Sign Up</button>
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-3 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+      Seller Portal
+    </h1>
+    <p class="text-center text-white/60 mb-10">Login or sign up to manage your seller account</p>
+
+    <!-- Main Card -->
+    <div id="seller-container" class="glass-card gradient-border p-8">
+      <!-- Tabs -->
+      <div class="flex justify-center mb-8 border-b border-white/10">
+        <button id="tabLogin" class="tab-btn active">Login</button>
+        <button id="tabSignup" class="tab-btn">Sign Up</button>
       </div>
 
-      <form id="sellerLogin" class="space-y-4">
-        <input type="text" id="loginCode" placeholder="Seller Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
-        <input type="password" id="loginPassword" placeholder="Password" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
-        <button type="submit" class="btn w-full bg-white text-gray-900 hover:bg-gray-100">Login</button>
+      <!-- Login Form -->
+      <form id="sellerLogin" class="space-y-5">
+        <div>
+          <label class="block text-sm text-white/70 mb-2">Seller Code</label>
+          <input type="text" id="loginCode" placeholder="Enter your seller code" required class="premium-input" />
+        </div>
+        <div>
+          <label class="block text-sm text-white/70 mb-2">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required class="premium-input" />
+        </div>
+        <button type="submit" class="btn-primary w-full">
+          <span>Login to Dashboard</span>
+        </button>
       </form>
 
-      <form id="sellerSignup" class="space-y-4 hidden">
-        <input type="text" id="signupCode" placeholder="Seller Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
-        <input type="email" id="signupEmail" placeholder="Email" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
-        <input type="password" id="signupPassword" placeholder="Password" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
-        <div class="flex items-stretch gap-2 mb-4 relative">
-          <div class="relative w-[30%] h-11">
-            <select id="signupCountryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400"></select>
-            <div id="signupIsoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
-          </div>
-          <div class="flex items-stretch w-[70%] h-11 border border-gray-300 rounded-lg overflow-hidden">
-            <span id="signupPhonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
-            <input id="signupPhone" type="tel" placeholder="Phone Number" required class="w-full px-3 py-2 text-gray-700 focus:outline-none" />
+      <!-- Signup Form -->
+      <form id="sellerSignup" class="space-y-5 hidden">
+        <div>
+          <label class="block text-sm text-white/70 mb-2">Seller Code</label>
+          <input type="text" id="signupCode" placeholder="Choose your seller code" required class="premium-input" />
+        </div>
+        <div>
+          <label class="block text-sm text-white/70 mb-2">Email</label>
+          <input type="email" id="signupEmail" placeholder="your@email.com" required class="premium-input" />
+        </div>
+        <div>
+          <label class="block text-sm text-white/70 mb-2">Password</label>
+          <input type="password" id="signupPassword" placeholder="Create a strong password" required class="premium-input" />
+        </div>
+        <div>
+          <label class="block text-sm text-white/70 mb-2">Phone Number</label>
+          <div class="flex gap-3">
+            <div class="relative w-[30%]">
+              <select id="signupCountryCode" class="phone-select w-full h-full"></select>
+              <div id="signupIsoLabel" class="absolute inset-0 flex items-center justify-center text-sm text-white font-medium pointer-events-none">--</div>
+            </div>
+            <div class="phone-wrapper flex-1">
+              <span id="signupPhonePrefix" class="phone-prefix">+--</span>
+              <input id="signupPhone" type="tel" placeholder="Phone number" required class="phone-input" />
+            </div>
           </div>
         </div>
-        <input type="text" id="authCode" placeholder="Authorization Code" required class="w-full bg-white/10 border border-white/25 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-white/60" />
-        <p class="text-xs text-white/70">You need an authorization code to become a seller. Contact us to get one.</p>
-        <button type="submit" class="btn w-full bg-emerald-500 hover:bg-emerald-600 text-white">Sign Up</button>
+        <div>
+          <label class="block text-sm text-white/70 mb-2">Authorization Code</label>
+          <input type="text" id="authCode" placeholder="Enter your authorization code" required class="premium-input" />
+          <p class="text-xs text-white/50 mt-2">You need an authorization code to become a seller. Contact us to get one.</p>
+        </div>
+        <button type="submit" class="btn-success w-full">
+          <span>Create Seller Account</span>
+        </button>
       </form>
     </div>
+
+    <!-- Help text -->
+    <p class="text-center text-white/40 text-sm mt-8">
+      Need help? <a href="mailto:support@partsmateth.com" class="text-blue-400 hover:text-blue-300 transition-colors">Contact Support</a>
+    </p>
   </main>
 
-    <script>
-      let __countryOptionsCache = null;
-      async function loadCountries(selectId, isoLabelId, prefixSpanId) {
-        if (!__countryOptionsCache) {
-          __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
+  <!-- Country loading script -->
+  <script>
+    let __countryOptionsCache = null;
+    async function loadCountries(selectId, isoLabelId, prefixSpanId) {
+      if (!__countryOptionsCache) {
+        __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
+      }
+      const html = await __countryOptionsCache;
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = html;
+      const update = () => {
+        const opt = sel.options[sel.selectedIndex];
+        if (isoLabelId) {
+          const isoEl = document.getElementById(isoLabelId);
+          if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
         }
-        const html = await __countryOptionsCache;
-        const sel = document.getElementById(selectId);
-        if (!sel) return;
-        sel.innerHTML = html;
-        const update = () => {
-          const opt = sel.options[sel.selectedIndex];
-          if (isoLabelId) {
-            const isoEl = document.getElementById(isoLabelId);
-            if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
-          }
-          if (prefixSpanId) {
-            const preEl = document.getElementById(prefixSpanId);
-            if (preEl) preEl.textContent = opt?.value || "";
-          }
-        };
-        sel.addEventListener("change", update);
-        update();
-        return true; // ✅ allow .then() to work
-      }
-      // Helper to derive country name from selected option
-      function getSelectedCountryName(selectEl) {
-        const opt = selectEl.options[selectEl.selectedIndex];
-        let raw = opt?.getAttribute("data-country") || "";
-        return raw.includes("(") ? raw.split("(")[0].trim() : raw;
-      }
-    </script>
+        if (prefixSpanId) {
+          const preEl = document.getElementById(prefixSpanId);
+          if (preEl) preEl.textContent = opt?.value || "";
+        }
+      };
+      sel.addEventListener("change", update);
+      update();
+      return true;
+    }
+
+    function getSelectedCountryName(selectEl) {
+      const opt = selectEl.options[selectEl.selectedIndex];
+      let raw = opt?.getAttribute("data-country") || "";
+      return raw.includes("(") ? raw.split("(")[0].trim() : raw;
+    }
+  </script>
 
   <script>
-  loadCountries("signupCountryCode", "signupIsoLabel", "signupPhonePrefix").then(() => {
-    console.log("✅ Country options loaded for signup");
-  });
-</script>
+    loadCountries("signupCountryCode", "signupIsoLabel", "signupPhonePrefix").then(() => {
+      console.log("✅ Country options loaded for signup");
+    });
+  </script>
 
-
+  <!-- Tab switching -->
   <script>
     const tabLogin = document.getElementById("tabLogin");
     const tabSignup = document.getElementById("tabSignup");
@@ -114,17 +481,20 @@
     tabLogin.onclick = () => {
       formLogin.classList.remove("hidden");
       formSignup.classList.add("hidden");
-      tabLogin.classList.add("font-semibold","border-b-2","border-white");
-      tabSignup.classList.remove("font-semibold","border-b-2","border-white");
+      tabLogin.classList.add("active");
+      tabSignup.classList.remove("active");
     };
 
     tabSignup.onclick = () => {
       formSignup.classList.remove("hidden");
       formLogin.classList.add("hidden");
-      tabSignup.classList.add("font-semibold","border-b-2","border-white");
-      tabLogin.classList.remove("font-semibold","border-b-2","border-white");
+      tabSignup.classList.add("active");
+      tabLogin.classList.remove("active");
     };
+  </script>
 
+  <!-- API calls -->
+  <script>
     async function postSeller(data) {
       const res = await fetch("/api/seller-auth", {
         method: "POST",
@@ -134,23 +504,22 @@
       return res.json();
     }
 
-document.getElementById("sellerSignup").addEventListener("submit", async e => {
-  e.preventDefault();
-  const country = getSelectedCountryName(document.getElementById("signupCountryCode"));
-  const phone = document.getElementById("signupPhonePrefix").textContent + document.getElementById("signupPhone").value.trim();
-  const payload = {
-    mode: "signup",
-    sellerCode: document.getElementById("signupCode").value.trim(),
-    email: document.getElementById("signupEmail").value.trim(),
-    password: document.getElementById("signupPassword").value.trim(),
-    phone,
-    country,
-    authCode: document.getElementById("authCode").value.trim()
-  };
-  const res = await postSeller(payload);
-  alert(res.ok ? "✅ Signup successful!" : "❌ " + res.error);
-});
-
+    document.getElementById("sellerSignup").addEventListener("submit", async e => {
+      e.preventDefault();
+      const country = getSelectedCountryName(document.getElementById("signupCountryCode"));
+      const phone = document.getElementById("signupPhonePrefix").textContent + document.getElementById("signupPhone").value.trim();
+      const payload = {
+        mode: "signup",
+        sellerCode: document.getElementById("signupCode").value.trim(),
+        email: document.getElementById("signupEmail").value.trim(),
+        password: document.getElementById("signupPassword").value.trim(),
+        phone,
+        country,
+        authCode: document.getElementById("authCode").value.trim()
+      };
+      const res = await postSeller(payload);
+      alert(res.ok ? "✅ Signup successful!" : "❌ " + res.error);
+    });
 
     document.getElementById("sellerLogin").addEventListener("submit", async e => {
       e.preventDefault();
@@ -170,21 +539,22 @@ document.getElementById("sellerSignup").addEventListener("submit", async e => {
     });
   </script>
 
+  <!-- Mobile menu toggle -->
   <script>
-    (()=>{
-      const canvas=document.getElementById('bgParticles');
-      const ctx=canvas.getContext('2d');
-      let w,h,dpr,particles=[],pointer={x:null,y:null};
-      function resize(){dpr=window.devicePixelRatio||1;w=canvas.width=innerWidth*dpr;h=canvas.height=innerHeight*dpr;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';}
-      addEventListener('resize',resize);resize();
-      const COUNT=Math.min(120,Math.floor((innerWidth*innerHeight)/15000));
-      const rand=(a,b)=>a+Math.random()*(b-a);
-      function init(){particles=Array.from({length:COUNT}).map(()=>({x:rand(0,w),y:rand(0,h),vx:rand(-.2,.2),vy:rand(-.2,.2),r:rand(1,2.2)*dpr,hue:rand(160,190)}));}
-      init();
-      addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();pointer.x=(e.clientX-r.left)*dpr;pointer.y=(e.clientY-r.top)*dpr;});
-      addEventListener('pointerleave',()=>{pointer.x=pointer.y=null});
-      function step(){ctx.clearRect(0,0,w,h);for(const p of particles){if(pointer.x){const dx=p.x-pointer.x,dy=p.y-pointer.y,d2=dx*dx+dy*dy,f=Math.min(100000/(d2+10000),.6);p.vx+=(dx/d2)*f;p.vy+=(dy/d2)*f;}p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.vy*=.985;if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;}ctx.globalCompositeOperation='lighter';for(const p of particles){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`hsla(${p.hue},70%,60%,.8)`;ctx.fill();}ctx.globalCompositeOperation='source-over';requestAnimationFrame(step);}requestAnimationFrame(step);
-    })();
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileDropdown = document.getElementById('mobileDropdown');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileDropdown.classList.toggle('hidden');
+    });
+  </script>
+
+  <!-- GSAP Animations -->
+  <script>
+    gsap.from(".seller-icon", { opacity: 0, scale: 0.5, duration: 0.6, ease: "back.out(1.7)" });
+    gsap.from("h1", { opacity: 0, y: 30, duration: 0.6, delay: 0.2 });
+    gsap.from("main > p", { opacity: 0, y: 20, duration: 0.5, delay: 0.3 });
+    gsap.from("#seller-container", { opacity: 0, y: 40, duration: 0.7, delay: 0.4, ease: "power2.out" });
   </script>
 </body>
 </html>

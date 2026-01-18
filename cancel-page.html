@@ -1,149 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payment Canceled | PartsMateTH</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      :root {
-        --c1: 128, 0, 32;
-        --c2: 64, 0, 16;
-      }
-      body {
-        min-height: 100vh;
-        background: linear-gradient(135deg, rgba(var(--c1),0.9), rgba(var(--c2),1));
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Canceled | PartsMateTH</title>
+  <meta name="description" content="Your payment was not completed. You can try again or contact support." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    :root {
+      --gradient-start: #3B82F6;
+      --gradient-end: #42C2BA;
+      --cancel-color: #ef4444;
+      --bg-dark: #060912;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.5);
+    }
 
-        background-attachment: fixed;
-        overflow: hidden;
-        display: flex;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    /* Animated Background */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .gradient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.3;
+      z-index: 0;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      top: -150px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      bottom: -100px;
+      left: -100px;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(5deg); }
+      66% { transform: translate(-20px, 20px) rotate(-5deg); }
+    }
+
+    /* Cancel Card */
+    .cancel-card {
+      position: relative;
+      z-index: 10;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 3rem;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .cancel-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--cancel-color), transparent);
+    }
+
+    /* Cancel Icon */
+    .cancel-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+      border: 2px solid rgba(239, 68, 68, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cancel-icon svg {
+      width: 40px;
+      height: 40px;
+      color: var(--cancel-color);
+    }
+
+    .cancel-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cancel-subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cancel-info {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    @media (min-width: 480px) {
+      .btn-group {
+        flex-direction: row;
         justify-content: center;
-        align-items: center;
-        color: white;
-        font-family: 'Poppins', 'Inter', sans-serif;
       }
-      #bgParticles {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        pointer-events: none;
-        filter: contrast(120%) brightness(110%);
-      }
-      .glass {
-        position: relative;
-        z-index: 10;
-        background: rgba(255,255,255,0.15);
-        border: 1px solid rgba(255,255,255,0.25);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 1.5rem;
-        padding: 2.5rem;
-        box-shadow: 0 25px 40px rgba(0,0,0,0.25);
-      }
-      .accent-pill {
-        background: linear-gradient(90deg, rgba(var(--c1),1), rgba(var(--c2),1));
-      }
-      .btn {
-        transition: all 0.25s ease;
-        font-weight: 500;
-        border-radius: 0.75rem;
-        padding: 0.8rem 1.25rem;
-      }
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="bgParticles"></canvas>
-    <div class="glass max-w-lg w-full text-center">
-      <div class="flex justify-center items-center gap-3 mb-6">
-        <div class="accent-pill w-12 h-12 rounded-xl grid place-items-center shadow-md">
-          <span class="text-2xl">✖</span>
-        </div>
-        <h1 class="text-3xl font-semibold">Payment Canceled</h1>
-      </div>
-      <p class="text-white/90">Your payment was not completed.</p>
-      <p id="cancelInfo" class="text-white/70 mt-2"></p>
-      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="/" class="btn border border-white/30 bg-white/10 text-white">Back to Home</a>
-        <a id="retryBtn" class="btn bg-white text-gray-900">Try Again</a>
-      </div>
-      <div class="mt-6 text-xs text-white/70">
-        Need help? <a href="/#contact" class="underline hover:text-white">Contact support</a>
-      </div>
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: white;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Support Link */
+    .support-text {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .support-text a {
+      color: var(--gradient-start);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .support-text a:hover {
+      color: var(--gradient-end);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-grid"></div>
+  <div class="gradient-orb orb-1"></div>
+  <div class="gradient-orb orb-2"></div>
+
+  <!-- Cancel Card -->
+  <div class="cancel-card">
+    <div class="cancel-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+    </div>
+    
+    <h1 class="cancel-title">Payment Canceled</h1>
+    <p class="cancel-subtitle">Your payment was not completed.</p>
+    <p id="cancelInfo" class="cancel-info"></p>
+
+    <div class="btn-group">
+      <a href="/" class="btn btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        Back to Home
+      </a>
+      <a id="retryBtn" href="/" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path>
+        </svg>
+        Try Again
+      </a>
     </div>
 
-    <script>
-      (() => {
-        const canvas = document.getElementById('bgParticles');
-        const ctx = canvas.getContext('2d');
-        let w,h,dpr,particles=[],pointer={x:null,y:null};
+    <p class="support-text">
+      Need help? <a href="/#contact">Contact support</a>
+    </p>
+  </div>
 
-        function resize(){
-          dpr = window.devicePixelRatio || 1;
-          w = canvas.width = innerWidth * dpr;
-          h = canvas.height = innerHeight * dpr;
-          canvas.style.width = innerWidth + 'px';
-          canvas.style.height = innerHeight + 'px';
-        }
-        window.addEventListener('resize', resize);
-        resize();
+  <script>
+    // GSAP animation
+    gsap.from('.cancel-card', {
+      duration: 0.8,
+      y: 30,
+      opacity: 0,
+      ease: 'power3.out'
+    });
 
-        const COUNT = Math.min(120, Math.floor((innerWidth * innerHeight) / 14000));
-        function rand(a,b){return a + Math.random()*(b-a)}
-        function init(){
-          particles = Array.from({length: COUNT}).map(()=>({
-            x: rand(0,w), y: rand(0,h),
-            vx: rand(-0.2,0.2), vy: rand(-0.2,0.2),
-            r: rand(1,2.2)*dpr,
-            hue: rand(340, 360)
-          }));
-        }
-        init();
+    // Page logic
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get('email');
+    const plan = params.get('plan');
 
-        window.addEventListener('pointermove', e=>{
-          const rect = canvas.getBoundingClientRect();
-          pointer.x = (e.clientX - rect.left) * dpr;
-          pointer.y = (e.clientY - rect.top) * dpr;
-        });
-        window.addEventListener('pointerleave', ()=>{pointer.x=pointer.y=null});
+    if (email) {
+      document.getElementById('cancelInfo').textContent = `You attempted to subscribe with: ${email}`;
+    }
 
-        function step(){
-          ctx.clearRect(0,0,w,h);
-          for(const p of particles){
-            if(pointer.x){
-              const dx=p.x-pointer.x, dy=p.y-pointer.y;
-              const d2=dx*dx+dy*dy;
-              const force=Math.min(100000/(d2+10000),0.6);
-              p.vx+=(dx/d2)*force; p.vy+=(dy/d2)*force;
-            }
-            p.x+=p.vx; p.y+=p.vy;
-            p.vx*=0.985; p.vy*=0.985;
-            if(p.x<0)p.x=w; if(p.x>w)p.x=0; if(p.y<0)p.y=h; if(p.y>h)p.y=0;
-          }
-          ctx.globalCompositeOperation='lighter';
-          for(const p of particles){
-            ctx.beginPath();
-            ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-            ctx.fillStyle=`hsla(${p.hue},70%,60%,0.8)`;
-            ctx.fill();
-          }
-          ctx.globalCompositeOperation='source-over';
-          requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
-      })();
-
-      const params=new URLSearchParams(window.location.search);
-      const email=params.get('email');
-      const plan=params.get('plan');
-      if(email){document.getElementById('cancelInfo').textContent=`You attempted to subscribe with: ${email}`;}
-      const qs=new URLSearchParams();
-      if(email)qs.set('email',email);
-      if(plan)qs.set('plan',plan);
-      document.getElementById('retryBtn').href=`/${qs.toString()?"?"+qs.toString():""}#home`;
-    </script>
-  </body>
+    const qs = new URLSearchParams();
+    if (email) qs.set('email', email);
+    if (plan) qs.set('plan', plan);
+    
+    document.getElementById('retryBtn').href = `/${qs.toString() ? "?" + qs.toString() : ""}#home`;
+  </script>
+</body>
 </html>
