@@ -1,602 +1,1349 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PartsMateTH — The Future of Autoparts Intelligence</title>
+  <meta name="description" content="PartsMateTH is an advanced autoparts intelligence platform for dealers, garages, and exporters. Speed up daily work 10x faster with automation tools.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PartsMateTH</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      html {
-        scroll-behavior: smooth;
-      }
-    </style>
-    <style>
-  .tooltip::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 120%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(37, 99, 235, 0.95); /* Tailwind blue-600 */
-    color: white;
-    font-size: 12px;
-    padding: 3px 8px;
-    border-radius: 6px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-  }
-  .tooltip:hover::after {
-    opacity: 1;
-  }
-</style>
-
-<style>
-.floating-img {
-position: absolute;
-width: clamp(220px, 70vw, 460px);
-height: auto;
-opacity: 0;
-transform: translateY(150px);
-will-change: transform, opacity;
-}
-</style>
-
-  </head> 
-
-  <body class="bg-gray-50 text-gray-800">
-    
-    <!-- Navbar -->
-    <header id="navbar" class="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-md shadow-sm transition duration-300">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-
-    <!-- Logo + Title -->
-    <a href="/index.html" class="flex items-center space-x-3">
-      <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo"
-           class="h-10 md:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105">
-<h1 class="text-xl md:text-2xl font-extrabold tracking-tight 
-           bg-gradient-to-r from-[rgb(0,166,201)] to-[rgb(16,185,129)] 
-           bg-clip-text text-transparent">
-  PartsMateTH
-</h1>
-    </a>
-
-    <!-- Desktop Nav -->
-    <nav class="hidden md:block">
-      <ul class="flex space-x-6 font-medium text-gray-700">
-        <li><a href="#home" class="hover:text-blue-500">Home</a></li>
-        <li><a href="/plans.html" class="hover:text-blue-500">Plans</a></li>
-        <li><a href="#about" class="hover:text-blue-500">About</a></li>
-        <li><a href="#contact" class="hover:text-blue-500">Contact</a></li>
-        <li><a href="/profile.html" class="text-blue-600">Profile</a></li>
-        <li><a href="/download.html" class="text-blue-600">Download</a></li>
-      </ul>
-    </nav>
-    <!-- Mobile Button -->
-    <button id="mobileMenuBtn" class="md:hidden text-3xl">☰</button>
-  </div>
-
-  <!-- Mobile Menu -->
-  <div id="mobileMenu" class="hidden md:hidden bg-white border-t">
-    <ul class="flex flex-col px-6 py-4 space-y-4 font-medium">
-      <li><a href="#home">Home</a></li>
-      <li><a href="/plans.html">Plans</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="/profile.html" class="text-blue-600">Profile</a></li>
-    </ul>
-  </div>
-    </header>
-    
-    <!-- Hero / Home -->
-    <section id="home" class="bg-gradient-to-br from-blue-500 to-teal-400 py-20">
-      <div class="text-center px-6">
-        <h2 class="text-4xl font-bold mb-2">Welcome to PartsMateTH</h2>
-        <p class="text-xl font-semibold mb-6">⚡ Speed up daily work 10x faster with automation tools.</p>
-        <p class="text-lg text-white mb-10">PartsMateTH is an all-in-one automotive parts assistant designed to help you work faster and smarter.
-From checking prices and part names to finding alternates, origins, weights, and compatible models, everything is automated in one place. Built for shops, exporters, and mechanics, PartsMateTH saves time, reduces mistakes, and makes daily work smooth and effortless. </p>
-        <div class="max-w-5xl mx-auto px-4">
-<h2 class="text-3xl md:text-4xl font-semibold mb-2 tracking-tight">Explore PartsMateTH Tabs</h2>
-<h2 class="text-2xl md:text-1xl font-semibold mb-10 tracking-tight">( ↓ You can click the headers to switch tabs ↓ )</h2>
-
-
-<!-- Main Image Container -->
-<div class="relative w-full overflow-hidden rounded-2xl shadow-lg bg-white inline-block">
-<img id="mainImage" src="/app-tabs-images/1-Home-Tab.png" alt="App Tabs Demo" class="w-full object-contain aspect-video transition-opacity duration-700 opacity-100 select-none pointer-events-none">
-
-
-<!-- Clickable Hotspots Overlay -->
-<div class="absolute top-[30px] left-0 h-[27px] w-full">
-<!-- Each tab is positioned according to provided Photoshop coordinates -->
-<div data-index="0" data-tooltip="Home" title="Home" class="tooltip absolute top-0 left-[0%] w-[5.69%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="1" data-tooltip="Click to view Prices tab" title="Prices Checker"class="tooltip absolute top-0 left-[5.7%] w-[10.9%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="2" data-tooltip="Click to view Names tab" title="Names Checker" class="tooltip absolute top-0 left-[16.5%] w-[10.75%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="3" data-tooltip="Click to view Country tab" title="Country Checker" class="tooltip absolute top-0 left-[27.4%] w-[12.1%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="4" data-tooltip="Click to view Details tab" title="Part Details" class="tooltip absolute top-0 left-[39.45%] w-[8.58%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="5" data-tooltip="Click to view Cleaner tab" title="List Cleaner" class="tooltip absolute top-0 left-[48.1%] w-[8.85%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="6" data-tooltip="Click to view Weights tab" title="Weights Checker" class="tooltip absolute top-0 left-[56.9%] w-[11.7%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="7" data-tooltip="Click to view Alternates tab" title="Alternates Check" class="tooltip absolute top-0 left-[68.5%] w-[12.5%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="8" data-tooltip="Click to view Model Check tab" title="Model Checker" class="tooltip absolute top-0 left-[80.8%] w-[11%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-<div data-index="9" data-tooltip="View Tab" title="Stock Pro" class="tooltip absolute top-0 left-[91.8%] w-[8.3%] h-full cursor-pointer hover:bg-gray-500/10"></div>
-</div>
-</div>
-
-
-<!-- Toggle Auto Slide -->
-<button id="toggleAuto" class="mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 active:scale-95 transition">⏸️ Pause Auto Slide</button>
-</div>
-
-      </div>
-    </section>
-
-<!-- Black Screen with Text -->
-<section class="h-[120vh] bg-[#1b1c1d] flex flex-col justify-center px-10 text-left text-6xl font-extrabold tracking-tight leading-tight font-[Poppins] overflow-hidden">
-  <div class="overflow-hidden"><p class="scroll-line">THE FUTURE OF AUTOPARTS</p></div>
-  <div class="overflow-hidden"><p class="scroll-line">FOR DEALERS, GARAGES, AND EXPORTERS</p></div>
-  <div class="overflow-hidden"><p class="scroll-line">MADE IN THAILAND, CONNECTING THE WORLD</p></div>
-  <div class="overflow-hidden"><p class="scroll-line">FASTER, SMARTER, AND SIMPLER — PARTSMATETH</p></div>
-</section>
-
-<!-- Black Screen with Images and Center Text -->
-<section id="showcase" class="relative h-[300vh] bg-[#1b1c1d] overflow-hidden flex items-start justify-center pt-[20vh]">
-  <h1 id="mainText"
-      class="text-[14vw] font-extrabold tracking-tight z-10 select-none opacity-0 scale-90
-             bg-gradient-to-r from-[rgb(0,166,201)] to-[rgb(16,185,129)] bg-clip-text text-transparent">
-    PARTSMATE<span style="color: rgba(255, 255, 255, 0.85);">.</span>
-  </h1>
-<!-- Floating images -->
-<img src="/app-tabs-images/1-Home-Tab.png" class="floating-img" style="top:50%; left:35%" data-speed="3.5">
-<img src="/app-tabs-images/2-Prices-Tab.png" class="floating-img" style="top:55%; left:3%;" data-speed="3.1">
-<img src="/app-tabs-images/3-Names-Tab.png" class="floating-img" style="top:55%; left:70%;" data-speed="2.1">
-<img src="/app-tabs-images/4-Country-Tab.png" class="floating-img" style="top:65%; left:35%;" data-speed="3">
-<img src="/app-tabs-images/5-Details-Tab.png" class="floating-img" style="top:60%; left:5%;" data-speed="1.6">
-<img src="/app-tabs-images/6-Lists-Tab.png" class="floating-img" style="top:70%; left:2%;" data-speed="1.1">
-<img src="/app-tabs-images/7-Weights-Tab.png" class="floating-img" style="top:85%; left:28%;" data-speed="3.3">
-<img src="/app-tabs-images/8-Alternates-Tab.png" class="floating-img" style="top:85%; left:45%;" data-speed="0.9">
-<img src="/app-tabs-images/9-Model-Tab.png" class="floating-img" style="top:72%; left:75%;" data-speed="1.1">
-<img src="/app-tabs-images/10-Stock-Tab.png" class="floating-img" style="top:99%; left:67%;" data-speed="3.8">
-</section>
-    
-    <!-- About Us Section -->
-    <section id="about" class="py-20 bg-white text-center px-6">
-      <div class="max-w-4xl mx-auto">
-        <p class="text-lg leading-8 text-gray-700">
-          <strong>PartsMateTH</strong> is an advanced autoparts intelligence platform designed for serious dealers, garages, and exporters who need speed, precision, and simplicity. We help you find correct Toyota part names, live global prices, manufacturing origins, alternates, vehicle fitment data, and much more — all in a few clicks.
-          <br><br>
-          Our team operates across multiple hubs in 🇯🇵 Japan, 🇦🇺 Australia, 🇸🇬 Singapore, and 🇦🇪 Dubai, but our main headquarters is proudly based in 🇹🇭 <strong>Thailand</strong>. From here, we power the platform used by hundreds of international customers who rely on us to streamline their parts business.
-          <br><br>
-          Whether you're managing inventory, quoting exports, or just want to stop wasting time on slow websites — <strong>PartsMateTH is built for you.</strong>
-          <br><br>
-          We're on a mission to make autoparts work faster, smarter, and simpler.
-        </p>
-      </div>
-    </section>
-    
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-gray-100 text-center px-6">
-      <h3 class="text-3xl font-semibold mb-6 text-blue-600">Contact Us</h3>
-      <p class="mb-6 text-gray-700">Have questions or need support? We’re here to help.</p>
-      <form id="contactForm" class="max-w-md mx-auto space-y-4">
-        
-        <input name="name" type="text" placeholder="Your Name" required class="w-full px-4 py-2 border rounded-lg" />
-        <input name="email" type="email" placeholder="Your Email" required class="w-full px-4 py-2 border rounded-lg" />
-        <div class="flex items-stretch gap-2 mb-4 relative">
-          <div class="relative w-[20%] h-11">
-            <select id="contactCountryCode" class="appearance-none w-full h-full px-2 py-2 border border-gray-300 rounded-lg bg-white [&>option]:text-black text-transparent text-sm focus:ring-2 focus:ring-blue-400">
-            </select>
-            <div id="contactIsoLabel" class="absolute inset-0 flex items-center px-3 text-sm text-gray-800 font-semibold pointer-events-none">--</div>
-          </div>
-
-          <div class="flex items-stretch w-[80%] h-11 border border-gray-300 rounded-lg overflow-hidden">
-            <span id="contactPhonePrefix" class="px-3 bg-gray-100 text-gray-700 text-sm flex items-center h-full border-r whitespace-nowrap">+--</span>
-            <input id="contactPhone" type="tel" placeholder="Phone Number" required class="w-full px-3 py-2 text-gray-700 focus:outline-none" />
-          </div>
-        </div>
-        <textarea name="message" placeholder="Your Message" required rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
-        <button id="submitBtn" type="submit" class="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-          <span id="btnText">Submit</span>
-          <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-          </svg>
-        </button>
-      </form>
-      <p id="formResponse" class="mt-4 text-green-600 font-semibold"></p>
-      
-      <div class="mt-6 text-gray-600">
-        <p>📞 WhatsApp: <a href="https://wa.me/971504565701" class="text-blue-500" target="_blank">+971 50 456 5701</a></p>
-        <p>📧 Email: <a href="mailto:support@partsmateth.com" class="text-blue-500">support@partsmateth.com</a></p>
-      </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer class="bg-blue-600 text-white py-4 text-center">
-      <p>&copy; 2025 PartsMateTH. All rights reserved.</p>
-    </footer>
-    
-    <script>
-      const navbar = document.getElementById("navbar");
-      const sections = Array.from(document.querySelectorAll("section[id]"));
-      const navLinksHash = Array.from(document.querySelectorAll('.nav-link[href^="#"]'));
-      
-      function setActiveByScroll() {
-        if (navbar) navbar.classList.toggle("bg-white/90", window.scrollY > 50);
-        let current = "";
-        const y = window.pageYOffset || document.documentElement.scrollTop || 0;
-        for (const section of sections) {
-          const top = section.offsetTop - 100;
-          if (y >= top) current = section.id;
-        }
-        navLinksHash.forEach(link => {
-          link.classList.remove("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
-          if (current && link.getAttribute("href") === `#${current}`) {
-            link.classList.add("text-blue-600", "font-bold", "border-b-2", "border-blue-600");
-          }
-        });
-      }
-      // Smooth-scroll ONLY for hash links
-      navLinksHash.forEach(link => {
-        link.addEventListener("click", e => {
-          const href = link.getAttribute("href");
-          const target = href && document.querySelector(href);
-          if (target) {
-            e.preventDefault();
-            target.scrollIntoView({
-              behavior: "smooth"
-            });
-          }
-        });
-      });
-      window.addEventListener("scroll", setActiveByScroll);
-      window.addEventListener("load", setActiveByScroll);
-    </script>
-    
-    <script>
-      let __countryOptionsCache = null;
-      async function loadCountries(selectId, isoLabelId, prefixSpanId) {
-        if (!__countryOptionsCache) {
-          __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
-        }
-        const html = await __countryOptionsCache;
-        const sel = document.getElementById(selectId);
-        if (!sel) return;
-        sel.innerHTML = html;
-        const update = () => {
-          const opt = sel.options[sel.selectedIndex];
-          if (isoLabelId) {
-            const isoEl = document.getElementById(isoLabelId);
-            if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
-          }
-          if (prefixSpanId) {
-            const preEl = document.getElementById(prefixSpanId);
-            if (preEl) preEl.textContent = opt?.value || "";
-          }
-        };
-        sel.addEventListener("change", update);
-        update();
-        return true; // ✅ allow .then() to work
-      }
-      // Helper to derive country name from selected option
-      function getSelectedCountryName(selectEl) {
-        const opt = selectEl.options[selectEl.selectedIndex];
-        let raw = opt?.getAttribute("data-country") || "";
-        return raw.includes("(") ? raw.split("(")[0].trim() : raw;
-      }
-    </script>
-    
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("contactForm");
-        const btnText = document.getElementById("btnText");
-        const btnSpinner = document.getElementById("btnSpinner");
-        // country/phone UI sync
-        const cc = document.getElementById("contactCountryCode");
-        loadCountries("contactCountryCode", "contactIsoLabel", "contactPhonePrefix");
-        if (!form) return;
-        form.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          // spinner
-          btnText.textContent = "Sending...";
-          btnSpinner.classList.remove("hidden");
-          document.getElementById("submitBtn").disabled = true;
-          document.getElementById("submitBtn").classList.add("opacity-60", "cursor-not-allowed");
-          // data for sheet
-          const name = form.name.value;
-          const email = form.email.value;
-          const message = form.message.value;
-          const phoneNumber = document.getElementById("contactPhone")?.value || "";
-          const phone = document.getElementById("contactPhonePrefix").textContent + document.getElementById("contactPhone").value;
-          // derive country name from selected option’s data-country (text before '(' if present)
-          let countryRaw = cc?.options[cc.selectedIndex]?.getAttribute("data-country") || "";
-          const ccSel = document.getElementById("contactCountryCode");
-          const country = getSelectedCountryName(ccSel);
-          // background log to Google Sheet
-          fetch("/api/saveSupport", {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              keepalive: true,
-              body: JSON.stringify({
-                name,
-                email,
-                phone,
-                country,
-                message
-              }),
-            })
-            .then(async (res) => {
-              const data = await res.json();
-
-              if (!res.ok || !data.ok) {
-                throw new Error(data.error || "Failed");
-              }
-
-              document.getElementById("formResponse").innerText =
-                "✅ Message sent successfully! We’ll get back to you soon.";
-            
-              // 🔹 Clear form fields
-              form.reset();
-
-              // 🔹 Reset phone UI
-              document.getElementById("contactPhonePrefix").textContent = "+--";
-              document.getElementById("contactIsoLabel").textContent = "--";
-            })
-
-            .catch(err => {
-              console.error("❌ Failed to log message:", err);
-              document.getElementById("formResponse").innerText = "⚠️ Message sent via email, but logging failed.";
-            })
-            .finally(() => {
-              btnText.textContent = "Submit";
-              btnSpinner.classList.add("hidden");
-
-              // 🔹 Re-enable submit button
-              const btn = document.getElementById("submitBtn");
-              btn.disabled = false;
-              btn.classList.remove("opacity-60", "cursor-not-allowed");
-            });
-
-          // No preventDefault → FormSubmit still sends email + autoresponse
-        });
-      });
-    </script>
-    
-    <script>
-      // initialize dropdown once page loads
-      loadCountries("countryCode", "isoLabel", "phonePrefix").then(() => {
-        initSubscribeForm(); // attach change event + run first update
-      });
-      
-      function initSubscribeForm() {
-        const countryCode = document.getElementById("countryCode");
-        const phonePrefix = document.getElementById("phonePrefix");
-        const isoLabel = document.getElementById("isoLabel");
-        
-        function updateCountryDisplay() {
-          const selected = countryCode.options[countryCode.selectedIndex];
-          phonePrefix.textContent = selected.value;
-          isoLabel.textContent = selected.getAttribute("data-iso");
-        }
-        countryCode.addEventListener("change", updateCountryDisplay);
-        updateCountryDisplay();
-      }
-      // Prefill from query string
-      const p = new URLSearchParams(window.location.search);
-      const email = p.get("email");
-      const plan = p.get("plan");
-      if (email) {
-        const emailInput = document.getElementById("emailInput");
-        if (emailInput) emailInput.value = email;
-      }
-      if (plan) {
-        const planSelect = document.getElementById("planSelect");
-        if (planSelect) {
-          for (const opt of planSelect.options) {
-            if (opt.value.toLowerCase() === plan.toLowerCase()) {
-              planSelect.value = opt.value;
-              break;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              blue: '#3B82F6',
+              teal: '#42C2BA',
+              dark: '#0A0F1C',
+              darker: '#060912',
+              card: '#111827',
+              muted: '#1F2937',
+            }
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'float-delayed': 'float 6s ease-in-out 2s infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'shimmer': 'shimmer 2s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            glow: {
+              'from': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.3)' },
+              'to': { boxShadow: '0 0 40px rgba(66, 194, 186, 0.4)' },
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' },
             }
           }
         }
       }
-      // Subscribe handler
-      async function subscribe() {
-        const name = document.getElementById("nameInput").value;
-        const email = document.getElementById("emailInput").value;
-        const phone = phonePrefix.textContent + document.getElementById("phoneInput").value;
-        const plan = document.getElementById("planSelect").value;
-        // Country (trim text before '(' if present)
-        const countrySelect = document.getElementById("countryCode");
-        const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-        let country = selectedOption.getAttribute("data-country") || "";
-        if (country.includes("(")) country = country.split("(")[0].trim();
-        if (!name || !email || !phone) {
-          alert("Please fill in all fields.");
-          return;
-        }
-        const res = await fetch("/api/create-checkout-session", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            phone,
-            plan,
-            country
-          }),
-        });
-        const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          alert("Something went wrong. Please try again.");
-        }
-      }
-    </script>
-
-
-<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
-<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
-
-<script>
-  gsap.registerPlugin(ScrollTrigger);
-
-  const lines = gsap.utils.toArray(".scroll-line");
-
-  lines.forEach((line, i) => {
-    gsap.fromTo(line,
-      {
-        backgroundImage: "linear-gradient(to right, #fffff5 0%, #fffff5 0%, #2d2e2f 0%, #2d2e2f 100%)",
-        backgroundClip: "text",
-        textFillColor: "transparent",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent"
-      },
-      {
-        backgroundImage: "linear-gradient(to right, #fffff5 100%, #fffff5 100%, #2d2e2f 100%, #2d2e2f 100%)",
-        ease: "power1.out",
-        scrollTrigger: {
-          trigger: line,
-          start: "top 75%",   // starts earlier
-          end: "top 1%",      // ends later for that smooth lag
-          scrub: 1,         // softens the movement — the higher, the smoother
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-  });
-</script>
-
-<script>
-gsap.registerPlugin(ScrollTrigger);
-
-
-// --- Master timeline for PARTSMATE fade-in, hold, and release ---
-const tl = gsap.timeline({
-scrollTrigger: {
-trigger: "#showcase",
-start: "top top",
-end: "bottom 35%",
-scrub: true,
-pin: "#mainText",
-pinSpacing: true,
-anticipatePin: 1,
-}
-});
-
-
-// Fade and scale in
-tl.fromTo("#mainText", { opacity: 0, scale: 0.5, y: 0 }, { opacity: 1, scale: 1, ease: "power2.out", duration: 0.25 });
-
-// Hold
-tl.to("#mainText", { duration: 0.8 });
-
-// Glide out gently at the end
-tl.to("#mainText", { y: -300, opacity: 0.6, ease: "power2.inOut", duration: 0.25 });
-
-// --- Floating images animation ---
-const imgs = gsap.utils.toArray(".floating-img");
-imgs.forEach((img, i) => {
-  const isFront = i % 2 === 0;
-  img.style.zIndex = isFront ? 15 : 5;
-  img.style.opacity = isFront ? 0.85 : 0.5; // brighter if in front
-
-  const speed = img.dataset.speed ? parseFloat(img.dataset.speed) : gsap.utils.random(0.6, 1.6);
-  gsap.fromTo(img, { y: 150, opacity: img.style.opacity }, {
-    y: () => -700 * speed,
-    ease: "none",
-    scrollTrigger: {
-      trigger: "#showcase",
-      start: "top 30%",
-      end: "bottom 15%",
-      scrub: true
     }
-  });
-});
-
-</script>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-const mainImage = document.getElementById('mainImage');
-const btn = document.getElementById('toggleAuto');
-const hotspots = document.querySelectorAll('[data-index]');
-
-
-const images = [
-'1-Home-Tab.png','2-Prices-Tab.png','3-Names-Tab.png','4-Country-Tab.png','5-Details-Tab.png',
-'6-Lists-Tab.png','7-Weights-Tab.png','8-Alternates-Tab.png','9-Model-Tab.png','10-Stock-Tab.png'
-];
-
-
-let index = 0;
-let auto = true;
-let timer;
-
-
-function showImage(i, fade = true) {
-const newSrc = `/app-tabs-images/${images[i]}`;
-if (fade) {
-mainImage.classList.add('opacity-0');
-setTimeout(() => {
-mainImage.src = newSrc;
-mainImage.classList.remove('opacity-0');
-}, 300);
-} else {
-mainImage.src = newSrc;
-}
-}
-
-
-function next() {
-index = (index + 1) % images.length;
-showImage(index);
-}
-
-
-function startAuto() { timer = setInterval(next, 5000); }
-function stopAuto() { clearInterval(timer); }
-function resetAuto() { if (auto) { stopAuto(); startAuto(); } }
-
-
-// Attach click handlers to overlay zones
-hotspots.forEach(h => {
-h.addEventListener('click', () => {
-index = parseInt(h.dataset.index);
-showImage(index);
-resetAuto();
-});});
-
-
-btn.addEventListener('click', () => {
-auto = !auto;
-if (auto) {
-startAuto();
-btn.textContent = '⏸️ Pause Auto Slide';
-} else {
-stopAuto();
-btn.textContent = '▶️ Resume Auto Slide';
-}
-});
-
-
-showImage(index, false);
-startAuto();
-});
-</script>
-
-<script>
-  const btn = document.getElementById("mobileMenuBtn");
-  const menu = document.getElementById("mobileMenu");
-  if (btn && menu) btn.onclick = () => menu.classList.toggle("hidden");
-</script>
-    
-  </body>
+  </script>
   
+  <style>
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #060912;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    .font-display { font-family: 'Space Grotesk', sans-serif; }
+    
+    /* Premium gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Gradient border */
+    .gradient-border {
+      position: relative;
+      background: #111827;
+      border-radius: 1rem;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 1rem;
+      padding: 1px;
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+    
+    /* Glassmorphism */
+    .glass {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Glowing button */
+    .btn-glow {
+      position: relative;
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      transition: all 0.3s ease;
+    }
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      border-radius: inherit;
+      filter: blur(15px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+    .btn-glow:hover::before { opacity: 0.6; }
+    .btn-glow:hover { transform: translateY(-2px); }
+    
+    /* Floating images */
+    .floating-img {
+      position: absolute;
+      width: clamp(200px, 60vw, 420px);
+      height: auto;
+      opacity: 0;
+      transform: translateY(150px);
+      will-change: transform, opacity;
+      border-radius: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Tooltip */
+    .tooltip { position: relative; }
+    .tooltip::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      color: white;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    .tooltip:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    
+    /* Scroll reveal lines */
+    .scroll-line {
+      background-image: linear-gradient(to right, #fff 0%, #fff 0%, #2d2e2f 0%, #2d2e2f 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Interactive card hover */
+    .feature-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.25);
+    }
+    
+    /* Tab buttons */
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
+    }
+    
+    /* Tab indicators */
+    .tab-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .tab-dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0A0F1C; }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(180deg, #3B82F6, #42C2BA);
+      border-radius: 4px;
+    }
+    
+    /* Nav link hover */
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #3B82F6, #42C2BA);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link:hover { color: #42C2BA; }
+    
+    /* Input focus glow */
+    .input-glow:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    /* Shimmer effect */
+    .shimmer {
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+    }
+    
+    /* Tab image shadow */
+    .app-preview {
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 25px 50px -12px rgba(0, 0, 0, 0.6),
+        0 0 80px -20px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Stagger children */
+    .stagger-children > * {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .stagger-children.active > *:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+    .stagger-children.active > *:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+    
+    /* Hero gradient orb */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 8s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="antialiased">
+  
+  <!-- Navbar -->
+  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16 md:h-20">
+        
+        <!-- Logo -->
+        <a href="/index.html" class="flex items-center space-x-3 group">
+          <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo"
+               class="h-9 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-110">
+          <span class="font-display text-xl md:text-2xl font-bold gradient-text">
+            PartsMateTH
+          </span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#home" class="nav-link text-gray-300 font-medium">Home</a>
+          <a href="#features" class="nav-link text-gray-300 font-medium">Features</a>
+          <a href="#about" class="nav-link text-gray-300 font-medium">About</a>
+          <a href="#contact" class="nav-link text-gray-300 font-medium">Contact</a>
+          <a href="/plans.html" class="nav-link text-gray-300 font-medium">Plans</a>
+          <a href="/download.html" class="btn-glow px-5 py-2.5 rounded-full text-white font-semibold text-sm">
+            Download App
+          </a>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-lg glass">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden glass border-t border-white/5">
+      <div class="px-6 py-6 space-y-4">
+        <a href="#home" class="block text-gray-300 hover:text-white font-medium py-2">Home</a>
+        <a href="#features" class="block text-gray-300 hover:text-white font-medium py-2">Features</a>
+        <a href="#about" class="block text-gray-300 hover:text-white font-medium py-2">About</a>
+        <a href="#contact" class="block text-gray-300 hover:text-white font-medium py-2">Contact</a>
+        <a href="/plans.html" class="block text-gray-300 hover:text-white font-medium py-2">Plans</a>
+        <a href="/profile.html" class="block text-gray-300 hover:text-white font-medium py-2">Profile</a>
+        <a href="/download.html" class="btn-glow inline-block px-6 py-3 rounded-full text-white font-semibold mt-2">
+          Download App
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <!-- Background orbs -->
+    <div class="hero-orb w-[500px] h-[500px] bg-blue-500 top-1/4 -left-48"></div>
+    <div class="hero-orb w-[400px] h-[400px] bg-teal-400 bottom-1/4 -right-32" style="animation-delay: 2s;"></div>
+    <div class="hero-orb w-[300px] h-[300px] bg-blue-600 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="animation-delay: 4s;"></div>
+    
+    <!-- Grid pattern overlay -->
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      <div class="text-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center px-4 py-2 rounded-full glass mb-8 reveal">
+          <span class="w-2 h-2 rounded-full bg-teal-400 mr-2 animate-pulse"></span>
+          <span class="text-sm text-gray-300">The #1 Autoparts Intelligence Platform</span>
+        </div>
+        
+        <!-- Main headline -->
+        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 reveal">
+          <span class="text-white">Work </span>
+          <span class="gradient-text">10x Faster</span>
+          <br class="hidden sm:block">
+          <span class="text-white">with Automation</span>
+        </h1>
+        
+        <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 mb-10 reveal">
+          PartsMateTH is an all-in-one automotive parts assistant. Check prices, part names, alternates, 
+          origins, weights, and compatible models — all automated in one powerful platform.
+        </p>
+        
+        <!-- CTA buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 reveal">
+          <a href="/download.html" class="btn-glow px-8 py-4 rounded-full text-white font-semibold text-lg w-full sm:w-auto text-center">
+            Get Started Free
+          </a>
+          <a href="#features" class="px-8 py-4 rounded-full border border-white/20 text-white font-semibold text-lg hover:bg-white/5 transition-all duration-300 w-full sm:w-auto text-center">
+            Explore Features
+          </a>
+        </div>
+        
+        <!-- App Preview -->
+        <div class="max-w-5xl mx-auto reveal">
+          <h2 class="font-display text-2xl md:text-3xl font-semibold text-white mb-3">
+            Explore PartsMateTH Tabs
+          </h2>
+          <p class="text-gray-400 mb-6 text-sm">Select a tab to preview</p>
+          
+          <!-- Tab Buttons -->
+          <div class="flex flex-wrap justify-center gap-2 mb-6">
+            <button data-index="0" class="tab-btn active px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">🏠</span> Home
+            </button>
+            <button data-index="1" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">💰</span> Prices
+            </button>
+            <button data-index="2" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">🏷️</span> Names
+            </button>
+            <button data-index="3" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">🌍</span> Country
+            </button>
+            <button data-index="4" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">🔍</span> Details
+            </button>
+            <button data-index="5" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">🧹</span> Cleaner
+            </button>
+            <button data-index="6" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">⚖️</span> Weights
+            </button>
+            <button data-index="7" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">🔄</span> Alternates
+            </button>
+            <button data-index="8" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">🚗</span> Model
+            </button>
+            <button data-index="9" class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all duration-300">
+              <span class="hidden sm:inline">📦</span> Stock
+            </button>
+          </div>
+          
+          <div class="relative rounded-2xl overflow-hidden app-preview bg-brand-card">
+            <img id="mainImage" src="/app-tabs-images/1-Home-Tab.png" 
+                 alt="PartsMateTH App Demo" 
+                 class="w-full object-contain aspect-video transition-all duration-500 select-none">
+          </div>
+          
+          <div class="flex items-center justify-center gap-4 mt-6">
+            <button id="toggleAuto" class="px-5 py-2.5 rounded-full glass text-white font-medium hover:bg-white/10 transition-all duration-300 text-sm">
+              ⏸️ Pause Auto
+            </button>
+            <div class="flex items-center gap-2">
+              <div class="flex gap-1" id="tabIndicators">
+                <!-- Dots will be generated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Animated Text Section -->
+  <section class="min-h-screen bg-brand-darker flex flex-col justify-center px-6 md:px-12 lg:px-20 py-20">
+    <div class="max-w-7xl mx-auto w-full space-y-4 md:space-y-6">
+      <div class="overflow-hidden">
+        <p class="scroll-line font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">THE FUTURE OF AUTOPARTS</p>
+      </div>
+      <div class="overflow-hidden">
+        <p class="scroll-line font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">FOR DEALERS, GARAGES, AND EXPORTERS</p>
+      </div>
+      <div class="overflow-hidden">
+        <p class="scroll-line font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">MADE IN THAILAND, CONNECTING THE WORLD</p>
+      </div>
+      <div class="overflow-hidden">
+        <p class="scroll-line font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">FASTER, SMARTER, SIMPLER — PARTSMATETH</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase Section with Floating Images -->
+  <section id="showcase" class="relative h-[300vh] bg-brand-darker overflow-hidden flex items-start justify-center pt-[25vh]">
+    <h1 id="mainText" class="font-display text-[12vw] md:text-[14vw] font-extrabold tracking-tight z-10 select-none opacity-0 scale-90 gradient-text">
+      PARTSMATE<span class="text-white/80">.</span>
+    </h1>
+    
+    <!-- Floating images -->
+    <img src="/app-tabs-images/1-Home-Tab.png" class="floating-img" style="top:50%; left:35%" data-speed="3.5">
+    <img src="/app-tabs-images/2-Prices-Tab.png" class="floating-img" style="top:55%; left:3%;" data-speed="3.1">
+    <img src="/app-tabs-images/3-Names-Tab.png" class="floating-img" style="top:55%; left:70%;" data-speed="2.1">
+    <img src="/app-tabs-images/4-Country-Tab.png" class="floating-img" style="top:65%; left:35%;" data-speed="3">
+    <img src="/app-tabs-images/5-Details-Tab.png" class="floating-img" style="top:60%; left:5%;" data-speed="1.6">
+    <img src="/app-tabs-images/6-Lists-Tab.png" class="floating-img" style="top:70%; left:2%;" data-speed="1.1">
+    <img src="/app-tabs-images/7-Weights-Tab.png" class="floating-img" style="top:85%; left:28%;" data-speed="3.3">
+    <img src="/app-tabs-images/8-Alternates-Tab.png" class="floating-img" style="top:85%; left:45%;" data-speed="0.9">
+    <img src="/app-tabs-images/9-Model-Tab.png" class="floating-img" style="top:72%; left:75%;" data-speed="1.1">
+    <img src="/app-tabs-images/10-Stock-Tab.png" class="floating-img" style="top:99%; left:67%;" data-speed="3.8">
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-24 md:py-32 bg-brand-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 reveal">
+        <span class="inline-block px-4 py-1.5 rounded-full glass text-sm text-teal-400 font-medium mb-4">
+          Powerful Features
+        </span>
+        <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-4">
+          10 Powerful Tabs, <span class="gradient-text">One Platform</span>
+        </h2>
+        <p class="text-gray-400 max-w-2xl mx-auto text-lg">
+          Every tool you need to dominate the autoparts business, built into one seamless experience.
+        </p>
+      </div>
+      
+      <!-- Feature Cards Grid -->
+      <div class="space-y-8">
+        
+        <!-- Row 1: Home Tab - Full Width Hero Card -->
+        <div class="feature-card gradient-border p-8 md:p-10 rounded-2xl reveal group relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-500/5 to-transparent pointer-events-none"></div>
+          <div class="flex flex-col lg:flex-row gap-8 items-start">
+            <div class="flex-1">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                  <span class="text-3xl">🏠</span>
+                </div>
+                <div>
+                  <span class="text-xs font-semibold text-teal-400 uppercase tracking-wider">Central Hub</span>
+                  <h3 class="font-display text-2xl md:text-3xl font-bold text-white">Home Dashboard</h3>
+                </div>
+              </div>
+              <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                Your central dashboard and starting point in PartsMateTH. Access all features from one place with an intuitive interface designed for speed.
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <span class="text-xl">🌐</span>
+                  <div>
+                    <div class="text-white font-medium text-sm">10 Languages</div>
+                    <div class="text-gray-400 text-xs">English, Arabic, French, Hindi, Urdu, Pashto, Russian, Korean, Turkish, Chinese</div>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <span class="text-xl">🔄</span>
+                  <div>
+                    <div class="text-white font-medium text-sm">Auto Updates</div>
+                    <div class="text-gray-400 text-xs">Always have the latest features and improvements automatically</div>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <span class="text-xl">💡</span>
+                  <div>
+                    <div class="text-white font-medium text-sm">Suggestion Box</div>
+                    <div class="text-gray-400 text-xs">Share feedback directly to help shape the software's future</div>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <span class="text-xl">📢</span>
+                  <div>
+                    <div class="text-white font-medium text-sm">Complaint Box</div>
+                    <div class="text-gray-400 text-xs">Report issues and get them resolved quickly</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Two Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Prices Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">💰</span>
+              </div>
+              <div>
+                <span class="text-xs font-semibold text-green-400 uppercase tracking-wider">Pricing Intel</span>
+                <h3 class="font-display text-xl font-bold text-white">Prices Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Instantly check estimated Toyota part prices from multiple sources in one place. Compare Internet market prices, Al-Futtaim (Dubai), and Thai OEM (OFP) prices in seconds.
+            </p>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Multi-source price comparison</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Export to Excel with one click</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Smart estimates from market history</span>
+              </div>
+            </div>
+            <div class="mt-5 pt-5 border-t border-white/10">
+              <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs font-medium">
+                🚗 Toyota Supported • More brands coming soon
+              </span>
+            </div>
+          </div>
+
+          <!-- Name Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🏷️</span>
+              </div>
+              <div>
+                <span class="text-xs font-semibold text-purple-400 uppercase tracking-wider">Part Naming</span>
+                <h3 class="font-display text-xl font-bold text-white">Name Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Generate accurate, proper part names directly from part numbers in seconds. Choose from multiple trusted databases for the most market-accepted naming.
+            </p>
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Toyota Thailand official sticker names</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Al-Futtaim Dubai databases</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Full detailed USA Toyota names</span>
+              </div>
+            </div>
+            <div class="mt-5 pt-5 border-t border-white/10">
+              <span class="inline-flex items-center px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-medium">
+                🚗 Toyota Supported • More brands coming soon
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Three Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Country Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🌍</span>
+              </div>
+              <div>
+                <span class="text-xs font-semibold text-cyan-400 uppercase tracking-wider">Origin Data</span>
+                <h3 class="font-display text-xl font-bold text-white">Country Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Quickly identify the country of origin ("Made in") for Toyota part numbers. Essential for export documentation and origin-sensitive markets.
+            </p>
+            <div class="space-y-2 mb-5">
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Historical origin data</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Export to Excel</span>
+              </div>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-medium">
+              🚗 Toyota Supported
+            </span>
+          </div>
+
+          <!-- Part Details -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🔍</span>
+              </div>
+              <div>
+                <span class="text-xs font-semibold text-orange-400 uppercase tracking-wider">Deep Search</span>
+                <h3 class="font-display text-xl font-bold text-white">Part Details</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Get deep, hard-to-find technical details for any Toyota part number. Extended specifications, usage notes, and background information.
+            </p>
+            <div class="space-y-2 mb-5">
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Single or bulk lookups</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Technical specifications</span>
+              </div>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-medium">
+              🚗 Toyota Supported
+            </span>
+          </div>
+
+          <!-- List Cleaner -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500/20 to-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🧹</span>
+              </div>
+              <div>
+                <span class="text-xs font-semibold text-teal-400 uppercase tracking-wider">Data Cleanup</span>
+                <h3 class="font-display text-xl font-bold text-white">List Cleaner</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Turn messy part lists into clean, usable data in seconds. Scan text or images and automatically isolate valid part numbers.
+            </p>
+            <div class="space-y-2 mb-5">
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Image & text scanning</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Multi-brand support</span>
+              </div>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-xs font-medium">
+              ✅ All Brands Supported
+            </span>
+          </div>
+        </div>
+
+        <!-- Row 4: Weight Checker - Highlight Card -->
+        <div class="feature-card gradient-border p-8 md:p-10 rounded-2xl reveal group relative overflow-hidden bg-gradient-to-br from-brand-card to-brand-dark">
+          <div class="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="flex flex-col lg:flex-row gap-8 items-center relative z-10">
+            <div class="flex-shrink-0">
+              <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center shadow-lg shadow-yellow-500/20">
+                <span class="text-5xl">⚖️</span>
+              </div>
+            </div>
+            <div class="flex-1 text-center lg:text-left">
+              <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-3">
+                <span class="text-xs font-semibold text-yellow-400 uppercase tracking-wider">Logistics Power</span>
+                <span class="px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-300 text-xs font-bold">⭐ MOST POWERFUL</span>
+              </div>
+              <h3 class="font-display text-2xl md:text-3xl font-bold text-white mb-3">Weight Checker</h3>
+              <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                Instantly find part weights in kilograms without buying samples or using a weighing scale. Supports up to <strong class="text-white">400+ brands</strong> including all major OEM and aftermarket brands — making it one of the most powerful tools in PartsMate.
+              </p>
+              <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+                <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+                  <span class="text-lg">📦</span>
+                  <span class="text-gray-300 text-sm">Freight calculations</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+                  <span class="text-lg">🚢</span>
+                  <span class="text-gray-300 text-sm">Container planning</span>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10">
+                  <span class="text-lg">📋</span>
+                  <span class="text-gray-300 text-sm">Professional quotations</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 5: Two Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Alternates Check -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-rose-500/10 to-pink-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="relative z-10">
+              <div class="flex items-center gap-4 mb-5">
+                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <span class="text-2xl">🔄</span>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-rose-400 uppercase tracking-wider">Stock Revival</span>
+                    <span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-xs font-bold">ESSENTIAL</span>
+                  </div>
+                  <h3 class="font-display text-xl font-bold text-white">Alternates Check</h3>
+                </div>
+              </div>
+              <p class="text-gray-400 leading-relaxed mb-5">
+                <strong class="text-white">Turn dead stock into fast-moving sales.</strong> Instantly shows all equivalent and interchangeable part numbers across the same brand, other OEM brands, and almost all aftermarket brands.
+              </p>
+              <div class="p-4 rounded-xl bg-gradient-to-r from-rose-500/10 to-pink-500/10 border border-rose-500/20 mb-5">
+                <p class="text-rose-200 text-sm leading-relaxed">
+                  💡 <strong>Pro Tip:</strong> If a part has been sitting in your stock for years, this tool shows you what else that exact same part can be sold as — dramatically increasing stock turnover.
+                </p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 rounded-full bg-white/5 text-gray-300 text-xs">Quick Search</span>
+                <span class="px-3 py-1 rounded-full bg-white/5 text-gray-300 text-xs">Deep Search</span>
+                <span class="px-3 py-1 rounded-full bg-white/5 text-gray-300 text-xs">100+ OEM Brands</span>
+                <span class="px-3 py-1 rounded-full bg-white/5 text-gray-300 text-xs">Aftermarket Support</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🚗</span>
+              </div>
+              <div>
+                <span class="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Fitment Data</span>
+                <h3 class="font-display text-xl font-bold text-white">Model Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Know exactly which car models a part fits before you sell or install it. Instantly shows compatible vehicle models, years, and variations — helping you avoid wrong sales, returns, and installation issues.
+            </p>
+            <div class="space-y-3 mb-5">
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Clear fitment results</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Vehicle models, years & variations</span>
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-gray-300">Accurate quotations & customer confidence</span>
+              </div>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-medium">
+              🚗 Toyota Supported • More brands coming soon
+            </span>
+          </div>
+        </div>
+
+        <!-- Row 6: Stock Pro - Experimental Banner -->
+        <div class="feature-card relative p-8 md:p-10 rounded-2xl reveal group overflow-hidden border-2 border-dashed border-white/20 bg-gradient-to-br from-brand-card/50 to-brand-dark/50">
+          <div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,0.03)_50%,transparent_75%)] bg-[size:20px_20px]"></div>
+          <div class="relative z-10">
+            <div class="flex flex-col lg:flex-row gap-8 items-start">
+              <div class="flex-shrink-0">
+                <div class="relative">
+                  <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
+                    <span class="text-4xl">📦</span>
+                  </div>
+                  <div class="absolute -top-2 -right-2 px-2 py-1 rounded-md bg-amber-500 text-black text-xs font-bold animate-pulse">
+                    BETA
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex flex-wrap items-center gap-3 mb-3">
+                  <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Inventory Management</span>
+                  <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                    EXPERIMENTAL
+                  </span>
+                </div>
+                <h3 class="font-display text-2xl md:text-3xl font-bold text-white mb-3">Stock Pro</h3>
+                <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                  An advanced stock management system designed to help auto-parts dealers track inventory, manage quantities, and move stock faster from one central place. Upload stock lists, add or sell parts individually or in bulk, apply filters, and monitor low-stock items.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                  <div class="text-center p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div class="text-lg mb-1">📊</div>
+                    <div class="text-gray-300 text-xs">Stock Tracking</div>
+                  </div>
+                  <div class="text-center p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div class="text-lg mb-1">📥</div>
+                    <div class="text-gray-300 text-xs">Bulk Upload</div>
+                  </div>
+                  <div class="text-center p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div class="text-lg mb-1">🔔</div>
+                    <div class="text-gray-300 text-xs">Low Stock Alerts</div>
+                  </div>
+                  <div class="text-center p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div class="text-lg mb-1">📝</div>
+                    <div class="text-gray-300 text-xs">Quick Quotes</div>
+                  </div>
+                </div>
+                <p class="text-slate-500 text-sm italic">
+                  🚧 Currently under active development. Once finalized, Stock Pro will help dealers control inventory smarter, reduce dead stock, and generate quotes faster.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-24 md:py-32 bg-brand-darker relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-500/5 to-transparent"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div class="reveal">
+          <span class="inline-block px-4 py-1.5 rounded-full glass text-sm text-teal-400 font-medium mb-6">
+            About Us
+          </span>
+          <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-6">
+            Built for <span class="gradient-text">Global Impact</span>
+          </h2>
+          <div class="space-y-6 text-gray-400 text-lg leading-relaxed">
+            <p>
+              <strong class="text-white">PartsMateTH</strong> is an advanced autoparts intelligence platform designed for serious dealers, garages, and exporters who need speed, precision, and simplicity.
+            </p>
+            <p>
+              We help you find correct Toyota part names, live global prices, manufacturing origins, alternates, vehicle fitment data, and much more — all in a few clicks.
+            </p>
+            <p>
+              Our team operates across multiple hubs in 🇯🇵 Japan, 🇦🇺 Australia, 🇸🇬 Singapore, and 🇦🇪 Dubai, but our main headquarters is proudly based in 🇹🇭 <strong class="text-white">Thailand</strong>.
+            </p>
+            <p>
+              We're on a mission to make autoparts work <strong class="text-white">faster, smarter, and simpler</strong>.
+            </p>
+          </div>
+        </div>
+        
+        <div class="reveal grid grid-cols-2 gap-4">
+          <div class="gradient-border p-6 rounded-2xl text-center">
+            <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">10x</div>
+            <div class="text-gray-400 text-sm">Faster Workflow</div>
+          </div>
+          <div class="gradient-border p-6 rounded-2xl text-center">
+            <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">100+</div>
+            <div class="text-gray-400 text-sm">Countries Served</div>
+          </div>
+          <div class="gradient-border p-6 rounded-2xl text-center">
+            <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">1M+</div>
+            <div class="text-gray-400 text-sm">Parts in Database</div>
+          </div>
+          <div class="gradient-border p-6 rounded-2xl text-center">
+            <div class="text-4xl md:text-5xl font-bold gradient-text mb-2">24/7</div>
+            <div class="text-gray-400 text-sm">Global Support</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-24 md:py-32 bg-brand-dark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+        
+        <!-- Left column - Contact Info -->
+        <div class="reveal">
+          <span class="inline-block px-4 py-1.5 rounded-full glass text-sm text-teal-400 font-medium mb-6">
+            Get in Touch
+          </span>
+          <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-6">
+            Let's <span class="gradient-text">Connect</span>
+          </h2>
+          <p class="text-gray-400 text-lg mb-10">
+            Have questions or need support? Our team is here to help you get the most out of PartsMateTH.
+          </p>
+          
+          <div class="space-y-6">
+            <a href="https://wa.me/971504565701" target="_blank" class="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group">
+              <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-white font-medium group-hover:text-teal-400 transition-colors">WhatsApp</div>
+                <div class="text-gray-400 text-sm">+971 50 456 5701</div>
+              </div>
+            </a>
+            
+            <a href="mailto:support@partsmateth.com" class="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group">
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-white font-medium group-hover:text-teal-400 transition-colors">Email</div>
+                <div class="text-gray-400 text-sm">support@partsmateth.com</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Right column - Contact Form -->
+        <div class="reveal">
+          <form id="contactForm" class="gradient-border p-6 md:p-8 rounded-2xl space-y-6">
+            <div>
+              <label class="block text-gray-300 text-sm font-medium mb-2">Your Name</label>
+              <input name="name" type="text" required 
+                     class="input-glow w-full px-4 py-3 rounded-xl bg-brand-muted border border-white/10 text-white placeholder-gray-500 focus:outline-none transition-all duration-300" 
+                     placeholder="John Doe">
+            </div>
+            
+            <div>
+              <label class="block text-gray-300 text-sm font-medium mb-2">Email Address</label>
+              <input name="email" type="email" required 
+                     class="input-glow w-full px-4 py-3 rounded-xl bg-brand-muted border border-white/10 text-white placeholder-gray-500 focus:outline-none transition-all duration-300" 
+                     placeholder="john@example.com">
+            </div>
+            
+            <div>
+              <label class="block text-gray-300 text-sm font-medium mb-2">Phone Number</label>
+              <div class="flex gap-2">
+                <div class="relative w-24">
+                  <select id="contactCountryCode" 
+                          class="appearance-none w-full h-full px-3 py-3 rounded-xl bg-brand-muted border border-white/10 text-transparent focus:outline-none focus:border-blue-500 transition-all duration-300 cursor-pointer [&>option]:text-white [&>option]:bg-[#0b1220]">
+                  </select>
+                  <div id="contactIsoLabel" class="absolute inset-0 flex items-center justify-center text-white font-medium pointer-events-none">--</div>
+                </div>
+                <div class="flex-1 flex rounded-xl overflow-hidden border border-white/10 bg-brand-muted">
+                  <span id="contactPhonePrefix" class="px-3 flex items-center text-gray-400 border-r border-white/10 bg-brand-card whitespace-nowrap">+--</span>
+                  <input id="contactPhone" type="tel" required 
+                         class="input-glow flex-1 px-4 py-3 bg-transparent text-white placeholder-gray-500 focus:outline-none" 
+                         placeholder="Phone Number">
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <label class="block text-gray-300 text-sm font-medium mb-2">Message</label>
+              <textarea name="message" required rows="4" 
+                        class="input-glow w-full px-4 py-3 rounded-xl bg-brand-muted border border-white/10 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 resize-none" 
+                        placeholder="Tell us how we can help..."></textarea>
+            </div>
+            
+            <button id="submitBtn" type="submit" class="btn-glow w-full py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-2">
+              <span id="btnText">Send Message</span>
+              <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </button>
+            
+            <p id="formResponse" class="text-center font-medium"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 bg-brand-darker border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center space-x-3">
+          <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH" class="h-8 w-auto">
+          <span class="font-display text-lg font-bold gradient-text">PartsMateTH</span>
+        </div>
+        <div class="text-gray-400 text-sm">
+          &copy; 2025 PartsMateTH. All rights reserved.
+        </div>
+        <div class="flex items-center space-x-6">
+          <a href="/plans.html" class="text-gray-400 hover:text-white transition-colors text-sm">Plans</a>
+          <a href="/profile.html" class="text-gray-400 hover:text-white transition-colors text-sm">Profile</a>
+          <a href="/download.html" class="text-gray-400 hover:text-white transition-colors text-sm">Download</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById("navbar");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add("glass", "shadow-lg");
+      } else {
+        navbar.classList.remove("glass", "shadow-lg");
+      }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    mobileMenuBtn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+    });
+
+    // Close mobile menu when clicking a link
+    mobileMenu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => mobileMenu.classList.add("hidden"));
+    });
+  </script>
+
+  <script>
+    // Country code loader
+    let __countryOptionsCache = null;
+    async function loadCountries(selectId, isoLabelId, prefixSpanId) {
+      if (!__countryOptionsCache) {
+        __countryOptionsCache = fetch("/country-options.html").then(r => r.text());
+      }
+      const html = await __countryOptionsCache;
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = html;
+      const update = () => {
+        const opt = sel.options[sel.selectedIndex];
+        if (isoLabelId) {
+          const isoEl = document.getElementById(isoLabelId);
+          if (isoEl) isoEl.textContent = opt?.getAttribute("data-iso") || "";
+        }
+        if (prefixSpanId) {
+          const preEl = document.getElementById(prefixSpanId);
+          if (preEl) preEl.textContent = opt?.value || "";
+        }
+      };
+      sel.addEventListener("change", update);
+      update();
+      return true;
+    }
+    
+    function getSelectedCountryName(selectEl) {
+      const opt = selectEl.options[selectEl.selectedIndex];
+      let raw = opt?.getAttribute("data-country") || "";
+      return raw.includes("(") ? raw.split("(")[0].trim() : raw;
+    }
+  </script>
+
+  <script>
+    // Contact form handler
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCountries("contactCountryCode", "contactIsoLabel", "contactPhonePrefix");
+      
+      const form = document.getElementById("contactForm");
+      const btnText = document.getElementById("btnText");
+      const btnSpinner = document.getElementById("btnSpinner");
+      const submitBtn = document.getElementById("submitBtn");
+      const formResponse = document.getElementById("formResponse");
+      
+      if (!form) return;
+      
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        btnText.textContent = "Sending...";
+        btnSpinner.classList.remove("hidden");
+        submitBtn.disabled = true;
+        submitBtn.classList.add("opacity-60", "cursor-not-allowed");
+        
+        const name = form.name.value;
+        const email = form.email.value;
+        const message = form.message.value;
+        const phone = document.getElementById("contactPhonePrefix").textContent + document.getElementById("contactPhone").value;
+        const ccSel = document.getElementById("contactCountryCode");
+        const country = getSelectedCountryName(ccSel);
+        
+        fetch("/api/saveSupport", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          keepalive: true,
+          body: JSON.stringify({ name, email, phone, country, message }),
+        })
+        .then(async (res) => {
+          const data = await res.json();
+          if (!res.ok || !data.ok) throw new Error(data.error || "Failed");
+          
+          formResponse.textContent = "✅ Message sent successfully! We'll get back to you soon.";
+          formResponse.className = "text-center font-medium text-green-400";
+          form.reset();
+          document.getElementById("contactPhonePrefix").textContent = "+--";
+          document.getElementById("contactIsoLabel").textContent = "--";
+        })
+        .catch(err => {
+          console.error("❌ Failed to log message:", err);
+          formResponse.textContent = "⚠️ Something went wrong. Please try again.";
+          formResponse.className = "text-center font-medium text-yellow-400";
+        })
+        .finally(() => {
+          btnText.textContent = "Send Message";
+          btnSpinner.classList.add("hidden");
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("opacity-60", "cursor-not-allowed");
+        });
+      });
+    });
+  </script>
+
+  <script>
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Scroll reveal lines
+    const lines = gsap.utils.toArray(".scroll-line");
+    lines.forEach((line) => {
+      gsap.fromTo(line,
+        { backgroundImage: "linear-gradient(to right, #fff 0%, #fff 0%, #2d2e2f 0%, #2d2e2f 100%)" },
+        {
+          backgroundImage: "linear-gradient(to right, #fff 100%, #fff 100%, #2d2e2f 100%, #2d2e2f 100%)",
+          ease: "power1.out",
+          scrollTrigger: {
+            trigger: line,
+            start: "top 80%",
+            end: "top 20%",
+            scrub: 1,
+          }
+        }
+      );
+    });
+    
+    // Main showcase text animation
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#showcase",
+        start: "top top",
+        end: "bottom 35%",
+        scrub: true,
+        pin: "#mainText",
+        pinSpacing: true,
+        anticipatePin: 1,
+      }
+    });
+    
+    tl.fromTo("#mainText", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, ease: "power2.out", duration: 0.25 });
+    tl.to("#mainText", { duration: 0.8 });
+    tl.to("#mainText", { y: -300, opacity: 0.6, ease: "power2.inOut", duration: 0.25 });
+    
+    // Floating images
+    const imgs = gsap.utils.toArray(".floating-img");
+    imgs.forEach((img, i) => {
+      const isFront = i % 2 === 0;
+      img.style.zIndex = isFront ? 15 : 5;
+      img.style.opacity = isFront ? 0.85 : 0.5;
+      
+      const speed = img.dataset.speed ? parseFloat(img.dataset.speed) : gsap.utils.random(0.6, 1.6);
+      gsap.fromTo(img, { y: 150, opacity: img.style.opacity }, {
+        y: () => -700 * speed,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#showcase",
+          start: "top 30%",
+          end: "bottom 15%",
+          scrub: true
+        }
+      });
+    });
+    
+    // Reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+    reveals.forEach(el => {
+      gsap.fromTo(el, 
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none none"
+          }
+        }
+      );
+    });
+  </script>
+
+  <script>
+    // Image slideshow with tab buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      const mainImage = document.getElementById('mainImage');
+      const btn = document.getElementById('toggleAuto');
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const indicatorsContainer = document.getElementById('tabIndicators');
+      
+      const images = [
+        '1-Home-Tab.png','2-Prices-Tab.png','3-Names-Tab.png','4-Country-Tab.png','5-Details-Tab.png',
+        '6-Lists-Tab.png','7-Weights-Tab.png','8-Alternates-Tab.png','9-Model-Tab.png','10-Stock-Tab.png'
+      ];
+      
+      // Create dot indicators
+      images.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'tab-dot' + (i === 0 ? ' active' : '');
+        dot.dataset.index = i;
+        indicatorsContainer.appendChild(dot);
+      });
+      
+      const dots = document.querySelectorAll('.tab-dot');
+      
+      let index = 0;
+      let auto = true;
+      let timer;
+      
+      function updateActiveStates(i) {
+        tabBtns.forEach((btn, idx) => {
+          btn.classList.toggle('active', idx === i);
+        });
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('active', idx === i);
+        });
+      }
+      
+      function showImage(i, fade = true) {
+        const newSrc = `/app-tabs-images/${images[i]}`;
+        updateActiveStates(i);
+        
+        if (fade) {
+          mainImage.style.opacity = '0';
+          mainImage.style.transform = 'scale(0.98)';
+          setTimeout(() => {
+            mainImage.src = newSrc;
+            mainImage.style.opacity = '1';
+            mainImage.style.transform = 'scale(1)';
+          }, 300);
+        } else {
+          mainImage.src = newSrc;
+        }
+      }
+      
+      function next() {
+        index = (index + 1) % images.length;
+        showImage(index);
+      }
+      
+      function startAuto() { timer = setInterval(next, 5000); }
+      function stopAuto() { clearInterval(timer); }
+      function resetAuto() { if (auto) { stopAuto(); startAuto(); } }
+      
+      // Tab button clicks
+      tabBtns.forEach(tabBtn => {
+        tabBtn.addEventListener('click', () => {
+          index = parseInt(tabBtn.dataset.index);
+          showImage(index);
+          resetAuto();
+        });
+      });
+      
+      // Dot indicator clicks
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          index = parseInt(dot.dataset.index);
+          showImage(index);
+          resetAuto();
+        });
+      });
+      
+      btn.addEventListener('click', () => {
+        auto = !auto;
+        if (auto) {
+          startAuto();
+          btn.textContent = '⏸️ Pause Auto';
+        } else {
+          stopAuto();
+          btn.textContent = '▶️ Resume Auto';
+        }
+      });
+      
+      showImage(index, false);
+      startAuto();
+    });
+  </script>
+</body>
 </html>
