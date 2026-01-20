@@ -1,85 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Verifying Seller Account - PartsMateTH</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Seller Email | PartsMateTH</title>
+  <meta name="description" content="Verify your seller email address to complete your PartsMateTH seller registration." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, .font-display { font-family: 'Space Grotesk', sans-serif; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-      min-height: 100vh;
+      background: #060912;
+      overflow-x: hidden;
+    }
+
+    /* Animated gradient background */
+    .gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
+      top: -200px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #42C2BA 0%, #3B82F6 100%);
+      bottom: -150px;
+      left: -100px;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
+    }
+
+    /* Grid pattern */
+    .grid-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: -1;
+    }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 50%, #3B82F6 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Glassmorphism */
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Verify Card */
+    .verify-container {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .verify-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.875rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      color: white;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Status Icons */
+    .status-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      color: #f8fafc;
+      margin: 0 auto 1.5rem;
     }
 
-    .verification-card {
-      background: rgba(30, 41, 59, 0.8);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      padding: 48px;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    .status-icon.loading {
+      background: rgba(59, 130, 246, 0.15);
+      border: 2px solid rgba(59, 130, 246, 0.3);
     }
 
-    .logo {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 32px;
+    .status-icon.success {
+      background: rgba(34, 197, 94, 0.15);
+      border: 2px solid rgba(34, 197, 94, 0.3);
     }
 
-    .logo span {
-      color: #f97316;
+    .status-icon.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 2px solid rgba(239, 68, 68, 0.3);
     }
 
-    .spinner-container {
-      margin-bottom: 24px;
-    }
-
+    /* Spinner */
     .spinner {
-      width: 56px;
-      height: 56px;
-      border: 4px solid rgba(249, 115, 22, 0.2);
-      border-top-color: #f97316;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 255, 255, 0.08);
+      border-top-color: #3B82F6;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    .status-text {
-      font-size: 18px;
-      color: #94a3b8;
-      margin-bottom: 8px;
-    }
-
-    .sub-text {
-      font-size: 14px;
-      color: #64748b;
-    }
-
-    /* Result states */
-    .result-container {
+    /* State sections */
+    .state-section {
       display: none;
+      text-align: center;
+      padding: 3rem 2rem;
     }
 
-    .result-container.show {
+    .state-section.active {
       display: block;
       animation: fadeIn 0.5s ease;
     }
@@ -89,115 +213,223 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .result-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      display: flex;
+    /* Mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(6, 9, 18, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 90;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 24px;
-      font-size: 40px;
+      gap: 2rem;
+      display: flex;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
-    .result-icon.success {
-      background: rgba(34, 197, 94, 0.2);
-      color: #22c55e;
+    .mobile-menu.active {
+      opacity: 1;
+      visibility: visible;
     }
 
-    .result-icon.error {
-      background: rgba(239, 68, 68, 0.2);
-      color: #ef4444;
-    }
-
-    .result-title {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .result-message {
-      font-size: 16px;
-      color: #94a3b8;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
-
-    .action-button {
-      display: inline-block;
-      background: linear-gradient(135deg, #f97316, #ea580c);
-      color: white;
+    .mobile-menu a {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      transition: color 0.3s;
       text-decoration: none;
-      padding: 14px 32px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
     }
 
-    .action-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+    .mobile-menu a:hover {
+      color: white;
     }
 
-    .loading-container {
-      display: block;
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
     }
 
-    .loading-container.hide {
-      display: none;
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      margin-top: 3rem;
     }
   </style>
 </head>
-<body>
-  <div class="verification-card">
-    <div class="logo">Parts<span>Mate</span>TH</div>
-    
-    <div class="loading-container" id="loading">
-      <div class="spinner-container">
-        <div class="spinner"></div>
-      </div>
-      <p class="status-text">Verifying your seller account...</p>
-      <p class="sub-text">This will only take a moment</p>
-    </div>
 
-    <div class="result-container" id="result">
-      <div class="result-icon" id="resultIcon">✓</div>
-      <h2 class="result-title" id="resultTitle">Verification Complete</h2>
-      <p class="result-message" id="resultMessage"></p>
-      <a href="seller-dashboard.html" class="action-button" id="actionButton">Go to Dashboard</a>
+<body class="text-white min-h-screen">
+  <!-- Background -->
+  <div class="gradient-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+  <div class="grid-pattern"></div>
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="glass rounded-2xl px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-110">
+          <span class="text-xl font-bold font-display tracking-tight hidden sm:block">PartsMateTH</span>
+        </a>
+        
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-white/70 hover:text-white transition-colors">Home</a>
+          <a href="/plans.html" class="text-white/70 hover:text-white transition-colors">Plans</a>
+          <a href="/profile.html" class="text-white/70 hover:text-white transition-colors">Profile</a>
+          <a href="/seller.html" class="text-white/70 hover:text-white transition-colors">Seller Portal</a>
+        </nav>
+        
+        <button class="md:hidden text-white p-2" id="menuToggle">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="absolute top-6 right-6 text-white p-2" id="menuClose">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+    <a href="/">Home</a>
+    <a href="/plans.html">Plans</a>
+    <a href="/profile.html">Profile</a>
+    <a href="/seller.html">Seller Portal</a>
   </div>
 
+  <!-- Main Content -->
+  <main class="relative z-10 max-w-xl mx-auto px-6 pt-32 pb-12 min-h-screen flex flex-col justify-center">
+    <!-- Page Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 font-display">
+        Seller <span class="gradient-text">Verification</span>
+      </h1>
+      <p class="text-lg text-white/60">
+        Confirming your seller email address
+      </p>
+    </div>
+
+    <!-- Verify Card -->
+    <div class="verify-container">
+      <!-- Loading State -->
+      <div class="state-section active" id="loadingState">
+        <div class="status-icon loading">
+          <div class="spinner"></div>
+        </div>
+        <h2 class="text-2xl font-bold font-display mb-2">Verifying Email</h2>
+        <p class="text-white/60">Please wait while we verify your seller account...</p>
+      </div>
+
+      <!-- Success State -->
+      <div class="state-section" id="successState">
+        <div class="status-icon success">
+          <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold font-display mb-2 text-green-400">Email Verified!</h2>
+        <p class="text-white/60 mb-6">Your seller account has been verified successfully. You can now access your dashboard and start listing parts.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/seller-dashboard.html" class="btn btn-primary">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+            </svg>
+            Go to Dashboard
+          </a>
+          <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div class="state-section" id="errorState">
+        <div class="status-icon error">
+          <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-bold font-display mb-2 text-red-400">Verification Failed</h2>
+        <p class="text-white/60 mb-2" id="errorMessage">The verification link is invalid or has expired.</p>
+        <p class="text-white/40 text-sm mb-6">Please request a new verification email from the seller portal.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/seller.html" class="btn btn-primary">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            Seller Portal
+          </a>
+          <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 PartsMateTH. All rights reserved.</p>
+  </footer>
+
   <script>
-    (async () => {
-      const params = new URLSearchParams(location.search);
-      const code = params.get("code");
-      const token = params.get("token");
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose = document.getElementById('menuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
 
-      const loading = document.getElementById("loading");
-      const result = document.getElementById("result");
-      const resultIcon = document.getElementById("resultIcon");
-      const resultTitle = document.getElementById("resultTitle");
-      const resultMessage = document.getElementById("resultMessage");
-      const actionButton = document.getElementById("actionButton");
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+    });
 
-      function showResult(success, title, message, buttonText, buttonLink) {
-        loading.classList.add("hide");
-        result.classList.add("show");
-        
-        resultIcon.textContent = success ? "✓" : "✕";
-        resultIcon.className = "result-icon " + (success ? "success" : "error");
-        resultTitle.textContent = title;
-        resultMessage.textContent = message;
-        actionButton.textContent = buttonText;
-        actionButton.href = buttonLink;
-      }
+    menuClose.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+    });
 
+    // Verification logic
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const token = params.get('token');
+
+    const loadingState = document.getElementById('loadingState');
+    const successState = document.getElementById('successState');
+    const errorState = document.getElementById('errorState');
+    const errorMessage = document.getElementById('errorMessage');
+
+    function showState(state) {
+      loadingState.classList.remove('active');
+      successState.classList.remove('active');
+      errorState.classList.remove('active');
+      state.classList.add('active');
+    }
+
+    async function verifyEmail() {
       if (!code || !token) {
-        showResult(false, "Invalid Link", "This verification link is invalid or has expired. Please request a new verification email.", "Back to Home", "index.html");
+        errorMessage.textContent = 'This verification link is invalid or has expired. Please request a new verification email.';
+        showState(errorState);
         return;
       }
 
@@ -211,14 +443,19 @@
         const isSuccess = txt.toLowerCase().includes("success") || txt.toLowerCase().includes("verified") || txt.includes("✅");
         
         if (isSuccess) {
-          showResult(true, "Account Verified!", "Your seller account has been successfully verified. You can now access your dashboard and start listing parts.", "Go to Dashboard", "seller-dashboard.html");
+          showState(successState);
         } else {
-          showResult(false, "Verification Failed", txt || "Something went wrong during verification. Please try again or contact support.", "Back to Home", "index.html");
+          errorMessage.textContent = txt || 'Something went wrong during verification. Please try again or contact support.';
+          showState(errorState);
         }
-      } catch (err) {
-        showResult(false, "Network Error", "Unable to verify your account due to a network error. Please check your connection and try again.", "Try Again", location.href);
+      } catch (error) {
+        errorMessage.textContent = 'Network error. Please check your connection and try again.';
+        showState(errorState);
       }
-    })();
+    }
+
+    // Start verification after a brief delay
+    setTimeout(verifyEmail, 1000);
   </script>
 </body>
 </html>
