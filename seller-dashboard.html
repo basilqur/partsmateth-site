@@ -8,52 +8,33 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
-    :root {
-      --gradient-start: #3B82F6;
-      --gradient-end: #42C2BA;
-      --bg-dark: #060912;
-      --bg-card: rgba(255, 255, 255, 0.03);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --text-primary: #ffffff;
-      --text-secondary: rgba(255, 255, 255, 0.7);
-      --text-muted: rgba(255, 255, 255, 0.5);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, .font-display { font-family: 'Space Grotesk', sans-serif; }
 
     body {
-      min-height: 100vh;
-      background: var(--bg-dark);
-      color: var(--text-primary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #060912;
       overflow-x: hidden;
-      line-height: 1.6;
     }
 
-    /* Animated Background */
-    .bg-grid {
+    /* Animated gradient background */
+    .gradient-bg {
       position: fixed;
-      inset: 0;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 60px 60px;
-      z-index: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      overflow: hidden;
     }
 
     .gradient-orb {
-      position: fixed;
+      position: absolute;
       border-radius: 50%;
       filter: blur(80px);
       opacity: 0.4;
-      z-index: 0;
       animation: float 20s ease-in-out infinite;
     }
 
@@ -76,56 +57,54 @@
     }
 
     @keyframes float {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(30px, -30px) rotate(5deg); }
-      66% { transform: translate(-20px, 20px) rotate(-5deg); }
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
     }
 
-    /* Navigation */
-    .nav-glass {
-      background: rgba(6, 9, 18, 0.8);
-      border-bottom: 1px solid var(--border-subtle);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+    /* Grid pattern */
+    .grid-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: -1;
     }
 
-    .logo-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1.5rem;
-      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 50%, #3B82F6 100%);
+      background-size: 200% 200%;
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s ease-in-out infinite;
     }
 
-    .nav-link {
-      color: var(--text-secondary);
-      font-weight: 500;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      text-decoration: none;
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
-    .nav-link:hover {
-      color: var(--text-primary);
-    }
-
-    .nav-link.logout {
-      color: #f87171;
-    }
-
-    .nav-link.logout:hover {
-      color: #ef4444;
+    /* Glassmorphism */
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     /* Dashboard Card */
     .dashboard-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       overflow: hidden;
       position: relative;
     }
@@ -156,7 +135,7 @@
 
     .stat-card {
       background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 16px;
       padding: 1.5rem;
       text-align: center;
@@ -202,7 +181,7 @@
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--text-muted);
+      color: rgba(255, 255, 255, 0.5);
       margin-bottom: 0.25rem;
     }
 
@@ -210,7 +189,7 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: 1.25rem;
       font-weight: 600;
-      color: var(--text-primary);
+      color: white;
     }
 
     .stat-value.revenue {
@@ -246,7 +225,7 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
       color: white;
       box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
     }
@@ -258,8 +237,8 @@
 
     .btn-secondary {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-primary);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: white;
     }
 
     .btn-secondary:hover {
@@ -294,157 +273,121 @@
       color: #f87171;
     }
 
-    /* Mobile Menu */
-    .mobile-menu-btn {
-      display: none;
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      cursor: pointer;
-      padding: 0.5rem;
+    /* Mobile menu - FIXED with opacity/visibility transitions */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(6, 9, 18, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 90;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      display: flex;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
-    @media (max-width: 768px) {
-      .desktop-nav {
-        display: none;
-      }
-
-      .mobile-menu-btn {
-        display: flex;
-      }
-
-      .mobile-nav {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 280px;
-        height: 100vh;
-        background: rgba(6, 9, 18, 0.98);
-        border-left: 1px solid var(--border-subtle);
-        backdrop-filter: blur(20px);
-        padding: 2rem;
-        z-index: 100;
-        transition: right 0.3s ease;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .mobile-nav.open {
-        right: 0;
-      }
-
-      .mobile-nav-close {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: transparent;
-        border: none;
-        color: var(--text-primary);
-        cursor: pointer;
-        font-size: 1.5rem;
-      }
-
-      .mobile-nav-links {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        margin-top: 3rem;
-      }
-
-      .mobile-nav-links a {
-        color: var(--text-secondary);
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: 500;
-        transition: color 0.3s ease;
-      }
-
-      .mobile-nav-links a:hover {
-        color: var(--text-primary);
-      }
-
-      .mobile-nav-links a.logout {
-        color: #f87171;
-      }
-
-      .mobile-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 99;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-      }
-
-      .mobile-overlay.open {
-        opacity: 1;
-        visibility: visible;
-      }
+    .mobile-menu.active {
+      opacity: 1;
+      visibility: visible;
     }
 
-    /* Page Title */
-    .page-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 2rem;
+    .mobile-menu a {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      transition: color 0.3s;
+      text-decoration: none;
     }
 
-    .page-title span {
-      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .mobile-menu a:hover {
+      color: white;
+    }
+
+    .mobile-menu a.logout {
+      color: #f87171;
+    }
+
+    .mobile-menu a.logout:hover {
+      color: #ef4444;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
     }
   </style>
 </head>
-<body>
+
+<body class="text-white min-h-screen">
   <!-- Background -->
-  <div class="bg-grid"></div>
-  <div class="gradient-orb orb-1"></div>
-  <div class="gradient-orb orb-2"></div>
-
-  <!-- Mobile Overlay -->
-  <div class="mobile-overlay" id="mobileOverlay"></div>
-
-  <!-- Mobile Nav -->
-  <nav class="mobile-nav" id="mobileNav">
-    <button class="mobile-nav-close" id="mobileNavClose">×</button>
-    <div class="mobile-nav-links">
-      <a href="/">Home</a>
-      <a href="/plans.html">Plans</a>
-      <a href="/seller.html">Seller Portal</a>
-      <a href="#" id="mobileLogoutBtn" class="logout">Logout</a>
-    </div>
-  </nav>
+  <div class="gradient-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+  <div class="grid-pattern"></div>
 
   <!-- Header -->
-  <header class="nav-glass sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="logo-text">PartsMateTH</a>
-      
-      <nav class="desktop-nav flex items-center gap-8">
-        <a href="/" class="nav-link">Home</a>
-        <a href="/plans.html" class="nav-link">Plans</a>
-        <a href="/seller.html" class="nav-link">Seller Portal</a>
-        <a href="#" id="logoutBtn" class="nav-link logout">Logout</a>
-      </nav>
-
-      <button class="mobile-menu-btn" id="mobileMenuBtn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="glass rounded-2xl px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-110">
+          <span class="text-xl font-bold font-display tracking-tight hidden sm:block">PartsMateTH</span>
+        </a>
+        
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-white/70 hover:text-white transition-colors">Home</a>
+          <a href="/plans.html" class="text-white/70 hover:text-white transition-colors">Plans</a>
+          <a href="/seller.html" class="text-white/70 hover:text-white transition-colors">Seller Portal</a>
+          <a href="#" id="logoutBtn" class="text-red-400 hover:text-red-300 transition-colors">Logout</a>
+        </nav>
+        
+        <button class="md:hidden text-white p-2" id="menuToggle">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="absolute top-6 right-6 text-white p-2" id="menuClose">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+    <a href="/">Home</a>
+    <a href="/plans.html">Plans</a>
+    <a href="/seller.html">Seller Portal</a>
+    <a href="#" id="mobileLogoutBtn" class="logout">Logout</a>
+  </div>
+
   <!-- Main Content -->
-  <main class="relative z-10 max-w-4xl mx-auto px-6 py-12">
-    <h1 class="page-title">Seller <span>Dashboard</span></h1>
+  <main class="relative z-10 max-w-4xl mx-auto px-6 pt-32 pb-12">
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-8 font-display">
+      Seller <span class="gradient-text">Dashboard</span>
+    </h1>
 
     <!-- Dashboard Card -->
     <div class="dashboard-card">
@@ -529,26 +472,19 @@
 
   <script>
     // Mobile menu
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileNav = document.getElementById('mobileNav');
-    const mobileOverlay = document.getElementById('mobileOverlay');
-    const mobileNavClose = document.getElementById('mobileNavClose');
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose = document.getElementById('menuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
 
-    function openMobileNav() {
-      mobileNav.classList.add('open');
-      mobileOverlay.classList.add('open');
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
       document.body.style.overflow = 'hidden';
-    }
+    });
 
-    function closeMobileNav() {
-      mobileNav.classList.remove('open');
-      mobileOverlay.classList.remove('open');
+    menuClose.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
       document.body.style.overflow = '';
-    }
-
-    mobileMenuBtn.addEventListener('click', openMobileNav);
-    mobileNavClose.addEventListener('click', closeMobileNav);
-    mobileOverlay.addEventListener('click', closeMobileNav);
+    });
 
     // GSAP Animations
     gsap.from('.dashboard-card', {

@@ -466,7 +466,6 @@
 
     /* Mobile menu */
     .mobile-menu {
-      display: none;
       position: fixed;
       top: 0;
       left: 0;
@@ -479,10 +478,15 @@
       align-items: center;
       justify-content: center;
       gap: 2rem;
+      display: flex;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
     .mobile-menu.active {
-      display: flex;
+      opacity: 1;
+      visibility: visible;
     }
 
     .mobile-menu a {

@@ -4,105 +4,130 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seller Portal | PartsMateTH</title>
+  <meta name="description" content="Login or sign up to manage your seller account at PartsMateTH." />
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Inter', sans-serif; }
-    body { 
-      min-height: 100vh; 
-      background: #060912; 
-      color: white; 
-      overflow-x: hidden; 
+    h1, h2, h3, h4, .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+    body {
+      background: #060912;
+      overflow-x: hidden;
     }
 
-    /* Animated gradient orbs */
-    .orb {
+    /* Animated gradient background */
+    .gradient-bg {
       position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .gradient-orb {
+      position: absolute;
       border-radius: 50%;
       filter: blur(80px);
-      opacity: 0.5;
-      pointer-events: none;
-      z-index: 0;
+      opacity: 0.4;
+      animation: float 20s ease-in-out infinite;
     }
+
     .orb-1 {
       width: 600px;
       height: 600px;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
       top: -200px;
       left: -200px;
-      animation: float1 20s ease-in-out infinite;
+      animation-delay: 0s;
     }
+
     .orb-2 {
       width: 500px;
       height: 500px;
-      background: linear-gradient(135deg, #06b6d4, #3b82f6);
+      background: linear-gradient(135deg, #06b6d4 0%, #3B82F6 100%);
       bottom: -150px;
       right: -150px;
-      animation: float2 25s ease-in-out infinite;
+      animation-delay: -10s;
     }
+
     .orb-3 {
       width: 400px;
       height: 400px;
-      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      background: linear-gradient(135deg, #8B5CF6 0%, #ec4899 100%);
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      animation: float3 18s ease-in-out infinite;
+      animation-delay: -5s;
     }
 
-    @keyframes float1 {
+    @keyframes float {
       0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(100px, 50px) scale(1.1); }
-      66% { transform: translate(50px, 100px) scale(0.95); }
-    }
-    @keyframes float2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(-80px, -40px) scale(1.05); }
-      66% { transform: translate(-40px, -80px) scale(0.9); }
-    }
-    @keyframes float3 {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.2); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
     }
 
-    /* Grid background */
-    .grid-bg {
+    /* Grid pattern */
+    .grid-pattern {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background-image: 
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
       background-size: 60px 60px;
-      z-index: 0;
+      z-index: -1;
+    }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 50%, #3B82F6 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Glassmorphism */
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     /* Glass card */
     .glass-card {
       background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 1.5rem;
+      border-radius: 24px;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Gradient border effect */
-    .gradient-border {
-      position: relative;
-    }
-    .gradient-border::before {
+    .glass-card::before {
       content: '';
       position: absolute;
-      inset: 0;
-      border-radius: 1.5rem;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5), rgba(6, 182, 212, 0.3));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
     }
 
     /* Input styling */
@@ -110,51 +135,41 @@
       width: 100%;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 0.75rem;
+      border-radius: 12px;
       padding: 0.875rem 1rem;
       color: white;
       font-size: 0.95rem;
       transition: all 0.3s ease;
     }
+
     .premium-input:focus {
       outline: none;
       border-color: rgba(59, 130, 246, 0.5);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
       background: rgba(255, 255, 255, 0.08);
     }
+
     .premium-input::placeholder {
       color: rgba(255, 255, 255, 0.4);
     }
 
     /* Button styling */
     .btn-primary {
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      background: linear-gradient(135deg, #3B82F6, #8B5CF6);
       color: white;
       font-weight: 600;
       padding: 0.875rem 1.5rem;
-      border-radius: 0.75rem;
+      border-radius: 12px;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      border: none;
+      cursor: pointer;
     }
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #60a5fa, #a78bfa);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .btn-primary:hover::before {
-      opacity: 1;
-    }
+
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.5);
-    }
-    .btn-primary span {
-      position: relative;
-      z-index: 1;
     }
 
     .btn-success {
@@ -162,29 +177,15 @@
       color: white;
       font-weight: 600;
       padding: 0.875rem 1.5rem;
-      border-radius: 0.75rem;
+      border-radius: 12px;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      border: none;
+      cursor: pointer;
     }
-    .btn-success::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, #34d399, #10b981);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .btn-success:hover::before {
-      opacity: 1;
-    }
+
     .btn-success:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.5);
-    }
-    .btn-success span {
-      position: relative;
-      z-index: 1;
     }
 
     /* Tab styling */
@@ -194,30 +195,39 @@
       color: rgba(255, 255, 255, 0.6);
       border-bottom: 2px solid transparent;
       transition: all 0.3s ease;
+      background: transparent;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      cursor: pointer;
     }
+
     .tab-btn:hover {
       color: rgba(255, 255, 255, 0.8);
     }
+
     .tab-btn.active {
       color: white;
-      border-color: #3b82f6;
+      border-bottom-color: #3B82F6;
     }
 
-    /* Phone input special styling */
+    /* Phone input */
     .phone-select {
       appearance: none;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 0.75rem;
+      border-radius: 12px;
       padding: 0.875rem 0.75rem;
       color: transparent;
       font-size: 0.9rem;
       cursor: pointer;
     }
+
     .phone-select:focus {
       outline: none;
       border-color: rgba(59, 130, 246, 0.5);
     }
+
     .phone-select option {
       background: #1a1a2e;
       color: white;
@@ -228,13 +238,15 @@
       align-items: stretch;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 0.75rem;
+      border-radius: 12px;
       overflow: hidden;
     }
+
     .phone-wrapper:focus-within {
       border-color: rgba(59, 130, 246, 0.5);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
     }
+
     .phone-prefix {
       padding: 0.875rem 0.75rem;
       background: rgba(255, 255, 255, 0.05);
@@ -243,6 +255,7 @@
       border-right: 1px solid rgba(255, 255, 255, 0.1);
       white-space: nowrap;
     }
+
     .phone-input {
       flex: 1;
       background: transparent;
@@ -251,9 +264,11 @@
       color: white;
       font-size: 0.95rem;
     }
+
     .phone-input:focus {
       outline: none;
     }
+
     .phone-input::placeholder {
       color: rgba(255, 255, 255, 0.4);
     }
@@ -270,87 +285,117 @@
       margin: 0 auto 1.5rem;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
     .seller-icon svg {
       width: 40px;
       height: 40px;
-      stroke: #3b82f6;
+      stroke: #3B82F6;
     }
 
-    /* Nav link hover */
-    .nav-link {
-      position: relative;
-      transition: color 0.3s ease;
-    }
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
+    /* Mobile menu - FIXED with opacity/visibility transitions */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
       left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      transition: width 0.3s ease;
+      right: 0;
+      bottom: 0;
+      background: rgba(6, 9, 18, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 90;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      display: flex;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    .nav-link:hover::after,
-    .nav-link.active::after {
-      width: 100%;
+
+    .mobile-menu.active {
+      opacity: 1;
+      visibility: visible;
     }
-    .nav-link.active {
+
+    .mobile-menu a {
+      font-size: 1.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      transition: color 0.3s;
+      text-decoration: none;
+    }
+
+    .mobile-menu a:hover {
       color: white;
     }
 
-    /* Mobile nav */
-    .mobile-menu {
-      display: none;
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
     }
-    @media (max-width: 640px) {
-      .desktop-nav { display: none; }
-      .mobile-menu { display: block; }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(59, 130, 246, 0.5);
     }
   </style>
 </head>
-<body>
-  <!-- Background elements -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="grid-bg"></div>
+
+<body class="text-white min-h-screen">
+  <!-- Background -->
+  <div class="gradient-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+  <div class="grid-pattern"></div>
 
   <!-- Header -->
-  <header class="relative z-10 border-b border-white/10 bg-black/20 backdrop-blur-xl">
-    <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="/" class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-        PartsMateTH
-      </a>
-      
-      <!-- Desktop Nav -->
-      <nav class="desktop-nav flex items-center gap-6 text-sm">
-        <a href="/" class="nav-link text-white/70 hover:text-white">Home</a>
-        <a href="/profile.html" class="nav-link text-white/70 hover:text-white">My Profile</a>
-        <a href="/seller.html" class="nav-link active text-white">Seller Portal</a>
-      </nav>
-
-      <!-- Mobile Menu Button -->
-      <button id="mobileMenuBtn" class="mobile-menu p-2 text-white/70 hover:text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Mobile Dropdown -->
-    <div id="mobileDropdown" class="hidden absolute top-full left-0 right-0 bg-black/90 backdrop-blur-xl border-b border-white/10 py-4 z-50">
-      <nav class="flex flex-col items-center gap-4 text-sm">
-        <a href="/" class="text-white/70 hover:text-white">Home</a>
-        <a href="/profile.html" class="text-white/70 hover:text-white">My Profile</a>
-        <a href="/seller.html" class="text-white font-semibold">Seller Portal</a>
-      </nav>
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="glass rounded-2xl px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-110">
+          <span class="text-xl font-bold font-display tracking-tight hidden sm:block">PartsMateTH</span>
+        </a>
+        
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-white/70 hover:text-white transition-colors">Home</a>
+          <a href="/plans.html" class="text-white/70 hover:text-white transition-colors">Plans</a>
+          <a href="/profile.html" class="text-white/70 hover:text-white transition-colors">Profile</a>
+          <a href="/seller.html" class="text-white font-semibold relative after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-0.5 after:bg-gradient-to-r after:from-[#3B82F6] after:to-[#42C2BA]">Seller Portal</a>
+        </nav>
+        
+        <button class="md:hidden text-white p-2" id="menuToggle">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main class="relative z-10 max-w-lg mx-auto px-4 py-16">
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="absolute top-6 right-6 text-white p-2" id="menuClose">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+    <a href="/">Home</a>
+    <a href="/plans.html">Plans</a>
+    <a href="/profile.html">Profile</a>
+    <a href="/seller.html">Seller Portal</a>
+  </div>
+
+  <main class="relative z-10 max-w-lg mx-auto px-6 pt-32 pb-16">
     <!-- Seller Icon -->
     <div class="seller-icon">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -359,13 +404,13 @@
       </svg>
     </div>
 
-    <h1 class="text-3xl md:text-4xl font-bold text-center mb-3 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
-      Seller Portal
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-3 font-display">
+      Seller <span class="gradient-text">Portal</span>
     </h1>
     <p class="text-center text-white/60 mb-10">Login or sign up to manage your seller account</p>
 
     <!-- Main Card -->
-    <div id="seller-container" class="glass-card gradient-border p-8">
+    <div id="seller-container" class="glass-card p-8">
       <!-- Tabs -->
       <div class="flex justify-center mb-8 border-b border-white/10">
         <button id="tabLogin" class="tab-btn active">Login</button>
@@ -383,7 +428,7 @@
           <input type="password" id="loginPassword" placeholder="Enter your password" required class="premium-input" />
         </div>
         <button type="submit" class="btn-primary w-full">
-          <span>Login to Dashboard</span>
+          Login to Dashboard
         </button>
       </form>
 
@@ -420,7 +465,7 @@
           <p class="text-xs text-white/50 mt-2">You need an authorization code to become a seller. Contact us to get one.</p>
         </div>
         <button type="submit" class="btn-success w-full">
-          <span>Create Seller Account</span>
+          Create Seller Account
         </button>
       </form>
     </div>
@@ -468,6 +513,23 @@
   <script>
     loadCountries("signupCountryCode", "signupIsoLabel", "signupPhonePrefix").then(() => {
       console.log("✅ Country options loaded for signup");
+    });
+  </script>
+
+  <!-- Mobile menu -->
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const menuClose = document.getElementById('menuClose');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    menuClose.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = '';
     });
   </script>
 
@@ -536,16 +598,6 @@
       } else {
         alert("❌ " + res.error);
       }
-    });
-  </script>
-
-  <!-- Mobile menu toggle -->
-  <script>
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileDropdown = document.getElementById('mobileDropdown');
-    
-    mobileMenuBtn.addEventListener('click', () => {
-      mobileDropdown.classList.toggle('hidden');
     });
   </script>
 
