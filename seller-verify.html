@@ -3,25 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Verifying Seller Account...</title>
+  <title>Verifying Seller Account - PartsMateTH</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #f8fafc;
+    }
+
+    .verification-card {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+    }
+
+    .logo span {
+      color: #f97316;
+    }
+
+    .spinner-container {
+      margin-bottom: 24px;
+    }
+
+    .spinner {
+      width: 56px;
+      height: 56px;
+      border: 4px solid rgba(249, 115, 22, 0.2);
+      border-top-color: #f97316;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-text {
+      font-size: 18px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+
+    .sub-text {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    /* Result states */
+    .result-container {
+      display: none;
+    }
+
+    .result-container.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 40px;
+    }
+
+    .result-icon.success {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+
+    .result-icon.error {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .result-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .result-message {
+      font-size: 16px;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .action-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: white;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .action-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+    }
+
+    .loading-container {
+      display: block;
+    }
+
+    .loading-container.hide {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="verification-card">
+    <div class="logo">Parts<span>Mate</span>TH</div>
+    
+    <div class="loading-container" id="loading">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+      <p class="status-text">Verifying your seller account...</p>
+      <p class="sub-text">This will only take a moment</p>
+    </div>
+
+    <div class="result-container" id="result">
+      <div class="result-icon" id="resultIcon">✓</div>
+      <h2 class="result-title" id="resultTitle">Verification Complete</h2>
+      <p class="result-message" id="resultMessage"></p>
+      <a href="seller-dashboard.html" class="action-button" id="actionButton">Go to Dashboard</a>
+    </div>
+  </div>
+
   <script>
-    (async ()=>{
+    (async () => {
       const params = new URLSearchParams(location.search);
       const code = params.get("code");
       const token = params.get("token");
+
+      const loading = document.getElementById("loading");
+      const result = document.getElementById("result");
+      const resultIcon = document.getElementById("resultIcon");
+      const resultTitle = document.getElementById("resultTitle");
+      const resultMessage = document.getElementById("resultMessage");
+      const actionButton = document.getElementById("actionButton");
+
+      function showResult(success, title, message, buttonText, buttonLink) {
+        loading.classList.add("hide");
+        result.classList.add("show");
+        
+        resultIcon.textContent = success ? "✓" : "✕";
+        resultIcon.className = "result-icon " + (success ? "success" : "error");
+        resultTitle.textContent = title;
+        resultMessage.textContent = message;
+        actionButton.textContent = buttonText;
+        actionButton.href = buttonLink;
+      }
+
       if (!code || !token) {
-        document.body.innerHTML = "Invalid verification link.";
+        showResult(false, "Invalid Link", "This verification link is invalid or has expired. Please request a new verification email.", "Back to Home", "index.html");
         return;
       }
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
-      const url = `${scriptUrl}?mode=verifySeller&code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
-      const res = await fetch(url);
-      const txt = await res.text();
-      document.body.innerHTML = txt;
+
+      try {
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec";
+        const url = `${scriptUrl}?mode=verifySeller&code=${encodeURIComponent(code)}&token=${encodeURIComponent(token)}`;
+        const res = await fetch(url);
+        const txt = await res.text();
+
+        // Check if verification was successful based on response
+        const isSuccess = txt.toLowerCase().includes("success") || txt.toLowerCase().includes("verified") || txt.includes("✅");
+        
+        if (isSuccess) {
+          showResult(true, "Account Verified!", "Your seller account has been successfully verified. You can now access your dashboard and start listing parts.", "Go to Dashboard", "seller-dashboard.html");
+        } else {
+          showResult(false, "Verification Failed", txt || "Something went wrong during verification. Please try again or contact support.", "Back to Home", "index.html");
+        }
+      } catch (err) {
+        showResult(false, "Network Error", "Unable to verify your account due to a network error. Please check your connection and try again.", "Try Again", location.href);
+      }
     })();
   </script>
-</head>
-<body style="font-family:sans-serif;text-align:center;padding:40px;color:#333;">
-  Verifying your account...
 </body>
 </html>
