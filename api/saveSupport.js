@@ -19,12 +19,12 @@ export default async function handler(req, res) {
     const scriptUrl = process.env.GOOGLE_SCRIPT_WEBAPP;
 
     const resp = await fetch(
-      `${scriptUrl}?mode=save&sheet=web_support_messages`,
+      `${scriptUrl}?mode=save&sheetName=web_support_messages`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sheet: "web_support_messages",
+          sheetName: "web_support_messages",
           name,
           email,
           phone,
