@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plans – PartsMateTH</title>
-  <meta name="description" content="Choose the perfect PartsMateTH plan for your auto parts business. Start with a free trial or subscribe to unlock powerful tools." />
+  <title>Get PartsMateTH – Auto Parts Intelligence</title>
+  <meta name="description" content="Get PartsMateTH – the ultimate auto parts intelligence platform. 50 parts per request, 300 daily checks, and blazing fast speed." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,6 @@
       overflow-x: hidden;
     }
 
-    /* Animated gradient background */
     .gradient-bg {
       position: fixed;
       top: 0;
@@ -74,13 +73,9 @@
       75% { transform: translate(20px, 10px) scale(1.02); }
     }
 
-    /* Grid pattern */
     .grid-pattern {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background-image: 
         linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
@@ -88,7 +83,6 @@
       z-index: -1;
     }
 
-    /* Gradient text */
     .gradient-text {
       background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 50%, #3B82F6 100%);
       background-size: 200% 200%;
@@ -103,7 +97,6 @@
       50% { background-position: 100% 50%; }
     }
 
-    /* Glassmorphism */
     .glass {
       background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(20px);
@@ -116,93 +109,9 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    /* Plan cards */
-    .plan-card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 24px;
-      padding: 2.5rem 2rem;
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow: hidden;
-    }
-
-    .plan-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
-      opacity: 0;
-      transition: opacity 0.5s;
-    }
-
-    .plan-card:hover {
-      transform: translateY(-12px) scale(1.02);
-      border-color: rgba(59, 130, 246, 0.3);
-      box-shadow: 
-        0 30px 60px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(59, 130, 246, 0.15);
-    }
-
-    .plan-card:hover::before {
-      opacity: 1;
-    }
-
-    /* Featured plan */
-    .plan-featured {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(66, 194, 186, 0.15) 100%);
-      border: 2px solid rgba(59, 130, 246, 0.4);
-      transform: scale(1.05);
-    }
-
-    .plan-featured:hover {
-      transform: translateY(-12px) scale(1.08);
-    }
-
-    .plan-featured::after {
-      content: 'MOST POPULAR';
-      position: absolute;
-      top: -1px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
-      color: white;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      padding: 6px 20px;
-      border-radius: 0 0 12px 12px;
-    }
-
-    /* Pro plan special styling */
-    .plan-pro {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-      border-color: rgba(139, 92, 246, 0.3);
-    }
-
-    .plan-pro::after {
-      content: '⚡ POWER USER';
-      position: absolute;
-      top: -1px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
-      color: white;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      padding: 6px 20px;
-      border-radius: 0 0 12px 12px;
-    }
-
-    /* CTA Button */
     .btn-glow {
       position: relative;
-      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
+      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
       color: white;
       font-weight: 600;
       padding: 14px 32px;
@@ -224,13 +133,10 @@
       transition: left 0.5s;
     }
 
-    .btn-glow:hover::before {
-      left: 100%;
-    }
-
+    .btn-glow:hover::before { left: 100%; }
     .btn-glow:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
     }
 
     .btn-secondary {
@@ -250,35 +156,27 @@
       transform: translateY(-2px);
     }
 
-    /* Feature list */
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 0;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.95rem;
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 1.75rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .feature-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      flex-shrink: 0;
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(139, 92, 246, 0.1);
     }
 
-    .feature-included {
-      background: rgba(34, 197, 94, 0.2);
-      color: #22c55e;
-    }
-
-    .feature-excluded {
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.3);
+    .stat-card {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
     }
 
     /* Modal */
@@ -318,7 +216,6 @@
       transform: scale(1) translateY(0);
     }
 
-    /* Form inputs */
     .form-input {
       width: 100%;
       padding: 14px 18px;
@@ -331,27 +228,14 @@
       outline: none;
     }
 
-    .form-input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
-    }
-
+    .form-input::placeholder { color: rgba(255, 255, 255, 0.4); }
     .form-input:focus {
       border-color: rgba(59, 130, 246, 0.5);
       box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
     }
 
-    /* Phone input group */
-    .phone-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .country-select-wrapper {
-      position: relative;
-      width: 90px;
-      flex-shrink: 0;
-    }
-
+    .phone-group { display: flex; gap: 10px; }
+    .country-select-wrapper { position: relative; width: 90px; flex-shrink: 0; }
     .country-select {
       appearance: none;
       width: 100%;
@@ -365,16 +249,8 @@
       cursor: pointer;
       transition: all 0.3s;
     }
-
-    .country-select option {
-      background: #1a1f2e;
-      color: white;
-    }
-
-    .country-select:focus {
-      border-color: rgba(59, 130, 246, 0.5);
-    }
-
+    .country-select option { background: #1a1f2e; color: white; }
+    .country-select:focus { border-color: rgba(59, 130, 246, 0.5); }
     .iso-label {
       position: absolute;
       inset: 0;
@@ -386,7 +262,6 @@
       font-size: 0.9rem;
       pointer-events: none;
     }
-
     .phone-input-wrapper {
       flex: 1;
       display: flex;
@@ -396,12 +271,10 @@
       overflow: hidden;
       transition: all 0.3s;
     }
-
     .phone-input-wrapper:focus-within {
       border-color: rgba(59, 130, 246, 0.5);
       box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
     }
-
     .phone-prefix {
       display: flex;
       align-items: center;
@@ -412,7 +285,6 @@
       font-size: 0.9rem;
       white-space: nowrap;
     }
-
     .phone-input {
       flex: 1;
       padding: 14px;
@@ -422,55 +294,16 @@
       font-size: 0.95rem;
       outline: none;
     }
+    .phone-input::placeholder { color: rgba(255, 255, 255, 0.4); }
 
-    .phone-input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
-    }
-
-    /* Comparison table */
-    .comparison-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-    }
-
-    .comparison-table th,
-    .comparison-table td {
-      padding: 16px 12px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .comparison-table th {
-      color: rgba(255, 255, 255, 0.5);
-      font-weight: 500;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .comparison-table td:first-child {
-      text-align: left;
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .comparison-table tbody tr:hover {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    /* Animations */
     .fade-up {
       opacity: 0;
       transform: translateY(30px);
     }
 
-    /* Mobile menu */
     .mobile-menu {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(6, 9, 18, 0.98);
       backdrop-filter: blur(20px);
       z-index: 90;
@@ -483,39 +316,14 @@
       visibility: hidden;
       transition: opacity 0.3s ease, visibility 0.3s ease;
     }
+    .mobile-menu.active { opacity: 1; visibility: visible; }
+    .mobile-menu a { font-size: 1.5rem; color: rgba(255, 255, 255, 0.8); transition: color 0.3s; }
+    .mobile-menu a:hover { color: white; }
 
-    .mobile-menu.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .mobile-menu a {
-      font-size: 1.5rem;
-      color: rgba(255, 255, 255, 0.8);
-      transition: color 0.3s;
-    }
-
-    .mobile-menu a:hover {
-      color: white;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(59, 130, 246, 0.3);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(59, 130, 246, 0.5);
-    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.5); }
   </style>
 </head>
 
@@ -569,320 +377,207 @@
   </div>
 
   <!-- Hero Section -->
-  <section class="pt-32 pb-16 px-6">
+  <section class="pt-32 pb-12 px-6">
     <div class="max-w-4xl mx-auto text-center">
       <div class="fade-up">
         <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-white/80 mb-6">
-          <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-          7-Day Free Trial Available
+          <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+          ⚡ Full Power. One Service.
         </span>
       </div>
       
       <h1 class="fade-up text-4xl sm:text-5xl lg:text-6xl font-bold font-display leading-tight mb-6">
-        Choose Your <span class="gradient-text">Perfect Plan</span>
+        The Complete <span class="gradient-text">Auto Parts</span> Intelligence Suite
       </h1>
       
-      <p class="fade-up text-lg sm:text-xl text-white/60 max-w-2xl mx-auto mb-8">
-        Unlock powerful tools built for auto parts professionals. Start free, upgrade anytime.
+      <p class="fade-up text-lg sm:text-xl text-white/60 max-w-2xl mx-auto mb-10">
+        Everything you need to dominate the auto parts market — all tools, maximum speed, zero limitations.
       </p>
     </div>
   </section>
 
-  <!-- Pricing Cards -->
-  <section class="px-6 pb-20">
-    <div class="max-w-6xl mx-auto">
-      <div class="grid md:grid-cols-3 gap-6 lg:gap-8 items-start">
-        
-        <!-- Basic Plan -->
-        <div class="plan-card fade-up" onclick="openModal('Basic')">
-          <div class="text-center mb-8">
-            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-slate-600/30 to-slate-700/30 flex items-center justify-center">
-              <svg class="w-7 h-7 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold font-display mb-2">Basic</h3>
-            <p class="text-white/50 text-sm mb-4">Perfect for getting started</p>
-            <div class="flex items-baseline justify-center gap-1">
-              <span class="text-4xl font-bold">99</span>
-              <span class="text-white/60">AED/mo</span>
-            </div>
-            <p class="text-sm text-white/40 line-through mt-1">149 AED</p>
-          </div>
-          
-          <div class="space-y-1 mb-8">
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>10 Part Numbers per Request</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>75 Checks per Day</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Prices Checker</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Names Generator</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-excluded">—</span>
-              <span class="text-white/40">Country Checker</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-excluded">—</span>
-              <span class="text-white/40">Weight Checker</span>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-2 text-white/50 text-sm mb-6">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <span>Speed: ~4 seconds</span>
-          </div>
-          
-          <button class="btn-secondary w-full">Get Started</button>
+  <!-- Pricing Hero Card -->
+  <section class="px-6 pb-16">
+    <div class="max-w-2xl mx-auto fade-up">
+      <div class="stat-card relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#8B5CF6] to-[#3B82F6] text-white text-xs font-bold tracking-widest px-6 py-1.5 rounded-b-xl uppercase">
+          All-In-One
         </div>
-
-        <!-- Plus Plan (Featured) -->
-        <div class="plan-card plan-featured fade-up" onclick="openModal('Plus')">
-          <div class="text-center mb-8 pt-4">
-            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#3B82F6]/30 to-[#42C2BA]/30 flex items-center justify-center">
-              <svg class="w-7 h-7 text-[#42C2BA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold font-display mb-2">Plus</h3>
-            <p class="text-white/50 text-sm mb-4">Best value for professionals</p>
-            <div class="flex items-baseline justify-center gap-1">
-              <span class="text-4xl font-bold gradient-text">199</span>
-              <span class="text-white/60">AED/mo</span>
-            </div>
-            <p class="text-sm text-white/40 line-through mt-1">249 AED</p>
-          </div>
-          
-          <div class="space-y-1 mb-8">
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>20 Part Numbers per Request</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>150 Checks per Day</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Everything in Basic +</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Country Checker</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Part Details Checker</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>List Cleaner</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-excluded">—</span>
-              <span class="text-white/40">Weight Checker</span>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-2 text-[#42C2BA] text-sm mb-6">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        <div class="pt-6">
+          <div class="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-purple-500/30 to-blue-500/30 flex items-center justify-center">
+            <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
             </svg>
-            <span>Speed: ~2.5 seconds</span>
           </div>
-          
-          <button class="btn-glow w-full">Get Started</button>
-        </div>
+          <h2 class="text-3xl font-bold font-display mb-2">PartsMateTH Pro</h2>
+          <p class="text-white/50 text-sm mb-6">Maximum power & speed for auto parts professionals</p>
+          <div class="flex items-baseline justify-center gap-1 mb-1">
+            <span class="text-5xl font-bold text-purple-400">349</span>
+            <span class="text-white/60 text-lg">AED/mo</span>
+          </div>
+          <p class="text-sm text-white/40 line-through mb-6">399 AED</p>
 
-        <!-- Pro Plan -->
-        <div class="plan-card plan-pro fade-up" onclick="openModal('Pro')">
-          <div class="text-center mb-8 pt-4">
-            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500/30 to-blue-500/30 flex items-center justify-center">
-              <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold font-display mb-2">Pro</h3>
-            <p class="text-white/50 text-sm mb-4">Maximum power & speed</p>
-            <div class="flex items-baseline justify-center gap-1">
-              <span class="text-4xl font-bold text-purple-400">349</span>
-              <span class="text-white/60">AED/mo</span>
-            </div>
-            <p class="text-sm text-white/40 line-through mt-1">399 AED</p>
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <button class="btn-glow text-lg px-10" onclick="openModal()">
+              Buy Now
+            </button>
           </div>
-          
-          <div class="space-y-1 mb-8">
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>50 Part Numbers per Request</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>300 Checks per Day</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Everything in Plus +</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Weight Checker (400+ brands)</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Alternates Checker</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">✓</span>
-              <span>Model Checker</span>
-            </div>
-            <div class="feature-item">
-              <span class="feature-icon feature-included">🚀</span>
-              <span>VIP Priority Support</span>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-2 text-purple-400 text-sm mb-6">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            <span>Speed: ~1.5 seconds (Fastest)</span>
-          </div>
-          
-          <button class="btn-glow w-full" style="background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);">Get Started</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Feature Comparison Table -->
+  <!-- Stats Row -->
+  <section class="px-6 pb-16">
+    <div class="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 fade-up">
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="text-3xl font-bold text-purple-400 font-display">50</div>
+        <div class="text-white/50 text-sm mt-1">Parts per Request</div>
+      </div>
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="text-3xl font-bold text-purple-400 font-display">300</div>
+        <div class="text-white/50 text-sm mt-1">Daily Checks</div>
+      </div>
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="text-3xl font-bold text-purple-400 font-display">~1.5s</div>
+        <div class="text-white/50 text-sm mt-1">Response Speed</div>
+      </div>
+      <div class="glass rounded-2xl p-5 text-center">
+        <div class="text-3xl font-bold text-purple-400 font-display">400+</div>
+        <div class="text-white/50 text-sm mt-1">Brands Covered</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
   <section class="px-6 pb-20">
     <div class="max-w-5xl mx-auto">
-      <div class="glass-strong rounded-3xl p-8 overflow-x-auto fade-up">
-        <h2 class="text-2xl font-bold font-display text-center mb-8">Compare All Features</h2>
-        
-        <table class="comparison-table">
-          <thead>
-            <tr>
-              <th class="text-left">Feature</th>
-              <th>Basic</th>
-              <th class="text-[#42C2BA]">Plus</th>
-              <th class="text-purple-400">Pro</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Parts per Request</td>
-              <td>10</td>
-              <td>20</td>
-              <td>50</td>
-            </tr>
-            <tr>
-              <td>Daily Checks</td>
-              <td>75</td>
-              <td>150</td>
-              <td>300</td>
-            </tr>
-            <tr>
-              <td>Response Speed</td>
-              <td>~4s</td>
-              <td>~2.5s</td>
-              <td>~1.5s</td>
-            </tr>
-            <tr>
-              <td>Prices Checker</td>
-              <td><span class="text-green-400">✓</span></td>
-              <td><span class="text-green-400">✓</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>Names Generator</td>
-              <td><span class="text-green-400">✓</span></td>
-              <td><span class="text-green-400">✓</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>Country Checker</td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-green-400">✓</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>Part Details</td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-green-400">✓</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>List Cleaner</td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-green-400">✓</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>Weight Checker</td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>Alternates Checker</td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>Model Checker</td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-            <tr>
-              <td>VIP Support</td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-white/30">—</span></td>
-              <td><span class="text-green-400">✓</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <h2 class="text-3xl font-bold font-display text-center mb-4 fade-up">Everything <span class="gradient-text">Included</span></h2>
+      <p class="text-white/50 text-center mb-12 max-w-xl mx-auto fade-up">All the tools you need, packed into one powerful subscription.</p>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Feature 1 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Prices Checker</h3>
+          <p class="text-white/50 text-sm">Instantly check and compare prices across suppliers for any part number.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Names Generator</h3>
+          <p class="text-white/50 text-sm">Auto-generate accurate part names from numbers in seconds.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Country Checker</h3>
+          <p class="text-white/50 text-sm">Identify the country of origin for any auto part instantly.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Part Details Checker</h3>
+          <p class="text-white/50 text-sm">Get comprehensive details and specifications for every part.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">List Cleaner</h3>
+          <p class="text-white/50 text-sm">Clean and validate your part number lists automatically.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Weight Checker</h3>
+          <p class="text-white/50 text-sm">Check weights across 400+ brands for accurate shipping estimates.</p>
+        </div>
+
+        <!-- Feature 7 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Alternates Checker</h3>
+          <p class="text-white/50 text-sm">Find alternative and interchangeable part numbers quickly.</p>
+        </div>
+
+        <!-- Feature 8 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Model Checker</h3>
+          <p class="text-white/50 text-sm">Identify compatible vehicle models for any part number.</p>
+        </div>
+
+        <!-- Feature 9 -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-4">
+            <span class="text-lg">🚀</span>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">VIP Priority Support</h3>
+          <p class="text-white/50 text-sm">Get fast, priority assistance whenever you need help.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- Buy Now CTA -->
+  <section class="px-6 pb-16">
+    <div class="max-w-3xl mx-auto text-center fade-up">
+      <div class="glass-strong rounded-3xl p-10">
+        <h2 class="text-3xl font-bold font-display mb-3">Ready to Get Started?</h2>
+        <p class="text-white/50 mb-2">349 AED/mo — All features included. Cancel anytime.</p>
+        <p class="text-white/40 text-sm mb-8">No hidden fees. Full access from day one.</p>
+        <button class="btn-glow text-lg px-12" onclick="openModal()">
+          Buy Now
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Free Trial Section (separate) -->
   <section class="px-6 pb-20">
-    <div class="max-w-4xl mx-auto text-center fade-up">
-      <div class="glass-strong rounded-3xl p-12">
-        <h2 class="text-3xl font-bold font-display mb-4">Not Sure Which Plan?</h2>
-        <p class="text-white/60 mb-8 max-w-xl mx-auto">
-          Start with a 7-day free trial on any plan. No credit card required. Cancel anytime.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button class="btn-glow" onclick="openModal('Plus')">Start Free Trial</button>
-          <a href="/" class="btn-secondary inline-flex items-center justify-center gap-2">
-            <span>Explore Features</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </a>
+    <div class="max-w-3xl mx-auto text-center fade-up">
+      <div class="glass rounded-3xl p-10 border border-white/5">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-semibold mb-5">
+          <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+          FREE FOR 7 DAYS
         </div>
+        <h2 class="text-2xl font-bold font-display mb-3">Want to Try Before You Buy?</h2>
+        <p class="text-white/50 mb-8 max-w-md mx-auto">
+          Start a 7-day free trial with full access to all features. No credit card required.
+        </p>
+        <button class="btn-secondary inline-flex items-center gap-2" onclick="openTrialModal()">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Start Free Trial
+        </button>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="py-12 bg-brand-darker border-t border-white/5">
+  <footer class="py-12 border-t border-white/5" style="background: #060912;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row justify-between items-center gap-6">
         <div class="flex items-center space-x-3">
@@ -895,19 +590,18 @@
         <div class="flex items-center space-x-6">
           <a href="/index.html" class="text-gray-400 hover:text-white transition-colors text-sm">Home</a>
           <a href="/plans.html" class="text-gray-400 hover:text-white transition-colors text-sm">Plans</a>
-          <a href="/profile.html" class="text-gray-400 hover:text-white transition-colors text-sm">Profile</a>
-          <a href="/policies.html" class="text-gray-400 hover:text-white transition-colors text-sm">All Policies</a>
+          <a href="/seller.html" class="text-gray-400 hover:text-white transition-colors text-sm">Seller Portal</a>
           <a href="/faq.html" class="text-gray-400 hover:text-white transition-colors text-sm">FAQs</a>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- Subscribe Modal -->
+  <!-- Buy Now Modal (no trial option) -->
   <div id="subscribeModal" class="modal-overlay">
     <div class="modal-content">
       <div class="flex items-center justify-between mb-6">
-        <h2 id="modalTitle" class="text-2xl font-bold font-display gradient-text">Subscribe</h2>
+        <h2 class="text-2xl font-bold font-display gradient-text">Buy PartsMateTH Pro</h2>
         <button onclick="closeModal()" class="text-white/40 hover:text-white transition-colors">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -920,12 +614,10 @@
           <label class="block text-sm text-white/60 mb-2">Your Name</label>
           <input id="nameInput" type="text" placeholder="John Doe" class="form-input">
         </div>
-        
         <div>
           <label class="block text-sm text-white/60 mb-2">Email Address</label>
           <input id="emailInput" type="email" placeholder="john@example.com" class="form-input">
         </div>
-        
         <div>
           <label class="block text-sm text-white/60 mb-2">Phone Number</label>
           <div class="phone-group">
@@ -939,25 +631,18 @@
             </div>
           </div>
         </div>
-        
         <div>
           <label class="block text-sm text-white/60 mb-2">Invite Code <span class="text-red-400">*</span></label>
           <input id="invCodeInput" type="text" placeholder="Enter your invite code" class="form-input" required>
         </div>
       </div>
 
-      <div class="mt-8 space-y-3">
-        <button onclick="startTrial()" class="btn-glow w-full flex items-center justify-center gap-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          Start 7-Day Free Trial
-        </button>
-        <button onclick="subscribeNow()" class="btn-secondary w-full flex items-center justify-center gap-2">
+      <div class="mt-8">
+        <button onclick="subscribeNow()" class="btn-glow w-full flex items-center justify-center gap-2">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
           </svg>
-          Subscribe Now
+          Subscribe Now — 349 AED/mo
         </button>
       </div>
       
@@ -967,12 +652,63 @@
     </div>
   </div>
 
-  <script>
-    let selectedPlan = "";
+  <!-- Trial Modal (separate) -->
+  <div id="trialModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold font-display gradient-text">Start Free Trial</h2>
+        <button onclick="closeTrialModal()" class="text-white/40 hover:text-white transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
 
-    function openModal(plan) {
-      selectedPlan = plan;
-      document.getElementById("modalTitle").innerText = `${plan} Plan`;
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-white/60 mb-2">Your Name</label>
+          <input id="trialNameInput" type="text" placeholder="John Doe" class="form-input">
+        </div>
+        <div>
+          <label class="block text-sm text-white/60 mb-2">Email Address</label>
+          <input id="trialEmailInput" type="email" placeholder="john@example.com" class="form-input">
+        </div>
+        <div>
+          <label class="block text-sm text-white/60 mb-2">Phone Number</label>
+          <div class="phone-group">
+            <div class="country-select-wrapper">
+              <select id="trialCountryCode" class="country-select"></select>
+              <div id="trialIsoLabel" class="iso-label">--</div>
+            </div>
+            <div class="phone-input-wrapper">
+              <span id="trialPhonePrefix" class="phone-prefix">+--</span>
+              <input id="trialPhoneInput" type="tel" placeholder="555 123 4567" class="phone-input" required>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm text-white/60 mb-2">Invite Code <span class="text-red-400">*</span></label>
+          <input id="trialInvCodeInput" type="text" placeholder="Enter your invite code" class="form-input" required>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <button onclick="startTrial()" class="btn-glow w-full flex items-center justify-center gap-2" style="background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Start 7-Day Free Trial
+        </button>
+      </div>
+      
+      <p class="text-center text-white/30 text-xs mt-6">
+        No credit card required. Full access for 7 days.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function openModal() {
       document.getElementById("subscribeModal").classList.add("active");
       document.body.style.overflow = 'hidden';
     }
@@ -982,60 +718,27 @@
       document.body.style.overflow = '';
     }
 
-    // Close modal on backdrop click
+    function openTrialModal() {
+      document.getElementById("trialModal").classList.add("active");
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTrialModal() {
+      document.getElementById("trialModal").classList.remove("active");
+      document.body.style.overflow = '';
+    }
+
+    // Close modals on backdrop click
     document.getElementById("subscribeModal").addEventListener("click", (e) => {
       if (e.target === e.currentTarget) closeModal();
     });
-
-    // Close modal on Escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeModal();
+    document.getElementById("trialModal").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeTrialModal();
     });
 
-    // --- Trial ---
-    async function startTrial() {
-      const name = document.getElementById('nameInput').value.trim();
-      const email = document.getElementById('emailInput').value.trim();
-      const phone = document.getElementById('phonePrefix').textContent + document.getElementById('phoneInput').value.trim();
-      const countrySelect = document.getElementById('countryCode');
-      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-      let country = selectedOption?.getAttribute('data-country') || '';
-      if (country.includes('(')) country = country.split('(')[0].trim();
-      const invCode = document.getElementById('invCodeInput').value.trim();
-
-      if (!name || !email || !phone || !invCode) {
-        alert('Please fill all fields including Invite Code.');
-        return;
-      }
-
-      try {
-        const res = await fetch('/api/saveToSheet', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name,
-            email,
-            phone,
-            country,
-            plan: 'Trial',
-            invCode,
-            trialUsed: 'YES'
-          })
-        });
-        const result = await res.json().catch(() => ({}));
-        if (res.ok && result.ok) {
-          const orderNo = result.orderNo || '';
-          window.location.href =
-            `/trial-success-page.html?key=${encodeURIComponent(result.licenseKey)}&email=${encodeURIComponent(email)}&plan=Trial&order=${encodeURIComponent(orderNo)}`;
-        } else {
-          const msg = result.error || '⚠️ Something went wrong while starting your trial.';
-          alert(msg);
-        }
-      } catch (err) {
-        console.error('Trial start error:', err);
-        alert('⚠️ Failed to start trial.');
-      }
-    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { closeModal(); closeTrialModal(); }
+    });
 
     // --- Subscribe ---
     async function subscribeNow() {
@@ -1057,7 +760,7 @@
         const res = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone, plan: selectedPlan, country, invCode })
+          body: JSON.stringify({ name, email, phone, plan: 'Pro', country, invCode })
         });
         const data = await res.json();
         if (data.url) window.location.href = data.url;
@@ -1065,6 +768,48 @@
       } catch (err) {
         console.error('Subscribe error:', err);
         alert('⚠️ Failed to start checkout.');
+      }
+    }
+
+    // --- Trial ---
+    async function startTrial() {
+      const name = document.getElementById('trialNameInput').value.trim();
+      const email = document.getElementById('trialEmailInput').value.trim();
+      const phone = document.getElementById('trialPhonePrefix').textContent + document.getElementById('trialPhoneInput').value.trim();
+      const countrySelect = document.getElementById('trialCountryCode');
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      let country = selectedOption?.getAttribute('data-country') || '';
+      if (country.includes('(')) country = country.split('(')[0].trim();
+      const invCode = document.getElementById('trialInvCodeInput').value.trim();
+
+      if (!name || !email || !phone || !invCode) {
+        alert('Please fill all fields including Invite Code.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/saveToSheet', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, email, phone, country,
+            plan: 'Trial',
+            invCode,
+            trialUsed: 'YES'
+          })
+        });
+        const result = await res.json().catch(() => ({}));
+        if (res.ok && result.ok) {
+          const orderNo = result.orderNo || '';
+          window.location.href =
+            `/trial-success-page.html?key=${encodeURIComponent(result.licenseKey)}&email=${encodeURIComponent(email)}&plan=Trial&order=${encodeURIComponent(orderNo)}`;
+        } else {
+          const msg = result.error || '⚠️ Something went wrong while starting your trial.';
+          alert(msg);
+        }
+      } catch (err) {
+        console.error('Trial start error:', err);
+        alert('⚠️ Failed to start trial.');
       }
     }
 
@@ -1096,19 +841,16 @@
 
     // Initialize
     document.addEventListener("DOMContentLoaded", () => {
-      // Load countries
       loadCountries("countryCode", "isoLabel", "phonePrefix");
+      loadCountries("trialCountryCode", "trialIsoLabel", "trialPhonePrefix");
 
-      // Prefill from query string
       const params = new URLSearchParams(window.location.search);
       const email = params.get("email");
-      const plan = params.get("plan");
       if (email) {
         document.getElementById("emailInput").value = email;
       }
-      if (plan) {
-        openModal(plan.charAt(0).toUpperCase() + plan.slice(1));
-      }
+      const plan = params.get("plan");
+      if (plan) openModal();
 
       // Mobile menu toggle
       document.getElementById("menuToggle")?.addEventListener("click", () => {
@@ -1123,7 +865,7 @@
         opacity: 1,
         y: 0,
         duration: 0.8,
-        stagger: 0.15,
+        stagger: 0.1,
         ease: "power3.out"
       });
 

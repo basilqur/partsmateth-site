@@ -1,14 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="robots" content="noindex">
-  <title>PartsMateTH Download</title>
-  <meta http-equiv="refresh" content="0;url=https://api.partsmateth.com/files/PartsMateTH_Setup_2.2.5.exe">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download – PartsMateTH</title>
+  <meta name="description" content="Download PartsMateTH — the advanced autoparts intelligence tool for professionals." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              blue: '#3B82F6',
+              teal: '#42C2BA',
+              dark: '#0A0F1C',
+              darker: '#060912',
+              card: '#111827',
+              muted: '#1F2937',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, h4, .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+    body {
+      background: #060912;
+      overflow-x: hidden;
+      color: #fff;
+    }
+
+    .gradient-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 600px; height: 600px;
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
+      top: -200px; right: -100px;
+    }
+
+    .orb-2 {
+      width: 500px; height: 500px;
+      background: linear-gradient(135deg, #42C2BA 0%, #3B82F6 100%);
+      bottom: -150px; left: -100px;
+      animation-delay: -10s;
+    }
+
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
+    }
+
+    .grid-pattern {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: -1;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 50%, #3B82F6 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-strong {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-glow {
+      position: relative;
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
+      color: white;
+      font-weight: 600;
+      padding: 16px 40px;
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-glow:hover::before { left: 100%; }
+
+    .btn-glow:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 50px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 12px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .download-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 2.5rem;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .download-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .download-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(59, 130, 246, 0.3);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 60px rgba(59, 130, 246, 0.1);
+    }
+
+    .download-card:hover::before { opacity: 1; }
+
+    .step-number {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .req-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .req-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Progress bar animation */
+    @keyframes progress-fill {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    .download-progress {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      display: none;
+    }
+
+    .download-progress.active { display: block; }
+
+    .download-progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #3B82F6, #42C2BA);
+      animation: progress-fill 3s ease-out forwards;
+    }
+
+    /* Pulse ring for download button */
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+
+    .pulse-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 18px;
+      border: 2px solid rgba(59, 130, 246, 0.4);
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(6, 9, 18, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 90;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      display: flex;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .mobile-menu.active { opacity: 1; visibility: visible; }
+    .mobile-menu a { font-size: 1.5rem; color: rgba(255, 255, 255, 0.8); transition: color 0.3s; }
+    .mobile-menu a:hover { color: white; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.5); }
+  </style>
 </head>
-<body>
-  <p>If download doesn’t start automatically, 
-     <a href="https://api.partsmateth.com/files/PartsMateTH_Setup_2.2.5.exe">click here</a>.
-  </p>
+
+<body class="text-white min-h-screen">
+  <!-- Background -->
+  <div class="gradient-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+  </div>
+  <div class="grid-pattern"></div>
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" id="navbar">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="glass rounded-2xl px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3 group">
+          <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-110">
+          <span class="text-xl font-bold font-display tracking-tight hidden sm:block">PartsMateTH</span>
+        </a>
+        
+        <nav class="hidden md:flex items-center gap-8">
+          <a href="/" class="text-white/70 hover:text-white transition-colors">Home</a>
+          <a href="/plans.html" class="text-white/70 hover:text-white transition-colors">Plans</a>
+          <a href="/profile.html" class="text-white/70 hover:text-white transition-colors">Profile</a>
+          <a href="/seller.html" class="text-white/70 hover:text-white transition-colors">Seller Portal</a>
+          <a href="/index.html#contact" class="text-white/70 hover:text-white transition-colors">Contact Us</a>
+        </nav>
+        
+        <button class="md:hidden text-white p-2" id="menuToggle">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="absolute top-6 right-6 text-white p-2" id="menuClose">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+    <a href="/">Home</a>
+    <a href="/plans.html">Plans</a>
+    <a href="/profile.html">Profile</a>
+    <a href="/seller.html">Seller Portal</a>
+    <a href="/index.html#contact">Contact Us</a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="pt-32 pb-12 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="fade-up">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-white/80 mb-6">
+          <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          Windows Desktop App — Latest Version
+        </span>
+      </div>
+      
+      <h1 class="fade-up text-4xl sm:text-5xl lg:text-6xl font-bold font-display leading-tight mb-6">
+        Download <span class="gradient-text">PartsMateTH</span>
+      </h1>
+      
+      <p class="fade-up text-lg sm:text-xl text-white/60 max-w-2xl mx-auto mb-10">
+        Get the powerful desktop app and supercharge your auto parts workflow. Install in under a minute.
+      </p>
+
+      <!-- Main Download Button -->
+      <div class="fade-up relative inline-block mb-4">
+        <div class="pulse-ring"></div>
+        <button id="downloadBtn" onclick="startDownload()" class="btn-glow text-lg flex items-center gap-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Download for Windows
+        </button>
+      </div>
+
+      <p class="fade-up text-white/40 text-sm">Version X.X.X &bull; 45 MB &bull; Windows 10/11</p>
+
+      <!-- Progress bar (shows on click) -->
+      <div class="max-w-md mx-auto mt-6">
+        <div id="downloadProgress" class="download-progress">
+          <div class="download-progress-bar"></div>
+        </div>
+        <p id="downloadStatus" class="text-sm text-white/50 mt-2 hidden">⬇️ Your download has started...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What You Get Section -->
+  <section class="px-6 pb-20">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="fade-up text-2xl sm:text-3xl font-bold font-display text-center mb-12">
+        What's <span class="gradient-text">Inside</span>
+      </h2>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="download-card fade-up">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-teal-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-lg mb-2">Prices Checker</h3>
+          <p class="text-white/50 text-sm">Instantly fetch and compare part prices across multiple sources.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="download-card fade-up">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500/20 to-green-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-lg mb-2">Names Generator</h3>
+          <p class="text-white/50 text-sm">Generate accurate part names from part numbers automatically.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="download-card fade-up">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-lg mb-2">Country Checker</h3>
+          <p class="text-white/50 text-sm">Identify origin countries for any auto part instantly.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="download-card fade-up">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-lg mb-2">Weight Checker</h3>
+          <p class="text-white/50 text-sm">Get accurate weights for parts — perfect for shipping calculations.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="download-card fade-up">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-lg mb-2">Alternates Finder</h3>
+          <p class="text-white/50 text-sm">Find cross-references and alternate part numbers in seconds.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="download-card fade-up">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-lg mb-2">List Cleaner</h3>
+          <p class="text-white/50 text-sm">Clean and organize messy part lists with one click.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Install Section -->
+  <section class="px-6 pb-20">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="fade-up text-2xl sm:text-3xl font-bold font-display text-center mb-12">
+        Install in <span class="gradient-text">3 Easy Steps</span>
+      </h2>
+
+      <div class="space-y-6">
+        <!-- Step 1 -->
+        <div class="download-card fade-up flex items-start gap-5">
+          <div class="step-number">1</div>
+          <div>
+            <h3 class="font-display font-bold text-lg mb-1">Download the Installer</h3>
+            <p class="text-white/50 text-sm">Click the download button above. The .exe file will be saved to your Downloads folder.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="download-card fade-up flex items-start gap-5">
+          <div class="step-number">2</div>
+          <div>
+            <h3 class="font-display font-bold text-lg mb-1">Run the Setup</h3>
+            <p class="text-white/50 text-sm">Double-click the downloaded file and follow the installation wizard. It takes less than 30 seconds.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="download-card fade-up flex items-start gap-5">
+          <div class="step-number">3</div>
+          <div>
+            <h3 class="font-display font-bold text-lg mb-1">Login & Start Working</h3>
+            <p class="text-white/50 text-sm">Open PartsMateTH, enter your license key, and you're ready to go. Need a license? <a href="/plans.html" class="text-blue-400 hover:text-blue-300 underline underline-offset-2">Check our plans</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- System Requirements -->
+  <section class="px-6 pb-20">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="fade-up text-2xl sm:text-3xl font-bold font-display text-center mb-12">
+        System <span class="gradient-text">Requirements</span>
+      </h2>
+
+      <div class="download-card fade-up">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="req-item">
+            <div class="req-icon bg-blue-500/10">
+              <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">OS</p>
+              <p class="text-xs text-white/50">Windows 10 / 11</p>
+            </div>
+          </div>
+
+          <div class="req-item">
+            <div class="req-icon bg-teal-500/10">
+              <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">RAM</p>
+              <p class="text-xs text-white/50">4 GB minimum</p>
+            </div>
+          </div>
+
+          <div class="req-item">
+            <div class="req-icon bg-purple-500/10">
+              <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Storage</p>
+              <p class="text-xs text-white/50">100 MB free space</p>
+            </div>
+          </div>
+
+          <div class="req-item">
+            <div class="req-icon bg-green-500/10">
+              <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold">Internet</p>
+              <p class="text-xs text-white/50">Stable connection required</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="px-6 pb-20">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="download-card fade-up" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(66, 194, 186, 0.1) 100%); border-color: rgba(59, 130, 246, 0.3);">
+        <h2 class="text-2xl sm:text-3xl font-bold font-display mb-4">
+          Ready to <span class="gradient-text">Get Started?</span>
+        </h2>
+        <p class="text-white/50 mb-8 max-w-lg mx-auto">
+          Download the app and start your 7-day free trial — no credit card needed. Upgrade anytime from Plans.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button onclick="startDownload()" class="btn-glow flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Download Now
+          </button>
+          <a href="/plans.html" class="btn-secondary inline-flex items-center justify-center gap-2">
+            <span>View Plans</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-white/5" style="background: #060912;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center space-x-3">
+          <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH" class="h-8 w-auto">
+          <span class="font-display text-lg font-bold gradient-text">PartsMateTH</span>
+        </div>
+        <div class="text-gray-400 text-sm">
+          &copy; 2026 PartsMateTH. All rights reserved.
+        </div>
+        <div class="flex items-center space-x-6">
+          <a href="/index.html" class="text-gray-400 hover:text-white transition-colors text-sm">Home</a>
+          <a href="/plans.html" class="text-gray-400 hover:text-white transition-colors text-sm">Plans</a>
+          <a href="/profile.html" class="text-gray-400 hover:text-white transition-colors text-sm">Profile</a>
+          <a href="/policies.html" class="text-gray-400 hover:text-white transition-colors text-sm">All Policies</a>
+          <a href="/faq.html" class="text-gray-400 hover:text-white transition-colors text-sm">FAQs</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Download handler
+    function startDownload() {
+      const progress = document.getElementById('downloadProgress');
+      const status = document.getElementById('downloadStatus');
+      const btn = document.getElementById('downloadBtn');
+
+      progress.classList.add('active');
+      status.classList.remove('hidden');
+
+      btn.innerHTML = `
+        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Starting Download...
+      `;
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+
+      // 🔥 REAL DOWNLOAD TRIGGER
+      const link = document.createElement('a');
+      link.href = "https://api.partsmateth.com/files/PartsMateTH_Setup_2.2.5.exe";
+      link.download = "";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    
+      setTimeout(() => {
+        status.textContent = "⬇️ Your download has started. Check your Downloads folder.";
+      }, 800);
+    }
+
+    // Mobile menu
+    document.getElementById("menuToggle")?.addEventListener("click", () => {
+      document.getElementById("mobileMenu")?.classList.add("active");
+    });
+    document.getElementById("menuClose")?.addEventListener("click", () => {
+      document.getElementById("mobileMenu")?.classList.remove("active");
+    });
+
+    // GSAP Animations
+    gsap.to(".fade-up", {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      stagger: 0.12,
+      ease: "power3.out"
+    });
+
+    // Navbar scroll effect
+    window.addEventListener("scroll", () => {
+      const navbar = document.getElementById("navbar");
+      if (window.scrollY > 50) {
+        navbar.classList.add("py-2");
+        navbar.classList.remove("py-4");
+      } else {
+        navbar.classList.remove("py-2");
+        navbar.classList.add("py-4");
+      }
+    });
+  </script>
 </body>
 </html>
