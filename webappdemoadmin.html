@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PartsMateTH Web App - Admin</title>
+  <title>PartsMateTH - Auto Parts Intelligence</title>
   <meta name="description" content="PartsMateTH Web Admin Panel - Auto Parts Intelligence Platform">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -20,11 +21,14 @@
           colors: {
             brand: {
               blue: '#3B82F6',
-              teal: '#42C2BA',
+              teal: '#14B8A6',
+              cyan: '#06B6D4',
               dark: '#0A0F1C',
-              darker: '#060912',
-              card: '#111827',
-              muted: '#1F2937',
+              darker: '#050810',
+              card: '#0F1629',
+              surface: '#131B2E',
+              muted: '#1E293B',
+              border: '#1E293B',
             }
           }
         }
@@ -35,311 +39,528 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
-      background: #060912;
-      color: #fff;
+      background: #050810;
+      color: #E2E8F0;
       overflow-x: hidden;
       min-height: 100vh;
     }
     .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+    /* Ambient background */
+    .ambient-bg {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; pointer-events: none;
+    }
+    .ambient-bg::before {
+      content: '';
+      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 20%, rgba(59,130,246,0.06) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(20,184,166,0.04) 0%, transparent 50%);
+      animation: ambientMove 20s ease-in-out infinite;
+    }
+    @keyframes ambientMove {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-3%, 3%); }
+    }
+
     .gradient-text {
-      background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      background: linear-gradient(135deg, #3B82F6 0%, #14B8A6 50%, #06B6D4 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-    .gradient-border {
-      position: relative;
-      background: #111827;
+
+    .glass-card {
+      background: rgba(15, 22, 41, 0.8);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.06);
       border-radius: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .gradient-border::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 1rem;
-      padding: 1px;
-      background: linear-gradient(135deg, #3B82F6, #42C2BA);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
+    .glass-card:hover {
+      border-color: rgba(59,130,246,0.2);
+      box-shadow: 0 0 40px -10px rgba(59,130,246,0.1);
     }
-    .glass {
-      background: rgba(17, 24, 39, 0.7);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+
+    .glass-header {
+      background: rgba(5, 8, 16, 0.85);
+      backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-    .btn-glow {
+
+    /* Buttons */
+    .btn-primary {
       position: relative;
-      background: linear-gradient(135deg, #3B82F6, #42C2BA);
-      transition: all 0.3s ease;
+      background: linear-gradient(135deg, #3B82F6, #14B8A6);
+      color: white; font-weight: 600;
+      border-radius: 0.75rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
     }
-    .btn-glow::before {
+    .btn-primary::before {
       content: '';
-      position: absolute;
-      inset: -2px;
-      background: linear-gradient(135deg, #3B82F6, #42C2BA);
-      border-radius: inherit;
-      filter: blur(15px);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: -1;
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #2563EB, #0D9488);
+      opacity: 0; transition: opacity 0.3s;
     }
-    .btn-glow:hover::before { opacity: 0.6; }
-    .btn-glow:hover { transform: translateY(-2px); }
-    .tab-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.6);
-      cursor: pointer;
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px -5px rgba(59,130,246,0.4);
     }
-    .tab-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.9);
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #94A3B8;
+      border-radius: 0.75rem;
+      transition: all 0.2s;
     }
-    .tab-btn.active {
-      background: linear-gradient(135deg, #3B82F6, #42C2BA);
-      border-color: transparent;
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.08);
       color: white;
-      box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.4);
+      border-color: rgba(255,255,255,0.15);
     }
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #0A0F1C; }
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, #3B82F6, #42C2BA);
-      border-radius: 4px;
+
+    /* Tab navigation */
+    .tab-nav {
+      display: flex; gap: 0.25rem;
+      background: rgba(15, 22, 41, 0.6);
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.05);
     }
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      background: transparent;
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 0.375rem;
+    }
+    .tab-btn:hover { color: #CBD5E1; background: rgba(255,255,255,0.05); }
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(20,184,166,0.2));
+      color: white;
+      box-shadow: 0 0 20px -5px rgba(59,130,246,0.3);
+    }
+    .tab-btn i { font-size: 1rem; }
+
+    /* Mobile bottom nav */
+    @media (max-width: 768px) {
+      .desktop-nav { display: none; }
+      .mobile-nav {
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+        background: rgba(5, 8, 16, 0.95);
+        backdrop-filter: blur(24px);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding: 0.25rem 0.5rem calc(env(safe-area-inset-bottom, 0.5rem) + 0.25rem);
+        display: flex; gap: 0;
+      }
+      .mobile-nav .mob-tab {
+        flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.125rem;
+        padding: 0.375rem 0;
+        font-size: 0.625rem; font-weight: 500;
+        color: #475569;
+        cursor: pointer; border: none; background: transparent;
+        transition: color 0.2s;
+      }
+      .mobile-nav .mob-tab i { font-size: 1.25rem; }
+      .mobile-nav .mob-tab.active { color: #3B82F6; }
+      .mobile-nav .mob-tab:hover { color: #94A3B8; }
+      body { padding-bottom: 5rem; }
+    }
+    @media (min-width: 769px) {
+      .mobile-nav { display: none; }
+    }
+
+    /* Inputs */
     .input-field {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #fff;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #E2E8F0;
       border-radius: 0.75rem;
       padding: 0.75rem 1rem;
       width: 100%;
       outline: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      font-size: 0.875rem;
+      transition: all 0.25s;
     }
     .input-field:focus {
-      border-color: #3B82F6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-    .input-field::placeholder { color: rgba(255,255,255,0.3); }
-    textarea.input-field { resize: vertical; min-height: 120px; }
-    .radio-label {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.5rem 1rem; border-radius: 0.5rem;
+      border-color: rgba(59,130,246,0.5);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1), 0 0 20px -5px rgba(59,130,246,0.15);
       background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .input-field::placeholder { color: #475569; }
+    textarea.input-field { resize: vertical; min-height: 120px; }
+
+    /* Radio & Checkbox */
+    .radio-card {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.625rem 0.875rem; border-radius: 0.625rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
       cursor: pointer; transition: all 0.2s;
-      font-size: 0.875rem;
+      font-size: 0.8125rem; color: #94A3B8;
     }
-    .radio-label:hover { background: rgba(255,255,255,0.1); }
-    .radio-label input:checked + span { color: #42C2BA; }
-    .radio-label:has(input:checked) {
-      border-color: #42C2BA;
-      background: rgba(66, 194, 186, 0.1);
+    .radio-card:hover { background: rgba(255,255,255,0.06); color: #CBD5E1; }
+    .radio-card:has(input:checked) {
+      border-color: rgba(20,184,166,0.4);
+      background: rgba(20,184,166,0.08);
+      color: #14B8A6;
     }
+    .radio-card input[type="radio"] { accent-color: #14B8A6; }
+
     .chk-label {
       display: flex; align-items: center; gap: 0.5rem;
-      cursor: pointer; font-size: 0.875rem; color: rgba(255,255,255,0.8);
+      cursor: pointer; font-size: 0.8125rem; color: #94A3B8;
     }
-    .chk-label input[type="checkbox"] {
-      accent-color: #42C2BA;
-      width: 1rem; height: 1rem;
-    }
-    .results-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8125rem;
-    }
-    .results-table th {
-      background: rgba(59,130,246,0.15);
-      padding: 0.625rem 0.75rem;
-      text-align: left;
-      font-weight: 600;
-      color: #42C2BA;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      white-space: nowrap;
-    }
-    .results-table td {
-      padding: 0.5rem 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.85);
-    }
-    .results-table tr:hover td { background: rgba(255,255,255,0.03); }
-    .results-table tr.match-closest td { background: rgba(255, 100, 100, 0.08); }
-    .results-table tr.match-fuzzy td { background: rgba(255, 255, 100, 0.06); }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-    .feature-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-      padding: 1.25rem; border-radius: 1rem;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      cursor: pointer; transition: all 0.3s;
-      text-align: center; color: rgba(255,255,255,0.7);
-      font-size: 0.8125rem; font-weight: 500;
-    }
-    .feature-btn:hover {
-      background: rgba(59,130,246,0.1);
-      border-color: rgba(59,130,246,0.3);
-      color: #fff;
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px -8px rgba(59,130,246,0.2);
-    }
-    .feature-btn .icon { font-size: 1.75rem; }
-    .loader {
-      display: none;
-      border: 3px solid rgba(255,255,255,0.1);
-      border-top: 3px solid #42C2BA;
-      border-radius: 50%;
-      width: 24px; height: 24px;
-      animation: spin 0.8s linear infinite;
-    }
-    .loader.active { display: inline-block; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .stop-btn {
-      display: none;
-      background: #ef4444;
-      color: #fff;
-      border: none;
-      padding: 0.5rem 1.25rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-size: 0.8125rem;
-      font-weight: 600;
-    }
-    .stop-btn.active { display: inline-block; }
-    .detail-block { white-space: pre-wrap; font-family: 'Inter', monospace; line-height: 1.8; }
-    .detail-block .label { color: #42C2BA; font-weight: 600; }
-    .detail-block .value { color: rgba(255,255,255,0.85); }
-    .toast {
-      position: fixed; bottom: 2rem; right: 2rem;
-      padding: 1rem 1.5rem; border-radius: 0.75rem;
-      font-size: 0.875rem; font-weight: 500;
-      z-index: 1000; transform: translateY(120%);
-      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-    }
-    .toast.show { transform: translateY(0); }
-    .toast-success { background: linear-gradient(135deg, #059669, #10B981); color: #fff; }
-    .toast-error { background: linear-gradient(135deg, #DC2626, #EF4444); color: #fff; }
-    .toast-warning { background: #F59E0B; color: #000; }
+    .chk-label input[type="checkbox"] { accent-color: #14B8A6; width: 1rem; height: 1rem; }
+
+    /* Currency toggle */
     .currency-toggle {
       display: flex; border-radius: 0.5rem; overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
     }
     .currency-toggle button {
-      padding: 0.5rem 1.25rem; font-size: 0.8125rem; font-weight: 600;
-      background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5);
+      padding: 0.375rem 1rem; font-size: 0.75rem; font-weight: 600;
+      background: transparent; color: #64748B;
       border: none; cursor: pointer; transition: all 0.2s;
     }
     .currency-toggle button.active {
-      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      background: linear-gradient(135deg, #3B82F6, #14B8A6);
       color: #fff;
+    }
+
+    /* Tables */
+    .results-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    .results-table th {
+      background: rgba(59,130,246,0.08);
+      padding: 0.75rem; text-align: left;
+      font-weight: 600; font-size: 0.6875rem;
+      color: #14B8A6; text-transform: uppercase; letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      white-space: nowrap;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .results-table td {
+      padding: 0.625rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      color: #CBD5E1;
+      transition: background 0.15s;
+    }
+    .results-table tr:hover td { background: rgba(59,130,246,0.04); }
+    .results-table tr.match-closest td { background: rgba(239, 68, 68, 0.06); border-left: 2px solid #EF4444; }
+    .results-table tr.match-fuzzy td { background: rgba(234, 179, 8, 0.06); border-left: 2px solid #EAB308; }
+
+    /* Mobile table cards */
+    @media (max-width: 640px) {
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .results-table { font-size: 0.75rem; }
+      .results-table th, .results-table td { padding: 0.5rem; }
+    }
+
+    /* Panel */
+    .tab-panel { display: none; animation: fadeSlideIn 0.4s ease-out; }
+    .tab-panel.active { display: block; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Feature cards */
+    .feature-card {
+      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+      padding: 1.5rem 1rem; border-radius: 1rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: center;
+    }
+    .feature-card:hover {
+      background: rgba(59,130,246,0.06);
+      border-color: rgba(59,130,246,0.2);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px -15px rgba(59,130,246,0.15);
+    }
+    .feature-card .icon-wrap {
+      width: 3rem; height: 3rem; border-radius: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(20,184,166,0.15));
+      font-size: 1.25rem;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover .icon-wrap { transform: scale(1.1) rotate(-3deg); }
+    .feature-card .label { font-size: 0.8125rem; font-weight: 600; color: #CBD5E1; }
+    .feature-card .desc { font-size: 0.6875rem; color: #64748B; line-height: 1.4; }
+
+    /* Loader */
+    .loader { display: none; }
+    .loader.active {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8125rem; color: #64748B;
+    }
+    .loader .spinner {
+      width: 1.25rem; height: 1.25rem;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-top-color: #14B8A6;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .stop-btn {
+      display: none;
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .stop-btn:hover { background: rgba(239, 68, 68, 0.25); }
+    .stop-btn.active { display: inline-flex; align-items: center; gap: 0.375rem; }
+
+    /* Detail block */
+    .detail-block { white-space: pre-wrap; font-family: 'Inter', sans-serif; line-height: 1.9; font-size: 0.875rem; }
+    .detail-block .label { color: #14B8A6; font-weight: 600; }
+    .detail-block .value { color: #CBD5E1; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 6rem; right: 1.5rem;
+      padding: 0.875rem 1.25rem; border-radius: 0.75rem;
+      font-size: 0.8125rem; font-weight: 500;
+      z-index: 1000; transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; gap: 0.5rem;
+      max-width: calc(100vw - 3rem);
+    }
+    @media (min-width: 769px) { .toast { bottom: 2rem; } }
+    .toast.show { transform: translateX(0); }
+    .toast-success { background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16,185,129,0.3); }
+    .toast-error { background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239,68,68,0.3); }
+    .toast-warning { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245,158,11,0.3); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    /* Count badge */
+    .count-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 1.25rem; height: 1.25rem;
+      font-size: 0.625rem; font-weight: 700;
+      background: linear-gradient(135deg, #3B82F6, #14B8A6);
+      color: white; border-radius: 999px; padding: 0 0.375rem;
+    }
+
+    /* Section label */
+    .section-label {
+      font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #475569; margin-bottom: 0.5rem;
+    }
+
+    /* Stat card */
+    .stat-glow {
+      position: relative; overflow: hidden;
+    }
+    .stat-glow::after {
+      content: ''; position: absolute; top: -50%; right: -50%;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
+      pointer-events: none;
     }
   </style>
 </head>
 <body class="antialiased">
+  <div class="ambient-bg"></div>
 
   <!-- Header -->
-  <header class="glass sticky top-0 z-50 border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-      <div class="flex items-center gap-3">
-        <span class="font-display text-xl font-bold gradient-text">PartsMateTH</span>
-        <span class="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">Web Admin</span>
+  <header class="glass-header sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14 sm:h-16">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+          <i class="ri-car-line text-white text-sm"></i>
+        </div>
+        <div>
+          <span class="font-display text-base sm:text-lg font-bold gradient-text">PartsMateTH</span>
+        </div>
       </div>
-      <div class="text-xs text-gray-500">v1.0</div>
+      <div class="flex items-center gap-3">
+        <span class="text-[0.625rem] font-medium text-slate-500 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">v1.0</span>
+        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500/20 to-teal-500/20 flex items-center justify-center border border-white/10">
+          <i class="ri-user-3-line text-xs text-slate-400"></i>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- Tab Navigation -->
-  <nav class="sticky top-16 z-40 glass border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap gap-2">
-      <button class="tab-btn active px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all" data-tab="home">🏠 Home</button>
-      <button class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all" data-tab="prices">💰 Prices</button>
-      <button class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all" data-tab="names">🏷️ Names</button>
-      <button class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all" data-tab="country">🌍 Country</button>
-      <button class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all" data-tab="details">🔍 Details</button>
-      <button class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all" data-tab="weight">⚖️ Weight</button>
-      <button class="tab-btn px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all" data-tab="alternates">🔄 Alternates</button>
+  <!-- Desktop Tab Navigation -->
+  <nav class="desktop-nav sticky top-14 sm:top-16 z-40 glass-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5">
+      <div class="tab-nav overflow-x-auto">
+        <button class="tab-btn active" data-tab="home"><i class="ri-home-5-line"></i> Home</button>
+        <button class="tab-btn" data-tab="prices"><i class="ri-money-dollar-circle-line"></i> Prices</button>
+        <button class="tab-btn" data-tab="names"><i class="ri-price-tag-3-line"></i> Names</button>
+        <button class="tab-btn" data-tab="country"><i class="ri-global-line"></i> Country</button>
+        <button class="tab-btn" data-tab="details"><i class="ri-search-eye-line"></i> Details</button>
+        <button class="tab-btn" data-tab="weight"><i class="ri-scales-3-line"></i> Weight</button>
+        <button class="tab-btn" data-tab="alternates"><i class="ri-refresh-line"></i> Alternates</button>
+      </div>
     </div>
   </nav>
 
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-nav">
+    <button class="mob-tab active" data-tab="home"><i class="ri-home-5-line"></i>Home</button>
+    <button class="mob-tab" data-tab="prices"><i class="ri-money-dollar-circle-line"></i>Prices</button>
+    <button class="mob-tab" data-tab="names"><i class="ri-price-tag-3-line"></i>Names</button>
+    <button class="mob-tab" data-tab="country"><i class="ri-global-line"></i>Country</button>
+    <button class="mob-tab" data-tab="details"><i class="ri-search-eye-line"></i>Details</button>
+    <button class="mob-tab" data-tab="weight"><i class="ri-scales-3-line"></i>Weight</button>
+    <button class="mob-tab" data-tab="alternates"><i class="ri-refresh-line"></i>Alts</button>
+  </nav>
+
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
 
     <!-- ===================== HOME TAB ===================== -->
     <div id="tab-home" class="tab-panel active">
-      <div class="text-center mb-10">
-        <h1 class="font-display text-3xl sm:text-4xl font-bold mb-3">
+      <!-- Hero -->
+      <div class="text-center mb-10 sm:mb-12">
+        <div class="inline-flex items-center gap-2 bg-blue-500/10 text-blue-400 text-xs font-medium px-3 py-1.5 rounded-full border border-blue-500/20 mb-5">
+          <i class="ri-sparkling-2-fill"></i> Auto Parts Intelligence Platform
+        </div>
+        <h1 class="font-display text-3xl sm:text-5xl font-bold mb-4 leading-tight">
           Welcome to <span class="gradient-text">PartsMateTH</span>
         </h1>
-        <p class="text-gray-400 max-w-xl mx-auto">Your intelligent auto parts lookup platform. Select a feature below to get started.</p>
+        <p class="text-slate-400 max-w-lg mx-auto text-sm sm:text-base leading-relaxed">
+          Look up prices, names, origins, weights, and alternates for auto parts — all in one place.
+        </p>
       </div>
 
       <!-- Feature Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-        <button class="feature-btn" onclick="switchTab('prices')"><span class="icon">💰</span>Prices Checker</button>
-        <button class="feature-btn" onclick="switchTab('names')"><span class="icon">🏷️</span>Name Checker</button>
-        <button class="feature-btn" onclick="switchTab('country')"><span class="icon">🌍</span>Country Checker</button>
-        <button class="feature-btn" onclick="switchTab('details')"><span class="icon">🔍</span>Part Details</button>
-        <button class="feature-btn" onclick="switchTab('weight')"><span class="icon">⚖️</span>Weight Checker</button>
-        <button class="feature-btn" onclick="switchTab('alternates')"><span class="icon">🔄</span>Alternates Check</button>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-12">
+        <button class="feature-card" onclick="switchTab('prices')">
+          <div class="icon-wrap"><i class="ri-money-dollar-circle-line text-blue-400"></i></div>
+          <div class="label">Prices</div>
+          <div class="desc hidden sm:block">Check part pricing</div>
+        </button>
+        <button class="feature-card" onclick="switchTab('names')">
+          <div class="icon-wrap"><i class="ri-price-tag-3-line text-teal-400"></i></div>
+          <div class="label">Names</div>
+          <div class="desc hidden sm:block">Identify part names</div>
+        </button>
+        <button class="feature-card" onclick="switchTab('country')">
+          <div class="icon-wrap"><i class="ri-global-line text-cyan-400"></i></div>
+          <div class="label">Country</div>
+          <div class="desc hidden sm:block">Find origin country</div>
+        </button>
+        <button class="feature-card" onclick="switchTab('details')">
+          <div class="icon-wrap"><i class="ri-search-eye-line text-violet-400"></i></div>
+          <div class="label">Details</div>
+          <div class="desc hidden sm:block">Full part info</div>
+        </button>
+        <button class="feature-card" onclick="switchTab('weight')">
+          <div class="icon-wrap"><i class="ri-scales-3-line text-amber-400"></i></div>
+          <div class="label">Weight</div>
+          <div class="desc hidden sm:block">Check part weight</div>
+        </button>
+        <button class="feature-card" onclick="switchTab('alternates')">
+          <div class="icon-wrap"><i class="ri-refresh-line text-rose-400"></i></div>
+          <div class="label">Alternates</div>
+          <div class="desc hidden sm:block">Find replacements</div>
+        </button>
       </div>
 
       <!-- Feedback Section -->
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="gradient-border p-6">
-          <h3 class="font-display text-lg font-semibold mb-3 text-white">💡 Suggestion</h3>
-          <textarea id="txtSuggestion" class="input-field mb-3" placeholder="Share your suggestion..." rows="4"></textarea>
+      <div class="grid md:grid-cols-2 gap-4 sm:gap-6">
+        <div class="glass-card p-5 sm:p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+              <i class="ri-lightbulb-line text-emerald-400"></i>
+            </div>
+            <h3 class="font-display text-sm font-semibold text-white">Suggestion</h3>
+          </div>
+          <textarea id="txtSuggestion" class="input-field" placeholder="Share your suggestion..." rows="3"></textarea>
         </div>
-        <div class="gradient-border p-6">
-          <h3 class="font-display text-lg font-semibold mb-3 text-white">⚠️ Complaint</h3>
-          <textarea id="txtComplaint" class="input-field mb-3" placeholder="Report an issue..." rows="4"></textarea>
+        <div class="glass-card p-5 sm:p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+              <i class="ri-error-warning-line text-amber-400"></i>
+            </div>
+            <h3 class="font-display text-sm font-semibold text-white">Complaint</h3>
+          </div>
+          <textarea id="txtComplaint" class="input-field" placeholder="Report an issue..." rows="3"></textarea>
         </div>
       </div>
-      <div class="flex justify-center mt-6">
-        <button onclick="sendFeedback()" class="btn-glow px-8 py-3 rounded-full text-white font-semibold">
-          Submit Feedback
+      <div class="flex justify-center mt-5">
+        <button onclick="sendFeedback()" class="btn-primary px-8 py-3 text-sm">
+          <span class="flex items-center gap-2"><i class="ri-send-plane-line"></i> Submit Feedback</span>
         </button>
       </div>
     </div>
 
     <!-- ===================== PRICES TAB ===================== -->
     <div id="tab-prices" class="tab-panel">
-      <h2 class="font-display text-2xl font-bold mb-6">💰 Prices Checker</h2>
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+          <i class="ri-money-dollar-circle-line text-blue-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Prices Checker</h2>
+          <p class="text-xs text-slate-500">Check internet, futtaim & OFP prices</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-5">
         <div class="lg:col-span-1 space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-1">Part Numbers (one per line)</label>
-            <textarea id="txtPriceParts" class="input-field" placeholder="Enter part numbers..." rows="8"></textarea>
-          </div>
-          <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-400">Currency:</span>
-            <div class="currency-toggle">
-              <button id="btnAED" class="active" onclick="setCurrency('AED')">AED</button>
-              <button id="btnUSD" onclick="setCurrency('USD')">USD</button>
+          <div class="glass-card p-4 space-y-4">
+            <div>
+              <label class="section-label">Part Numbers</label>
+              <textarea id="txtPriceParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
             </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-500 font-medium">Currency</span>
+              <div class="currency-toggle">
+                <button id="btnAED" class="active" onclick="setCurrency('AED')">AED</button>
+                <button id="btnUSD" onclick="setCurrency('USD')">USD</button>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="fetchPrices()" class="btn-primary px-5 py-2.5 text-sm flex-1">
+                <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Prices</span>
+              </button>
+              <button id="stopPrices" class="stop-btn" onclick="stopPricesFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="sortInput('txtPriceParts')" class="btn-ghost px-3 py-1.5 text-xs flex-1">
+                <i class="ri-sort-asc"></i> Sort
+              </button>
+              <button onclick="cleanInput('txtPriceParts')" class="btn-ghost px-3 py-1.5 text-xs flex-1">
+                <i class="ri-eraser-line"></i> Clean
+              </button>
+            </div>
+            <div id="priceLoader" class="loader"><div class="spinner"></div><span>Fetching prices...</span></div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="fetchPrices()" class="btn-glow px-6 py-2.5 rounded-lg text-white font-semibold text-sm flex-1">
-              Check Prices
-            </button>
-            <button id="stopPrices" class="stop-btn" onclick="stopPricesFetch()">Stop</button>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="sortInput('txtPriceParts')" class="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">Sort</button>
-            <button onclick="cleanInput('txtPriceParts')" class="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white transition">Clean</button>
-          </div>
-          <div id="priceLoader" class="loader"></div>
         </div>
         <div class="lg:col-span-2">
-          <div class="gradient-border p-1 overflow-hidden">
-            <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+          <div class="glass-card p-1 overflow-hidden">
+            <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
               <table class="results-table" id="tblPrices">
                 <thead><tr>
-                  <th>Part No.</th><th>Part Name</th><th>Internet Price</th><th>Futtaim Price</th><th>OFP Price</th><th>Match</th>
+                  <th>Part No.</th><th>Part Name</th><th>Internet</th><th>Futtaim</th><th>OFP</th><th>Match</th>
                 </tr></thead>
                 <tbody id="pricesBody"></tbody>
               </table>
@@ -351,33 +572,43 @@
 
     <!-- ===================== NAMES TAB ===================== -->
     <div id="tab-names" class="tab-panel">
-      <h2 class="font-display text-2xl font-bold mb-6">🏷️ Name Checker</h2>
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
+          <i class="ri-price-tag-3-line text-teal-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Name Checker</h2>
+          <p class="text-xs text-slate-500">Look up part names from different sources</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-5">
         <div class="lg:col-span-1 space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-1">Part Numbers (one per line)</label>
-            <textarea id="txtNameParts" class="input-field" placeholder="Enter part numbers..." rows="8"></textarea>
-          </div>
-          <div>
-            <label class="block text-sm text-gray-400 mb-2">Source</label>
-            <div class="grid grid-cols-2 gap-2">
-              <label class="radio-label"><input type="radio" name="nameSource" value="universal" checked><span>Universal</span></label>
-              <label class="radio-label"><input type="radio" name="nameSource" value="toyota"><span>Toyota Thailand</span></label>
-              <label class="radio-label"><input type="radio" name="nameSource" value="futtaim"><span>Al Futtaim Dubai</span></label>
-              <label class="radio-label"><input type="radio" name="nameSource" value="usa"><span>USA</span></label>
+          <div class="glass-card p-4 space-y-4">
+            <div>
+              <label class="section-label">Part Numbers</label>
+              <textarea id="txtNameParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
             </div>
+            <div>
+              <label class="section-label">Source</label>
+              <div class="grid grid-cols-2 gap-2">
+                <label class="radio-card"><input type="radio" name="nameSource" value="universal" checked><span>Universal</span></label>
+                <label class="radio-card"><input type="radio" name="nameSource" value="toyota"><span>Toyota TH</span></label>
+                <label class="radio-card"><input type="radio" name="nameSource" value="futtaim"><span>Al Futtaim</span></label>
+                <label class="radio-card"><input type="radio" name="nameSource" value="usa"><span>USA</span></label>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="fetchNames()" class="btn-primary px-5 py-2.5 text-sm flex-1">
+                <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Names</span>
+              </button>
+              <button id="stopNames" class="stop-btn" onclick="stopNamesFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+            </div>
+            <div id="nameLoader" class="loader"><div class="spinner"></div><span>Fetching names...</span></div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="fetchNames()" class="btn-glow px-6 py-2.5 rounded-lg text-white font-semibold text-sm flex-1">
-              Check Names
-            </button>
-            <button id="stopNames" class="stop-btn" onclick="stopNamesFetch()">Stop</button>
-          </div>
-          <div id="nameLoader" class="loader"></div>
         </div>
         <div class="lg:col-span-2">
-          <div class="gradient-border p-1 overflow-hidden">
-            <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+          <div class="glass-card p-1 overflow-hidden">
+            <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
               <table class="results-table" id="tblNames">
                 <thead><tr><th>Part Number</th><th>Part Name</th></tr></thead>
                 <tbody id="namesBody"></tbody>
@@ -390,24 +621,34 @@
 
     <!-- ===================== COUNTRY TAB ===================== -->
     <div id="tab-country" class="tab-panel">
-      <h2 class="font-display text-2xl font-bold mb-6">🌍 Country / Origin Checker</h2>
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+          <i class="ri-global-line text-cyan-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Country / Origin</h2>
+          <p class="text-xs text-slate-500">Find where parts are manufactured</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-5">
         <div class="lg:col-span-1 space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-1">Part Numbers (one per line)</label>
-            <textarea id="txtOriginParts" class="input-field" placeholder="Enter part numbers..." rows="8"></textarea>
+          <div class="glass-card p-4 space-y-4">
+            <div>
+              <label class="section-label">Part Numbers</label>
+              <textarea id="txtOriginParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="fetchOrigins()" class="btn-primary px-5 py-2.5 text-sm flex-1">
+                <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Origins</span>
+              </button>
+              <button id="stopOrigins" class="stop-btn" onclick="stopOriginsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+            </div>
+            <div id="originLoader" class="loader"><div class="spinner"></div><span>Fetching origins...</span></div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="fetchOrigins()" class="btn-glow px-6 py-2.5 rounded-lg text-white font-semibold text-sm flex-1">
-              Check Origins
-            </button>
-            <button id="stopOrigins" class="stop-btn" onclick="stopOriginsFetch()">Stop</button>
-          </div>
-          <div id="originLoader" class="loader"></div>
         </div>
         <div class="lg:col-span-2">
-          <div class="gradient-border p-1 overflow-hidden">
-            <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+          <div class="glass-card p-1 overflow-hidden">
+            <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
               <table class="results-table" id="tblOrigins">
                 <thead><tr><th>Part Number</th><th>Part Name</th><th>Origin</th></tr></thead>
                 <tbody id="originsBody"></tbody>
@@ -420,36 +661,48 @@
 
     <!-- ===================== PART DETAILS TAB ===================== -->
     <div id="tab-details" class="tab-panel">
-      <h2 class="font-display text-2xl font-bold mb-6">🔍 Part Details</h2>
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
+          <i class="ri-search-eye-line text-violet-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Part Details</h2>
+          <p class="text-xs text-slate-500">Get comprehensive part information</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-5">
         <div class="lg:col-span-1 space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-1">Part Number(s)</label>
-            <textarea id="txtDetailParts" class="input-field" placeholder="Enter part number(s)..." rows="4"></textarea>
-          </div>
-          <label class="chk-label">
-            <input type="checkbox" id="chkMultiParts">
-            <span>Check Multiple Parts</span>
-          </label>
-          <div class="flex gap-2">
-            <button onclick="fetchDetails()" class="btn-glow px-6 py-2.5 rounded-lg text-white font-semibold text-sm flex-1">
-              Get Details
-            </button>
-            <button id="stopDetails" class="stop-btn" onclick="stopDetailsFetch()">Stop</button>
-          </div>
-          <div id="detailLoader" class="loader"></div>
-          <!-- Progress bar for multi -->
-          <div id="detailProgress" class="hidden">
-            <div class="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-              <div id="detailProgressBar" class="h-full bg-gradient-to-r from-blue-500 to-teal-400 transition-all duration-300" style="width:0%"></div>
+          <div class="glass-card p-4 space-y-4">
+            <div>
+              <label class="section-label">Part Number(s)</label>
+              <textarea id="txtDetailParts" class="input-field" placeholder="Enter part number(s)..." rows="4"></textarea>
             </div>
-            <p id="detailProgressText" class="text-xs text-gray-500 mt-1">0 / 0</p>
+            <label class="chk-label">
+              <input type="checkbox" id="chkMultiParts">
+              <span>Check Multiple Parts</span>
+            </label>
+            <div class="flex gap-2">
+              <button onclick="fetchDetails()" class="btn-primary px-5 py-2.5 text-sm flex-1">
+                <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Get Details</span>
+              </button>
+              <button id="stopDetails" class="stop-btn" onclick="stopDetailsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+            </div>
+            <div id="detailLoader" class="loader"><div class="spinner"></div><span>Fetching details...</span></div>
+            <div id="detailProgress" class="hidden space-y-1">
+              <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                <div id="detailProgressBar" class="h-full bg-gradient-to-r from-blue-500 to-teal-400 transition-all duration-300 rounded-full" style="width:0%"></div>
+              </div>
+              <p id="detailProgressText" class="text-xs text-slate-500">0 / 0</p>
+            </div>
           </div>
         </div>
         <div class="lg:col-span-2">
-          <div class="gradient-border p-6 overflow-auto max-h-[600px]">
-            <div id="detailsResult" class="detail-block text-sm" style="min-height:200px;">
-              <span class="text-gray-500">Results will appear here...</span>
+          <div class="glass-card p-5 sm:p-6 overflow-auto max-h-[600px]">
+            <div id="detailsResult" class="detail-block" style="min-height:200px;">
+              <div class="flex flex-col items-center justify-center h-48 text-slate-600">
+                <i class="ri-search-eye-line text-3xl mb-2"></i>
+                <span class="text-sm">Results will appear here</span>
+              </div>
             </div>
           </div>
         </div>
@@ -458,24 +711,34 @@
 
     <!-- ===================== WEIGHT TAB ===================== -->
     <div id="tab-weight" class="tab-panel">
-      <h2 class="font-display text-2xl font-bold mb-6">⚖️ Weight Checker</h2>
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+          <i class="ri-scales-3-line text-amber-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Weight Checker</h2>
+          <p class="text-xs text-slate-500">Look up part weights and brands</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-5">
         <div class="lg:col-span-1 space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-1">Part Numbers (one per line)</label>
-            <textarea id="txtWeightParts" class="input-field" placeholder="Enter part numbers..." rows="8"></textarea>
+          <div class="glass-card p-4 space-y-4">
+            <div>
+              <label class="section-label">Part Numbers</label>
+              <textarea id="txtWeightParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="fetchWeights()" class="btn-primary px-5 py-2.5 text-sm flex-1">
+                <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Weights</span>
+              </button>
+              <button id="stopWeights" class="stop-btn" onclick="stopWeightsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+            </div>
+            <div id="weightLoader" class="loader"><div class="spinner"></div><span>Fetching weights...</span></div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="fetchWeights()" class="btn-glow px-6 py-2.5 rounded-lg text-white font-semibold text-sm flex-1">
-              Check Weights
-            </button>
-            <button id="stopWeights" class="stop-btn" onclick="stopWeightsFetch()">Stop</button>
-          </div>
-          <div id="weightLoader" class="loader"></div>
         </div>
         <div class="lg:col-span-2">
-          <div class="gradient-border p-1 overflow-hidden">
-            <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+          <div class="glass-card p-1 overflow-hidden">
+            <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
               <table class="results-table" id="tblWeights">
                 <thead><tr><th>Part Number</th><th>Part Name</th><th>Weight (kgs)</th><th>Brand</th></tr></thead>
                 <tbody id="weightsBody"></tbody>
@@ -488,38 +751,48 @@
 
     <!-- ===================== ALTERNATES TAB ===================== -->
     <div id="tab-alternates" class="tab-panel">
-      <h2 class="font-display text-2xl font-bold mb-6">🔄 Alternates Check</h2>
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center">
+          <i class="ri-refresh-line text-rose-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Alternates Check</h2>
+          <p class="text-xs text-slate-500">Find alternate part numbers across brands</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-5">
         <div class="lg:col-span-1 space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-1">Part Numbers (one per line)</label>
-            <textarea id="txtAltParts" class="input-field" placeholder="Enter part numbers..." rows="6"></textarea>
+          <div class="glass-card p-4 space-y-4">
+            <div>
+              <label class="section-label">Part Numbers</label>
+              <textarea id="txtAltParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="5"></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="fetchAlternates(false)" class="btn-primary px-4 py-2.5 text-sm">
+                <span class="flex items-center justify-center gap-1.5"><i class="ri-flashlight-line"></i> Quick</span>
+              </button>
+              <button onclick="fetchAlternates(true)" class="btn-primary px-4 py-2.5 text-sm">
+                <span class="flex items-center justify-center gap-1.5"><i class="ri-search-2-line"></i> Deep</span>
+              </button>
+            </div>
+            <button id="stopAlts" class="stop-btn w-full justify-center" onclick="stopFetch('alts')"><i class="ri-stop-circle-line"></i> Stop</button>
+            <div id="altLoader" class="loader"><div class="spinner"></div><span>Searching alternates...</span></div>
+            <div id="altFilterWrap" class="hidden space-y-3">
+              <div>
+                <label class="section-label">Filter by Brand</label>
+                <select id="cmbBrandFilter" class="input-field text-sm" onchange="filterAltBrand()">
+                  <option>All Brands</option>
+                </select>
+              </div>
+              <input id="txtSearchAlts" class="input-field text-sm" placeholder="🔍 Search alternates..." oninput="searchAlternates()">
+            </div>
+            <div id="altStats" class="text-xs text-slate-500"></div>
           </div>
-          <div class="flex gap-2">
-            <button onclick="fetchAlternates(false)" class="btn-glow px-4 py-2.5 rounded-lg text-white font-semibold text-sm flex-1">
-              ⚡ Quick Search
-            </button>
-            <button onclick="fetchAlternates(true)" class="btn-glow px-4 py-2.5 rounded-lg text-white font-semibold text-sm flex-1">
-              🔍 Deep Search
-            </button>
-            <button id="stopAlts" class="stop-btn" onclick="stopFetch('alts')">Stop</button>
-          </div>
-          <div id="altLoader" class="loader"></div>
-          <!-- Brand filter -->
-          <div id="altFilterWrap" class="hidden space-y-2">
-            <label class="block text-sm text-gray-400">Filter by Brand</label>
-            <select id="cmbBrandFilter" class="input-field text-sm" onchange="filterAltBrand()">
-              <option>All Brands</option>
-            </select>
-            <input id="txtSearchAlts" class="input-field text-sm" placeholder="Search alternates..." oninput="searchAlternates()">
-          </div>
-          <div id="altStats" class="text-xs text-gray-500"></div>
         </div>
         <div class="lg:col-span-2">
-          <!-- Part tabs for multi-part results -->
           <div id="altPartTabs" class="flex flex-wrap gap-1 mb-3"></div>
-          <div class="gradient-border p-1 overflow-hidden">
-            <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+          <div class="glass-card p-1 overflow-hidden">
+            <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
               <table class="results-table" id="tblAlts">
                 <thead id="altsHead"><tr></tr></thead>
                 <tbody id="altsBody"></tbody>
@@ -532,36 +805,48 @@
 
   </main>
 
+  <!-- Footer -->
+  <footer class="border-t border-white/5 mt-12 py-6 text-center text-xs text-slate-600 relative z-10">
+    <p>PartsMateTH &copy; 2026 &middot; Auto Parts Intelligence</p>
+  </footer>
+
   <!-- Toast -->
   <div id="toast" class="toast toast-success">Message</div>
 
   <script>
     // ============ GLOBALS ============
-     const API_RAW = 'https://api.partsmateth.com';
-     const PROXY = 'https://corsproxy.io/?url=';
-     const API = PROXY + encodeURIComponent(API_RAW);
-     const API_KEY = 'x-partsmate-vps-2025';
-     const API_HEADERS = { 'Content-Type': 'application/json', 'x-api-key': API_KEY };
-     const GET_HEADERS = { 'x-api-key': API_KEY };
+    const API_RAW = 'https://api.partsmateth.com';
+    const PROXY = 'https://corsproxy.io/?url=';
+    const API = PROXY + encodeURIComponent(API_RAW);
+    const API_KEY = 'x-partsmate-vps-2025';
+    const API_HEADERS = { 'Content-Type': 'application/json', 'x-api-key': API_KEY };
+    const GET_HEADERS = { 'x-api-key': API_KEY };
     let currentCurrency = 'AED';
     let abortControllers = {};
-    let altResultsData = {}; // store alternates per part
+    let altResultsData = {};
 
     // ============ TAB SWITCHING ============
     function switchTab(tab) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('nav .tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + tab).classList.add('active');
-      document.querySelector(`nav .tab-btn[data-tab="${tab}"]`).classList.add('active');
+      document.querySelectorAll('.desktop-nav .tab-btn, .mobile-nav .mob-tab').forEach(b => b.classList.remove('active'));
+      const panel = document.getElementById('tab-' + tab);
+      if (panel) {
+        panel.classList.add('active');
+        // Re-trigger animation
+        panel.style.animation = 'none';
+        panel.offsetHeight;
+        panel.style.animation = '';
+      }
+      document.querySelectorAll(`.desktop-nav .tab-btn[data-tab="${tab}"], .mobile-nav .mob-tab[data-tab="${tab}"]`).forEach(b => b.classList.add('active'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    document.querySelectorAll('nav .tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-    });
+    document.querySelectorAll('.desktop-nav .tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+    document.querySelectorAll('.mobile-nav .mob-tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
     // ============ TOAST ============
     function showToast(msg, type = 'success') {
       const t = document.getElementById('toast');
-      t.textContent = msg;
+      t.innerHTML = `<i class="ri-${type === 'success' ? 'check-line' : type === 'error' ? 'close-circle-line' : 'alert-line'}"></i> ${msg}`;
       t.className = 'toast toast-' + type + ' show';
       setTimeout(() => t.classList.remove('show'), 3500);
     }
@@ -573,23 +858,25 @@
     }
     function sortInput(id) {
       const el = document.getElementById(id);
-      const lines = el.value.split('\n').map(s=>s.trim()).filter(Boolean).sort();
+      const lines = el.value.split('\n').map(s => s.trim()).filter(Boolean).sort();
       el.value = lines.join('\n');
+      showToast('Sorted!');
     }
     function cleanInput(id) {
       const el = document.getElementById(id);
       const lines = el.value.split('\n').map(s => s.trim().replace(/[-\s]/g, '')).filter(Boolean);
-      el.value = [...new Set(lines)].join('\n');
+      const unique = [...new Set(lines)];
+      el.value = unique.join('\n');
+      showToast(`Cleaned! ${unique.length} unique parts.`);
     }
     function setCurrency(c) {
       const wasAED = currentCurrency === 'AED';
       currentCurrency = c;
-      document.getElementById('btnAED').classList.toggle('active', c==='AED');
-      document.getElementById('btnUSD').classList.toggle('active', c==='USD');
-      // Convert existing rows
+      document.getElementById('btnAED').classList.toggle('active', c === 'AED');
+      document.getElementById('btnUSD').classList.toggle('active', c === 'USD');
       const rows = document.querySelectorAll('#pricesBody tr');
       rows.forEach(tr => {
-        [2,3,4].forEach(ci => {
+        [2, 3, 4].forEach(ci => {
           const td = tr.children[ci];
           if (!td) return;
           const raw = td.textContent.replace(/[^0-9.\-]/g, '');
@@ -612,20 +899,14 @@
       if (val < 100) return Math.round(val / 2) * 2;
       return Math.round(val / 5) * 5;
     }
-    function setLoading(id, on) {
-      document.getElementById(id).classList.toggle('active', on);
-    }
-    function setStop(id, on) {
-      document.getElementById(id).classList.toggle('active', on);
-    }
+    function setLoading(id, on) { document.getElementById(id).classList.toggle('active', on); }
+    function setStop(id, on) { document.getElementById(id).classList.toggle('active', on); }
     function newAbort(key) {
       if (abortControllers[key]) abortControllers[key].abort();
       abortControllers[key] = new AbortController();
       return abortControllers[key].signal;
     }
-    function stopFetch(key) {
-      if (abortControllers[key]) abortControllers[key].abort();
-    }
+    function stopFetch(key) { if (abortControllers[key]) abortControllers[key].abort(); }
 
     // Healthcheck
     async function healthcheck(signal) {
@@ -633,7 +914,7 @@
         try {
           const r = await fetch(API + '/healthcheck', { signal, headers: GET_HEADERS });
           if (r.ok) { const b = await r.json(); if (b.ok) return true; }
-        } catch(e) { if (e.name === 'AbortError') throw e; }
+        } catch (e) { if (e.name === 'AbortError') throw e; }
         await new Promise(r => setTimeout(r, 1000));
       }
       return false;
@@ -644,7 +925,6 @@
       const sug = document.getElementById('txtSuggestion').value.trim();
       const comp = document.getElementById('txtComplaint').value.trim();
       if (!sug && !comp) { showToast('Please enter a suggestion or complaint.', 'warning'); return; }
-      // In webapp we just show success — Google Sheets API needs server-side auth
       if (sug) document.getElementById('txtSuggestion').value = '';
       if (comp) document.getElementById('txtComplaint').value = '';
       showToast('Feedback submitted. Thank you!');
@@ -661,7 +941,7 @@
       setLoading('priceLoader', true);
       setStop('stopPrices', true);
       const sym = currentCurrency === 'AED' ? ' AED' : ' $';
-      const factor = currentCurrency === 'AED' ? 1 : 1/3.67;
+      const factor = currentCurrency === 'AED' ? 1 : 1 / 3.67;
       try {
         await healthcheck(signal);
         for (let i = 0; i < parts.length; i += 5) {
@@ -675,11 +955,11 @@
               body: JSON.stringify({ parts: batch })
             });
             data = await r.json();
-          } catch(e) { if (e.name === 'AbortError') break; }
+          } catch (e) { if (e.name === 'AbortError') break; }
           batch.forEach(part => {
             const tr = document.createElement('tr');
             if (!data[part]) {
-              tr.innerHTML = `<td>${part}</td><td>N/A</td><td>N/A</td><td>N/A</td><td>N/A</td><td>Not Found</td>`;
+              tr.innerHTML = `<td>${part}</td><td class="text-slate-500">N/A</td><td class="text-slate-500">N/A</td><td class="text-slate-500">N/A</td><td class="text-slate-500">N/A</td><td><span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Not Found</span></td>`;
             } else {
               const item = data[part];
               const name = item.name || 'N/A';
@@ -688,20 +968,21 @@
               const matchedFrom = item.matchedFrom || '';
               const internet = price * 1.4;
               const oem = price * 0.6;
-              let matchType = 'Exact';
-              if (source === 'closest') { matchType = 'Closest → ' + matchedFrom; tr.className = 'match-closest'; }
-              else if (source === 'fuzzy') { matchType = 'Fuzzy → ' + matchedFrom; tr.className = 'match-fuzzy'; }
-              tr.innerHTML = `<td>${part}</td><td>${name}</td>` +
-                `<td>${price > 0 ? (Math.round(internet * factor * 100)/100) + sym : 'N/A'}</td>` +
-                `<td>${price > 0 ? (Math.round(price * factor * 100)/100) + sym : 'N/A'}</td>` +
-                `<td>${price > 0 ? mround(oem * factor).toFixed(1) + sym : 'N/A'}</td>` +
+              let matchType = '<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">Exact</span>';
+              if (source === 'closest') { matchType = `<span class="text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-400">Closest → ${matchedFrom}</span>`; tr.className = 'match-closest'; }
+              else if (source === 'fuzzy') { matchType = `<span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400">Fuzzy → ${matchedFrom}</span>`; tr.className = 'match-fuzzy'; }
+              tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${name}</td>` +
+                `<td>${price > 0 ? (Math.round(internet * factor * 100) / 100) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
+                `<td>${price > 0 ? (Math.round(price * factor * 100) / 100) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
+                `<td>${price > 0 ? mround(oem * factor).toFixed(1) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
                 `<td>${matchType}</td>`;
             }
             tbody.appendChild(tr);
           });
           if (i + 5 < parts.length) await new Promise(r => setTimeout(r, 1500));
         }
-      } catch(e) { /* abort */ }
+        if (parts.length > 0) showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) { /* abort */ }
       setLoading('priceLoader', false);
       setStop('stopPrices', false);
     }
@@ -715,13 +996,8 @@
       const signal = newAbort('names');
       const tbody = document.getElementById('namesBody');
       tbody.innerHTML = '';
-      // Update header for USA source (has Brand column)
       const thead = document.querySelector('#tblNames thead tr');
-      if (source === 'usa') {
-        thead.innerHTML = '<th>Part Number</th><th>Part Name</th><th>Brand</th>';
-      } else {
-        thead.innerHTML = '<th>Part Number</th><th>Part Name</th>';
-      }
+      thead.innerHTML = source === 'usa' ? '<th>Part Number</th><th>Part Name</th><th>Brand</th>' : '<th>Part Number</th><th>Part Name</th>';
       setLoading('nameLoader', true);
       setStop('stopNames', true);
       try {
@@ -729,16 +1005,15 @@
         for (let i = 0; i < parts.length; i += 5) {
           const batch = parts.slice(i, i + 5);
           if (source === 'usa') {
-            // Weight endpoint returns name + brand
             for (const part of batch) {
               try {
                 const cleaned = part.replace(/[-\s]/g, '');
                 const r = await fetch(API + '/getWeights?partno=' + cleaned, { signal, headers: GET_HEADERS });
                 const d = await r.json();
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${part}</td><td>${d.name||'N/A'}</td><td>${d.brand||'N/A'}</td>`;
+                tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td><td>${d.brand || 'N/A'}</td>`;
                 tbody.appendChild(tr);
-              } catch(e) { if (e.name==='AbortError') throw e; }
+              } catch (e) { if (e.name === 'AbortError') throw e; }
             }
           } else if (source === 'toyota') {
             for (const part of batch) {
@@ -747,12 +1022,11 @@
                 const r = await fetch(API + '/getToyodiyName?partno=' + cleaned, { signal, headers: GET_HEADERS });
                 const d = await r.json();
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${part}</td><td>${d.name||'N/A'}</td>`;
+                tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td>`;
                 tbody.appendChild(tr);
-              } catch(e) { if (e.name==='AbortError') throw e; }
+              } catch (e) { if (e.name === 'AbortError') throw e; }
             }
           } else {
-            // universal or futtaim
             const endpoint = source === 'futtaim' ? '/getPrice' : '/getSticker';
             try {
               const r = await fetch(API + endpoint, {
@@ -764,14 +1038,15 @@
               batch.forEach(part => {
                 const tr = document.createElement('tr');
                 const name = data[part]?.name || 'N/A';
-                tr.innerHTML = `<td>${part}</td><td>${name}</td>`;
+                tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${name}</td>`;
                 tbody.appendChild(tr);
               });
-            } catch(e) { if (e.name==='AbortError') throw e; }
+            } catch (e) { if (e.name === 'AbortError') throw e; }
           }
           if (i + 5 < parts.length) await new Promise(r => setTimeout(r, 2000));
         }
-      } catch(e) { /* abort */ }
+        if (parts.length > 0) showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) { /* abort */ }
       setLoading('nameLoader', false);
       setStop('stopNames', false);
     }
@@ -801,13 +1076,14 @@
               const tr = document.createElement('tr');
               const name = data[part]?.name || 'N/A';
               const country = data[part]?.country || 'JAPAN';
-              tr.innerHTML = `<td>${part}</td><td>${name}</td><td>${country}</td>`;
+              tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${name}</td><td>${country}</td>`;
               tbody.appendChild(tr);
             });
-          } catch(e) { if (e.name==='AbortError') throw e; }
+          } catch (e) { if (e.name === 'AbortError') throw e; }
           if (i + 5 < parts.length) await new Promise(r => setTimeout(r, 2000));
         }
-      } catch(e) { /* abort */ }
+        if (parts.length > 0) showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) { /* abort */ }
       setLoading('originLoader', false);
       setStop('stopOrigins', false);
     }
@@ -837,34 +1113,39 @@
         for (let idx = 0; idx < partsToCheck.length; idx++) {
           const cleaned = partsToCheck[idx].replace(/[-\s]/g, '');
           if (cleaned.length < 5) {
-            result.innerHTML += `<div class="mb-4"><span class="label">Part No.: </span><span class="value">${cleaned}</span><br><span class="text-red-400">Part number must be at least 5 characters.</span></div>`;
+            result.innerHTML += `<div class="mb-4 p-3 rounded-lg bg-red-500/5 border border-red-500/10"><span class="font-mono text-xs">${cleaned}</span> <span class="text-red-400 text-sm">— Part number must be at least 5 characters.</span></div>`;
             continue;
           }
           try {
             const r = await fetch(API + '/getDescription?partno=' + cleaned, { signal, headers: GET_HEADERS });
             const d = await r.json();
             const block = document.createElement('div');
-            block.className = 'mb-6 pb-4 border-b border-white/10';
+            block.className = 'mb-5 p-4 rounded-lg bg-white/[0.02] border border-white/5';
             block.innerHTML = `
-              ${multi ? `<span class="text-blue-400 font-bold">${idx+1}. </span>` : ''}
-              <span class="label">Part No.: </span><span class="value">${cleaned.toUpperCase()}</span><br>
-              <span class="label">Part Name: </span><span class="value">${d.name||'N/A'}</span><br>
-              <span class="label">Part Origin: </span><span class="value">${d.country||'N/A'}</span><br>
-              <span class="label">Part Fits Car Models: </span><span class="value">${d.model||'N/A'}</span>
-              <span class="label ml-8">Part Category: </span><span class="value">${d.category||'N/A'}</span><br>
-              <span class="label">Part Group: </span><span class="value">${d.group||'N/A'}</span>
-              <span class="label ml-8">Registration Date: </span><span class="value">${d.regDate||'N/A'}</span><br>
-              <span class="label">Part Details:</span><br><span class="value">${d.description||'N/A'}</span>
+              <div class="flex items-center gap-2 mb-3">
+                ${multi ? `<span class="count-badge">${idx + 1}</span>` : ''}
+                <span class="font-mono text-sm font-bold text-white">${cleaned.toUpperCase()}</span>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
+                <div><span class="label">Name: </span><span class="value">${d.name || 'N/A'}</span></div>
+                <div><span class="label">Origin: </span><span class="value">${d.country || 'N/A'}</span></div>
+                <div><span class="label">Models: </span><span class="value">${d.model || 'N/A'}</span></div>
+                <div><span class="label">Category: </span><span class="value">${d.category || 'N/A'}</span></div>
+                <div><span class="label">Group: </span><span class="value">${d.group || 'N/A'}</span></div>
+                <div><span class="label">Reg Date: </span><span class="value">${d.regDate || 'N/A'}</span></div>
+              </div>
+              ${d.description ? `<div class="mt-3 pt-3 border-t border-white/5"><span class="label">Details:</span><br><span class="value text-xs leading-relaxed">${d.description}</span></div>` : ''}
             `;
             result.appendChild(block);
-          } catch(e) { if (e.name==='AbortError') throw e; }
+          } catch (e) { if (e.name === 'AbortError') throw e; }
           if (multi) {
-            progressBar.style.width = ((idx+1)/partsToCheck.length*100) + '%';
-            progressText.textContent = (idx+1) + ' / ' + partsToCheck.length;
+            progressBar.style.width = ((idx + 1) / partsToCheck.length * 100) + '%';
+            progressText.textContent = (idx + 1) + ' / ' + partsToCheck.length;
           }
           if (idx + 1 < partsToCheck.length) await new Promise(r => setTimeout(r, 1500));
         }
-      } catch(e) { /* abort */ }
+        showToast(`Done! ${partsToCheck.length} part(s) checked.`);
+      } catch (e) { /* abort */ }
       setLoading('detailLoader', false);
       setStop('stopDetails', false);
       progressWrap.classList.add('hidden');
@@ -888,12 +1169,13 @@
             const r = await fetch(API + '/getWeights?partno=' + cleaned, { signal, headers: GET_HEADERS });
             const d = await r.json();
             const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${part}</td><td>${d.name||'N/A'}</td><td>${d.weight||'❌'}</td><td>${d.brand||'N/A'}</td>`;
+            tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td><td>${d.weight || '❌'}</td><td>${d.brand || 'N/A'}</td>`;
             tbody.appendChild(tr);
-          } catch(e) { if (e.name==='AbortError') throw e; }
+          } catch (e) { if (e.name === 'AbortError') throw e; }
           await new Promise(r => setTimeout(r, 1000));
         }
-      } catch(e) { /* abort */ }
+        showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) { /* abort */ }
       setLoading('weightLoader', false);
       setStop('stopWeights', false);
     }
@@ -925,7 +1207,6 @@
             const json = await r.json();
             let alternates = json.alternates;
             if (!alternates || typeof alternates !== 'object') { showToast(`No alternates found for ${partRaw}.`, 'warning'); continue; }
-            // Filter out NO_RESULT_FOUND brands
             const filtered = {};
             for (const [brand, vals] of Object.entries(alternates)) {
               if (Array.isArray(vals)) {
@@ -935,10 +1216,9 @@
             }
             if (Object.keys(filtered).length === 0) { showToast(`No alternates found for ${partRaw}.`, 'warning'); continue; }
             altResultsData[partRaw] = filtered;
-          } catch(e) { if (e.name === 'AbortError') throw e; }
+          } catch (e) { if (e.name === 'AbortError') throw e; }
           if (i + 1 < parts.length) await new Promise(r => setTimeout(r, deep ? 7000 : 5000));
         }
-        // Build part tabs
         const partKeys = Object.keys(altResultsData);
         if (partKeys.length > 0) {
           const tabsEl = document.getElementById('altPartTabs');
@@ -950,27 +1230,22 @@
             tabsEl.appendChild(btn);
           });
           showAltPart(partKeys[0]);
+          showToast(`Done! Found alternates for ${partKeys.length} part(s).`);
         }
-      } catch(e) { /* abort */ }
+      } catch (e) { /* abort */ }
       setLoading('altLoader', false);
       setStop('stopAlts', false);
     }
 
     function showAltPart(partKey) {
       currentAltPart = partKey;
-      // Update tab buttons
-      document.querySelectorAll('#altPartTabs button').forEach(b => {
-        b.classList.toggle('active', b.textContent === partKey);
-      });
+      document.querySelectorAll('#altPartTabs button').forEach(b => b.classList.toggle('active', b.textContent === partKey));
       const data = altResultsData[partKey];
       if (!data) return;
-      // Sort brands by count desc
-      const brands = Object.keys(data).sort((a,b) => data[b].length - data[a].length);
+      const brands = Object.keys(data).sort((a, b) => data[b].length - data[a].length);
       const maxRows = Math.max(...brands.map(b => data[b].length));
-      // Build header
       const headTr = document.getElementById('altsHead').querySelector('tr');
       headTr.innerHTML = brands.map(b => `<th>${b}</th>`).join('');
-      // Build body
       const tbody = document.getElementById('altsBody');
       tbody.innerHTML = '';
       for (let r = 0; r < maxRows; r++) {
@@ -978,19 +1253,17 @@
         brands.forEach(b => {
           const td = document.createElement('td');
           td.textContent = data[b][r] || '';
+          td.className = 'font-mono text-xs';
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
       }
-      // Brand filter
       const filterWrap = document.getElementById('altFilterWrap');
       filterWrap.classList.remove('hidden');
       const cmb = document.getElementById('cmbBrandFilter');
       cmb.innerHTML = '<option>All Brands</option>' + brands.map(b => `<option>${b}</option>`).join('');
-      // Stats
       const totalResults = brands.reduce((sum, b) => sum + data[b].length, 0);
-      document.getElementById('altStats').textContent = `Alternates found: ${brands.length} brands, ${totalResults} results.`;
-      // Reset search
+      document.getElementById('altStats').innerHTML = `<span class="count-badge mr-1">${brands.length}</span> brands &middot; <span class="count-badge mr-1">${totalResults}</span> results`;
       document.getElementById('txtSearchAlts').value = '';
     }
 
@@ -998,17 +1271,12 @@
       const selected = document.getElementById('cmbBrandFilter').value;
       const data = altResultsData[currentAltPart];
       if (!data) return;
-      const brands = Object.keys(data).sort((a,b) => data[b].length - data[a].length);
-      // Show/hide columns
+      const brands = Object.keys(data).sort((a, b) => data[b].length - data[a].length);
       const headCells = document.querySelectorAll('#altsHead th');
       const bodyRows = document.querySelectorAll('#altsBody tr');
-      headCells.forEach((th, ci) => {
-        th.style.display = (selected === 'All Brands' || brands[ci] === selected) ? '' : 'none';
-      });
+      headCells.forEach((th, ci) => { th.style.display = (selected === 'All Brands' || brands[ci] === selected) ? '' : 'none'; });
       bodyRows.forEach(tr => {
-        tr.querySelectorAll('td').forEach((td, ci) => {
-          td.style.display = (selected === 'All Brands' || brands[ci] === selected) ? '' : 'none';
-        });
+        tr.querySelectorAll('td').forEach((td, ci) => { td.style.display = (selected === 'All Brands' || brands[ci] === selected) ? '' : 'none'; });
       });
     }
 
@@ -1021,34 +1289,26 @@
         headCells.forEach(th => th.style.display = '');
         return;
       }
-      // Track which columns have matches
       const colMatch = new Set();
       rows.forEach(tr => {
         let rowMatch = false;
         tr.querySelectorAll('td').forEach((td, ci) => {
           const val = (td.textContent || '').toUpperCase();
-          if (val.includes(keyword)) {
-            td.style.background = 'rgba(255,255,100,0.1)';
-            rowMatch = true;
-            colMatch.add(ci);
-          } else {
-            td.style.background = '';
-          }
+          if (val.includes(keyword)) { td.style.background = 'rgba(59,130,246,0.1)'; rowMatch = true; colMatch.add(ci); }
+          else { td.style.background = ''; }
         });
         tr.style.display = rowMatch ? '' : 'none';
       });
       headCells.forEach((th, ci) => { th.style.display = colMatch.has(ci) ? '' : 'none'; });
       rows.forEach(tr => {
         if (tr.style.display === 'none') return;
-        tr.querySelectorAll('td').forEach((td, ci) => {
-          td.style.display = colMatch.has(ci) ? '' : 'none';
-        });
+        tr.querySelectorAll('td').forEach((td, ci) => { td.style.display = colMatch.has(ci) ? '' : 'none'; });
       });
     }
 
     // AbortSignal.throwIfAborted polyfill
     if (!AbortSignal.prototype.throwIfAborted) {
-      AbortSignal.prototype.throwIfAborted = function() {
+      AbortSignal.prototype.throwIfAborted = function () {
         if (this.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
       };
     }
