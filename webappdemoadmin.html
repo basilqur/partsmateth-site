@@ -99,8 +99,10 @@
       position: absolute; inset: 0;
       background: linear-gradient(135deg, #2563EB, #0D9488);
       opacity: 0; transition: opacity 0.3s;
+      pointer-events: none;
     }
     .btn-primary:hover::before { opacity: 1; }
+    .btn-primary > * { position: relative; z-index: 1; }
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 30px -5px rgba(59,130,246,0.4);
@@ -301,21 +303,47 @@
 
     /* Loader */
     .loader { display: none; }
+    .loader.show {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.8125rem; color: #94A3B8;
+      padding: 0.75rem 0;
+    }
     .loader.active {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 0.8125rem; color: #64748B;
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.8125rem; color: #94A3B8;
+      padding: 0.75rem 0;
     }
     .loader .spinner {
-      width: 1.25rem; height: 1.25rem;
-      border: 2px solid rgba(255,255,255,0.1);
+      width: 1.5rem; height: 1.5rem;
+      border: 2.5px solid rgba(255,255,255,0.08);
       border-top-color: #14B8A6;
+      border-right-color: #3B82F6;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Progress bar */
+    .progress-bar-wrap {
+      width: 100%; height: 3px; background: rgba(255,255,255,0.05);
+      border-radius: 2px; overflow: hidden; display: none;
+    }
+    .progress-bar-wrap.show { display: block; }
+    .progress-bar-wrap .progress-bar-inner {
+      height: 100%; width: 30%;
+      background: linear-gradient(90deg, #3B82F6, #14B8A6, #06B6D4, #3B82F6);
+      background-size: 300% 100%;
+      animation: progressShimmer 1.5s ease-in-out infinite;
+      border-radius: 2px;
+    }
+    @keyframes progressShimmer {
+      0% { background-position: 100% 0; width: 30%; }
+      50% { width: 70%; }
+      100% { background-position: 0 0; width: 30%; }
+    }
+
     .stop-btn {
-      display: none;
       background: rgba(239, 68, 68, 0.15);
       color: #EF4444;
       border: 1px solid rgba(239, 68, 68, 0.3);
@@ -325,8 +353,10 @@
       font-size: 0.75rem;
       font-weight: 600;
       transition: all 0.2s;
+      display: none;
     }
     .stop-btn:hover { background: rgba(239, 68, 68, 0.25); }
+    .stop-btn.show { display: inline-flex; align-items: center; gap: 0.375rem; }
     .stop-btn.active { display: inline-flex; align-items: center; gap: 0.375rem; }
 
     /* Detail block */
@@ -418,6 +448,8 @@
         <button class="tab-btn" data-tab="details"><i class="ri-search-eye-line"></i> Details</button>
         <button class="tab-btn" data-tab="weight"><i class="ri-scales-3-line"></i> Weight</button>
         <button class="tab-btn" data-tab="alternates"><i class="ri-refresh-line"></i> Alternates</button>
+        <button class="tab-btn" data-tab="listcleaner"><i class="ri-file-list-3-line"></i> List Cleaner</button>
+        <button class="tab-btn" data-tab="modelchecker"><i class="ri-car-line"></i> Model Checker</button>
       </div>
     </div>
   </nav>
@@ -431,6 +463,8 @@
     <button class="mob-tab" data-tab="details"><i class="ri-search-eye-line"></i>Details</button>
     <button class="mob-tab" data-tab="weight"><i class="ri-scales-3-line"></i>Weight</button>
     <button class="mob-tab" data-tab="alternates"><i class="ri-refresh-line"></i>Alts</button>
+    <button class="mob-tab" data-tab="listcleaner"><i class="ri-file-list-3-line"></i>List</button>
+    <button class="mob-tab" data-tab="modelchecker"><i class="ri-car-line"></i>Model</button>
   </nav>
 
   <!-- Main Content -->
@@ -803,11 +837,191 @@
       </div>
     </div>
 
+    <!-- ===================== LIST CLEANER TAB ===================== -->
+    <div id="tab-listcleaner" class="tab-panel">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+          <i class="ri-file-list-3-line text-emerald-400 text-lg"></i>
+        </div>
+        <div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white">List Cleaner</h2>
+          <p class="text-xs text-slate-500">Process text and images to extract part information</p>
+        </div>
+      </div>
+      <div class="grid lg:grid-cols-3 gap-5">
+        <div class="lg:col-span-1 space-y-4">
+          <div class="glass-card p-4 space-y-4">
+            <div>
+              <label class="section-label">Enter Part Numbers</label>
+              <textarea id="txtListCleanerInput" class="input-field" placeholder="Paste part numbers or text here..." rows="6"></textarea>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="alert('Scan feature coming soon')" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                <span class="flex items-center justify-center gap-1.5"><i class="ri-camera-line"></i> Scan</span>
+              </button>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button onclick="cleanList()" class="btn-primary px-4 py-2.5 text-sm">
+                <span class="flex items-center justify-center gap-1.5"><i class="ri-eraser-line"></i> Clean List</span>
+              </button>
+              <button onclick="readText()" class="btn-primary px-4 py-2.5 text-sm">
+                <span class="flex items-center justify-center gap-1.5"><i class="ri-file-text-line"></i> Read Text</span>
+              </button>
+            </div>
+            <div>
+              <label class="section-label mb-2">Filter by Brand</label>
+              <div class="flex items-center gap-2 mb-2">
+                <input type="checkbox" id="chkAllBrands" checked onchange="toggleAllBrands()" class="accent-brand-teal">
+                <label for="chkAllBrands" class="text-sm text-cyan-400 font-semibold cursor-pointer">All Brands</label>
+              </div>
+              <div class="space-y-1 max-h-48 overflow-y-auto" id="brandCheckboxes">
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Toyota"> Toyota</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Nissan"> Nissan</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Honda"> Honda</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Mazda"> Mazda</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Isuzu"> Isuzu</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Suzuki"> Suzuki</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Subaru"> Subaru</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Mitsubishi"> Mitsubishi</label>
+                <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Hyundai"> Hyundai</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-2">
+          <div class="glass-card p-4">
+            <h3 class="section-label mb-3">Result:</h3>
+            <div id="listCleanerResult" class="min-h-[300px] bg-slate-900/50 rounded-lg p-4 text-sm text-slate-300 whitespace-pre-wrap font-mono"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 glass-card p-4 text-center">
+        <p class="text-xs text-red-400/80 italic">Note: The Lists Cleaner tool processes text and images to extract part information. Clean List identifies and keeps only part numbers, while Read Text displays the full text as detected. Accuracy may vary depending on image clarity, formatting, hand writing or text quality. Please review the extracted data before using it.</p>
+      </div>
+    </div>
+
+    <!-- ===================== MODEL CHECKER TAB ===================== -->
+    <div id="tab-modelchecker" class="tab-panel">
+      <!-- Home View -->
+      <div id="mcHome">
+        <div class="text-center mb-8">
+          <div class="flex items-center justify-center gap-3 mb-2">
+            <i class="ri-search-line text-4xl text-brand-blue"></i>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white">Model Checker</h2>
+            <i class="ri-truck-line text-4xl text-brand-teal"></i>
+          </div>
+        </div>
+        <div class="space-y-5 max-w-4xl mx-auto">
+          <div class="glass-card p-6 flex flex-col sm:flex-row items-start gap-5">
+            <button onclick="showMcView('partno')" class="btn-primary px-6 py-4 text-sm sm:min-w-[280px] shrink-0">
+              <span class="flex items-center justify-center gap-2"><i class="ri-key-line"></i> Check by Part Number <i class="ri-settings-line"></i></span>
+            </button>
+            <p class="text-sm text-slate-400">Enter a Toyota part number to quickly verify which models and production ranges it fits.</p>
+          </div>
+          <div class="glass-card p-6 flex flex-col sm:flex-row items-start gap-5">
+            <button onclick="showMcView('vin')" class="btn-primary px-6 py-4 text-sm sm:min-w-[280px] shrink-0">
+              <span class="flex items-center justify-center gap-2"><i class="ri-car-line"></i> Check by VIN / Chassis Number <i class="ri-barcode-line"></i></span>
+            </button>
+            <p class="text-sm text-slate-400">Use a VIN or chassis number to retrieve the exact vehicle configuration, including production period and specifications.</p>
+          </div>
+          <div class="glass-card p-6 flex flex-col sm:flex-row items-start gap-5 opacity-60">
+            <button disabled class="btn-ghost px-6 py-4 text-sm sm:min-w-[280px] shrink-0 border border-white/10 rounded-xl cursor-not-allowed">
+              <span class="flex items-center justify-center gap-2"><i class="ri-file-list-line"></i> Check by Model Selection <i class="ri-truck-line"></i> Coming Soon</span>
+            </button>
+            <p class="text-sm text-slate-400">Choose the region, year, make, model, frame, and specifications step-by-step.</p>
+          </div>
+          <div class="glass-card p-6 flex flex-col sm:flex-row items-start gap-5 opacity-40">
+            <button disabled class="btn-ghost px-6 py-4 text-sm sm:min-w-[280px] shrink-0 border border-white/10 rounded-xl cursor-not-allowed">
+              <span class="flex items-center justify-center gap-2"><i class="ri-global-line"></i> Universal Checker for All Brands <i class="ri-tools-line"></i> Coming Soon</span>
+            </button>
+            <p class="text-sm text-slate-400">Cross-check compatibility across multiple car brands using part numbers or vehicle information.</p>
+          </div>
+        </div>
+        <div class="mt-6 glass-card p-4 text-center max-w-4xl mx-auto">
+          <p class="text-xs text-red-400/80 italic">Note: Compatibility and model applicability results are based on recorded Toyota fitment data and available production records. Variations may occur due to regional configurations, trim levels, engine types, or mid-production updates. Always verify using the vehicle's VIN, official Toyota EPC data, or model-specific documentation before ordering or installation to ensure complete accuracy.</p>
+        </div>
+      </div>
+
+      <!-- Part Number View -->
+      <div id="mcPartNo" class="hidden">
+        <div class="flex items-center gap-3 mb-6">
+          <button onclick="showMcView('home')" class="btn-ghost p-2 rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line text-lg"></i></button>
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+            <i class="ri-key-line text-blue-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Check by Part Number</h2>
+            <p class="text-xs text-slate-500">Find which models a part fits</p>
+          </div>
+        </div>
+        <div class="glass-card p-4 mb-4">
+          <div class="flex gap-2">
+            <input id="txtMcPartNo" class="input-field flex-1" placeholder="Enter part number...">
+            <button onclick="mcSearchPartNo()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Search</span></button>
+            <button id="mcStopPartNo" class="stop-btn" onclick="stopFetch('mcPartNo')"><i class="ri-stop-circle-line"></i> Stop</button>
+          </div>
+          <div id="mcPartNoProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
+          <div id="mcPartNoLoader" class="loader"><div class="spinner"></div><span>Searching models...</span></div>
+        </div>
+        <div id="mcPartNoBack" class="hidden mb-3">
+          <button onclick="mcPartNoGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> Back</button>
+        </div>
+        <div class="glass-card p-1 overflow-hidden">
+          <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+            <table class="results-table" id="tblMcXref"><thead><tr></tr></thead><tbody></tbody></table>
+            <table class="results-table hidden" id="tblMcDetails"><thead><tr></tr></thead><tbody></tbody></table>
+            <table class="results-table hidden" id="tblMcDiagramParts"><thead><tr></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIN View -->
+      <div id="mcVin" class="hidden">
+        <div class="flex items-center gap-3 mb-6">
+          <button onclick="showMcView('home')" class="btn-ghost p-2 rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line text-lg"></i></button>
+          <div class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
+            <i class="ri-car-line text-teal-400 text-lg"></i>
+          </div>
+          <div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-white">Check by VIN / Chassis Number</h2>
+            <p class="text-xs text-slate-500">Look up vehicle configuration and parts</p>
+          </div>
+        </div>
+        <div class="glass-card p-4 mb-4 space-y-3">
+          <div class="flex gap-2">
+            <input id="txtVinInput" class="input-field flex-1" placeholder="Enter VIN / Chassis No. Here">
+            <button onclick="mcSearchVin()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Search</span></button>
+            <button id="mcStopVin" class="stop-btn" onclick="stopFetch('mcVin')"><i class="ri-stop-circle-line"></i> Stop</button>
+          </div>
+          <div id="vinSearchBarWrap" class="hidden">
+            <div class="flex gap-2">
+              <input id="txtVinPartSearch" class="input-field flex-1" placeholder="Search parts in this VIN e.g. filter, shock, 17801">
+              <button onclick="mcSearchVinPart()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i></span></button>
+            </div>
+          </div>
+          <div id="mcVinProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
+          <div id="mcVinLoader" class="loader"><div class="spinner"></div><span>Searching...</span></div>
+        </div>
+        <div id="mcVinBack" class="hidden mb-3">
+          <button onclick="mcVinGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> Back</button>
+        </div>
+        <div class="glass-card p-1 overflow-hidden">
+          <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+            <table class="results-table" id="tblVinInfo"><thead><tr></tr></thead><tbody></tbody></table>
+            <table class="results-table hidden" id="tblVinCategories"><thead><tr></tr></thead><tbody></tbody></table>
+            <table class="results-table hidden" id="tblVinDiagrams"><thead><tr></tr></thead><tbody></tbody></table>
+            <table class="results-table hidden" id="tblVinDiagramParts"><thead><tr></tr></thead><tbody></tbody></table>
+            <table class="results-table hidden" id="tblVinSearchResult"><thead><tr></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- Footer -->
   <footer class="border-t border-white/5 mt-12 py-6 text-center text-xs text-slate-600 relative z-10">
-    <p>PartsMateTH &copy; 2026 &middot; Auto Parts Intelligence</p>
+    <p>PartsMateTH &copy; 2025 &middot; Auto Parts Intelligence</p>
   </footer>
 
   <!-- Toast -->
@@ -824,6 +1038,31 @@
     let currentCurrency = 'AED';
     let abortControllers = {};
     let altResultsData = {};
+
+    // Build properly encoded proxy URL for allorigins
+    function proxyUrl(path) {
+      return PROXY + encodeURIComponent(API_RAW + path);
+    }
+
+    // Show/hide loading state for model checker sections
+    function mcSetLoading(section, on, msg) {
+      const loaderId = section === 'partno' ? 'mcPartNoLoader' : 'mcVinLoader';
+      const stopId = section === 'partno' ? 'mcStopPartNo' : 'mcStopVin';
+      const progressId = section === 'partno' ? 'mcPartNoProgress' : 'mcVinProgress';
+      const loader = document.getElementById(loaderId);
+      const stop = document.getElementById(stopId);
+      const progress = document.getElementById(progressId);
+      if (on) {
+        if (msg) loader.querySelector('span').textContent = msg;
+        loader.classList.add('show');
+        stop.classList.add('show');
+        if (progress) progress.classList.add('show');
+      } else {
+        loader.classList.remove('show');
+        stop.classList.remove('show');
+        if (progress) progress.classList.remove('show');
+      }
+    }
 
     // ============ TAB SWITCHING ============
     function switchTab(tab) {
@@ -842,6 +1081,336 @@
     }
     document.querySelectorAll('.desktop-nav .tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
     document.querySelectorAll('.mobile-nav .mob-tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+    // ============ LIST CLEANER ============
+    const BRAND_PATTERNS = {
+      Toyota:     /\b(?=[A-Z0-9]{5}\b)(?=(?:.*[A-Z]){0,2})[A-Z0-9]{5}-[A-Z0-9]{4,5}(?:-[A-Z0-9]{1,3})?\b/,
+      Nissan:     /^[A-Z0-9]{4,5}-[A-Z0-9]{4,5}$/,
+      Isuzu:      /^\d-[0-9A-Z]{8}-\d$/,
+      Suzuki:     /^[0-9A-Z]{5}-[0-9A-Z]{5}(-[0-9A-Z]{3})?$/,
+      Mazda:      /^[A-Z0-9]{3,4}-[0-9A-Z]{2}-[A-Z0-9]{3,4}$/,
+      Mitsubishi: /\b(?=[A-Z0-9]{8}\b)(?=.*[A-Z])(?=.*\d)[A-Z0-9]{8}\b/,
+      Hyundai:    /^\d{10}$/,
+      Honda:      /^\d{5}-[A-Z0-9]{3}-[A-Z0-9]{3}$/,
+      Subaru:     /^\d{5}-[A-Z0-9]{5}$/
+    };
+
+    function getSelectedBrands() {
+      const checked = [...document.querySelectorAll('.brand-check:checked')].map(cb => cb.value);
+      return checked.length ? checked : ['Toyota'];
+    }
+
+    function isValidPartNumber(line, brands) {
+      line = line.trim().toUpperCase();
+      for (const b of brands) {
+        if (BRAND_PATTERNS[b] && BRAND_PATTERNS[b].test(line)) return true;
+      }
+      return false;
+    }
+
+    function normalizeOcrText(text) {
+      text = text.replace(/\r/g, '').trim();
+      text = text.replace(/[\u2010\u2011\u2012\u2013\u2014\u2212]/g, '-');
+      text = text.replace(/ {2,}/g, ' ');
+      const partTokenRegex = /\b[A-Z0-9]{4,5}\s*-\s*[A-Z0-9]{4,5}(?:\s*-\s*[A-Z0-9]{1,3})?\b/gi;
+      let lines = text.split('\n');
+      lines = lines.map(line => line.replace(partTokenRegex, match => {
+        let p = match;
+        p = p.replace(/(?<=\d)[ \t]+(?=\d)/g, '');
+        p = p.replace(/(?<=\d)[ \t]+(?=[A-Z])/gi, '');
+        p = p.replace(/(?<=[A-Z])[ \t]+(?=\d)/gi, '');
+        p = p.replace(/\s*-\s*/g, '-');
+        return p;
+      }));
+      text = lines.join('\n');
+      text = text.replace(/(?<=\d)\/(?=\d)/g, '1');
+      text = text.replace(/O(?=\d)/g, '0');
+      text = text.replace(/(?<=\d)O/g, '0');
+      text = text.replace(/\b(?=.*O)[O0]([CLKMY])[O0](\d+)\b/g, '0$1$2');
+      text = text.replace(/-(00|06)(\d{3})\b/g, '-0C$2');
+      return text;
+    }
+
+    function cleanList() {
+      const input = document.getElementById('txtListCleanerInput').value;
+      if (!input.trim()) { showToast('Please enter text first', 'warning'); return; }
+      const brands = getSelectedBrands();
+      const normalized = normalizeOcrText(input);
+      const lines = normalized.split(/[\n,;\t]+/).map(l => l.trim().toUpperCase()).filter(Boolean);
+      const valid = [...new Set(lines.filter(l => isValidPartNumber(l, brands)))];
+      document.getElementById('listCleanerResult').textContent = valid.length ? valid.join('\n') : 'No valid part numbers found.';
+      showToast(valid.length ? `Extracted ${valid.length} part number(s)` : 'No valid part numbers found', valid.length ? 'success' : 'warning');
+    }
+
+    function readText() {
+      const input = document.getElementById('txtListCleanerInput').value;
+      if (!input.trim()) { showToast('Please enter text first', 'warning'); return; }
+      const normalized = normalizeOcrText(input);
+      document.getElementById('listCleanerResult').textContent = normalized;
+      showToast('Full text displayed', 'success');
+    }
+
+    function toggleAllBrands() {
+      const checked = document.getElementById('chkAllBrands').checked;
+      document.querySelectorAll('.brand-check').forEach(cb => cb.checked = checked);
+    }
+
+    // ============ MODEL CHECKER ============
+    let mcPartNoHistory = []; // track which table is visible: 'xref', 'details', 'diagramParts'
+    let mcVinHistory = []; // track VIN view stack
+    let currentVinModelUrl = '';
+
+    function showMcView(view) {
+      ['mcHome','mcPartNo','mcVin'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const el = document.getElementById(view === 'home' ? 'mcHome' : view === 'partno' ? 'mcPartNo' : 'mcVin');
+      if (el) el.classList.remove('hidden');
+      if (view === 'partno') { mcPartNoHistory = ['xref']; updateMcPartNoView(); }
+      if (view === 'vin') { mcVinHistory = ['info']; currentVinModelUrl = ''; updateMcVinView(); }
+    }
+
+    function updateMcPartNoView() {
+      const current = mcPartNoHistory[mcPartNoHistory.length - 1];
+      ['tblMcXref','tblMcDetails','tblMcDiagramParts'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const map = { xref: 'tblMcXref', details: 'tblMcDetails', diagramParts: 'tblMcDiagramParts' };
+      if (map[current]) document.getElementById(map[current]).classList.remove('hidden');
+      document.getElementById('mcPartNoBack').classList.toggle('hidden', mcPartNoHistory.length <= 1);
+    }
+
+    function mcPartNoGoBack() {
+      if (mcPartNoHistory.length > 1) { mcPartNoHistory.pop(); updateMcPartNoView(); }
+    }
+
+    async function mcSearchPartNo() {
+      const part = document.getElementById('txtMcPartNo').value.trim();
+      if (!part) { showToast('Please enter a part number', 'warning'); return; }
+      mcSetLoading('partno', true, 'Searching models...');
+      abortControllers.mcPartNo = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/model/xref?part=' + encodeURIComponent(part)), { headers: GET_HEADERS, signal: abortControllers.mcPartNo.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblMcXref');
+        tbl.querySelector('thead tr').innerHTML = '<th>Date Range</th><th>Model</th><th>Frames/Options</th><th>Diagram Info</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.results || []).forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${r.dateRange||''}</td><td><a href="#" class="text-blue-400 hover:underline">${r.model||''}</a></td><td>${r.framesOptions||''}</td><td>${r.diagramInfo||''}</td>`;
+          tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadDetails(part, r.resId, r.urlModelName); };
+          tbody.appendChild(tr);
+        });
+        mcPartNoHistory = ['xref']; updateMcPartNoView();
+        if (!data.results?.length) showToast('No results found', 'warning');
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('partno', false); }
+    }
+
+    async function mcLoadDetails(part, resId, urlModelName) {
+      mcSetLoading('partno', true, 'Loading model details...');
+      abortControllers.mcPartNo = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/model/details?part=' + encodeURIComponent(part) + '&resId=' + encodeURIComponent(resId) + '&urlModelName=' + encodeURIComponent(urlModelName)), { headers: GET_HEADERS, signal: abortControllers.mcPartNo.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblMcDetails');
+        tbl.querySelector('thead tr').innerHTML = '<th>Model Dates</th><th>Matching Models</th><th>Model Options</th><th>Details</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.details || []).forEach(d => {
+          const tr = document.createElement('tr');
+          const optText = d.modelOptions || '';
+          const detailedOpt = d.detailedOptions || '';
+          const escapedOpt = detailedOpt.replace(/"/g, '&quot;');
+          tr.innerHTML = `<td>${d.modelDates||''}</td><td>${d.matchingModels||''}</td><td class="cursor-pointer text-blue-300 hover:underline font-semibold" title="${escapedOpt}">${optText}</td><td>${d.diagram?.url ? '<a href="#" class="text-blue-400 hover:underline">Details</a>' : '-'}</td>`;
+          if (d.diagram?.url) {
+            tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadDiagramParts(d.diagram.url); };
+          }
+          const optCell = tr.children[2];
+          optCell.onclick = () => { if (detailedOpt) alert(detailedOpt); };
+          tbody.appendChild(tr);
+        });
+        mcPartNoHistory.push('details'); updateMcPartNoView();
+        if (!data.details?.length) showToast('No details found', 'warning');
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('partno', false); }
+    }
+
+    async function mcLoadDiagramParts(url) {
+      mcSetLoading('partno', true, 'Loading diagram parts...');
+      abortControllers.mcPartNo = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/model/diagramParts?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcPartNo.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblMcDiagramParts');
+        tbl.querySelector('thead tr').innerHTML = '<th>PART NO.</th><th>PART NAME</th><th>QTY</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.parts || []).forEach(group => {
+          const mainTr = document.createElement('tr');
+          mainTr.className = 'bg-white/5 font-semibold';
+          mainTr.innerHTML = `<td>${group.mainPart||''}</td><td>${group.mainPartName||''}</td><td></td>`;
+          tbody.appendChild(mainTr);
+          (group.subParts || []).forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${s.partNo||''}</td><td>${s.name||''}</td><td class="text-center">${s.qty||''}</td>`;
+            tbody.appendChild(tr);
+          });
+        });
+        mcPartNoHistory.push('diagramParts'); updateMcPartNoView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('partno', false); }
+    }
+
+    // ---- VIN ----
+    function updateMcVinView() {
+      const current = mcVinHistory[mcVinHistory.length - 1];
+      ['tblVinInfo','tblVinCategories','tblVinDiagrams','tblVinDiagramParts','tblVinSearchResult'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const map = { info:'tblVinInfo', categories:'tblVinCategories', diagrams:'tblVinDiagrams', diagramParts:'tblVinDiagramParts', searchResult:'tblVinSearchResult' };
+      if (map[current]) document.getElementById(map[current]).classList.remove('hidden');
+      document.getElementById('mcVinBack').classList.toggle('hidden', mcVinHistory.length <= 1);
+      document.getElementById('vinSearchBarWrap').classList.toggle('hidden', !currentVinModelUrl);
+    }
+
+    function mcVinGoBack() {
+      if (mcVinHistory.length > 1) { mcVinHistory.pop(); updateMcVinView(); }
+    }
+
+    async function mcSearchVin() {
+      const vin = document.getElementById('txtVinInput').value.trim();
+      if (!vin || vin.length < 10) { showToast('Please enter a valid VIN (at least 10 characters)', 'warning'); return; }
+      mcSetLoading('vin', true, 'Searching VIN...');
+      currentVinModelUrl = '';
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/search?vin=' + encodeURIComponent(vin)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinInfo');
+        tbl.querySelector('thead tr').innerHTML = '<th>Label</th><th>Code</th><th>Value</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.result?.vehicleInfo || []).forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${item.label||''}</td><td>${item.code||''}</td><td>${item.value||''}</td>`;
+          tbody.appendChild(tr);
+        });
+        const divTr = document.createElement('tr'); divTr.className = 'bg-white/5';
+        divTr.innerHTML = '<td>---</td><td>---</td><td>---</td>';
+        tbody.appendChild(divTr);
+        const rr = data.result?.resultRow;
+        if (rr) {
+          const modelUrl = rr.modelUrl || '';
+          ['PRODUCTION FROM|' + (rr.from||''), 'PRODUCTION TO|' + (rr.to||''), 'FRAME|' + (rr.frame||''), 'MODEL LINK|' + (rr.modelCode||'')].forEach(entry => {
+            const [label, code] = entry.split('|');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${label}</td><td>${code}</td><td><a href="#" class="text-blue-400 font-bold underline">Click here to view more</a></td>`;
+            tr.querySelector('a').onclick = (e) => { e.preventDefault(); currentVinModelUrl = modelUrl; mcLoadVinCategories(modelUrl); };
+            tbody.appendChild(tr);
+          });
+        }
+        mcVinHistory = ['info']; updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcLoadVinCategories(url) {
+      mcSetLoading('vin', true, 'Loading categories...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/categories?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinCategories');
+        tbl.querySelector('thead tr').innerHTML = '<th>Category</th><th>Sub Items</th><th>Action</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.categories || []).forEach(cat => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${cat.title||''}</td><td>${(cat.subItems||[]).join(', ')}</td><td><a href="#" class="text-blue-400 hover:underline">View Diagrams</a></td>`;
+          tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadVinDiagrams(cat.url); };
+          tbody.appendChild(tr);
+        });
+        mcVinHistory.push('categories'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcLoadVinDiagrams(url) {
+      mcSetLoading('vin', true, 'Loading diagrams...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/diagrams?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinDiagrams');
+        tbl.querySelector('thead tr').innerHTML = '<th>Diagram Title</th><th>Action</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.diagrams || []).forEach(d => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${d.title||''}</td><td><a href="#" class="text-blue-400 hover:underline">View Parts</a></td>`;
+          tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadVinDiagramParts(d.url); };
+          tbody.appendChild(tr);
+        });
+        mcVinHistory.push('diagrams'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcLoadVinDiagramParts(url) {
+      mcSetLoading('vin', true, 'Loading parts...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/diagramParts?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinDiagramParts');
+        tbl.querySelector('thead tr').innerHTML = '<th>PART NO.</th><th>PART NAME</th><th>QTY</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.parts || []).forEach(group => {
+          const mainTr = document.createElement('tr');
+          mainTr.className = 'bg-white/5 font-semibold';
+          mainTr.innerHTML = `<td>${group.mainPart||''}</td><td>${group.mainPartName||''}</td><td></td>`;
+          tbody.appendChild(mainTr);
+          (group.subParts || []).forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${s.partNo||''}</td><td>${s.name||''}</td><td class="text-center">${s.qty||''}</td>`;
+            tbody.appendChild(tr);
+          });
+        });
+        mcVinHistory.push('diagramParts'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcSearchVinPart() {
+      const q = document.getElementById('txtVinPartSearch').value.trim();
+      if (!q) return;
+      if (!currentVinModelUrl) { showToast('Please search a VIN and click a model link first', 'warning'); return; }
+      mcSetLoading('vin', true, 'Searching parts...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/searchPart?modelUrl=' + encodeURIComponent(currentVinModelUrl) + '&q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinSearchResult');
+        tbl.querySelector('thead tr').innerHTML = '<th>Part No</th><th>Part Name</th><th>Action</th><th>Diagram</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.results || []).forEach(r => {
+          (r.parts || []).forEach(p => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${p.partNo||''}</td><td>${p.name||''}</td><td><a href="#" class="text-blue-400 hover:underline">View Diagram</a></td><td>${r.diagram||''}</td>`;
+            tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadVinDiagramParts(p.url); };
+            tbody.appendChild(tr);
+          });
+        });
+        mcVinHistory.push('searchResult'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    // Enter key support for model checker inputs
+    document.addEventListener('DOMContentLoaded', () => {
+      ['txtMcPartNo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') mcSearchPartNo(); });
+      });
+      ['txtVinInput'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') mcSearchVin(); });
+      });
+      ['txtVinPartSearch'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') mcSearchVinPart(); });
+      });
+    });
 
     // ============ TOAST ============
     function showToast(msg, type = 'success') {
