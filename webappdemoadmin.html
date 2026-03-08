@@ -43,6 +43,10 @@
       color: #E2E8F0;
       overflow-x: hidden;
       min-height: 100vh;
+      visibility: hidden; /* hidden until session validated */
+    }
+    body.authenticated {
+      visibility: visible;
     }
     .font-display { font-family: 'Space Grotesk', sans-serif; }
 
@@ -416,10 +420,37 @@
 </head>
 <body class="antialiased">
   <script>
+    // ===== SESSION GATE =====
     (function(){
       var s = localStorage.getItem('pm_session');
       if (!s) { window.location.href = '/login.html'; return; }
-      try { var d = JSON.parse(s); if (!d.licenseKey) throw 0; } catch(e) { localStorage.removeItem('pm_session'); window.location.href = '/login.html'; }
+      try { var d = JSON.parse(s); if (!d.licenseKey) throw 0; } catch(e) { localStorage.removeItem('pm_session'); window.location.href = '/login.html'; return; }
+      document.body.classList.add('authenticated'); // reveal page
+    })();
+  </script>
+  <script>
+    // ===== HEARTBEAT & KICK DETECTION =====
+    (function(){
+      var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+      var session = JSON.parse(localStorage.getItem('pm_session') || '{}');
+      if (!session.licenseKey) return;
+      var deviceId = localStorage.getItem('pm_device_id') || '';
+
+      async function heartbeat() {
+        try {
+          var res = await fetch(SCRIPT_URL + '?mode=heartbeat&licenseKey=' + encodeURIComponent(session.licenseKey) + '&deviceId=' + encodeURIComponent(deviceId));
+          var data = await res.json();
+          if (data.kicked) {
+            localStorage.removeItem('pm_session');
+            document.body.innerHTML = '';
+            alert('You have been logged out because another device signed in with this license.');
+            window.location.href = '/login.html';
+          }
+        } catch(e) { /* network error — silently ignore */ }
+      }
+
+      heartbeat(); // validate immediately on load
+      setInterval(heartbeat, 120000); // every 2 minutes
     })();
   </script>
   <div class="ambient-bg"></div>
@@ -1039,7 +1070,7 @@
   <script>
     // ============ GLOBALS ============
     const API_RAW = 'https://api.partsmateth.com';
-    const PROXY = 'https://corsproxy.io/?url=';
+    const PROXY = 'https://api.allorigins.win/raw?url=';
     const API = PROXY + encodeURIComponent(API_RAW);
     const API_KEY = 'x-partsmate-vps-2025';
     const API_HEADERS = { 'Content-Type': 'application/json', 'x-api-key': API_KEY };
@@ -1902,6 +1933,13 @@
 
     function pmLogout() {
       if (confirm('Are you sure you want to logout?')) {
+        // Notify backend to clear active session
+        var session = JSON.parse(localStorage.getItem('pm_session') || '{}');
+        var deviceId = localStorage.getItem('pm_device_id') || '';
+        var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+        if (session.licenseKey) {
+          fetch(SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(session.licenseKey) + '&deviceId=' + encodeURIComponent(deviceId)).catch(function(){});
+        }
         localStorage.removeItem('pm_session');
         window.location.href = '/login.html';
       }

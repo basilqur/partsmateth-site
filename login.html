@@ -483,6 +483,58 @@
       color: white;
     }
 
+    /* Conflict Modal */
+    .conflict-modal-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(12px);
+      display: none; align-items: center; justify-content: center;
+    }
+    .conflict-modal-overlay.active {
+      display: flex;
+    }
+    .conflict-modal {
+      background: #0f1629;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      animation: modalIn 0.3s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .conflict-icon {
+      width: 64px; height: 64px; border-radius: 18px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.2);
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+      font-size: 28px; color: #3B82F6;
+    }
+    .btn-conflict-cancel {
+      flex: 1; padding: 0.85rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; color: rgba(255,255,255,0.6);
+      font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-conflict-cancel:hover { background: rgba(255,255,255,0.08); color: white; }
+    .btn-conflict-proceed {
+      flex: 1.5; padding: 0.85rem 1rem;
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      border: none; border-radius: 12px; color: white;
+      font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-conflict-proceed:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(59,130,246,0.3); }
+
     /* Buttons */
     .btn-primary {
       width: 100%;
@@ -881,12 +933,60 @@
 
   </div>
 
+  <!-- Device Conflict Modal -->
+  <div id="deviceConflictModal" class="conflict-modal-overlay">
+    <div class="conflict-modal">
+      <div class="conflict-icon">
+        <i class="ri-computer-line"></i>
+      </div>
+      <h3 class="font-display" style="font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;">Another Device Active</h3>
+      <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;line-height:1.6;margin-bottom:1.5rem;">
+        This license is currently in use on another device. If you proceed, the other session will be logged out.
+      </p>
+      <div style="display:flex;gap:0.75rem;width:100%;">
+        <button onclick="closeConflictModal()" class="btn-conflict-cancel">Cancel</button>
+        <button onclick="forceLoginConfirm()" id="btnForceLogin" class="btn-conflict-proceed">
+          <i class="ri-logout-box-r-line" style="margin-right:4px;"></i> Log Out Other & Continue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Max Devices Modal -->
+  <div id="maxDevicesModal" class="conflict-modal-overlay">
+    <div class="conflict-modal">
+      <div class="conflict-icon" style="background:rgba(248,113,113,0.1);border-color:rgba(248,113,113,0.2);">
+        <i class="ri-forbid-line" style="color:#f87171;"></i>
+      </div>
+      <h3 class="font-display" style="font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;">Device Limit Reached</h3>
+      <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;line-height:1.6;margin-bottom:1.5rem;">
+        This license key has already been used on <strong style="color:#f87171;">3 different devices</strong>. No more devices can be registered. Please contact support if you need a reset.
+      </p>
+      <button onclick="closeMaxDevicesModal()" class="btn-conflict-cancel" style="width:100%;">Close</button>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast" class="toast"></div>
 
   <script>
     // ===== CONFIG =====
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+
+    // ===== PREFILL FROM URL =====
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const prefillKey = urlParams.get('key');
+      if (prefillKey) {
+        document.addEventListener('DOMContentLoaded', () => {
+          const keyInput = document.getElementById('loginKey');
+          if (keyInput) {
+            keyInput.value = prefillKey;
+            keyInput.dispatchEvent(new Event('input'));
+          }
+        });
+      }
+    })();
 
     // ===== DEVICE UUID =====
     function getDeviceId() {
@@ -987,7 +1087,7 @@
     }
 
     // ===== LOGIN =====
-    async function handleLogin() {
+    async function handleLogin(forceLogin = false) {
       const key = document.getElementById('loginKey').value.trim();
       if (!key) { showToast('Please enter your license key.', 'error'); return; }
       const btn = document.getElementById('btnLogin');
@@ -995,7 +1095,8 @@
       btn.innerHTML = '<span class="loader-spin"></span> Signing in...';
       try {
         const deviceId = getDeviceId();
-        const url = `${APPS_SCRIPT_URL}?mode=webLogin&licenseKey=${encodeURIComponent(key)}&deviceId=${encodeURIComponent(deviceId)}`;
+        let url = `${APPS_SCRIPT_URL}?mode=webLogin&licenseKey=${encodeURIComponent(key)}&deviceId=${encodeURIComponent(deviceId)}`;
+        if (forceLogin) url += '&forceLogin=true';
         const res = await fetch(url);
         const data = await res.json();
         if (data.ok) {
@@ -1016,6 +1117,10 @@
           }
           showToast('Login successful! Redirecting...', 'success');
           setTimeout(() => { window.location.href = '/webappdemoadmin.html'; }, 800);
+        } else if (data.activeElsewhere) {
+          showConflictModal();
+        } else if (data.maxDevicesReached) {
+          showMaxDevicesModal();
         } else {
           showToast(data.error || 'Invalid license key.', 'error');
         }
@@ -1026,6 +1131,24 @@
         btn.disabled = false;
         btn.innerHTML = 'Sign In';
       }
+    }
+
+    // ===== DEVICE CONFLICT MODALS =====
+    function showConflictModal() {
+      document.getElementById('deviceConflictModal').classList.add('active');
+    }
+    function closeConflictModal() {
+      document.getElementById('deviceConflictModal').classList.remove('active');
+    }
+    function showMaxDevicesModal() {
+      document.getElementById('maxDevicesModal').classList.add('active');
+    }
+    function closeMaxDevicesModal() {
+      document.getElementById('maxDevicesModal').classList.remove('active');
+    }
+    async function forceLoginConfirm() {
+      closeConflictModal();
+      await handleLogin(true);
     }
 
     // ===== SIGNUP =====
