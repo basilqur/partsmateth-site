@@ -423,8 +423,18 @@
     // ===== SESSION GATE =====
     (function(){
       var s = localStorage.getItem('pm_session');
-      if (!s) { window.location.href = '/login.html'; return; }
-      try { var d = JSON.parse(s); if (!d.licenseKey) throw 0; } catch(e) { localStorage.removeItem('pm_session'); window.location.href = '/login.html'; return; }
+      if (!s) { document.body.innerHTML = ''; window.location.replace('/login.html'); return; }
+      try {
+        var d = JSON.parse(s);
+        if (!d.licenseKey) throw 0;
+        // Validate session hasn't been tampered with — require all expected fields
+        if (!d.name || !d.plan || !d.email) throw 0;
+      } catch(e) {
+        localStorage.removeItem('pm_session');
+        document.body.innerHTML = '';
+        window.location.replace('/login.html');
+        return;
+      }
       document.body.classList.add('authenticated'); // reveal page
     })();
   </script>
@@ -466,13 +476,55 @@
           <span class="font-display text-base sm:text-lg font-bold gradient-text">PartsMateTH</span>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="text-[0.625rem] font-medium text-slate-500 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">v1.0</span>
-        <span id="userPlanBadge" class="text-[0.625rem] font-medium text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20"></span>
-        <span id="userName" class="text-xs font-medium text-slate-400 hidden sm:inline max-w-[120px] truncate"></span>
-        <button onclick="pmLogout()" title="Logout" class="w-7 h-7 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 hover:bg-red-500/20 transition-colors cursor-pointer">
-          <i class="ri-logout-box-r-line text-xs text-red-400"></i>
-        </button>
+      <div class="flex items-center gap-3">
+        <!-- User info dropdown -->
+        <div class="relative" id="userMenuWrapper">
+          <button onclick="document.getElementById('userDropdown').classList.toggle('hidden')" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer">
+            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+              <span id="userInitial" class="text-[0.65rem] font-bold text-white">?</span>
+            </div>
+            <span id="userNameHeader" class="text-xs font-medium text-slate-300 hidden sm:inline max-w-[120px] truncate"></span>
+            <span id="userPlanBadge" class="text-[0.625rem] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20"></span>
+            <i class="ri-arrow-down-s-line text-xs text-slate-500"></i>
+          </button>
+          <!-- Dropdown -->
+          <div id="userDropdown" class="hidden absolute right-0 top-full mt-2 w-72 rounded-xl bg-[#0F1629] border border-white/10 shadow-2xl shadow-black/50 z-50 overflow-hidden">
+            <div class="p-4 border-b border-white/10 bg-gradient-to-br from-blue-500/10 to-teal-500/10">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center flex-shrink-0">
+                  <span id="userInitialLg" class="text-sm font-bold text-white">?</span>
+                </div>
+                <div class="min-w-0">
+                  <p id="userGreeting" class="text-sm font-semibold text-white truncate">Hello!</p>
+                  <p id="userEmailDisplay" class="text-[0.7rem] text-slate-400 truncate"></p>
+                </div>
+              </div>
+            </div>
+            <div class="p-3 space-y-2">
+              <div class="flex items-center justify-between px-2 py-1.5">
+                <span class="text-[0.7rem] text-slate-500 uppercase tracking-wider">Plan</span>
+                <span id="userPlanDropdown" class="text-xs font-semibold text-blue-400"></span>
+              </div>
+              <div class="flex items-center justify-between px-2 py-1.5">
+                <span class="text-[0.7rem] text-slate-500 uppercase tracking-wider">License Key</span>
+                <span id="userKeyDisplay" class="text-xs font-mono text-slate-300 max-w-[140px] truncate"></span>
+              </div>
+              <div class="flex items-center justify-between px-2 py-1.5">
+                <span class="text-[0.7rem] text-slate-500 uppercase tracking-wider">Expires</span>
+                <span id="userExpiryDisplay" class="text-xs font-medium text-slate-300"></span>
+              </div>
+              <div class="flex items-center justify-between px-2 py-1.5">
+                <span class="text-[0.7rem] text-slate-500 uppercase tracking-wider">Status</span>
+                <span id="userStatusDisplay" class="text-[0.65rem] font-semibold px-2 py-0.5 rounded-full"></span>
+              </div>
+            </div>
+            <div class="p-3 border-t border-white/10">
+              <button onclick="pmLogout()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-colors text-red-400 text-xs font-medium cursor-pointer">
+                <i class="ri-logout-box-r-line"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -1925,10 +1977,70 @@
     // Session user info
     (function(){
       var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
-      var nameEl = document.getElementById('userName');
-      var planEl = document.getElementById('userPlanBadge');
-      if (nameEl && s.name) { nameEl.textContent = s.name; nameEl.classList.remove('hidden'); }
-      if (planEl && s.plan) { planEl.textContent = s.plan; }
+
+      // Header elements
+      var nameHeader = document.getElementById('userNameHeader');
+      var planBadge = document.getElementById('userPlanBadge');
+      var initial = document.getElementById('userInitial');
+      var initialLg = document.getElementById('userInitialLg');
+
+      // Dropdown elements
+      var greeting = document.getElementById('userGreeting');
+      var emailDisp = document.getElementById('userEmailDisplay');
+      var planDrop = document.getElementById('userPlanDropdown');
+      var keyDisp = document.getElementById('userKeyDisplay');
+      var expiryDisp = document.getElementById('userExpiryDisplay');
+      var statusDisp = document.getElementById('userStatusDisplay');
+
+      var firstName = (s.name || 'User').split(' ')[0];
+      var initials = (s.name || '?').split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
+
+      if (initial) initial.textContent = initials;
+      if (initialLg) initialLg.textContent = initials;
+      if (nameHeader) { nameHeader.textContent = firstName; nameHeader.classList.remove('hidden'); }
+      if (planBadge && s.plan) planBadge.textContent = s.plan;
+      if (greeting) greeting.textContent = 'Hello, ' + firstName + '!';
+      if (emailDisp) emailDisp.textContent = s.email || '';
+      if (planDrop) planDrop.textContent = s.plan || '';
+      if (keyDisp) keyDisp.textContent = s.licenseKey ? (s.licenseKey.substring(0,8) + '...') : '';
+      if (keyDisp) keyDisp.title = s.licenseKey || '';
+
+      // Expiry
+      if (expiryDisp && s.end) {
+        var endDate = new Date(s.end);
+        var now = new Date();
+        var daysLeft = Math.ceil((endDate - now) / (1000*60*60*24));
+        expiryDisp.textContent = endDate.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+        if (daysLeft <= 7 && daysLeft > 0) {
+          expiryDisp.textContent += ' (' + daysLeft + 'd left)';
+          expiryDisp.classList.add('text-amber-400');
+        } else if (daysLeft <= 0) {
+          expiryDisp.textContent += ' (expired)';
+          expiryDisp.classList.add('text-red-400');
+        }
+      } else if (expiryDisp) {
+        expiryDisp.textContent = '—';
+      }
+
+      // Status badge
+      if (statusDisp && s.status) {
+        var st = s.status.toUpperCase();
+        statusDisp.textContent = st;
+        if (st === 'ACTIVE') {
+          statusDisp.classList.add('text-emerald-400', 'bg-emerald-500/10', 'border', 'border-emerald-500/20');
+        } else {
+          statusDisp.classList.add('text-red-400', 'bg-red-500/10', 'border', 'border-red-500/20');
+        }
+      }
+
+      // Close dropdown on outside click
+      document.addEventListener('click', function(e) {
+        var wrapper = document.getElementById('userMenuWrapper');
+        var dropdown = document.getElementById('userDropdown');
+        if (wrapper && dropdown && !wrapper.contains(e.target)) {
+          dropdown.classList.add('hidden');
+        }
+      });
     })();
 
     function pmLogout() {
