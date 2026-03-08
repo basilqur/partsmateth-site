@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — PartsMateTH</title>
+  <meta name="description" content="Sign in to PartsMateTH Auto Parts Intelligence Platform">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #060912;
+      color: #e2e8f0;
+    }
+    .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+    /* ===== LAYOUT ===== */
+    .auth-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Form panels stack on the left, each full-height */
+    .forms-track {
+      position: relative;
+      width: 55%;
+      height: 100%;
+      flex-shrink: 0;
+    }
+    .form-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 4rem;
+      overflow-y: auto;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .panel-signin {
+      opacity: 1;
+      transform: translateX(0);
+      z-index: 2;
+    }
+    .panel-signup {
+      opacity: 0;
+      transform: translateX(-60px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ===== BRANDED SIDE (right, sticky) ===== */
+    .brand-side {
+      position: relative;
+      flex: 1;
+      height: 100%;
+      background: linear-gradient(160deg, #1e3a5f 0%, #0f172a 40%, #030712 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      /* This side stays put — "sticky" */
+    }
+    .brand-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 3rem;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    /* Animated mesh / glow blobs */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      animation: orbFloat 8s ease-in-out infinite alternate;
+    }
+    .glow-orb-1 {
+      width: 400px; height: 400px;
+      background: #3b82f6;
+      top: -10%; right: -5%;
+      animation-delay: 0s;
+    }
+    .glow-orb-2 {
+      width: 300px; height: 300px;
+      background: #42C2BA;
+      bottom: -5%; left: -10%;
+      animation-delay: -3s;
+    }
+    .glow-orb-3 {
+      width: 200px; height: 200px;
+      background: #8b5cf6;
+      top: 40%; left: 30%;
+      animation-delay: -5s;
+    }
+    @keyframes orbFloat {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, -20px) scale(1.1); }
+    }
+
+    /* Grid lines overlay */
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 1;
+    }
+
+    /* Noise texture */
+    .noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ===== ACTIVE STATE: signup shown ===== */
+    .auth-container.signup-active .panel-signin {
+      opacity: 0;
+      transform: translateX(60px);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .auth-container.signup-active .panel-signup {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      z-index: 2;
+    }
+    .auth-container.signup-active .brand-text-signin {
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+    }
+    .auth-container.signup-active .brand-text-signup {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .brand-text-signin, .brand-text-signup {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .brand-text-signup {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      opacity: 0;
+      transform: translateY(-20px);
+      pointer-events: none;
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 1rem 1.5rem;
+    }
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .header-logo img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.3s;
+    }
+    .header-logo:hover img { transform: scale(1.08); }
+    .header-logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: white;
+    }
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .header-nav a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.5rem 0.875rem;
+      border-radius: 10px;
+      transition: color 0.3s, background 0.3s;
+      position: relative;
+    }
+    .header-nav a:hover {
+      color: white;
+      background: rgba(255,255,255,0.06);
+    }
+    /* Magnetic hover effect target */
+    .magnetic-wrap {
+      display: inline-block;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+    .header-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      padding: 0.5rem;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .header-hamburger:hover {
+      background: rgba(255,255,255,0.06);
+    }
+    /* Mobile menu */
+    .mobile-nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 9, 18, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 190;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .mobile-nav-overlay.active { opacity: 1; visibility: visible; }
+    .mobile-nav-overlay a {
+      font-size: 1.5rem;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .mobile-nav-overlay a:hover { color: white; transform: translateX(8px); }
+    .mobile-nav-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: none; border: none;
+      color: white; cursor: pointer;
+    }
+    @media (max-width: 900px) {
+      .header-nav { display: none; }
+      .header-hamburger { display: block; }
+      .header-logo-text { display: none; }
+    }
+
+    /* ===== CURSOR GLOW ===== */
+    .cursor-glow {
+      position: fixed;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.4s;
+    }
+
+    /* ===== FORM STYLING ===== */
+    .form-card {
+      width: 100%;
+      max-width: 420px;
+    }
+    .form-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .form-subtitle {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.9375rem;
+      margin-bottom: 2rem;
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .field-group { margin-bottom: 1.25rem; }
+    .field-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.5rem;
+    }
+    .field-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: white;
+      font-size: 0.9375rem;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+    .field-input::placeholder { color: rgba(255,255,255,0.2); }
+    .field-input:focus {
+      border-color: rgba(59,130,246,0.5);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.08), 0 0 20px rgba(59,130,246,0.06);
+      background: rgba(255,255,255,0.05);
+    }
+    .field-input.key-input {
+      font-family: 'Space Grotesk', monospace;
+      letter-spacing: 0.15em;
+      text-align: center;
+      font-size: 1.125rem;
+    }
+
+    /* Phone */
+    .phone-row { display: flex; gap: 8px; }
+    .country-wrap { position: relative; width: 80px; flex-shrink: 0; }
+    .country-sel {
+      appearance: none;
+      width: 100%;
+      height: 100%;
+      padding: 0 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: transparent;
+      font-size: 0.875rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .country-sel:focus { border-color: rgba(59,130,246,0.5); }
+    .country-sel option { background: #0f172a; color: white; }
+    .iso-lbl {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 600; font-size: 0.875rem;
+      pointer-events: none;
+    }
+    .phone-box {
+      flex: 1;
+      display: flex;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .phone-box:focus-within {
+      border-color: rgba(59,130,246,0.5);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+    }
+    .phone-pre {
+      display: flex; align-items: center;
+      padding: 0 12px;
+      background: rgba(255,255,255,0.02);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.5);
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+    .phone-in {
+      flex: 1; padding: 0.875rem;
+      background: transparent; border: none;
+      color: white; font-size: 0.9375rem; outline: none;
+    }
+    .phone-in::placeholder { color: rgba(255,255,255,0.2); }
+
+    /* Checkbox */
+    .check-row {
+      display: flex; align-items: center; gap: 0.625rem;
+      cursor: pointer; user-select: none;
+      margin-bottom: 1.5rem;
+    }
+    .check-row input { display: none; }
+    .check-box {
+      width: 20px; height: 20px; border-radius: 6px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.03);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .check-row input:checked + .check-box {
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      border-color: transparent;
+    }
+    .check-box svg {
+      width: 12px; height: 12px; color: white;
+      opacity: 0; transition: opacity 0.15s;
+    }
+    .check-row input:checked + .check-box svg { opacity: 1; }
+    .check-text { font-size: 0.8125rem; color: rgba(255,255,255,0.4); }
+
+    /* Plan toggle */
+    .plan-toggle {
+      display: flex;
+      position: relative;
+      background: rgba(255,255,255,0.03);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 4px;
+      margin-bottom: 1.5rem;
+    }
+    .plan-slider {
+      position: absolute;
+      top: 4px; left: 4px;
+      width: calc(50% - 4px);
+      height: calc(100% - 8px);
+      border-radius: 11px;
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      box-shadow: 0 4px 15px rgba(59,130,246,0.25);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  background 0.5s ease,
+                  box-shadow 0.5s ease;
+      z-index: 0;
+    }
+    .plan-slider.trial {
+      transform: translateX(100%);
+      background: linear-gradient(135deg, #22c55e, #10b981);
+      box-shadow: 0 4px 15px rgba(34,197,94,0.25);
+    }
+    .plan-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 11px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.35);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.4s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .plan-btn.active {
+      color: white;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 14px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      background: linear-gradient(135deg, #3B82F6, #42C2BA);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.5s ease, background 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(59,130,246,0.3);
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
+    .btn-primary.trial-btn {
+      background: linear-gradient(135deg, #22c55e, #10b981);
+    }
+    .btn-primary.trial-btn:hover {
+      box-shadow: 0 8px 30px rgba(34,197,94,0.3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      padding: 0.875rem 2.5rem;
+      border-radius: 50px;
+      border: 2px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.02em;
+    }
+    .btn-ghost:hover {
+      background: white;
+      color: #0f172a;
+      border-color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255,255,255,0.15);
+    }
+
+    .help-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(59,130,246,0.8);
+      font-size: 0.8125rem;
+      text-decoration: none;
+      transition: color 0.2s;
+      margin-top: 1.25rem;
+    }
+    .help-link:hover { color: #3b82f6; }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Feature chips on brand side */
+    .feature-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.625rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .chip {
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Loader */
+    .loader-spin {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 1.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: 14px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      z-index: 1000;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(16px);
+      max-width: calc(100vw - 3rem);
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+    .toast-error { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+
+    /* ===== MOBILE ===== */
+    .mobile-tabs { display: none; }
+
+    @media (max-width: 900px) {
+      .auth-container { flex-direction: column; }
+      .forms-track { width: 100%; height: auto; min-height: 100vh; }
+      .form-panel {
+        position: relative;
+        padding: 6rem 1.5rem 2rem;
+      }
+      .panel-signup { display: none; position: relative; }
+      .brand-side { display: none; }
+      .mobile-tabs {
+        display: flex;
+        position: fixed;
+        top: 4rem;
+        left: 1rem; right: 1rem;
+        z-index: 200;
+        background: rgba(3,7,18,0.9);
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.06);
+        padding: 4px;
+        backdrop-filter: blur(16px);
+      }
+      .mob-tab {
+        flex: 1;
+        padding: 0.625rem;
+        border-radius: 11px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.35);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.25s;
+      }
+      .mob-tab.active {
+        background: linear-gradient(135deg, #3B82F6, #42C2BA);
+        color: white;
+      }
+      .auth-container.signup-active .panel-signin { display: none; }
+      .auth-container.signup-active .panel-signup {
+        display: flex;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+      body { overflow-y: auto; }
+      .auth-container { height: auto; min-height: 100vh; overflow: visible; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+    /* Subtle separator between forms and brand */
+    .forms-track::after {
+      content: '';
+      position: absolute;
+      top: 10%; bottom: 10%; right: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(59,130,246,0.15), rgba(66,194,186,0.15), transparent);
+      z-index: 10;
+    }
+
+    .terms-text {
+      text-align: center;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor glow follower -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/index.html" class="header-logo magnetic-wrap">
+        <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH Logo">
+        <span class="header-logo-text">PartsMateTH</span>
+      </a>
+      <nav class="header-nav">
+        <a href="/index.html" class="magnetic-wrap">Home</a>
+        <a href="/plans.html" class="magnetic-wrap">Plans</a>
+        <a href="/profile.html" class="magnetic-wrap">Profile</a>
+        <a href="/seller.html" class="magnetic-wrap">Seller Portal</a>
+        <a href="/index.html#contact" class="magnetic-wrap">Contact</a>
+      </nav>
+      <button class="header-hamburger magnetic-wrap" onclick="document.getElementById('mobileNav').classList.add('active')">
+        <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav-overlay" id="mobileNav">
+    <button class="mobile-nav-close" onclick="document.getElementById('mobileNav').classList.remove('active')">
+      <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <a href="/index.html">Home</a>
+    <a href="/plans.html">Plans</a>
+    <a href="/profile.html">Profile</a>
+    <a href="/seller.html">Seller Portal</a>
+    <a href="/index.html#contact">Contact</a>
+  </div>
+
+  <!-- Mobile Tabs -->
+  <div class="mobile-tabs" id="mobileTabs">
+    <button class="mob-tab active" onclick="mobileSwitch('signin')">Sign In</button>
+    <button class="mob-tab" onclick="mobileSwitch('signup')">Sign Up</button>
+  </div>
+
+  <div class="auth-container" id="authContainer">
+
+    <!-- ===== FORMS TRACK (left 55%) ===== -->
+    <div class="forms-track">
+
+      <!-- SIGN IN -->
+      <div class="form-panel panel-signin">
+        <div class="form-card">
+          <div style="text-align:center;margin-bottom:2.5rem;">
+            <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#3B82F6,#42C2BA);display:inline-flex;align-items:center;justify-content:center;margin-bottom:1.25rem;box-shadow:0 8px 32px rgba(59,130,246,0.2);">
+              <i class="ri-key-2-line" style="font-size:24px;color:white;"></i>
+            </div>
+            <h1 class="form-title">Welcome Back</h1>
+            <p class="form-subtitle">Enter your license key to access the platform</p>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">License Key</label>
+            <input type="text" id="loginKey" placeholder="XXXX-XXXX-XXXX-XXXX" class="field-input key-input" autocomplete="off" spellcheck="false">
+          </div>
+
+          <label class="check-row">
+            <input type="checkbox" id="rememberMe">
+            <div class="check-box">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="check-text">Remember me &amp; keep me logged in</span>
+          </label>
+
+          <button onclick="handleLogin()" id="btnLogin" class="btn-primary">
+            Sign In
+          </button>
+
+          <div style="text-align:center;">
+            <a href="/index.html#contact" class="help-link">
+              <i class="ri-question-line"></i> Lost or forgot your license key?
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGN UP -->
+      <div class="form-panel panel-signup">
+        <div class="form-card">
+          <div style="text-align:center;margin-bottom:1.5rem;">
+            <h2 class="form-title"><span class="gradient-text">Get Started</span></h2>
+            <p class="form-subtitle" style="margin-bottom:0;">Choose your plan and create your account</p>
+          </div>
+
+          <div class="plan-toggle">
+            <div class="plan-slider" id="planSlider"></div>
+            <button class="plan-btn active" data-plan="pro" onclick="switchPlan('pro')">Pro — 349 AED/mo</button>
+            <button class="plan-btn" data-plan="trial" onclick="switchPlan('trial')">7-Day Free Trial</button>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Full Name</label>
+            <input type="text" id="signupName" placeholder="John Doe" class="field-input">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Email Address</label>
+            <input type="email" id="signupEmail" placeholder="john@example.com" class="field-input">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Phone Number</label>
+            <div class="phone-row">
+              <div class="country-wrap">
+                <select id="signupCountryCode" class="country-sel"></select>
+                <div id="signupIsoLabel" class="iso-lbl">--</div>
+              </div>
+              <div class="phone-box">
+                <span id="signupPhonePrefix" class="phone-pre">+--</span>
+                <input type="tel" id="signupPhone" placeholder="555 123 4567" class="phone-in">
+              </div>
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Invite Code <span style="color:#f87171;">*</span></label>
+            <input type="text" id="signupInvCode" placeholder="Enter invite code" class="field-input">
+          </div>
+
+          <button onclick="handleSignup()" id="btnSignup" class="btn-primary">
+            <span id="signupBtnText">Subscribe Now — 349 AED/mo</span>
+          </button>
+
+          <p class="terms-text">By signing up, you agree to our Terms of Service.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== BRAND SIDE (right 45%, stays sticky) ===== -->
+    <div class="brand-side">
+      <div class="glow-orb glow-orb-1"></div>
+      <div class="glow-orb glow-orb-2"></div>
+      <div class="glow-orb glow-orb-3"></div>
+      <div class="grid-overlay"></div>
+      <div class="noise"></div>
+
+      <!-- Default: Sign-in CTA -->
+      <div class="brand-content brand-text-signin">
+        <div style="width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,0.08);display:inline-flex;align-items:center;justify-content:center;margin-bottom:1.5rem;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);">
+          <i class="ri-rocket-2-line" style="font-size:28px;color:white;"></i>
+        </div>
+        <h2 class="font-display" style="font-size:2.25rem;font-weight:700;margin-bottom:1rem;line-height:1.2;">New Here?</h2>
+        <p style="color:rgba(255,255,255,0.7);font-size:1rem;max-width:280px;margin:0 auto 2rem;line-height:1.6;">
+          Get your license key and unlock the full auto parts intelligence suite
+        </p>
+        <button class="btn-ghost" onclick="togglePanel()">Sign Up</button>
+        <div class="feature-chips">
+          <span class="chip"><i class="ri-search-eye-line" style="margin-right:4px;"></i> Smart Search</span>
+          <span class="chip"><i class="ri-bar-chart-2-line" style="margin-right:4px;"></i> Analytics</span>
+          <span class="chip"><i class="ri-global-line" style="margin-right:4px;"></i> Multi-Market</span>
+        </div>
+      </div>
+
+      <!-- When signup is active -->
+      <div class="brand-content brand-text-signup">
+        <div style="width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,0.08);display:inline-flex;align-items:center;justify-content:center;margin-bottom:1.5rem;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);">
+          <i class="ri-login-box-line" style="font-size:28px;color:white;"></i>
+        </div>
+        <h2 class="font-display" style="font-size:2.25rem;font-weight:700;margin-bottom:1rem;line-height:1.2;">One Of Us?</h2>
+        <p style="color:rgba(255,255,255,0.7);font-size:1rem;max-width:280px;margin:0 auto 2rem;line-height:1.6;">
+          Already have a license key?<br>Sign in and get back to work!
+        </p>
+        <button class="btn-ghost" onclick="togglePanel()">Sign In</button>
+        <div class="feature-chips">
+          <span class="chip"><i class="ri-shield-check-line" style="margin-right:4px;"></i> Secure</span>
+          <span class="chip"><i class="ri-speed-line" style="margin-right:4px;"></i> Fast</span>
+          <span class="chip"><i class="ri-customer-service-2-line" style="margin-right:4px;"></i> 24/7 Support</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // ===== CONFIG =====
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+
+    // ===== DEVICE UUID =====
+    function getDeviceId() {
+      let id = localStorage.getItem('pm_device_id');
+      if (!id) {
+        id = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+          const r = Math.random() * 16 | 0;
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        localStorage.setItem('pm_device_id', id);
+      }
+      return id;
+    }
+
+    // ===== PANEL TOGGLE =====
+    function togglePanel() {
+      document.getElementById('authContainer').classList.toggle('signup-active');
+    }
+
+    function mobileSwitch(panel) {
+      const wrap = document.getElementById('authContainer');
+      const btns = document.querySelectorAll('.mob-tab');
+      if (panel === 'signup') {
+        wrap.classList.add('signup-active');
+        btns[0].classList.remove('active');
+        btns[1].classList.add('active');
+      } else {
+        wrap.classList.remove('signup-active');
+        btns[0].classList.add('active');
+        btns[1].classList.remove('active');
+      }
+    }
+
+    // ===== PLAN TOGGLE =====
+    let selectedPlan = 'pro';
+    function switchPlan(plan) {
+      selectedPlan = plan;
+      document.querySelectorAll('.plan-btn').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.plan-btn[data-plan="${plan}"]`).classList.add('active');
+
+      // Slide the indicator
+      const slider = document.getElementById('planSlider');
+      if (plan === 'trial') {
+        slider.classList.add('trial');
+      } else {
+        slider.classList.remove('trial');
+      }
+
+      // Fade the submit button color
+      const btn = document.getElementById('btnSignup');
+      const txt = document.getElementById('signupBtnText');
+      if (plan === 'trial') {
+        txt.textContent = 'Start 7-Day Free Trial';
+        btn.classList.add('trial-btn');
+      } else {
+        txt.textContent = 'Subscribe Now — 349 AED/mo';
+        btn.classList.remove('trial-btn');
+      }
+    }
+
+    // ===== TOAST =====
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast toast-' + type + ' show';
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), 4000);
+    }
+
+    // ===== LOGIN =====
+    async function handleLogin() {
+      const key = document.getElementById('loginKey').value.trim();
+      if (!key) { showToast('Please enter your license key.', 'error'); return; }
+      const btn = document.getElementById('btnLogin');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loader-spin"></span> Signing in...';
+      try {
+        const deviceId = getDeviceId();
+        const url = `${APPS_SCRIPT_URL}?mode=webLogin&licenseKey=${encodeURIComponent(key)}&deviceId=${encodeURIComponent(deviceId)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.ok) {
+          localStorage.setItem('pm_session', JSON.stringify({
+            licenseKey: key,
+            name: data.name || '',
+            email: data.email || '',
+            plan: data.plan || '',
+            start: data.start || '',
+            end: data.end || '',
+            status: data.status || '',
+            loggedInAt: new Date().toISOString()
+          }));
+          if (document.getElementById('rememberMe').checked) {
+            localStorage.setItem('pm_remember_key', key);
+          } else {
+            localStorage.removeItem('pm_remember_key');
+          }
+          showToast('Login successful! Redirecting...', 'success');
+          setTimeout(() => { window.location.href = '/webappdemoadmin.html'; }, 800);
+        } else {
+          showToast(data.error || 'Invalid license key.', 'error');
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        showToast('Connection error. Please check your internet and try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Sign In';
+      }
+    }
+
+    // ===== SIGNUP =====
+    async function handleSignup() {
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const phoneNum = document.getElementById('signupPhone').value.trim();
+      const phone = document.getElementById('signupPhonePrefix').textContent + phoneNum;
+      const countrySelect = document.getElementById('signupCountryCode');
+      const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+      let country = selectedOption?.getAttribute('data-country') || '';
+      if (country.includes('(')) country = country.split('(')[0].trim();
+      const invCode = document.getElementById('signupInvCode').value.trim();
+
+      if (!name || !email || !phoneNum || !invCode) {
+        showToast('Please fill all fields including Invite Code.', 'error');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btnSignup');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loader-spin"></span> Processing...';
+
+      try {
+        if (selectedPlan === 'pro') {
+          // Pro → Stripe checkout
+          const res = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, plan: 'Pro', country, invCode })
+          });
+          const data = await res.json();
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            showToast(data.error || 'Something went wrong. Please try again.', 'error');
+          }
+        } else {
+          // Trial → saveToSheet API
+          const res = await fetch('/api/saveToSheet', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, country, plan: 'Trial', invCode, trialUsed: 'YES' })
+          });
+          const result = await res.json().catch(() => ({}));
+          if (result.ok) {
+            const orderNo = result.orderNo || '';
+            showToast('Trial created! Check your email to verify.', 'success');
+            setTimeout(() => {
+              window.location.href = `/trial-success-page.html?key=${encodeURIComponent(result.licenseKey || '')}&email=${encodeURIComponent(email)}&plan=Trial&order=${encodeURIComponent(orderNo)}`;
+            }, 1200);
+          } else {
+            showToast(result.error || 'Something went wrong while starting your trial.', 'error');
+          }
+        }
+      } catch (err) {
+        console.error('Signup error:', err);
+        showToast('Connection error. Please try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        const txt = selectedPlan === 'pro' ? 'Subscribe Now — 349 AED/mo' : 'Start 7-Day Free Trial';
+        btn.innerHTML = `<span id="signupBtnText">${txt}</span>`;
+        if (selectedPlan === 'trial') btn.classList.add('trial-btn');
+      }
+    }
+
+    function generateTrialKey() {
+      const hex = () => Math.floor(Math.random() * 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+      return `${hex()}-${hex()}-${hex()}-${hex()}-${hex()}-${hex()}`;
+    }
+
+    // ===== COUNTRY LOADER =====
+    let __countryCache = null;
+    async function loadCountries(selectId, isoLabelId, prefixSpanId) {
+      try {
+        if (!__countryCache) __countryCache = fetch('/country-options.html').then(r => r.text());
+        const html = await __countryCache;
+        const sel = document.getElementById(selectId);
+        if (!sel) return;
+        sel.innerHTML = html;
+        const update = () => {
+          const opt = sel.options[sel.selectedIndex];
+          if (isoLabelId) document.getElementById(isoLabelId).textContent = opt?.getAttribute('data-iso') || '';
+          if (prefixSpanId) document.getElementById(prefixSpanId).textContent = opt?.value || '';
+        };
+        sel.addEventListener('change', update);
+        update();
+      } catch (e) { console.error('Country load error:', e); }
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCountries('signupCountryCode', 'signupIsoLabel', 'signupPhonePrefix');
+
+      const savedKey = localStorage.getItem('pm_remember_key');
+      if (savedKey) {
+        document.getElementById('loginKey').value = savedKey;
+        document.getElementById('rememberMe').checked = true;
+      }
+
+      const session = localStorage.getItem('pm_session');
+      if (session) {
+        try {
+          const s = JSON.parse(session);
+          if (s.licenseKey) { window.location.href = '/webappdemoadmin.html'; return; }
+        } catch(e) {}
+      }
+
+      document.getElementById('loginKey').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleLogin();
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('signup') === 'true') togglePanel();
+      if (params.get('plan') === 'trial') { togglePanel(); switchPlan('trial'); }
+      if (params.get('email')) {
+        document.getElementById('signupEmail').value = params.get('email');
+        togglePanel();
+      }
+    });
+
+    // ===== CURSOR GLOW FOLLOWER =====
+    const glow = document.getElementById('cursorGlow');
+    let glowX = 0, glowY = 0, targetX = 0, targetY = 0;
+    document.addEventListener('mousemove', (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+    });
+    function animateGlow() {
+      glowX += (targetX - glowX) * 0.08;
+      glowY += (targetY - glowY) * 0.08;
+      glow.style.left = glowX + 'px';
+      glow.style.top = glowY + 'px';
+      requestAnimationFrame(animateGlow);
+    }
+    animateGlow();
+
+    // ===== MAGNETIC HOVER on .magnetic-wrap =====
+    document.querySelectorAll('.magnetic-wrap').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) * 0.25;
+        const dy = (e.clientY - cy) * 0.25;
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'translate(0, 0)';
+      });
+    });
+
+    // ===== TILT on form cards =====
+    document.querySelectorAll('.form-card').forEach(card => {
+      card.style.transition = 'transform 0.15s ease-out';
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(800px) rotateY(${x * 4}deg) rotateX(${-y * 4}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+      });
+    });
+  </script>
+</body>
+</html>
