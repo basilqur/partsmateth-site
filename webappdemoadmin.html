@@ -415,6 +415,13 @@
   </style>
 </head>
 <body class="antialiased">
+  <script>
+    (function(){
+      var s = localStorage.getItem('pm_session');
+      if (!s) { window.location.href = '/login.html'; return; }
+      try { var d = JSON.parse(s); if (!d.licenseKey) throw 0; } catch(e) { localStorage.removeItem('pm_session'); window.location.href = '/login.html'; }
+    })();
+  </script>
   <div class="ambient-bg"></div>
 
   <!-- Header -->
@@ -428,11 +435,13 @@
           <span class="font-display text-base sm:text-lg font-bold gradient-text">PartsMateTH</span>
         </div>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
         <span class="text-[0.625rem] font-medium text-slate-500 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">v1.0</span>
-        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500/20 to-teal-500/20 flex items-center justify-center border border-white/10">
-          <i class="ri-user-3-line text-xs text-slate-400"></i>
-        </div>
+        <span id="userPlanBadge" class="text-[0.625rem] font-medium text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20"></span>
+        <span id="userName" class="text-xs font-medium text-slate-400 hidden sm:inline max-w-[120px] truncate"></span>
+        <button onclick="pmLogout()" title="Logout" class="w-7 h-7 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 hover:bg-red-500/20 transition-colors cursor-pointer">
+          <i class="ri-logout-box-r-line text-xs text-red-400"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -1880,6 +1889,22 @@
       AbortSignal.prototype.throwIfAborted = function () {
         if (this.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
       };
+    }
+
+    // Session user info
+    (function(){
+      var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
+      var nameEl = document.getElementById('userName');
+      var planEl = document.getElementById('userPlanBadge');
+      if (nameEl && s.name) { nameEl.textContent = s.name; nameEl.classList.remove('hidden'); }
+      if (planEl && s.plan) { planEl.textContent = s.plan; }
+    })();
+
+    function pmLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('pm_session');
+        window.location.href = '/login.html';
+      }
     }
   </script>
 </body>

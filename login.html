@@ -278,7 +278,15 @@
       .header-nav { display: none; }
       .header-hamburger { display: block; z-index: 210; }
       .header-logo-text { display: none; }
-      .site-header { padding: 0.75rem 1rem; }
+      .site-header {
+        padding: 0.75rem 1rem;
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      }
+      .site-header.header-hidden {
+        transform: translateY(-100%);
+        opacity: 0;
+        pointer-events: none;
+      }
     }
 
     /* ===== CURSOR GLOW ===== */
@@ -901,6 +909,28 @@
       document.getElementById('mobileNav').classList.remove('active');
       document.body.classList.remove('nav-open');
     }
+
+    // Mobile: hide header when scrolled down, show at top
+    (function() {
+      const header = document.querySelector('.site-header');
+      const formPanels = document.querySelectorAll('.form-panel');
+      function checkScroll() {
+        let scrollTop = 0;
+        formPanels.forEach(p => { if (p.scrollTop > scrollTop) scrollTop = p.scrollTop; });
+        if (window.innerWidth <= 900) {
+          if (scrollTop > 30) {
+            header.classList.add('header-hidden');
+          } else {
+            header.classList.remove('header-hidden');
+          }
+        } else {
+          header.classList.remove('header-hidden');
+        }
+      }
+      formPanels.forEach(p => p.addEventListener('scroll', checkScroll, { passive: true }));
+      window.addEventListener('scroll', checkScroll, { passive: true });
+      window.addEventListener('resize', checkScroll);
+    })();
 
     function togglePanel() {
       document.getElementById('authContainer').classList.toggle('signup-active');
