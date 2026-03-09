@@ -1121,9 +1121,7 @@
 
   <script>
     // ============ GLOBALS ============
-    const API_RAW = 'https://api.partsmateth.com';
-    const PROXY = 'https://corsproxy.io/?url=';
-    const API = PROXY + encodeURIComponent(API_RAW);
+    const API = 'https://api.partsmateth.com';
     const API_KEY = 'x-partsmate-vps-2025';
     const API_HEADERS = { 'Content-Type': 'application/json', 'x-api-key': API_KEY };
     const GET_HEADERS = { 'x-api-key': API_KEY };
@@ -1133,7 +1131,7 @@
 
     // Build properly encoded proxy URL for allorigins
     function proxyUrl(path) {
-      return PROXY + encodeURIComponent(API_RAW + path);
+      return API + path;
     }
 
     // Show/hide loading state for model checker sections
