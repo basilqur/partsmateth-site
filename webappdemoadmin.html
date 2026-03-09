@@ -1567,18 +1567,6 @@
     }
     function stopFetch(key) { if (abortControllers[key]) abortControllers[key].abort(); }
 
-    // Healthcheck
-    async function healthcheck(signal) {
-      for (let i = 0; i < 10; i++) {
-        try {
-          const r = await fetch(API + '/healthcheck', { signal, headers: GET_HEADERS });
-          if (r.ok) { const b = await r.json(); if (b.ok) return true; }
-        } catch (e) { if (e.name === 'AbortError') throw e; }
-        await new Promise(r => setTimeout(r, 1000));
-      }
-      return false;
-    }
-
     // ============ FEEDBACK ============
     function sendFeedback() {
       const sug = document.getElementById('txtSuggestion').value.trim();
@@ -1602,7 +1590,6 @@
       const sym = currentCurrency === 'AED' ? ' AED' : ' $';
       const factor = currentCurrency === 'AED' ? 1 : 1 / 3.67;
       try {
-        await healthcheck(signal);
         for (let i = 0; i < parts.length; i += 5) {
           signal.throwIfAborted?.();
           const batch = parts.slice(i, i + 5);
@@ -1660,7 +1647,6 @@
       setLoading('nameLoader', true);
       setStop('stopNames', true);
       try {
-        await healthcheck(signal);
         for (let i = 0; i < parts.length; i += 5) {
           const batch = parts.slice(i, i + 5);
           if (source === 'usa') {
@@ -1721,7 +1707,6 @@
       setLoading('originLoader', true);
       setStop('stopOrigins', true);
       try {
-        await healthcheck(signal);
         for (let i = 0; i < parts.length; i += 5) {
           const batch = parts.slice(i, i + 5);
           try {
@@ -1767,7 +1752,6 @@
         progressText.textContent = '0 / ' + parts.length;
       }
       try {
-        await healthcheck(signal);
         const partsToCheck = multi ? parts : [parts[0]];
         for (let idx = 0; idx < partsToCheck.length; idx++) {
           const cleaned = partsToCheck[idx].replace(/[-\s]/g, '');
@@ -1821,7 +1805,6 @@
       setLoading('weightLoader', true);
       setStop('stopWeights', true);
       try {
-        await healthcheck(signal);
         for (const part of parts) {
           try {
             const cleaned = part.replace(/[-\s]/g, '');
@@ -1854,7 +1837,6 @@
       setLoading('altLoader', true);
       setStop('stopAlts', true);
       try {
-        await healthcheck(signal);
         for (let i = 0; i < parts.length; i++) {
           signal.throwIfAborted?.();
           const partRaw = parts[i];
