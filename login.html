@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overflow: hidden; }
@@ -959,10 +960,29 @@
         <i class="ri-forbid-line" style="color:#f87171;"></i>
       </div>
       <h3 class="font-display" style="font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;">Device Limit Reached</h3>
-      <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;line-height:1.6;margin-bottom:1.5rem;">
-        This license key has already been used on <strong style="color:#f87171;">3 different devices</strong>. No more devices can be registered. Please contact support if you need a reset.
+      <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;line-height:1.6;margin-bottom:1rem;">
+        This license key has already been used on <strong style="color:#f87171;">3 different devices</strong>. No more devices can be registered.
       </p>
+      <button id="btnDeviceReset" onclick="requestDeviceReset()" class="btn-primary" style="width:100%;margin-bottom:0.75rem;padding:0.75rem;border:none;cursor:pointer;">
+        <i class="ri-refresh-line"></i> Reset My Devices (One-Time)
+      </button>
       <button onclick="closeMaxDevicesModal()" class="btn-conflict-cancel" style="width:100%;">Close</button>
+    </div>
+  </div>
+
+  <!-- OTP Reset Modal -->
+  <div id="otpResetModal" class="conflict-modal-overlay">
+    <div class="conflict-modal">
+      <div class="conflict-icon" style="background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.2);">
+        <i class="ri-mail-send-line" style="color:#3B82F6;"></i>
+      </div>
+      <h3 class="font-display" style="font-size:1.5rem;font-weight:700;margin-bottom:0.5rem;">Enter Verification Code</h3>
+      <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;line-height:1.6;margin-bottom:1.5rem;">
+        We've sent a 6-digit code to your email. Enter it below to reset your devices.
+      </p>
+      <input type="text" id="otpCode" placeholder="000000" maxlength="6" class="field-input key-input" style="text-align:center;font-size:1.5rem;letter-spacing:8px;margin-bottom:1rem;" autocomplete="off">
+      <button onclick="verifyOtpReset()" id="btnVerifyOtp" class="btn-primary" style="width:100%;margin-bottom:0.75rem;padding:0.75rem;border:none;cursor:pointer;">Verify & Reset</button>
+      <button onclick="closeOtpModal()" class="btn-conflict-cancel" style="width:100%;">Cancel</button>
     </div>
   </div>
 
@@ -1095,7 +1115,16 @@
       btn.innerHTML = '<span class="loader-spin"></span> Signing in...';
       try {
         const deviceId = getDeviceId();
-        let url = `${APPS_SCRIPT_URL}?mode=webLogin&licenseKey=${encodeURIComponent(key)}&deviceId=${encodeURIComponent(deviceId)}`;
+
+        // Get fingerprint
+        let visitorId = '';
+        try {
+          const fp = await FingerprintJS.load();
+          const result = await fp.get();
+          visitorId = result.visitorId;
+        } catch(e) { console.warn('Fingerprint error:', e); }
+
+        let url = `${APPS_SCRIPT_URL}?mode=webLogin&licenseKey=${encodeURIComponent(key)}&deviceId=${encodeURIComponent(deviceId)}&fingerprint=${encodeURIComponent(visitorId)}`;
         if (forceLogin) url += '&forceLogin=true';
         const res = await fetch(url);
         const data = await res.json();
@@ -1115,12 +1144,21 @@
           } else {
             localStorage.removeItem('pm_remember_key');
           }
-          showToast('Login successful! Redirecting...', 'success');
-          setTimeout(() => { window.location.href = '/webappdemoadmin.html'; }, 800);
+
+          // Show suspicious warning if present
+          if (data.suspiciousWarning) {
+            showToast(data.suspiciousWarning, 'error');
+            setTimeout(() => { window.location.href = '/webappdemoadmin.html'; }, 3000);
+          } else {
+            showToast('Login successful! Redirecting...', 'success');
+            setTimeout(() => { window.location.href = '/webappdemoadmin.html'; }, 800);
+          }
+        } else if (data.suspiciousBlocked) {
+          showToast(data.error || 'Account suspended. Contact support.', 'error');
         } else if (data.activeElsewhere) {
           showConflictModal();
         } else if (data.maxDevicesReached) {
-          showMaxDevicesModal();
+          showMaxDevicesModal(data.resetUsed);
         } else {
           showToast(data.error || 'Invalid license key.', 'error');
         }
@@ -1140,8 +1178,13 @@
     function closeConflictModal() {
       document.getElementById('deviceConflictModal').classList.remove('active');
     }
-    function showMaxDevicesModal() {
-      document.getElementById('maxDevicesModal').classList.add('active');
+    function showMaxDevicesModal(resetUsed) {
+      const modal = document.getElementById('maxDevicesModal');
+      modal.classList.add('active');
+      const resetBtn = document.getElementById('btnDeviceReset');
+      if (resetBtn) {
+        resetBtn.style.display = resetUsed ? 'none' : 'block';
+      }
     }
     function closeMaxDevicesModal() {
       document.getElementById('maxDevicesModal').classList.remove('active');
@@ -1149,6 +1192,60 @@
     async function forceLoginConfirm() {
       closeConflictModal();
       await handleLogin(true);
+    }
+
+    // ===== DEVICE RESET (OTP) =====
+    async function requestDeviceReset() {
+      const key = document.getElementById('loginKey').value.trim();
+      if (!key) { showToast('Please enter your license key first.', 'error'); return; }
+      const btn = document.getElementById('btnDeviceReset');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loader-spin"></span> Sending code...';
+      try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?mode=sendDeviceResetCode&licenseKey=${encodeURIComponent(key)}`);
+        const data = await res.json();
+        if (data.ok) {
+          closeMaxDevicesModal();
+          document.getElementById('otpResetModal').classList.add('active');
+          showToast('Verification code sent to your email!', 'success');
+        } else {
+          showToast(data.error || 'Could not send reset code.', 'error');
+        }
+      } catch (err) {
+        showToast('Connection error.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="ri-refresh-line"></i> Reset My Devices (One-Time)';
+      }
+    }
+
+    function closeOtpModal() {
+      document.getElementById('otpResetModal').classList.remove('active');
+    }
+
+    async function verifyOtpReset() {
+      const key = document.getElementById('loginKey').value.trim();
+      const code = document.getElementById('otpCode').value.trim();
+      if (!code || code.length !== 6) { showToast('Please enter the 6-digit code.', 'error'); return; }
+      const btn = document.getElementById('btnVerifyOtp');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loader-spin"></span> Verifying...';
+      try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?mode=verifyDeviceReset&licenseKey=${encodeURIComponent(key)}&code=${encodeURIComponent(code)}`);
+        const data = await res.json();
+        if (data.ok) {
+          closeOtpModal();
+          showToast('Devices reset successfully! You can now sign in.', 'success');
+          setTimeout(() => handleLogin(), 1000);
+        } else {
+          showToast(data.error || 'Invalid or expired code.', 'error');
+        }
+      } catch (err) {
+        showToast('Connection error.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Verify & Reset';
+      }
     }
 
     // ===== SIGNUP =====

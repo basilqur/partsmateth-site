@@ -10,6 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <!-- SheetJS for Excel parsing -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <!-- PDF.js for PDF parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
   <script>
     tailwind.config = {
       theme: {
@@ -203,6 +208,29 @@
     }
     .input-field::placeholder { color: #475569; }
     textarea.input-field { resize: vertical; min-height: 120px; }
+
+    /* Drag & Drop overlay */
+    .drop-target-wrapper { position: relative; }
+    .drop-overlay {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(20, 184, 166, 0.12);
+      border: 2px dashed rgba(20, 184, 166, 0.6);
+      border-radius: 0.75rem;
+      display: none;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+    .drop-overlay.active { display: flex; }
+    .drop-overlay-text {
+      color: #14B8A6; font-weight: 600; font-size: 0.875rem;
+      background: rgba(5, 8, 16, 0.8); padding: 0.5rem 1.25rem;
+      border-radius: 0.5rem; pointer-events: none;
+    }
+    .input-field.drag-hover {
+      border-color: rgba(20, 184, 166, 0.6) !important;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15), 0 0 20px -5px rgba(20, 184, 166, 0.2) !important;
+    }
 
     /* Radio & Checkbox */
     .radio-card {
@@ -1172,8 +1200,20 @@
     document.querySelectorAll('.desktop-nav .tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
     document.querySelectorAll('.mobile-nav .mob-tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
-    // ============ LIST CLEANER ============
-    const BRAND_PATTERNS = {
+    // ============ LIST CLEANER (ported from C# ApplyCleaningLogic) ============
+    const BRAND_EXTRACT_PATTERNS = {
+      Toyota:     /\b(?=[A-Z0-9]{5}\b)(?=(?:.*[A-Z]){0,2})[A-Z0-9]{5}\s*-\s*[A-Z0-9]{4,5}(?:\s*-\s*[A-Z0-9]{1,3})?\b/g,
+      Nissan:     /[A-Z0-9]{4,5}-[A-Z0-9]{4,5}/g,
+      Isuzu:      /\d-[A-Z0-9]{8}-\d/g,
+      Suzuki:     /[A-Z0-9]{5}-[A-Z0-9]{5}(-[A-Z0-9]{3})?/g,
+      Mazda:      /[A-Z0-9]{3,4}-[A-Z0-9]{2}-[A-Z0-9]{3,4}/g,
+      Mitsubishi: /\b(?=[A-Z0-9]{8}\b)(?=.*[A-Z])(?=.*\d)[A-Z0-9]{8}\b/g,
+      Hyundai:    /\b\d{10}\b/g,
+      Honda:      /\d{5}-[A-Z0-9]{3}-[A-Z0-9]{3}/g,
+      Subaru:     /\d{5}-[A-Z0-9]{5}/g
+    };
+
+    const BRAND_VALID_PATTERNS = {
       Toyota:     /\b(?=[A-Z0-9]{5}\b)(?=(?:.*[A-Z]){0,2})[A-Z0-9]{5}-[A-Z0-9]{4,5}(?:-[A-Z0-9]{1,3})?\b/,
       Nissan:     /^[A-Z0-9]{4,5}-[A-Z0-9]{4,5}$/,
       Isuzu:      /^\d-[0-9A-Z]{8}-\d$/,
@@ -1192,10 +1232,78 @@
 
     function isValidPartNumber(line, brands) {
       line = line.trim().toUpperCase();
+      if (!brands || !brands.length) brands = ['Toyota'];
       for (const b of brands) {
-        if (BRAND_PATTERNS[b] && BRAND_PATTERNS[b].test(line)) return true;
+        if (BRAND_VALID_PATTERNS[b] && BRAND_VALID_PATTERNS[b].test(line)) return true;
       }
       return false;
+    }
+
+    function isToyotaNumber(partNumber) {
+      partNumber = partNumber.replace(/\s*-\s*/g, '-');
+      const raw = partNumber.replace(/-/g, '');
+      if (![10, 11, 12, 13].includes(raw.length)) return false;
+      const first5 = raw.substring(0, 5);
+      const letterCount = (first5.match(/[A-Z]/gi) || []).length;
+      return letterCount <= 2;
+    }
+
+    function applyCleaningLogic(inputText, selectedBrands) {
+      if (!inputText || !inputText.trim()) return '';
+
+      // Build active extraction patterns
+      let activePatterns = [];
+      if (!selectedBrands || !selectedBrands.length) {
+        activePatterns.push(BRAND_EXTRACT_PATTERNS.Toyota);
+      } else {
+        for (const brand of selectedBrands) {
+          if (BRAND_EXTRACT_PATTERNS[brand]) activePatterns.push(BRAND_EXTRACT_PATTERNS[brand]);
+        }
+        if (!activePatterns.length) activePatterns.push(BRAND_EXTRACT_PATTERNS.Toyota);
+      }
+
+      const isToyotaMode = !selectedBrands || !selectedBrands.length || selectedBrands.includes('Toyota');
+      const lines = inputText.split(/\r?\n/);
+      const processed = [];
+
+      for (const line of lines) {
+        if (!line.trim()) { processed.push(''); continue; }
+
+        // Fix OCR spaces around dashes
+        let cleanLine = line.replace(/\s*-\s*/g, '-').trim();
+        let upperLine = cleanLine.toUpperCase();
+        let matchFound = false;
+
+        for (const pattern of activePatterns) {
+          // Reset regex lastIndex for global patterns
+          pattern.lastIndex = 0;
+          let m;
+          while ((m = pattern.exec(upperLine)) !== null) {
+            if (!m[0].trim()) continue;
+            let partNumber = m[0].toUpperCase().trim();
+
+            // Toyota reformatting
+            if (isToyotaMode && isToyotaNumber(partNumber)) {
+              let raw = partNumber.replace(/-/g, '');
+              if (raw.length >= 10) {
+                raw = raw.substring(0, 5) + '-' + raw.substring(5);
+                if (raw.length > 11) {
+                  raw = raw.substring(0, 11) + '-' + raw.substring(11);
+                }
+              }
+              partNumber = raw;
+            }
+
+            processed.push(partNumber);
+            matchFound = true;
+          }
+          if (matchFound) break;
+        }
+
+        if (!matchFound) processed.push(cleanLine);
+      }
+
+      return processed.join('\n');
     }
 
     function normalizeOcrText(text) {
@@ -1218,6 +1326,8 @@
       text = text.replace(/(?<=\d)O/g, '0');
       text = text.replace(/\b(?=.*O)[O0]([CLKMY])[O0](\d+)\b/g, '0$1$2');
       text = text.replace(/-(00|06)(\d{3})\b/g, '-0C$2');
+      // Remove Cyrillic characters
+      text = text.replace(/[\u0400-\u04FF]+/g, '');
       return text;
     }
 
@@ -1226,7 +1336,8 @@
       if (!input.trim()) { showToast('Please enter text first', 'warning'); return; }
       const brands = getSelectedBrands();
       const normalized = normalizeOcrText(input);
-      const lines = normalized.split(/[\n,;\t]+/).map(l => l.trim().toUpperCase()).filter(Boolean);
+      const cleaned = applyCleaningLogic(normalized, brands);
+      const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
       const valid = [...new Set(lines.filter(l => isValidPartNumber(l, brands)))];
       document.getElementById('listCleanerResult').textContent = valid.length ? valid.join('\n') : 'No valid part numbers found.';
       showToast(valid.length ? `Extracted ${valid.length} part number(s)` : 'No valid part numbers found', valid.length ? 'success' : 'warning');
@@ -2035,6 +2146,243 @@
         localStorage.removeItem('pm_session');
         window.location.href = '/login.html';
       }
+    }
+
+    // ============ IMAGE OCR via Google Vision API ============
+    const VISION_API_KEY = 'AIzaSyD9hv5dTxWfJhQa8eJ10jSJsyOyeDCxx4g';
+
+    async function ocrFromImage(imageFile) {
+      const arrayBuf = await imageFile.arrayBuffer();
+      const base64 = btoa(new Uint8Array(arrayBuf).reduce((s, b) => s + String.fromCharCode(b), ''));
+
+      const res = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requests: [{ image: { content: base64 }, features: [{ type: 'TEXT_DETECTION' }] }]
+        })
+      });
+
+      const data = await res.json();
+      const annotations = data.responses?.[0]?.textAnnotations;
+      if (!annotations || !annotations.length) return '';
+      return annotations[0].description || '';
+    }
+
+    async function ocrFromBlob(blob) {
+      const file = new File([blob], 'clipboard.png', { type: blob.type });
+      return await ocrFromImage(file);
+    }
+
+    // ============ DRAG & DROP + PASTE FILE EXTRACTION ============
+    async function extractTextFromFile(file) {
+      const name = file.name.toLowerCase();
+      const ext = name.split('.').pop();
+
+      // Image files → OCR
+      if (['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'].includes(ext) || file.type.startsWith('image/')) {
+        return await ocrFromImage(file);
+      }
+
+      // Text/CSV files
+      if (['txt', 'csv'].includes(ext)) {
+        return await file.text();
+      }
+
+      // Excel files
+      if (['xlsx', 'xls'].includes(ext)) {
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        let allText = [];
+        for (const sheetName of wb.SheetNames) {
+          const sheet = wb.Sheets[sheetName];
+          const csv = XLSX.utils.sheet_to_csv(sheet, { blankrows: false });
+          allText.push(csv);
+        }
+        return allText.join('\n');
+      }
+
+      // PDF files
+      if (ext === 'pdf') {
+        const buf = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+        let allText = [];
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const pageText = content.items.map(item => item.str).join(' ');
+          allText.push(pageText);
+        }
+        return allText.join('\n');
+      }
+
+      // Fallback: try reading as text
+      try { return await file.text(); } catch(e) { return ''; }
+    }
+
+    // Process extracted text and populate the target element
+    async function processExtractedText(rawText, targetId, sourceLabel) {
+      if (!rawText || !rawText.trim()) {
+        showToast('No text found in ' + sourceLabel, 'warning');
+        return;
+      }
+
+      const el = document.getElementById(targetId);
+      if (!el) return;
+
+      if (targetId === 'txtListCleanerInput') {
+        el.value = rawText;
+        const brands = getSelectedBrands();
+        const normalized = normalizeOcrText(rawText);
+        const cleaned = applyCleaningLogic(normalized, brands);
+        const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const valid = [...new Set(lines.filter(l => isValidPartNumber(l, brands)))];
+        document.getElementById('listCleanerResult').textContent = valid.length ? valid.join('\n') : 'No valid part numbers found.';
+        showToast(valid.length ? `Extracted ${valid.length} part number(s) from ${sourceLabel}` : `No valid part numbers found in ${sourceLabel}`, valid.length ? 'success' : 'warning');
+      } else {
+        const brands = getSelectedBrands();
+        const normalized = normalizeOcrText(rawText);
+        const cleaned = applyCleaningLogic(normalized, brands);
+        const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const valid = [...new Set(lines.filter(l => isValidPartNumber(l, brands)))];
+        if (valid.length) {
+          el.value = valid.join('\n');
+          showToast(`Loaded ${valid.length} part number(s) from ${sourceLabel}`, 'success');
+        } else {
+          el.value = rawText.trim();
+          showToast('No part numbers matched. Raw text loaded.', 'warning');
+        }
+      }
+    }
+
+    function initDragDropAndPaste() {
+      const dropTargetIds = [
+        'txtPriceParts', 'txtNameParts', 'txtOriginParts', 'txtDetailParts',
+        'txtWeightParts', 'txtAltParts', 'txtListCleanerInput', 'txtMcPartNo'
+      ];
+      const validExts = ['txt', 'csv', 'xlsx', 'xls', 'pdf', 'jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'];
+
+      dropTargetIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        // Wrap element for overlay
+        const parent = el.parentElement;
+        if (!parent.classList.contains('drop-target-wrapper')) {
+          parent.classList.add('drop-target-wrapper');
+          const overlay = document.createElement('div');
+          overlay.className = 'drop-overlay';
+          overlay.innerHTML = '<div class="drop-overlay-text"><i class="ri-upload-2-line"></i> Drop file or image here</div>';
+          parent.appendChild(overlay);
+        }
+
+        let dragCounter = 0;
+
+        el.addEventListener('dragenter', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          dragCounter++;
+          el.classList.add('drag-hover');
+          parent.querySelector('.drop-overlay').classList.add('active');
+        });
+
+        el.addEventListener('dragover', (e) => {
+          e.preventDefault(); e.stopPropagation();
+        });
+
+        el.addEventListener('dragleave', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          dragCounter--;
+          if (dragCounter <= 0) {
+            dragCounter = 0;
+            el.classList.remove('drag-hover');
+            parent.querySelector('.drop-overlay').classList.remove('active');
+          }
+        });
+
+        el.addEventListener('drop', async (e) => {
+          e.preventDefault(); e.stopPropagation();
+          dragCounter = 0;
+          el.classList.remove('drag-hover');
+          parent.querySelector('.drop-overlay').classList.remove('active');
+
+          const files = [...e.dataTransfer.files];
+          if (!files.length) return;
+
+          const file = files[0];
+          const ext = file.name.split('.').pop().toLowerCase();
+
+          // Accept images by MIME type too
+          if (!validExts.includes(ext) && !file.type.startsWith('image/')) {
+            showToast('Unsupported file type. Use: ' + validExts.join(', '), 'warning');
+            return;
+          }
+
+          const isImage = file.type.startsWith('image/');
+          showToast((isImage ? 'Running OCR on ' : 'Extracting text from ') + file.name + '...', 'info');
+
+          try {
+            const rawText = await extractTextFromFile(file);
+            await processExtractedText(rawText, id, file.name);
+          } catch (err) {
+            console.error('File extraction error:', err);
+            showToast('Error reading file: ' + err.message, 'error');
+          }
+        });
+
+        // ===== CLIPBOARD PASTE SUPPORT (Ctrl+V / Cmd+V) =====
+        el.addEventListener('paste', async (e) => {
+          const clipboardData = e.clipboardData;
+          if (!clipboardData) return;
+
+          // Check for image in clipboard
+          const items = [...clipboardData.items];
+          const imageItem = items.find(item => item.type.startsWith('image/'));
+
+          if (imageItem) {
+            e.preventDefault(); // prevent default paste behavior
+            const blob = imageItem.getAsFile();
+            if (!blob) return;
+
+            showToast('Running OCR on pasted image...', 'info');
+            try {
+              const rawText = await ocrFromBlob(blob);
+              await processExtractedText(rawText, id, 'pasted image');
+            } catch (err) {
+              console.error('OCR error:', err);
+              showToast('Error reading image: ' + err.message, 'error');
+            }
+            return;
+          }
+
+          // Check for files in clipboard (e.g. copied file from explorer)
+          const fileItem = items.find(item => item.kind === 'file' && !item.type.startsWith('image/'));
+          if (fileItem) {
+            const file = fileItem.getAsFile();
+            if (file) {
+              e.preventDefault();
+              const ext = file.name.split('.').pop().toLowerCase();
+              if (validExts.includes(ext)) {
+                showToast('Extracting text from pasted file...', 'info');
+                try {
+                  const rawText = await extractTextFromFile(file);
+                  await processExtractedText(rawText, id, file.name);
+                } catch (err) {
+                  console.error('File extraction error:', err);
+                  showToast('Error reading file: ' + err.message, 'error');
+                }
+              }
+            }
+          }
+          // If plain text paste → let default behavior handle it
+        });
+      });
+    }
+
+    // Initialize after DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDragDropAndPaste);
+    } else {
+      initDragDropAndPaste();
     }
   </script>
 </body>
