@@ -476,17 +476,15 @@
       var INACTIVITY_LIMIT = 60 * 60 * 1000; // 1 hour
       var lastActivity = Date.now();
 
-      function silentLogout() {
+       function silentLogout() {
         var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
         var d = localStorage.getItem('pm_device_id') || '';
         if (s.licenseKey) {
-          // Use sendBeacon for reliability on tab close; fall back to fetch
+          // Use fetch with keepalive for reliability on tab close (sendBeacon sends POST, but Apps Script expects GET)
           var url = SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(s.licenseKey) + '&deviceId=' + encodeURIComponent(d);
-          if (navigator.sendBeacon) {
-            navigator.sendBeacon(url);
-          } else {
-            fetch(url).catch(function(){});
-          }
+          try {
+            fetch(url, { method: 'GET', keepalive: true }).catch(function(){});
+          } catch(e) {}
         }
         localStorage.removeItem('pm_session');
       }
