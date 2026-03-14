@@ -467,28 +467,86 @@
     })();
   </script>
   <script>
-    // ===== HEARTBEAT & KICK DETECTION =====
+    // ===== HEARTBEAT, KICK DETECTION, INACTIVITY & TAB CLOSE AUTO-LOGOUT =====
     (function(){
       var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
       var session = JSON.parse(localStorage.getItem('pm_session') || '{}');
       if (!session.licenseKey) return;
       var deviceId = localStorage.getItem('pm_device_id') || '';
+      var INACTIVITY_LIMIT = 60 * 60 * 1000; // 1 hour
+      var lastActivity = Date.now();
 
+      function silentLogout() {
+        var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
+        var d = localStorage.getItem('pm_device_id') || '';
+        if (s.licenseKey) {
+          // Use sendBeacon for reliability on tab close; fall back to fetch
+          var url = SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(s.licenseKey) + '&deviceId=' + encodeURIComponent(d);
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(url);
+          } else {
+            fetch(url).catch(function(){});
+          }
+        }
+        localStorage.removeItem('pm_session');
+      }
+
+      function forceLogoutRedirect(msg) {
+        silentLogout();
+        document.body.innerHTML = '';
+        if (msg) alert(msg);
+        window.location.replace('/login.html');
+      }
+
+      // --- Heartbeat ---
       async function heartbeat() {
         try {
           var res = await fetch(SCRIPT_URL + '?mode=heartbeat&licenseKey=' + encodeURIComponent(session.licenseKey) + '&deviceId=' + encodeURIComponent(deviceId));
           var data = await res.json();
           if (data.kicked) {
-            localStorage.removeItem('pm_session');
-            document.body.innerHTML = '';
-            alert('You have been logged out because another device signed in with this license.');
-            window.location.href = '/login.html';
+            forceLogoutRedirect('You have been logged out because another device signed in with this license.');
           }
         } catch(e) { /* network error — silently ignore */ }
       }
+      heartbeat();
+      var hbInterval = setInterval(heartbeat, 120000);
 
-      heartbeat(); // validate immediately on load
-      setInterval(heartbeat, 120000); // every 2 minutes
+      // --- Inactivity auto-logout (1 hour) ---
+      function resetActivity() { lastActivity = Date.now(); }
+      ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(evt) {
+        document.addEventListener(evt, resetActivity, { passive: true });
+      });
+
+      setInterval(function() {
+        if (Date.now() - lastActivity > INACTIVITY_LIMIT) {
+          forceLogoutRedirect('You have been logged out due to inactivity.');
+        }
+      }, 60000); // check every minute
+
+      // --- Tab visibility: pause heartbeat when hidden, logout after 5 min hidden ---
+      var hiddenSince = null;
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          hiddenSince = Date.now();
+          clearInterval(hbInterval);
+        } else {
+          // Tab re-activated
+          if (hiddenSince && (Date.now() - hiddenSince > 20 * 60 * 1000)) {
+            // Hidden for more than 20 minutes — logout
+            forceLogoutRedirect('Session expired while the tab was inactive.');
+            return;
+          }
+          hiddenSince = null;
+          resetActivity();
+          heartbeat(); // immediate check on return
+          hbInterval = setInterval(heartbeat, 120000);
+        }
+      });
+
+      // --- Tab/browser close: notify backend ---
+      window.addEventListener('beforeunload', function() {
+        silentLogout();
+      });
     })();
   </script>
   <div class="ambient-bg"></div>
@@ -2136,7 +2194,6 @@
 
     function pmLogout() {
       if (confirm('Are you sure you want to logout?')) {
-        // Notify backend to clear active session
         var session = JSON.parse(localStorage.getItem('pm_session') || '{}');
         var deviceId = localStorage.getItem('pm_device_id') || '';
         var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
@@ -2144,7 +2201,7 @@
           fetch(SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(session.licenseKey) + '&deviceId=' + encodeURIComponent(deviceId)).catch(function(){});
         }
         localStorage.removeItem('pm_session');
-        window.location.href = '/login.html';
+        window.location.replace('/login.html');
       }
     }
 
