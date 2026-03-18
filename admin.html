@@ -102,13 +102,16 @@
   if (!s) { document.body.innerHTML=''; window.location.replace('/login.html'); return; }
   try {
     var d = JSON.parse(s);
-    if (!d.licenseKey || !d.name || !d.plan || !d.email) throw 0;
-    if (d.plan.toLowerCase() !== 'admin') {
-      alert('Access denied. Admin privileges required.');
+    console.log('[Admin Gate] Session:', JSON.stringify(d));
+    if (!d.licenseKey) throw 'No license key in session';
+    if (!d.plan) throw 'No plan in session';
+    if (d.plan.toString().trim().toLowerCase() !== 'admin') {
+      alert('Access denied. Admin privileges required. Your plan: ' + d.plan);
       window.location.replace('/webappdemoadmin.html');
       return;
     }
   } catch(e) {
+    console.error('[Admin Gate] Error:', e);
     localStorage.removeItem('pm_session');
     document.body.innerHTML='';
     window.location.replace('/login.html');
