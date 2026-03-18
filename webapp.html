@@ -1,0 +1,2636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PartsMateTH - Auto Parts Intelligence</title>
+  <meta name="description" content="PartsMateTH Web Admin Panel - Auto Parts Intelligence Platform">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              blue: '#3B82F6',
+              teal: '#14B8A6',
+              cyan: '#06B6D4',
+              dark: '#0A0F1C',
+              darker: '#050810',
+              card: '#0F1629',
+              surface: '#131B2E',
+              muted: '#1E293B',
+              border: '#1E293B',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0A0F1C;
+      color: #E2E8F0;
+      overflow-x: hidden;
+      min-height: 100vh;
+      visibility: hidden;
+    }
+    body.authenticated { visibility: visible; }
+    .font-display { font-family: 'Space Grotesk', sans-serif; }
+
+    /* ===== SIDEBAR LAYOUT ===== */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #0D1224;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 50;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .sidebar-logo {
+      padding: 1.25rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 0.75rem 0.75rem;
+      overflow-y: auto;
+    }
+
+    .sidebar-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 0.875rem;
+      border-radius: 0.625rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #94A3B8;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 2px;
+    }
+    .sidebar-nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: #CBD5E1;
+    }
+    .sidebar-nav-item.active {
+      background: rgba(59,130,246,0.12);
+      color: #3B82F6;
+      font-weight: 600;
+    }
+    .sidebar-nav-item i { font-size: 1.125rem; width: 1.25rem; text-align: center; }
+
+    .sidebar-section-label {
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #334155;
+      padding: 1rem 0.875rem 0.375rem;
+    }
+
+    .sidebar-user {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Main content area */
+    .main-content {
+      flex: 1;
+      margin-left: 240px;
+      min-height: 100vh;
+    }
+
+    /* Top bar */
+    .top-bar {
+      height: 3.5rem;
+      background: rgba(10, 15, 28, 0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .quick-search-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.875rem;
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #64748B;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-search-btn:hover { background: rgba(255,255,255,0.08); color: #94A3B8; }
+    .quick-search-btn kbd {
+      background: rgba(255,255,255,0.06);
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.625rem;
+      font-family: inherit;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #3B82F6 0%, #14B8A6 50%, #06B6D4 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .glass-card {
+      background: rgba(15, 22, 41, 0.6);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 0.75rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card:hover {
+      border-color: rgba(59,130,246,0.15);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      position: relative;
+      background: linear-gradient(135deg, #3B82F6, #14B8A6);
+      color: white; font-weight: 600;
+      border-radius: 0.625rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #2563EB, #0D9488);
+      opacity: 0; transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary > * { position: relative; z-index: 1; }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px -4px rgba(59,130,246,0.35);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #94A3B8;
+      border-radius: 0.625rem;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    /* Inputs */
+    .input-field {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #E2E8F0;
+      border-radius: 0.625rem;
+      padding: 0.625rem 0.875rem;
+      width: 100%;
+      outline: none;
+      font-size: 0.875rem;
+      transition: all 0.25s;
+    }
+    .input-field:focus {
+      border-color: rgba(59,130,246,0.5);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.08), 0 0 15px -5px rgba(59,130,246,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+    .input-field::placeholder { color: #475569; }
+    textarea.input-field { resize: vertical; min-height: 120px; }
+
+    /* Search bar (full width in content) */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      transition: all 0.25s;
+    }
+    .search-bar:focus-within {
+      border-color: rgba(59,130,246,0.4);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+      background: rgba(255,255,255,0.05);
+    }
+    .search-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #E2E8F0;
+      font-size: 0.875rem;
+    }
+    .search-bar input::placeholder { color: #475569; }
+    .search-bar i { color: #475569; }
+
+    /* Tables */
+    .results-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    .results-table th {
+      background: rgba(59,130,246,0.06);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: 0.6875rem;
+      color: #14B8A6;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      white-space: nowrap;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .results-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      color: #CBD5E1;
+      transition: background 0.15s;
+    }
+    .results-table tr:hover td { background: rgba(59,130,246,0.03); }
+    .results-table tr.match-closest td { background: rgba(239, 68, 68, 0.06); border-left: 2px solid #EF4444; }
+    .results-table tr.match-fuzzy td { background: rgba(234, 179, 8, 0.06); border-left: 2px solid #EAB308; }
+
+    @media (max-width: 640px) {
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .results-table { font-size: 0.75rem; }
+      .results-table th, .results-table td { padding: 0.5rem; }
+    }
+
+    /* Panel */
+    .tab-panel { display: none; animation: fadeSlideIn 0.35s ease-out; }
+    .tab-panel.active { display: block; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Feature cards */
+    .feature-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem 1rem;
+      border-radius: 0.75rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-align: center;
+    }
+    .feature-card:hover {
+      background: rgba(59,130,246,0.06);
+      border-color: rgba(59,130,246,0.2);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px -10px rgba(59,130,246,0.12);
+    }
+    .feature-card .icon-wrap {
+      width: 2.75rem; height: 2.75rem; border-radius: 0.625rem;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(20,184,166,0.12));
+      font-size: 1.125rem;
+      transition: transform 0.3s;
+    }
+    .feature-card:hover .icon-wrap { transform: scale(1.08); }
+    .feature-card .label { font-size: 0.8125rem; font-weight: 600; color: #CBD5E1; }
+    .feature-card .desc { font-size: 0.6875rem; color: #64748B; line-height: 1.4; }
+
+    /* Drag & Drop overlay */
+    .drop-target-wrapper { position: relative; }
+    .drop-overlay {
+      position: absolute; inset: 0; z-index: 20;
+      background: rgba(20, 184, 166, 0.12);
+      border: 2px dashed rgba(20, 184, 166, 0.6);
+      border-radius: 0.75rem;
+      display: none;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+    .drop-overlay.active { display: flex; }
+    .drop-overlay-text {
+      color: #14B8A6; font-weight: 600; font-size: 0.875rem;
+      background: rgba(5, 8, 16, 0.8); padding: 0.5rem 1.25rem;
+      border-radius: 0.5rem; pointer-events: none;
+    }
+    .input-field.drag-hover {
+      border-color: rgba(20, 184, 166, 0.6) !important;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15), 0 0 20px -5px rgba(20, 184, 166, 0.2) !important;
+    }
+
+    /* Radio & Checkbox */
+    .radio-card {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 0.75rem; border-radius: 0.5rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer; transition: all 0.2s;
+      font-size: 0.8125rem; color: #94A3B8;
+    }
+    .radio-card:hover { background: rgba(255,255,255,0.06); color: #CBD5E1; }
+    .radio-card:has(input:checked) {
+      border-color: rgba(20,184,166,0.4);
+      background: rgba(20,184,166,0.08);
+      color: #14B8A6;
+    }
+    .radio-card input[type="radio"] { accent-color: #14B8A6; }
+
+    .chk-label {
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; font-size: 0.8125rem; color: #94A3B8;
+    }
+    .chk-label input[type="checkbox"] { accent-color: #14B8A6; width: 1rem; height: 1rem; }
+
+    /* Currency toggle */
+    .currency-toggle {
+      display: flex; border-radius: 0.5rem; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+    .currency-toggle button {
+      padding: 0.375rem 1rem; font-size: 0.75rem; font-weight: 600;
+      background: transparent; color: #64748B;
+      border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .currency-toggle button.active {
+      background: linear-gradient(135deg, #3B82F6, #14B8A6);
+      color: #fff;
+    }
+
+    /* Loader */
+    .loader { display: none; }
+    .loader.show, .loader.active {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.8125rem; color: #94A3B8;
+      padding: 0.75rem 0;
+    }
+    .loader .spinner {
+      width: 1.5rem; height: 1.5rem;
+      border: 2.5px solid rgba(255,255,255,0.08);
+      border-top-color: #14B8A6;
+      border-right-color: #3B82F6;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Progress bar */
+    .progress-bar-wrap {
+      width: 100%; height: 3px; background: rgba(255,255,255,0.05);
+      border-radius: 2px; overflow: hidden; display: none;
+    }
+    .progress-bar-wrap.show { display: block; }
+    .progress-bar-wrap .progress-bar-inner {
+      height: 100%; width: 30%;
+      background: linear-gradient(90deg, #3B82F6, #14B8A6, #06B6D4, #3B82F6);
+      background-size: 300% 100%;
+      animation: progressShimmer 1.5s ease-in-out infinite;
+      border-radius: 2px;
+    }
+    @keyframes progressShimmer {
+      0% { background-position: 100% 0; width: 30%; }
+      50% { width: 70%; }
+      100% { background-position: 0 0; width: 30%; }
+    }
+
+    .stop-btn {
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 0.5rem 1rem;
+      border-radius: 0.625rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: none;
+    }
+    .stop-btn:hover { background: rgba(239, 68, 68, 0.25); }
+    .stop-btn.show, .stop-btn.active { display: inline-flex; align-items: center; gap: 0.375rem; }
+
+    /* Detail block */
+    .detail-block { white-space: pre-wrap; font-family: 'Inter', sans-serif; line-height: 1.9; font-size: 0.875rem; }
+    .detail-block .label { color: #14B8A6; font-weight: 600; }
+    .detail-block .value { color: #CBD5E1; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 2rem; right: 1.5rem;
+      padding: 0.875rem 1.25rem; border-radius: 0.75rem;
+      font-size: 0.8125rem; font-weight: 500;
+      z-index: 1000; transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; gap: 0.5rem;
+      max-width: calc(100vw - 3rem);
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16,185,129,0.3); }
+    .toast-error { background: rgba(239, 68, 68, 0.2); color: #F87171; border: 1px solid rgba(239,68,68,0.3); }
+    .toast-warning { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245,158,11,0.3); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+    /* Count badge */
+    .count-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 1.25rem; height: 1.25rem;
+      font-size: 0.625rem; font-weight: 700;
+      background: linear-gradient(135deg, #3B82F6, #14B8A6);
+      color: white; border-radius: 999px; padding: 0 0.375rem;
+    }
+
+    /* Section label */
+    .section-label {
+      font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #475569; margin-bottom: 0.5rem;
+    }
+
+    /* Tab nav (for alternates sub-tabs) */
+    .tab-btn {
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+    }
+    .tab-btn:hover { color: #CBD5E1; background: rgba(255,255,255,0.05); }
+    .tab-btn.active {
+      background: rgba(59,130,246,0.15);
+      color: white;
+    }
+
+    /* Status badges */
+    .badge-verified {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 999px;
+      background: rgba(16,185,129,0.15);
+      color: #34D399;
+    }
+    .badge-pending {
+      display: inline-block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 999px;
+      background: rgba(245,158,11,0.15);
+      color: #FBBF24;
+    }
+
+    /* Mobile sidebar */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 45;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      .mobile-menu-btn { display: flex !important; }
+
+      /* Mobile bottom nav */
+      .mobile-nav {
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+        background: rgba(10, 15, 28, 0.95);
+        backdrop-filter: blur(24px);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding: 0.25rem 0.5rem calc(env(safe-area-inset-bottom, 0.5rem) + 0.25rem);
+        display: flex; gap: 0;
+      }
+      .mobile-nav .mob-tab {
+        flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.125rem;
+        padding: 0.375rem 0;
+        font-size: 0.55rem; font-weight: 500;
+        color: #475569;
+        cursor: pointer; border: none; background: transparent;
+        transition: color 0.2s;
+      }
+      .mobile-nav .mob-tab i { font-size: 1.125rem; }
+      .mobile-nav .mob-tab.active { color: #3B82F6; }
+      .mobile-nav .mob-tab:hover { color: #94A3B8; }
+      body { padding-bottom: 4.5rem; }
+    }
+    @media (min-width: 769px) {
+      .mobile-nav { display: none !important; }
+      .mobile-menu-btn { display: none !important; }
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <script>
+    // ===== SESSION GATE =====
+    (function(){
+      var s = localStorage.getItem('pm_session');
+      if (!s) { document.body.innerHTML = ''; window.location.replace('/login.html'); return; }
+      try {
+        var d = JSON.parse(s);
+        if (!d.licenseKey) throw 0;
+        if (!d.name || !d.plan || !d.email) throw 0;
+      } catch(e) {
+        localStorage.removeItem('pm_session');
+        document.body.innerHTML = '';
+        window.location.replace('/login.html');
+        return;
+      }
+      document.body.classList.add('authenticated');
+    })();
+  </script>
+  <script>
+    // ===== HEARTBEAT, KICK DETECTION, INACTIVITY & TAB CLOSE AUTO-LOGOUT =====
+    (function(){
+      var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+      var session = JSON.parse(localStorage.getItem('pm_session') || '{}');
+      if (!session.licenseKey) return;
+      var deviceId = localStorage.getItem('pm_device_id') || '';
+      var INACTIVITY_LIMIT = 60 * 60 * 1000;
+      var lastActivity = Date.now();
+
+      function silentLogout() {
+        var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
+        var d = localStorage.getItem('pm_device_id') || '';
+        if (s.licenseKey) {
+          var url = SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(s.licenseKey) + '&deviceId=' + encodeURIComponent(d);
+          try { fetch(url, { method: 'GET', keepalive: true }).catch(function(){}); } catch(e) {}
+        }
+        localStorage.removeItem('pm_session');
+      }
+
+      function forceLogoutRedirect(msg) {
+        silentLogout();
+        document.body.innerHTML = '';
+        if (msg) alert(msg);
+        window.location.replace('/login.html');
+      }
+
+      async function heartbeat() {
+        try {
+          var res = await fetch(SCRIPT_URL + '?mode=heartbeat&licenseKey=' + encodeURIComponent(session.licenseKey) + '&deviceId=' + encodeURIComponent(deviceId));
+          var data = await res.json();
+          if (data.kicked) {
+            forceLogoutRedirect('You have been logged out because another device signed in with this license.');
+          }
+        } catch(e) {}
+      }
+      heartbeat();
+      var hbInterval = setInterval(heartbeat, 120000);
+
+      function resetActivity() { lastActivity = Date.now(); }
+      ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(evt) {
+        document.addEventListener(evt, resetActivity, { passive: true });
+      });
+
+      setInterval(function() {
+        if (Date.now() - lastActivity > INACTIVITY_LIMIT) {
+          forceLogoutRedirect('You have been logged out due to inactivity.');
+        }
+      }, 60000);
+
+      var hiddenSince = null;
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          hiddenSince = Date.now();
+          clearInterval(hbInterval);
+        } else {
+          if (hiddenSince && (Date.now() - hiddenSince > 20 * 60 * 1000)) {
+            forceLogoutRedirect('Session expired while the tab was inactive.');
+            return;
+          }
+          hiddenSince = null;
+          resetActivity();
+          heartbeat();
+          hbInterval = setInterval(heartbeat, 120000);
+        }
+      });
+
+      window.addEventListener('beforeunload', function() {
+        silentLogout();
+      });
+    })();
+  </script>
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <div class="app-layout">
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Logo -->
+      <div class="sidebar-logo">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center flex-shrink-0">
+          <span class="text-white font-bold text-sm">P</span>
+        </div>
+        <div>
+          <div class="font-display font-bold text-sm text-white leading-none">PartsMateTH</div>
+          <div class="text-[0.625rem] text-slate-500 mt-0.5">Web Platform</div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav">
+        <button class="sidebar-nav-item active" data-tab="home" onclick="switchTab('home')">
+          <i class="ri-search-line"></i> Search Parts
+        </button>
+        <button class="sidebar-nav-item" data-tab="prices" onclick="switchTab('prices')">
+          <i class="ri-money-dollar-circle-line"></i> Prices
+        </button>
+        <button class="sidebar-nav-item" data-tab="names" onclick="switchTab('names')">
+          <i class="ri-price-tag-3-line"></i> Names
+        </button>
+        <button class="sidebar-nav-item" data-tab="country" onclick="switchTab('country')">
+          <i class="ri-global-line"></i> Countries
+        </button>
+        <button class="sidebar-nav-item" data-tab="weight" onclick="switchTab('weight')">
+          <i class="ri-scales-3-line"></i> Weights
+        </button>
+        <button class="sidebar-nav-item" data-tab="alternates" onclick="switchTab('alternates')">
+          <i class="ri-refresh-line"></i> Alternates
+        </button>
+        <button class="sidebar-nav-item" data-tab="listcleaner" onclick="switchTab('listcleaner')">
+          <i class="ri-file-list-3-line"></i> List Cleaner
+        </button>
+        <button class="sidebar-nav-item" data-tab="modelchecker" onclick="switchTab('modelchecker')">
+          <i class="ri-car-line"></i> Model Checker
+        </button>
+
+        <div class="sidebar-section-label">More</div>
+        <button class="sidebar-nav-item" data-tab="details" onclick="switchTab('details')">
+          <i class="ri-search-eye-line"></i> Part Details
+        </button>
+      </nav>
+
+      <!-- User section at bottom -->
+      <div class="sidebar-user">
+        <div class="relative" id="sidebarUserMenu">
+          <button onclick="document.getElementById('sidebarUserDropdown').classList.toggle('hidden')" class="flex items-center gap-2.5 w-full px-2 py-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center flex-shrink-0">
+              <span id="userInitial" class="text-[0.65rem] font-bold text-white">?</span>
+            </div>
+            <div class="flex-1 min-w-0 text-left">
+              <div id="userNameSidebar" class="text-xs font-medium text-slate-300 truncate"></div>
+              <div id="userPlanSidebar" class="text-[0.6rem] text-blue-400"></div>
+            </div>
+            <i class="ri-more-2-fill text-slate-600 text-sm"></i>
+          </button>
+          <!-- Dropdown (above) -->
+          <div id="sidebarUserDropdown" class="hidden absolute bottom-full left-0 right-0 mb-2 rounded-xl bg-[#0D1224] border border-white/10 shadow-2xl shadow-black/50 z-50 overflow-hidden">
+            <div class="p-3.5 border-b border-white/10 bg-gradient-to-br from-blue-500/10 to-teal-500/10">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center flex-shrink-0">
+                  <span id="userInitialLg" class="text-sm font-bold text-white">?</span>
+                </div>
+                <div class="min-w-0">
+                  <p id="userGreeting" class="text-sm font-semibold text-white truncate">Hello!</p>
+                  <p id="userEmailDisplay" class="text-[0.65rem] text-slate-400 truncate"></p>
+                </div>
+              </div>
+            </div>
+            <div class="p-2.5 space-y-1.5">
+              <div class="flex items-center justify-between px-2 py-1">
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">Plan</span>
+                <span id="userPlanDropdown" class="text-xs font-semibold text-blue-400"></span>
+              </div>
+              <div class="flex items-center justify-between px-2 py-1">
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">License</span>
+                <span id="userKeyDisplay" class="text-xs font-mono text-slate-300 max-w-[120px] truncate"></span>
+              </div>
+              <div class="flex items-center justify-between px-2 py-1">
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">Expires</span>
+                <span id="userExpiryDisplay" class="text-xs font-medium text-slate-300"></span>
+              </div>
+              <div class="flex items-center justify-between px-2 py-1">
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">Status</span>
+                <span id="userStatusDisplay" class="text-[0.6rem] font-semibold px-2 py-0.5 rounded-full"></span>
+              </div>
+            </div>
+            <div class="p-2.5 border-t border-white/10">
+              <button onclick="pmLogout()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-colors text-red-400 text-xs font-medium cursor-pointer">
+                <i class="ri-logout-box-r-line"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="flex items-center gap-3">
+          <button class="mobile-menu-btn p-2 rounded-lg hover:bg-white/5 text-slate-400" style="display:none" onclick="openSidebar()">
+            <i class="ri-menu-line text-lg"></i>
+          </button>
+          <div>
+            <h1 id="pageTitle" class="font-display text-base font-bold text-white">Parts Intelligence</h1>
+            <p id="pageSubtitle" class="text-[0.65rem] text-slate-500">Search across verified global databases</p>
+          </div>
+        </div>
+        <button class="quick-search-btn" onclick="switchTab('home')">
+          <kbd>⌘K</kbd> Quick Search
+        </button>
+      </div>
+
+      <!-- Content Area -->
+      <div class="p-5 sm:p-6 lg:p-8">
+
+        <!-- ===================== HOME TAB ===================== -->
+        <div id="tab-home" class="tab-panel active">
+          <!-- Search Bar -->
+          <div class="mb-8">
+            <div class="flex gap-3">
+              <div class="search-bar flex-1">
+                <i class="ri-search-line text-lg"></i>
+                <input type="text" id="homeSearchInput" placeholder="Search part numbers, names, or brands..." onkeydown="if(event.key==='Enter')homeQuickSearch()">
+              </div>
+              <button onclick="homeQuickSearch()" class="btn-primary px-6 py-2.5 text-sm">
+                <span>Search</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Results Table (hidden initially) -->
+          <div id="homeResultsWrap" class="hidden mb-8">
+            <div class="glass-card p-1 overflow-hidden">
+              <div class="table-wrap overflow-x-auto max-h-[400px] overflow-y-auto">
+                <table class="results-table" id="tblHomeResults">
+                  <thead><tr>
+                    <th>Part No.</th><th>Name</th><th>Price (THB)</th><th>Origin</th><th>Status</th>
+                  </tr></thead>
+                  <tbody id="homeResultsBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 mb-10">
+            <button class="feature-card" onclick="switchTab('prices')">
+              <div class="icon-wrap"><i class="ri-money-dollar-circle-line text-blue-400"></i></div>
+              <div class="label">Prices</div>
+              <div class="desc hidden sm:block">Check part pricing</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('names')">
+              <div class="icon-wrap"><i class="ri-price-tag-3-line text-teal-400"></i></div>
+              <div class="label">Names</div>
+              <div class="desc hidden sm:block">Identify part names</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('country')">
+              <div class="icon-wrap"><i class="ri-global-line text-cyan-400"></i></div>
+              <div class="label">Country</div>
+              <div class="desc hidden sm:block">Find origin country</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('details')">
+              <div class="icon-wrap"><i class="ri-search-eye-line text-violet-400"></i></div>
+              <div class="label">Details</div>
+              <div class="desc hidden sm:block">Full part info</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('weight')">
+              <div class="icon-wrap"><i class="ri-scales-3-line text-amber-400"></i></div>
+              <div class="label">Weight</div>
+              <div class="desc hidden sm:block">Check part weight</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('alternates')">
+              <div class="icon-wrap"><i class="ri-refresh-line text-rose-400"></i></div>
+              <div class="label">Alternates</div>
+              <div class="desc hidden sm:block">Find replacements</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('listcleaner')">
+              <div class="icon-wrap"><i class="ri-file-list-3-line text-emerald-400"></i></div>
+              <div class="label">List Cleaner</div>
+              <div class="desc hidden sm:block">Extract part numbers</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('modelchecker')">
+              <div class="icon-wrap"><i class="ri-car-line text-orange-400"></i></div>
+              <div class="label">Model Checker</div>
+              <div class="desc hidden sm:block">Check compatibility</div>
+            </button>
+          </div>
+
+          <!-- Feedback Section -->
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="glass-card p-5">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                  <i class="ri-lightbulb-line text-emerald-400 text-sm"></i>
+                </div>
+                <h3 class="font-display text-sm font-semibold text-white">Suggestion</h3>
+              </div>
+              <textarea id="txtSuggestion" class="input-field" placeholder="Share your suggestion..." rows="3"></textarea>
+            </div>
+            <div class="glass-card p-5">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                  <i class="ri-error-warning-line text-amber-400 text-sm"></i>
+                </div>
+                <h3 class="font-display text-sm font-semibold text-white">Complaint</h3>
+              </div>
+              <textarea id="txtComplaint" class="input-field" placeholder="Report an issue..." rows="3"></textarea>
+            </div>
+          </div>
+          <div class="flex justify-center mt-4">
+            <button onclick="sendFeedback()" class="btn-primary px-6 py-2.5 text-sm">
+              <span class="flex items-center gap-2"><i class="ri-send-plane-line"></i> Submit Feedback</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===================== PRICES TAB ===================== -->
+        <div id="tab-prices" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
+              <i class="ri-money-dollar-circle-line text-blue-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white">Prices Checker</h2>
+              <p class="text-xs text-slate-500">Check estimated internet, Dubai genuine futtaim & OFP prices</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label">Part Numbers</label>
+                  <textarea id="txtPriceParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-slate-500 font-medium">Currency</span>
+                  <div class="currency-toggle">
+                    <button id="btnAED" class="active" onclick="setCurrency('AED')">AED</button>
+                    <button id="btnUSD" onclick="setCurrency('USD')">USD</button>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="fetchPrices()" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Prices</span>
+                  </button>
+                  <button id="stopPrices" class="stop-btn" onclick="stopPricesFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="sortInput('txtPriceParts')" class="btn-ghost px-3 py-1.5 text-xs flex-1">
+                    <i class="ri-sort-asc"></i> Sort
+                  </button>
+                  <button onclick="cleanInput('txtPriceParts')" class="btn-ghost px-3 py-1.5 text-xs flex-1">
+                    <i class="ri-eraser-line"></i> Clean
+                  </button>
+                </div>
+                <div id="priceLoader" class="loader"><div class="spinner"></div><span>Fetching prices...</span></div>
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div class="glass-card p-1 overflow-hidden">
+                <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                  <table class="results-table" id="tblPrices">
+                    <thead><tr>
+                      <th>Part No.</th><th>Part Name</th><th>Internet</th><th>Dubai Genuine (Futtaim)</th><th>OFP</th><th>Match</th>
+                    </tr></thead>
+                    <tbody id="pricesBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== NAMES TAB ===================== -->
+        <div id="tab-names" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-teal-500/10 flex items-center justify-center">
+              <i class="ri-price-tag-3-line text-teal-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white">Name Checker</h2>
+              <p class="text-xs text-slate-500">Look up part names from different sources</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label">Part Numbers</label>
+                  <textarea id="txtNameParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                </div>
+                <div>
+                  <label class="section-label">Source</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="radio-card"><input type="radio" name="nameSource" value="universal" checked><span>Universal</span></label>
+                    <label class="radio-card"><input type="radio" name="nameSource" value="toyota"><span>Toyota TH</span></label>
+                    <label class="radio-card"><input type="radio" name="nameSource" value="futtaim"><span>Al Futtaim</span></label>
+                    <label class="radio-card"><input type="radio" name="nameSource" value="usa"><span>USA</span></label>
+                  </div>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="fetchNames()" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Names</span>
+                  </button>
+                  <button id="stopNames" class="stop-btn" onclick="stopNamesFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                </div>
+                <div id="nameLoader" class="loader"><div class="spinner"></div><span>Fetching names...</span></div>
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div class="glass-card p-1 overflow-hidden">
+                <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                  <table class="results-table" id="tblNames">
+                    <thead><tr><th>Part Number</th><th>Part Name</th></tr></thead>
+                    <tbody id="namesBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== COUNTRY TAB ===================== -->
+        <div id="tab-country" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+              <i class="ri-global-line text-cyan-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white">Country / Origin</h2>
+              <p class="text-xs text-slate-500">Find where parts are manufactured</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label">Part Numbers</label>
+                  <textarea id="txtOriginParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="fetchOrigins()" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Origins</span>
+                  </button>
+                  <button id="stopOrigins" class="stop-btn" onclick="stopOriginsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                </div>
+                <div id="originLoader" class="loader"><div class="spinner"></div><span>Fetching origins...</span></div>
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div class="glass-card p-1 overflow-hidden">
+                <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                  <table class="results-table" id="tblOrigins">
+                    <thead><tr><th>Part Number</th><th>Part Name</th><th>Origin</th></tr></thead>
+                    <tbody id="originsBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== PART DETAILS TAB ===================== -->
+        <div id="tab-details" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-violet-500/10 flex items-center justify-center">
+              <i class="ri-search-eye-line text-violet-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white">Part Details</h2>
+              <p class="text-xs text-slate-500">Get comprehensive part information</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label">Part Number(s)</label>
+                  <textarea id="txtDetailParts" class="input-field" placeholder="Enter part number(s)..." rows="4"></textarea>
+                </div>
+                <label class="chk-label">
+                  <input type="checkbox" id="chkMultiParts">
+                  <span>Check Multiple Parts</span>
+                </label>
+                <div class="flex gap-2">
+                  <button onclick="fetchDetails()" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Get Details</span>
+                  </button>
+                  <button id="stopDetails" class="stop-btn" onclick="stopDetailsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                </div>
+                <div id="detailLoader" class="loader"><div class="spinner"></div><span>Fetching details...</span></div>
+                <div id="detailProgress" class="hidden space-y-1">
+                  <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                    <div id="detailProgressBar" class="h-full bg-gradient-to-r from-blue-500 to-teal-400 transition-all duration-300 rounded-full" style="width:0%"></div>
+                  </div>
+                  <p id="detailProgressText" class="text-xs text-slate-500">0 / 0</p>
+                </div>
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div class="glass-card p-5 overflow-auto max-h-[600px]">
+                <div id="detailsResult" class="detail-block" style="min-height:200px;">
+                  <div class="flex flex-col items-center justify-center h-48 text-slate-600">
+                    <i class="ri-search-eye-line text-3xl mb-2"></i>
+                    <span class="text-sm">Results will appear here</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== WEIGHT TAB ===================== -->
+        <div id="tab-weight" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
+              <i class="ri-scales-3-line text-amber-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white">Weight Checker</h2>
+              <p class="text-xs text-slate-500">Look up part weights and brands</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label">Part Numbers</label>
+                  <textarea id="txtWeightParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="fetchWeights()" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Weights</span>
+                  </button>
+                  <button id="stopWeights" class="stop-btn" onclick="stopWeightsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                </div>
+                <div id="weightLoader" class="loader"><div class="spinner"></div><span>Fetching weights...</span></div>
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div class="glass-card p-1 overflow-hidden">
+                <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                  <table class="results-table" id="tblWeights">
+                    <thead><tr><th>Part Number</th><th>Part Name</th><th>Weight (kgs)</th><th>Brand</th></tr></thead>
+                    <tbody id="weightsBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== ALTERNATES TAB ===================== -->
+        <div id="tab-alternates" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-rose-500/10 flex items-center justify-center">
+              <i class="ri-refresh-line text-rose-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white">Alternates Check</h2>
+              <p class="text-xs text-slate-500">Find alternate part numbers across brands</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label">Part Numbers</label>
+                  <textarea id="txtAltParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="5"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="fetchAlternates(false)" class="btn-primary px-4 py-2.5 text-sm">
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-flashlight-line"></i> Quick</span>
+                  </button>
+                  <button onclick="fetchAlternates(true)" class="btn-primary px-4 py-2.5 text-sm">
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-search-2-line"></i> Deep</span>
+                  </button>
+                </div>
+                <button id="stopAlts" class="stop-btn w-full justify-center" onclick="stopFetch('alts')"><i class="ri-stop-circle-line"></i> Stop</button>
+                <div id="altLoader" class="loader"><div class="spinner"></div><span>Searching alternates...</span></div>
+                <div id="altFilterWrap" class="hidden space-y-2">
+                  <div>
+                    <label class="section-label">Filter by Brand</label>
+                    <select id="cmbBrandFilter" class="input-field text-sm" onchange="filterAltBrand()">
+                      <option>All Brands</option>
+                    </select>
+                  </div>
+                  <input id="txtSearchAlts" class="input-field text-sm" placeholder="🔍 Search alternates..." oninput="searchAlternates()">
+                </div>
+                <div id="altStats" class="text-xs text-slate-500"></div>
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div id="altPartTabs" class="flex flex-wrap gap-1 mb-3"></div>
+              <div class="glass-card p-1 overflow-hidden">
+                <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                  <table class="results-table" id="tblAlts">
+                    <thead id="altsHead"><tr></tr></thead>
+                    <tbody id="altsBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== LIST CLEANER TAB ===================== -->
+        <div id="tab-listcleaner" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+              <i class="ri-file-list-3-line text-emerald-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white">List Cleaner</h2>
+              <p class="text-xs text-slate-500">Process text and images to extract part information</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label">Enter Part Numbers</label>
+                  <textarea id="txtListCleanerInput" class="input-field" placeholder="Paste part numbers or text here..." rows="6"></textarea>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="alert('Scan feature coming soon')" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-camera-line"></i> Scan</span>
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="cleanList()" class="btn-primary px-4 py-2.5 text-sm">
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-eraser-line"></i> Clean List</span>
+                  </button>
+                  <button onclick="readText()" class="btn-primary px-4 py-2.5 text-sm">
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-file-text-line"></i> Read Text</span>
+                  </button>
+                </div>
+                <div>
+                  <label class="section-label mb-2">Filter by Brand</label>
+                  <div class="flex items-center gap-2 mb-2">
+                    <input type="checkbox" id="chkAllBrands" checked onchange="toggleAllBrands()" class="accent-brand-teal">
+                    <label for="chkAllBrands" class="text-sm text-cyan-400 font-semibold cursor-pointer">All Brands</label>
+                  </div>
+                  <div class="space-y-1 max-h-48 overflow-y-auto" id="brandCheckboxes">
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Toyota"> Toyota</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Nissan"> Nissan</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Honda"> Honda</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Mazda"> Mazda</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Isuzu"> Isuzu</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Suzuki"> Suzuki</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Subaru"> Subaru</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Mitsubishi"> Mitsubishi</label>
+                    <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Hyundai"> Hyundai</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div class="glass-card p-4">
+                <h3 class="section-label mb-3">Result:</h3>
+                <div id="listCleanerResult" class="min-h-[300px] bg-slate-900/50 rounded-lg p-4 text-sm text-slate-300 whitespace-pre-wrap font-mono"></div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 glass-card p-4 text-center">
+            <p class="text-xs text-red-400/80 italic">Note: The Lists Cleaner tool processes text and images to extract part information. Clean List identifies and keeps only part numbers, while Read Text displays the full text as detected. Accuracy may vary depending on image clarity, formatting, hand writing or text quality. Please review the extracted data before using it.</p>
+          </div>
+        </div>
+
+        <!-- ===================== MODEL CHECKER TAB ===================== -->
+        <div id="tab-modelchecker" class="tab-panel">
+          <!-- Home View -->
+          <div id="mcHome">
+            <div class="text-center mb-6">
+              <div class="flex items-center justify-center gap-3 mb-2">
+                <i class="ri-search-line text-3xl text-brand-blue"></i>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">Model Checker</h2>
+                <i class="ri-truck-line text-3xl text-brand-teal"></i>
+              </div>
+            </div>
+            <div class="space-y-4 max-w-3xl mx-auto">
+              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4">
+                <button onclick="showMcView('partno')" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
+                  <span class="flex items-center justify-center gap-2"><i class="ri-key-line"></i> Check by Part Number <i class="ri-settings-line"></i></span>
+                </button>
+                <p class="text-sm text-slate-400">Enter a Toyota part number to quickly verify which models and production ranges it fits.</p>
+              </div>
+              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4">
+                <button onclick="showMcView('vin')" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
+                  <span class="flex items-center justify-center gap-2"><i class="ri-car-line"></i> Check by VIN / Chassis Number <i class="ri-barcode-line"></i></span>
+                </button>
+                <p class="text-sm text-slate-400">Use a VIN or chassis number to retrieve the exact vehicle configuration, including production period and specifications.</p>
+              </div>
+              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4 opacity-60">
+                <button disabled class="btn-ghost px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0 border border-white/10 rounded-xl cursor-not-allowed">
+                  <span class="flex items-center justify-center gap-2"><i class="ri-file-list-line"></i> Check by Model Selection <i class="ri-truck-line"></i> Coming Soon</span>
+                </button>
+                <p class="text-sm text-slate-400">Choose the region, year, make, model, frame, and specifications step-by-step.</p>
+              </div>
+              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4 opacity-40">
+                <button disabled class="btn-ghost px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0 border border-white/10 rounded-xl cursor-not-allowed">
+                  <span class="flex items-center justify-center gap-2"><i class="ri-global-line"></i> Universal Checker for All Brands <i class="ri-tools-line"></i> Coming Soon</span>
+                </button>
+                <p class="text-sm text-slate-400">Cross-check compatibility across multiple car brands using part numbers or vehicle information.</p>
+              </div>
+            </div>
+            <div class="mt-5 glass-card p-4 text-center max-w-3xl mx-auto">
+              <p class="text-xs text-red-400/80 italic">Note: Compatibility and model applicability results are based on recorded Toyota fitment data and available production records. Variations may occur due to regional configurations, trim levels, engine types, or mid-production updates. Always verify using the vehicle's VIN, official Toyota EPC data, or model-specific documentation before ordering or installation to ensure complete accuracy.</p>
+            </div>
+          </div>
+
+          <!-- Part Number View -->
+          <div id="mcPartNo" class="hidden">
+            <div class="flex items-center gap-3 mb-5">
+              <button onclick="showMcView('home')" class="btn-ghost p-2 rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line text-lg"></i></button>
+              <div class="w-9 h-9 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                <i class="ri-key-line text-blue-400 text-lg"></i>
+              </div>
+              <div>
+                <h2 class="font-display text-lg font-bold text-white">Check by Part Number</h2>
+                <p class="text-xs text-slate-500">Find which models a part fits</p>
+              </div>
+            </div>
+            <div class="glass-card p-4 mb-4">
+              <div class="flex gap-2">
+                <input id="txtMcPartNo" class="input-field flex-1" placeholder="Enter part number...">
+                <button onclick="mcSearchPartNo()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Search</span></button>
+                <button id="mcStopPartNo" class="stop-btn" onclick="stopFetch('mcPartNo')"><i class="ri-stop-circle-line"></i> Stop</button>
+              </div>
+              <div id="mcPartNoProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
+              <div id="mcPartNoLoader" class="loader"><div class="spinner"></div><span>Searching models...</span></div>
+            </div>
+            <div id="mcPartNoBack" class="hidden mb-3">
+              <button onclick="mcPartNoGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> Back</button>
+            </div>
+            <div class="glass-card p-1 overflow-hidden">
+              <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                <table class="results-table" id="tblMcXref"><thead><tr></tr></thead><tbody></tbody></table>
+                <table class="results-table hidden" id="tblMcDetails"><thead><tr></tr></thead><tbody></tbody></table>
+                <table class="results-table hidden" id="tblMcDiagramParts"><thead><tr></tr></thead><tbody></tbody></table>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIN View -->
+          <div id="mcVin" class="hidden">
+            <div class="flex items-center gap-3 mb-5">
+              <button onclick="showMcView('home')" class="btn-ghost p-2 rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line text-lg"></i></button>
+              <div class="w-9 h-9 rounded-xl bg-teal-500/10 flex items-center justify-center">
+                <i class="ri-car-line text-teal-400 text-lg"></i>
+              </div>
+              <div>
+                <h2 class="font-display text-lg font-bold text-white">Check by VIN / Chassis Number</h2>
+                <p class="text-xs text-slate-500">Look up vehicle configuration and parts</p>
+              </div>
+            </div>
+            <div class="glass-card p-4 mb-4 space-y-3">
+              <div class="flex gap-2">
+                <input id="txtVinInput" class="input-field flex-1" placeholder="Enter VIN / Chassis No. Here">
+                <button onclick="mcSearchVin()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Search</span></button>
+                <button id="mcStopVin" class="stop-btn" onclick="stopFetch('mcVin')"><i class="ri-stop-circle-line"></i> Stop</button>
+              </div>
+              <div id="vinSearchBarWrap" class="hidden">
+                <div class="flex gap-2">
+                  <input id="txtVinPartSearch" class="input-field flex-1" placeholder="Search parts in this VIN e.g. filter, shock, 17801">
+                  <button onclick="mcSearchVinPart()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i></span></button>
+                </div>
+              </div>
+              <div id="mcVinProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
+              <div id="mcVinLoader" class="loader"><div class="spinner"></div><span>Searching...</span></div>
+            </div>
+            <div id="mcVinBack" class="hidden mb-3">
+              <button onclick="mcVinGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> Back</button>
+            </div>
+            <div class="glass-card p-1 overflow-hidden">
+              <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                <table class="results-table" id="tblVinInfo"><thead><tr></tr></thead><tbody></tbody></table>
+                <table class="results-table hidden" id="tblVinCategories"><thead><tr></tr></thead><tbody></tbody></table>
+                <table class="results-table hidden" id="tblVinDiagrams"><thead><tr></tr></thead><tbody></tbody></table>
+                <table class="results-table hidden" id="tblVinDiagramParts"><thead><tr></tr></thead><tbody></tbody></table>
+                <table class="results-table hidden" id="tblVinSearchResult"><thead><tr></tr></thead><tbody></tbody></table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="border-t border-white/5 mt-8 py-5 text-center text-xs text-slate-600">
+        <p>PartsMateTH &copy; 2025 &middot; Auto Parts Intelligence</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-nav">
+    <button class="mob-tab active" data-tab="home"><i class="ri-home-5-line"></i>Home</button>
+    <button class="mob-tab" data-tab="prices"><i class="ri-money-dollar-circle-line"></i>Prices</button>
+    <button class="mob-tab" data-tab="names"><i class="ri-price-tag-3-line"></i>Names</button>
+    <button class="mob-tab" data-tab="country"><i class="ri-global-line"></i>Country</button>
+    <button class="mob-tab" data-tab="details"><i class="ri-search-eye-line"></i>Details</button>
+    <button class="mob-tab" data-tab="weight"><i class="ri-scales-3-line"></i>Weight</button>
+    <button class="mob-tab" data-tab="alternates"><i class="ri-refresh-line"></i>Alts</button>
+    <button class="mob-tab" data-tab="listcleaner"><i class="ri-file-list-3-line"></i>List</button>
+    <button class="mob-tab" data-tab="modelchecker"><i class="ri-car-line"></i>Model</button>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast" class="toast toast-success">Message</div>
+
+  <script>
+    // ============ GLOBALS ============
+    const API = 'https://api.partsmateth.com';
+    const API_KEY = 'x-partsmate-vps-2025';
+    const API_HEADERS = { 'Content-Type': 'application/json', 'x-api-key': API_KEY };
+    const GET_HEADERS = { 'x-api-key': API_KEY };
+    let currentCurrency = 'AED';
+    let abortControllers = {};
+    let altResultsData = {};
+
+    function proxyUrl(path) { return API + path; }
+
+    // ============ SIDEBAR ============
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebarOverlay').classList.add('active');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('active');
+    }
+
+    // Page titles per tab
+    const pageTitles = {
+      home: ['Parts Intelligence', 'Search across verified global databases'],
+      prices: ['Prices Checker', 'Check estimated pricing across sources'],
+      names: ['Name Checker', 'Look up part names from different sources'],
+      country: ['Country / Origin', 'Find where parts are manufactured'],
+      details: ['Part Details', 'Get comprehensive part information'],
+      weight: ['Weight Checker', 'Look up part weights and brands'],
+      alternates: ['Alternates Check', 'Find alternate part numbers'],
+      listcleaner: ['List Cleaner', 'Process text to extract part numbers'],
+      modelchecker: ['Model Checker', 'Check part compatibility by model'],
+    };
+
+    // ============ TAB SWITCHING ============
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.mobile-nav .mob-tab').forEach(b => b.classList.remove('active'));
+      const panel = document.getElementById('tab-' + tab);
+      if (panel) {
+        panel.classList.add('active');
+        panel.style.animation = 'none';
+        panel.offsetHeight;
+        panel.style.animation = '';
+      }
+      document.querySelectorAll(`.sidebar-nav-item[data-tab="${tab}"]`).forEach(b => b.classList.add('active'));
+      document.querySelectorAll(`.mobile-nav .mob-tab[data-tab="${tab}"]`).forEach(b => b.classList.add('active'));
+
+      // Update top bar title
+      const titles = pageTitles[tab] || ['PartsMateTH', ''];
+      document.getElementById('pageTitle').textContent = titles[0];
+      document.getElementById('pageSubtitle').textContent = titles[1];
+
+      closeSidebar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    document.querySelectorAll('.mobile-nav .mob-tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+    // ============ HOME QUICK SEARCH ============
+    function homeQuickSearch() {
+      const q = document.getElementById('homeSearchInput').value.trim();
+      if (!q) { showToast('Enter a part number to search', 'warning'); return; }
+      // Quick search: use sticker API for basic info
+      const parts = q.toUpperCase().split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+      if (!parts.length) return;
+      const tbody = document.getElementById('homeResultsBody');
+      tbody.innerHTML = '';
+      document.getElementById('homeResultsWrap').classList.remove('hidden');
+
+      (async () => {
+        for (let i = 0; i < parts.length; i += 5) {
+          const batch = parts.slice(i, i + 5);
+          try {
+            const r = await fetch(API + '/getSticker', {
+              method: 'POST',
+              headers: API_HEADERS,
+              body: JSON.stringify({ parts: batch })
+            });
+            const data = await r.json();
+            batch.forEach(part => {
+              const tr = document.createElement('tr');
+              const info = data[part] || {};
+              const name = info.name || 'N/A';
+              const country = info.country || '—';
+              const price = info.price ? ('฿ ' + parseFloat(info.price).toLocaleString()) : '—';
+              const status = info.name ? '<span class="badge-verified">Verified</span>' : '<span class="badge-pending">Pending</span>';
+              tr.innerHTML = `<td class="font-mono text-xs text-blue-400">${part}</td><td>${name}</td><td class="text-yellow-400">${price}</td><td>${country}</td><td>${status}</td>`;
+              tbody.appendChild(tr);
+            });
+          } catch(e) {}
+          if (i + 5 < parts.length) await new Promise(r => setTimeout(r, 1500));
+        }
+        showToast(`Found ${parts.length} result(s)`, 'success');
+      })();
+    }
+
+    // ============ MODEL CHECKER ============
+    let mcPartNoHistory = [];
+    let mcVinHistory = [];
+    let currentVinModelUrl = '';
+
+    function mcSetLoading(section, on, msg) {
+      const loaderId = section === 'partno' ? 'mcPartNoLoader' : 'mcVinLoader';
+      const stopId = section === 'partno' ? 'mcStopPartNo' : 'mcStopVin';
+      const progressId = section === 'partno' ? 'mcPartNoProgress' : 'mcVinProgress';
+      const loader = document.getElementById(loaderId);
+      const stop = document.getElementById(stopId);
+      const progress = document.getElementById(progressId);
+      if (on) {
+        if (msg) loader.querySelector('span').textContent = msg;
+        loader.classList.add('show');
+        stop.classList.add('show');
+        if (progress) progress.classList.add('show');
+      } else {
+        loader.classList.remove('show');
+        stop.classList.remove('show');
+        if (progress) progress.classList.remove('show');
+      }
+    }
+
+    function showMcView(view) {
+      ['mcHome','mcPartNo','mcVin'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const el = document.getElementById(view === 'home' ? 'mcHome' : view === 'partno' ? 'mcPartNo' : 'mcVin');
+      if (el) el.classList.remove('hidden');
+      if (view === 'partno') { mcPartNoHistory = ['xref']; updateMcPartNoView(); }
+      if (view === 'vin') { mcVinHistory = ['info']; currentVinModelUrl = ''; updateMcVinView(); }
+    }
+
+    function updateMcPartNoView() {
+      const current = mcPartNoHistory[mcPartNoHistory.length - 1];
+      ['tblMcXref','tblMcDetails','tblMcDiagramParts'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const map = { xref: 'tblMcXref', details: 'tblMcDetails', diagramParts: 'tblMcDiagramParts' };
+      if (map[current]) document.getElementById(map[current]).classList.remove('hidden');
+      document.getElementById('mcPartNoBack').classList.toggle('hidden', mcPartNoHistory.length <= 1);
+    }
+
+    function mcPartNoGoBack() {
+      if (mcPartNoHistory.length > 1) { mcPartNoHistory.pop(); updateMcPartNoView(); }
+    }
+
+    async function mcSearchPartNo() {
+      const part = document.getElementById('txtMcPartNo').value.trim();
+      if (!part) { showToast('Please enter a part number', 'warning'); return; }
+      mcSetLoading('partno', true, 'Searching models...');
+      abortControllers.mcPartNo = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/model/xref?part=' + encodeURIComponent(part)), { headers: GET_HEADERS, signal: abortControllers.mcPartNo.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblMcXref');
+        tbl.querySelector('thead tr').innerHTML = '<th>Date Range</th><th>Model</th><th>Frames/Options</th><th>Diagram Info</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.results || []).forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${r.dateRange||''}</td><td><a href="#" class="text-blue-400 hover:underline">${r.model||''}</a></td><td>${r.framesOptions||''}</td><td>${r.diagramInfo||''}</td>`;
+          tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadDetails(part, r.resId, r.urlModelName); };
+          tbody.appendChild(tr);
+        });
+        mcPartNoHistory = ['xref']; updateMcPartNoView();
+        if (!data.results?.length) showToast('No results found', 'warning');
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('partno', false); }
+    }
+
+    async function mcLoadDetails(part, resId, urlModelName) {
+      mcSetLoading('partno', true, 'Loading model details...');
+      abortControllers.mcPartNo = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/model/details?part=' + encodeURIComponent(part) + '&resId=' + encodeURIComponent(resId) + '&urlModelName=' + encodeURIComponent(urlModelName)), { headers: GET_HEADERS, signal: abortControllers.mcPartNo.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblMcDetails');
+        tbl.querySelector('thead tr').innerHTML = '<th>Model Dates</th><th>Matching Models</th><th>Model Options</th><th>Details</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.details || []).forEach(d => {
+          const tr = document.createElement('tr');
+          const optText = d.modelOptions || '';
+          const detailedOpt = d.detailedOptions || '';
+          const escapedOpt = detailedOpt.replace(/"/g, '&quot;');
+          tr.innerHTML = `<td>${d.modelDates||''}</td><td>${d.matchingModels||''}</td><td class="cursor-pointer text-blue-300 hover:underline font-semibold" title="${escapedOpt}">${optText}</td><td>${d.diagram?.url ? '<a href="#" class="text-blue-400 hover:underline">Details</a>' : '-'}</td>`;
+          if (d.diagram?.url) {
+            tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadDiagramParts(d.diagram.url); };
+          }
+          const optCell = tr.children[2];
+          optCell.onclick = () => { if (detailedOpt) alert(detailedOpt); };
+          tbody.appendChild(tr);
+        });
+        mcPartNoHistory.push('details'); updateMcPartNoView();
+        if (!data.details?.length) showToast('No details found', 'warning');
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('partno', false); }
+    }
+
+    async function mcLoadDiagramParts(url) {
+      mcSetLoading('partno', true, 'Loading diagram parts...');
+      abortControllers.mcPartNo = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/model/diagramParts?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcPartNo.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblMcDiagramParts');
+        tbl.querySelector('thead tr').innerHTML = '<th>PART NO.</th><th>PART NAME</th><th>QTY</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.parts || []).forEach(group => {
+          const mainTr = document.createElement('tr');
+          mainTr.className = 'bg-white/5 font-semibold';
+          mainTr.innerHTML = `<td>${group.mainPart||''}</td><td>${group.mainPartName||''}</td><td></td>`;
+          tbody.appendChild(mainTr);
+          (group.subParts || []).forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${s.partNo||''}</td><td>${s.name||''}</td><td class="text-center">${s.qty||''}</td>`;
+            tbody.appendChild(tr);
+          });
+        });
+        mcPartNoHistory.push('diagramParts'); updateMcPartNoView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('partno', false); }
+    }
+
+    // ---- VIN ----
+    function updateMcVinView() {
+      const current = mcVinHistory[mcVinHistory.length - 1];
+      ['tblVinInfo','tblVinCategories','tblVinDiagrams','tblVinDiagramParts','tblVinSearchResult'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const map = { info:'tblVinInfo', categories:'tblVinCategories', diagrams:'tblVinDiagrams', diagramParts:'tblVinDiagramParts', searchResult:'tblVinSearchResult' };
+      if (map[current]) document.getElementById(map[current]).classList.remove('hidden');
+      document.getElementById('mcVinBack').classList.toggle('hidden', mcVinHistory.length <= 1);
+      document.getElementById('vinSearchBarWrap').classList.toggle('hidden', !currentVinModelUrl);
+    }
+
+    function mcVinGoBack() {
+      if (mcVinHistory.length > 1) { mcVinHistory.pop(); updateMcVinView(); }
+    }
+
+    async function mcSearchVin() {
+      const vin = document.getElementById('txtVinInput').value.trim();
+      if (!vin || vin.length < 10) { showToast('Please enter a valid VIN (at least 10 characters)', 'warning'); return; }
+      mcSetLoading('vin', true, 'Searching VIN...');
+      currentVinModelUrl = '';
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/search?vin=' + encodeURIComponent(vin)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinInfo');
+        tbl.querySelector('thead tr').innerHTML = '<th>Label</th><th>Code</th><th>Value</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.result?.vehicleInfo || []).forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${item.label||''}</td><td>${item.code||''}</td><td>${item.value||''}</td>`;
+          tbody.appendChild(tr);
+        });
+        const divTr = document.createElement('tr'); divTr.className = 'bg-white/5';
+        divTr.innerHTML = '<td>---</td><td>---</td><td>---</td>';
+        tbody.appendChild(divTr);
+        const rr = data.result?.resultRow;
+        if (rr) {
+          const modelUrl = rr.modelUrl || '';
+          ['PRODUCTION FROM|' + (rr.from||''), 'PRODUCTION TO|' + (rr.to||''), 'FRAME|' + (rr.frame||''), 'MODEL LINK|' + (rr.modelCode||'')].forEach(entry => {
+            const [label, code] = entry.split('|');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${label}</td><td>${code}</td><td><a href="#" class="text-blue-400 font-bold underline">Click here to view more</a></td>`;
+            tr.querySelector('a').onclick = (e) => { e.preventDefault(); currentVinModelUrl = modelUrl; mcLoadVinCategories(modelUrl); };
+            tbody.appendChild(tr);
+          });
+        }
+        mcVinHistory = ['info']; updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcLoadVinCategories(url) {
+      mcSetLoading('vin', true, 'Loading categories...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/categories?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinCategories');
+        tbl.querySelector('thead tr').innerHTML = '<th>Category</th><th>Sub Items</th><th>Action</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.categories || []).forEach(cat => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${cat.title||''}</td><td>${(cat.subItems||[]).join(', ')}</td><td><a href="#" class="text-blue-400 hover:underline">View Diagrams</a></td>`;
+          tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadVinDiagrams(cat.url); };
+          tbody.appendChild(tr);
+        });
+        mcVinHistory.push('categories'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcLoadVinDiagrams(url) {
+      mcSetLoading('vin', true, 'Loading diagrams...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/diagrams?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinDiagrams');
+        tbl.querySelector('thead tr').innerHTML = '<th>Diagram Title</th><th>Action</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.diagrams || []).forEach(d => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${d.title||''}</td><td><a href="#" class="text-blue-400 hover:underline">View Parts</a></td>`;
+          tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadVinDiagramParts(d.url); };
+          tbody.appendChild(tr);
+        });
+        mcVinHistory.push('diagrams'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcLoadVinDiagramParts(url) {
+      mcSetLoading('vin', true, 'Loading parts...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/diagramParts?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinDiagramParts');
+        tbl.querySelector('thead tr').innerHTML = '<th>PART NO.</th><th>PART NAME</th><th>QTY</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.parts || []).forEach(group => {
+          const mainTr = document.createElement('tr');
+          mainTr.className = 'bg-white/5 font-semibold';
+          mainTr.innerHTML = `<td>${group.mainPart||''}</td><td>${group.mainPartName||''}</td><td></td>`;
+          tbody.appendChild(mainTr);
+          (group.subParts || []).forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${s.partNo||''}</td><td>${s.name||''}</td><td class="text-center">${s.qty||''}</td>`;
+            tbody.appendChild(tr);
+          });
+        });
+        mcVinHistory.push('diagramParts'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    async function mcSearchVinPart() {
+      const q = document.getElementById('txtVinPartSearch').value.trim();
+      if (!q) return;
+      if (!currentVinModelUrl) { showToast('Please search a VIN and click a model link first', 'warning'); return; }
+      mcSetLoading('vin', true, 'Searching parts...');
+      abortControllers.mcVin = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/vin/searchPart?modelUrl=' + encodeURIComponent(currentVinModelUrl) + '&q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcVin.signal });
+        const data = await res.json();
+        const tbl = document.getElementById('tblVinSearchResult');
+        tbl.querySelector('thead tr').innerHTML = '<th>Part No</th><th>Part Name</th><th>Action</th><th>Diagram</th>';
+        const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+        (data.results || []).forEach(r => {
+          (r.parts || []).forEach(p => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${p.partNo||''}</td><td>${p.name||''}</td><td><a href="#" class="text-blue-400 hover:underline">View Diagram</a></td><td>${r.diagram||''}</td>`;
+            tr.querySelector('a').onclick = (e) => { e.preventDefault(); mcLoadVinDiagramParts(p.url); };
+            tbody.appendChild(tr);
+          });
+        });
+        mcVinHistory.push('searchResult'); updateMcVinView();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('vin', false); }
+    }
+
+    // Enter key support
+    document.addEventListener('DOMContentLoaded', () => {
+      ['txtMcPartNo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') mcSearchPartNo(); });
+      });
+      ['txtVinInput'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') mcSearchVin(); });
+      });
+      ['txtVinPartSearch'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') mcSearchVinPart(); });
+      });
+    });
+
+    // ============ LIST CLEANER ============
+    const BRAND_EXTRACT_PATTERNS = {
+      Toyota:     /\b(?=[A-Z0-9]{5}\b)(?=(?:.*[A-Z]){0,2})[A-Z0-9]{5}\s*-\s*[A-Z0-9]{4,5}(?:\s*-\s*[A-Z0-9]{1,3})?\b/g,
+      Nissan:     /[A-Z0-9]{4,5}-[A-Z0-9]{4,5}/g,
+      Isuzu:      /\d-[A-Z0-9]{8}-\d/g,
+      Suzuki:     /[A-Z0-9]{5}-[A-Z0-9]{5}(-[A-Z0-9]{3})?/g,
+      Mazda:      /[A-Z0-9]{3,4}-[A-Z0-9]{2}-[A-Z0-9]{3,4}/g,
+      Mitsubishi: /\b(?=[A-Z0-9]{8}\b)(?=.*[A-Z])(?=.*\d)[A-Z0-9]{8}\b/g,
+      Hyundai:    /\b\d{10}\b/g,
+      Honda:      /\d{5}-[A-Z0-9]{3}-[A-Z0-9]{3}/g,
+      Subaru:     /\d{5}-[A-Z0-9]{5}/g
+    };
+
+    const BRAND_VALID_PATTERNS = {
+      Toyota:     /\b(?=[A-Z0-9]{5}\b)(?=(?:.*[A-Z]){0,2})[A-Z0-9]{5}-[A-Z0-9]{4,5}(?:-[A-Z0-9]{1,3})?\b/,
+      Nissan:     /^[A-Z0-9]{4,5}-[A-Z0-9]{4,5}$/,
+      Isuzu:      /^\d-[0-9A-Z]{8}-\d$/,
+      Suzuki:     /^[0-9A-Z]{5}-[0-9A-Z]{5}(-[0-9A-Z]{3})?$/,
+      Mazda:      /^[A-Z0-9]{3,4}-[0-9A-Z]{2}-[A-Z0-9]{3,4}$/,
+      Mitsubishi: /\b(?=[A-Z0-9]{8}\b)(?=.*[A-Z])(?=.*\d)[A-Z0-9]{8}\b/,
+      Hyundai:    /^\d{10}$/,
+      Honda:      /^\d{5}-[A-Z0-9]{3}-[A-Z0-9]{3}$/,
+      Subaru:     /^\d{5}-[A-Z0-9]{5}$/
+    };
+
+    function getSelectedBrands() {
+      const checked = [...document.querySelectorAll('.brand-check:checked')].map(cb => cb.value);
+      return checked.length ? checked : ['Toyota'];
+    }
+
+    function isValidPartNumber(line, brands) {
+      line = line.trim().toUpperCase();
+      if (!brands || !brands.length) brands = ['Toyota'];
+      for (const b of brands) {
+        if (BRAND_VALID_PATTERNS[b] && BRAND_VALID_PATTERNS[b].test(line)) return true;
+      }
+      return false;
+    }
+
+    function isToyotaNumber(partNumber) {
+      partNumber = partNumber.replace(/\s*-\s*/g, '-');
+      const raw = partNumber.replace(/-/g, '');
+      if (![10, 11, 12, 13].includes(raw.length)) return false;
+      const first5 = raw.substring(0, 5);
+      const letterCount = (first5.match(/[A-Z]/gi) || []).length;
+      return letterCount <= 2;
+    }
+
+    function applyCleaningLogic(inputText, selectedBrands) {
+      if (!inputText || !inputText.trim()) return '';
+      let activePatterns = [];
+      if (!selectedBrands || !selectedBrands.length) {
+        activePatterns.push(BRAND_EXTRACT_PATTERNS.Toyota);
+      } else {
+        for (const brand of selectedBrands) {
+          if (BRAND_EXTRACT_PATTERNS[brand]) activePatterns.push(BRAND_EXTRACT_PATTERNS[brand]);
+        }
+        if (!activePatterns.length) activePatterns.push(BRAND_EXTRACT_PATTERNS.Toyota);
+      }
+      const isToyotaMode = !selectedBrands || !selectedBrands.length || selectedBrands.includes('Toyota');
+      const lines = inputText.split(/\r?\n/);
+      const processed = [];
+      for (const line of lines) {
+        if (!line.trim()) { processed.push(''); continue; }
+        let cleanLine = line.replace(/\s*-\s*/g, '-').trim();
+        let upperLine = cleanLine.toUpperCase();
+        let matchFound = false;
+        for (const pattern of activePatterns) {
+          pattern.lastIndex = 0;
+          let m;
+          while ((m = pattern.exec(upperLine)) !== null) {
+            if (!m[0].trim()) continue;
+            let partNumber = m[0].toUpperCase().trim();
+            if (isToyotaMode && isToyotaNumber(partNumber)) {
+              let raw = partNumber.replace(/-/g, '');
+              if (raw.length >= 10) {
+                raw = raw.substring(0, 5) + '-' + raw.substring(5);
+                if (raw.length > 11) {
+                  raw = raw.substring(0, 11) + '-' + raw.substring(11);
+                }
+              }
+              partNumber = raw;
+            }
+            processed.push(partNumber);
+            matchFound = true;
+          }
+          if (matchFound) break;
+        }
+        if (!matchFound) processed.push(cleanLine);
+      }
+      return processed.join('\n');
+    }
+
+    function normalizeOcrText(text) {
+      text = text.replace(/\r/g, '').trim();
+      text = text.replace(/[\u2010\u2011\u2012\u2013\u2014\u2212]/g, '-');
+      text = text.replace(/ {2,}/g, ' ');
+      const partTokenRegex = /\b[A-Z0-9]{4,5}\s*-\s*[A-Z0-9]{4,5}(?:\s*-\s*[A-Z0-9]{1,3})?\b/gi;
+      let lines = text.split('\n');
+      lines = lines.map(line => line.replace(partTokenRegex, match => {
+        let p = match;
+        p = p.replace(/(?<=\d)[ \t]+(?=\d)/g, '');
+        p = p.replace(/(?<=\d)[ \t]+(?=[A-Z])/gi, '');
+        p = p.replace(/(?<=[A-Z])[ \t]+(?=\d)/gi, '');
+        p = p.replace(/\s*-\s*/g, '-');
+        return p;
+      }));
+      text = lines.join('\n');
+      text = text.replace(/(?<=\d)\/(?=\d)/g, '1');
+      text = text.replace(/O(?=\d)/g, '0');
+      text = text.replace(/(?<=\d)O/g, '0');
+      text = text.replace(/\b(?=.*O)[O0]([CLKMY])[O0](\d+)\b/g, '0$1$2');
+      text = text.replace(/-(00|06)(\d{3})\b/g, '-0C$2');
+      text = text.replace(/[\u0400-\u04FF]+/g, '');
+      return text;
+    }
+
+    function cleanList() {
+      const input = document.getElementById('txtListCleanerInput').value;
+      if (!input.trim()) { showToast('Please enter text first', 'warning'); return; }
+      const brands = getSelectedBrands();
+      const normalized = normalizeOcrText(input);
+      const cleaned = applyCleaningLogic(normalized, brands);
+      const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const valid = [...new Set(lines.filter(l => isValidPartNumber(l, brands)))];
+      document.getElementById('listCleanerResult').textContent = valid.length ? valid.join('\n') : 'No valid part numbers found.';
+      showToast(valid.length ? `Extracted ${valid.length} part number(s)` : 'No valid part numbers found', valid.length ? 'success' : 'warning');
+    }
+
+    function readText() {
+      const input = document.getElementById('txtListCleanerInput').value;
+      if (!input.trim()) { showToast('Please enter text first', 'warning'); return; }
+      const normalized = normalizeOcrText(input);
+      document.getElementById('listCleanerResult').textContent = normalized;
+      showToast('Full text displayed', 'success');
+    }
+
+    function toggleAllBrands() {
+      const checked = document.getElementById('chkAllBrands').checked;
+      document.querySelectorAll('.brand-check').forEach(cb => cb.checked = checked);
+    }
+
+    // ============ TOAST ============
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.innerHTML = `<i class="ri-${type === 'success' ? 'check-line' : type === 'error' ? 'close-circle-line' : 'alert-line'}"></i> ${msg}`;
+      t.className = 'toast toast-' + type + ' show';
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    // ============ HELPERS ============
+    function getLines(id) {
+      return document.getElementById(id).value.toUpperCase()
+        .split('\n').map(s => s.trim()).filter(Boolean);
+    }
+    function sortInput(id) {
+      const el = document.getElementById(id);
+      const lines = el.value.split('\n').map(s => s.trim()).filter(Boolean).sort();
+      el.value = lines.join('\n');
+      showToast('Sorted!');
+    }
+    function cleanInput(id) {
+      const el = document.getElementById(id);
+      const lines = el.value.split('\n').map(s => s.trim().replace(/[-\s]/g, '')).filter(Boolean);
+      const unique = [...new Set(lines)];
+      el.value = unique.join('\n');
+      showToast(`Cleaned! ${unique.length} unique parts.`);
+    }
+    function setCurrency(c) {
+      const wasAED = currentCurrency === 'AED';
+      currentCurrency = c;
+      document.getElementById('btnAED').classList.toggle('active', c === 'AED');
+      document.getElementById('btnUSD').classList.toggle('active', c === 'USD');
+      const rows = document.querySelectorAll('#pricesBody tr');
+      rows.forEach(tr => {
+        [2, 3, 4].forEach(ci => {
+          const td = tr.children[ci];
+          if (!td) return;
+          const raw = td.textContent.replace(/[^0-9.\-]/g, '');
+          const val = parseFloat(raw);
+          if (isNaN(val)) return;
+          if (c === 'USD' && wasAED) {
+            const converted = ci === 4 ? mround(val / 3.67) : Math.round(val / 3.67 * 100) / 100;
+            td.textContent = converted + ' $';
+          } else if (c === 'AED' && !wasAED) {
+            const converted = ci === 4 ? mround(val * 3.67) : Math.round(val * 3.67 * 100) / 100;
+            td.textContent = converted + ' AED';
+          }
+        });
+      });
+    }
+    function mround(val) {
+      if (val < 2) return Math.round(val / 0.05) * 0.05;
+      if (val < 10) return Math.round(val / 0.1) * 0.1;
+      if (val < 50) return Math.round(val);
+      if (val < 100) return Math.round(val / 2) * 2;
+      return Math.round(val / 5) * 5;
+    }
+    function setLoading(id, on) { document.getElementById(id).classList.toggle('active', on); }
+    function setStop(id, on) { document.getElementById(id).classList.toggle('active', on); }
+    function newAbort(key) {
+      if (abortControllers[key]) abortControllers[key].abort();
+      abortControllers[key] = new AbortController();
+      return abortControllers[key].signal;
+    }
+    function stopFetch(key) { if (abortControllers[key]) abortControllers[key].abort(); }
+
+    // ============ FEEDBACK ============
+    function sendFeedback() {
+      const sug = document.getElementById('txtSuggestion').value.trim();
+      const comp = document.getElementById('txtComplaint').value.trim();
+      if (!sug && !comp) { showToast('Please enter a suggestion or complaint.', 'warning'); return; }
+      if (sug) document.getElementById('txtSuggestion').value = '';
+      if (comp) document.getElementById('txtComplaint').value = '';
+      showToast('Feedback submitted. Thank you!');
+    }
+
+    // ============ PRICES ============
+    function stopPricesFetch() { stopFetch('prices'); }
+    async function fetchPrices() {
+      const parts = getLines('txtPriceParts');
+      if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
+      const signal = newAbort('prices');
+      const tbody = document.getElementById('pricesBody');
+      tbody.innerHTML = '';
+      setLoading('priceLoader', true);
+      setStop('stopPrices', true);
+      const sym = currentCurrency === 'AED' ? ' AED' : ' $';
+      const factor = currentCurrency === 'AED' ? 1 : 1 / 3.67;
+      try {
+        for (let i = 0; i < parts.length; i += 5) {
+          signal.throwIfAborted?.();
+          const batch = parts.slice(i, i + 5);
+          let data = {};
+          try {
+            const r = await fetch(API + '/getPrice', {
+              method: 'POST', signal,
+              headers: API_HEADERS,
+              body: JSON.stringify({ parts: batch })
+            });
+            data = await r.json();
+          } catch (e) { if (e.name === 'AbortError') break; }
+          batch.forEach(part => {
+            const tr = document.createElement('tr');
+            if (!data[part]) {
+              tr.innerHTML = `<td>${part}</td><td class="text-slate-500">N/A</td><td class="text-slate-500">N/A</td><td class="text-slate-500">N/A</td><td class="text-slate-500">N/A</td><td><span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Not Found</span></td>`;
+            } else {
+              const item = data[part];
+              const name = item.name || 'N/A';
+              const price = parseFloat(item.price) || 0;
+              const source = item.source || 'not_found';
+              const matchedFrom = item.matchedFrom || '';
+              const internet = price * 1.4;
+              const oem = price * 0.6;
+              let matchType = '<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">Exact</span>';
+              if (source === 'closest') { matchType = `<span class="text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-400">Closest → ${matchedFrom}</span>`; tr.className = 'match-closest'; }
+              else if (source === 'fuzzy') { matchType = `<span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400">Fuzzy → ${matchedFrom}</span>`; tr.className = 'match-fuzzy'; }
+              tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${name}</td>` +
+                `<td>${price > 0 ? (Math.round(internet * factor * 100) / 100) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
+                `<td>${price > 0 ? (Math.round(price * factor * 100) / 100) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
+                `<td>${price > 0 ? mround(oem * factor).toFixed(1) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
+                `<td>${matchType}</td>`;
+            }
+            tbody.appendChild(tr);
+          });
+          if (i + 5 < parts.length) await new Promise(r => setTimeout(r, 1500));
+        }
+        if (parts.length > 0) showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) {}
+      setLoading('priceLoader', false);
+      setStop('stopPrices', false);
+    }
+
+    // ============ NAMES ============
+    function stopNamesFetch() { stopFetch('names'); }
+    async function fetchNames() {
+      const parts = getLines('txtNameParts');
+      if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
+      const source = document.querySelector('input[name="nameSource"]:checked').value;
+      const signal = newAbort('names');
+      const tbody = document.getElementById('namesBody');
+      tbody.innerHTML = '';
+      const thead = document.querySelector('#tblNames thead tr');
+      thead.innerHTML = source === 'usa' ? '<th>Part Number</th><th>Part Name</th><th>Brand</th>' : '<th>Part Number</th><th>Part Name</th>';
+      setLoading('nameLoader', true);
+      setStop('stopNames', true);
+      try {
+        for (let i = 0; i < parts.length; i += 5) {
+          const batch = parts.slice(i, i + 5);
+          if (source === 'usa') {
+            for (const part of batch) {
+              try {
+                const cleaned = part.replace(/[-\s]/g, '');
+                const r = await fetch(API + '/getWeights?partno=' + cleaned, { signal, headers: GET_HEADERS });
+                const d = await r.json();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td><td>${d.brand || 'N/A'}</td>`;
+                tbody.appendChild(tr);
+              } catch (e) { if (e.name === 'AbortError') throw e; }
+            }
+          } else if (source === 'toyota') {
+            for (const part of batch) {
+              try {
+                const cleaned = part.replace(/[-\s]/g, '');
+                const r = await fetch(API + '/getToyodiyName?partno=' + cleaned, { signal, headers: GET_HEADERS });
+                const d = await r.json();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td>`;
+                tbody.appendChild(tr);
+              } catch (e) { if (e.name === 'AbortError') throw e; }
+            }
+          } else {
+            const endpoint = source === 'futtaim' ? '/getPrice' : '/getSticker';
+            try {
+              const r = await fetch(API + endpoint, {
+                method: 'POST', signal,
+                headers: API_HEADERS,
+                body: JSON.stringify({ parts: batch })
+              });
+              const data = await r.json();
+              batch.forEach(part => {
+                const tr = document.createElement('tr');
+                const name = data[part]?.name || 'N/A';
+                tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${name}</td>`;
+                tbody.appendChild(tr);
+              });
+            } catch (e) { if (e.name === 'AbortError') throw e; }
+          }
+          if (i + 5 < parts.length) await new Promise(r => setTimeout(r, 2000));
+        }
+        if (parts.length > 0) showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) {}
+      setLoading('nameLoader', false);
+      setStop('stopNames', false);
+    }
+
+    // ============ ORIGINS ============
+    function stopOriginsFetch() { stopFetch('origins'); }
+    async function fetchOrigins() {
+      const parts = getLines('txtOriginParts');
+      if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
+      const signal = newAbort('origins');
+      const tbody = document.getElementById('originsBody');
+      tbody.innerHTML = '';
+      setLoading('originLoader', true);
+      setStop('stopOrigins', true);
+      try {
+        for (let i = 0; i < parts.length; i += 5) {
+          const batch = parts.slice(i, i + 5);
+          try {
+            const r = await fetch(API + '/getSticker', {
+              method: 'POST', signal,
+              headers: API_HEADERS,
+              body: JSON.stringify({ parts: batch })
+            });
+            const data = await r.json();
+            batch.forEach(part => {
+              const tr = document.createElement('tr');
+              const name = data[part]?.name || 'N/A';
+              const country = data[part]?.country || 'JAPAN';
+              tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${name}</td><td>${country}</td>`;
+              tbody.appendChild(tr);
+            });
+          } catch (e) { if (e.name === 'AbortError') throw e; }
+          if (i + 5 < parts.length) await new Promise(r => setTimeout(r, 2000));
+        }
+        if (parts.length > 0) showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) {}
+      setLoading('originLoader', false);
+      setStop('stopOrigins', false);
+    }
+
+    // ============ PART DETAILS ============
+    function stopDetailsFetch() { stopFetch('details'); }
+    async function fetchDetails() {
+      const multi = document.getElementById('chkMultiParts').checked;
+      const parts = getLines('txtDetailParts');
+      if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
+      const signal = newAbort('details');
+      const result = document.getElementById('detailsResult');
+      result.innerHTML = '';
+      setLoading('detailLoader', true);
+      setStop('stopDetails', true);
+      const progressWrap = document.getElementById('detailProgress');
+      const progressBar = document.getElementById('detailProgressBar');
+      const progressText = document.getElementById('detailProgressText');
+      if (multi && parts.length > 1) {
+        progressWrap.classList.remove('hidden');
+        progressBar.style.width = '0%';
+        progressText.textContent = '0 / ' + parts.length;
+      }
+      try {
+        const partsToCheck = multi ? parts : [parts[0]];
+        for (let idx = 0; idx < partsToCheck.length; idx++) {
+          const cleaned = partsToCheck[idx].replace(/[-\s]/g, '');
+          if (cleaned.length < 5) {
+            result.innerHTML += `<div class="mb-4 p-3 rounded-lg bg-red-500/5 border border-red-500/10"><span class="font-mono text-xs">${cleaned}</span> <span class="text-red-400 text-sm">— Part number must be at least 5 characters.</span></div>`;
+            continue;
+          }
+          try {
+            const r = await fetch(API + '/getDescription?partno=' + cleaned, { signal, headers: GET_HEADERS });
+            const d = await r.json();
+            const block = document.createElement('div');
+            block.className = 'mb-5 p-4 rounded-lg bg-white/[0.02] border border-white/5';
+            block.innerHTML = `
+              <div class="flex items-center gap-2 mb-3">
+                ${multi ? `<span class="count-badge">${idx + 1}</span>` : ''}
+                <span class="font-mono text-sm font-bold text-white">${cleaned.toUpperCase()}</span>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 text-sm">
+                <div><span class="label">Name: </span><span class="value">${d.name || 'N/A'}</span></div>
+                <div><span class="label">Origin: </span><span class="value">${d.country || 'N/A'}</span></div>
+                <div><span class="label">Models: </span><span class="value">${d.model || 'N/A'}</span></div>
+                <div><span class="label">Category: </span><span class="value">${d.category || 'N/A'}</span></div>
+                <div><span class="label">Group: </span><span class="value">${d.group || 'N/A'}</span></div>
+                <div><span class="label">Reg Date: </span><span class="value">${d.regDate || 'N/A'}</span></div>
+              </div>
+              ${d.description ? `<div class="mt-3 pt-3 border-t border-white/5"><span class="label">Details:</span><br><span class="value text-xs leading-relaxed">${d.description}</span></div>` : ''}
+            `;
+            result.appendChild(block);
+          } catch (e) { if (e.name === 'AbortError') throw e; }
+          if (multi) {
+            progressBar.style.width = ((idx + 1) / partsToCheck.length * 100) + '%';
+            progressText.textContent = (idx + 1) + ' / ' + partsToCheck.length;
+          }
+          if (idx + 1 < partsToCheck.length) await new Promise(r => setTimeout(r, 1500));
+        }
+        showToast(`Done! ${partsToCheck.length} part(s) checked.`);
+      } catch (e) {}
+      setLoading('detailLoader', false);
+      setStop('stopDetails', false);
+      progressWrap.classList.add('hidden');
+    }
+
+    // ============ WEIGHTS ============
+    function stopWeightsFetch() { stopFetch('weights'); }
+    async function fetchWeights() {
+      const parts = getLines('txtWeightParts');
+      if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
+      const signal = newAbort('weights');
+      const tbody = document.getElementById('weightsBody');
+      tbody.innerHTML = '';
+      setLoading('weightLoader', true);
+      setStop('stopWeights', true);
+      try {
+        for (const part of parts) {
+          try {
+            const cleaned = part.replace(/[-\s]/g, '');
+            const r = await fetch(API + '/getWeights?partno=' + cleaned, { signal, headers: GET_HEADERS });
+            const d = await r.json();
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td><td>${d.weight || '❌'}</td><td>${d.brand || 'N/A'}</td>`;
+            tbody.appendChild(tr);
+          } catch (e) { if (e.name === 'AbortError') throw e; }
+          await new Promise(r => setTimeout(r, 1000));
+        }
+        showToast(`Done! ${parts.length} parts checked.`);
+      } catch (e) {}
+      setLoading('weightLoader', false);
+      setStop('stopWeights', false);
+    }
+
+    // ============ ALTERNATES ============
+    let currentAltPart = null;
+    async function fetchAlternates(deep) {
+      const parts = getLines('txtAltParts');
+      if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
+      const signal = newAbort('alts');
+      altResultsData = {};
+      document.getElementById('altsBody').innerHTML = '';
+      document.getElementById('altsHead').querySelector('tr').innerHTML = '';
+      document.getElementById('altPartTabs').innerHTML = '';
+      document.getElementById('altFilterWrap').classList.add('hidden');
+      document.getElementById('altStats').textContent = '';
+      setLoading('altLoader', true);
+      setStop('stopAlts', true);
+      try {
+        for (let i = 0; i < parts.length; i++) {
+          signal.throwIfAborted?.();
+          const partRaw = parts[i];
+          const cleaned = partRaw.replace(/[-\s]/g, '');
+          const enc = encodeURIComponent(cleaned);
+          const url = `${API}/getAlternates?partno=${enc}&deep=${deep}`;
+          try {
+            const r = await fetch(url, { signal, headers: GET_HEADERS });
+            const json = await r.json();
+            let alternates = json.alternates;
+            if (!alternates || typeof alternates !== 'object') { showToast(`No alternates found for ${partRaw}.`, 'warning'); continue; }
+            const filtered = {};
+            for (const [brand, vals] of Object.entries(alternates)) {
+              if (Array.isArray(vals)) {
+                const clean = vals.filter(v => v !== 'NO_RESULT_FOUND');
+                if (clean.length > 0) filtered[brand] = clean.sort();
+              }
+            }
+            if (Object.keys(filtered).length === 0) { showToast(`No alternates found for ${partRaw}.`, 'warning'); continue; }
+            altResultsData[partRaw] = filtered;
+          } catch (e) { if (e.name === 'AbortError') throw e; }
+          if (i + 1 < parts.length) await new Promise(r => setTimeout(r, deep ? 7000 : 5000));
+        }
+        const partKeys = Object.keys(altResultsData);
+        if (partKeys.length > 0) {
+          const tabsEl = document.getElementById('altPartTabs');
+          partKeys.forEach((pk, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'tab-btn px-3 py-1.5 text-xs rounded-lg transition-all' + (idx === 0 ? ' active' : '');
+            btn.textContent = pk;
+            btn.onclick = () => showAltPart(pk);
+            tabsEl.appendChild(btn);
+          });
+          showAltPart(partKeys[0]);
+          showToast(`Done! Found alternates for ${partKeys.length} part(s).`);
+        }
+      } catch (e) {}
+      setLoading('altLoader', false);
+      setStop('stopAlts', false);
+    }
+
+    function showAltPart(partKey) {
+      currentAltPart = partKey;
+      document.querySelectorAll('#altPartTabs button').forEach(b => b.classList.toggle('active', b.textContent === partKey));
+      const data = altResultsData[partKey];
+      if (!data) return;
+      const brands = Object.keys(data).sort((a, b) => data[b].length - data[a].length);
+      const maxRows = Math.max(...brands.map(b => data[b].length));
+      const headTr = document.getElementById('altsHead').querySelector('tr');
+      headTr.innerHTML = brands.map(b => `<th>${b}</th>`).join('');
+      const tbody = document.getElementById('altsBody');
+      tbody.innerHTML = '';
+      for (let r = 0; r < maxRows; r++) {
+        const tr = document.createElement('tr');
+        brands.forEach(b => {
+          const td = document.createElement('td');
+          td.textContent = data[b][r] || '';
+          td.className = 'font-mono text-xs';
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      }
+      const filterWrap = document.getElementById('altFilterWrap');
+      filterWrap.classList.remove('hidden');
+      const cmb = document.getElementById('cmbBrandFilter');
+      cmb.innerHTML = '<option>All Brands</option>' + brands.map(b => `<option>${b}</option>`).join('');
+      const totalResults = brands.reduce((sum, b) => sum + data[b].length, 0);
+      document.getElementById('altStats').innerHTML = `<span class="count-badge mr-1">${brands.length}</span> brands &middot; <span class="count-badge mr-1">${totalResults}</span> results`;
+      document.getElementById('txtSearchAlts').value = '';
+    }
+
+    function filterAltBrand() {
+      const selected = document.getElementById('cmbBrandFilter').value;
+      const data = altResultsData[currentAltPart];
+      if (!data) return;
+      const brands = Object.keys(data).sort((a, b) => data[b].length - data[a].length);
+      const headCells = document.querySelectorAll('#altsHead th');
+      const bodyRows = document.querySelectorAll('#altsBody tr');
+      headCells.forEach((th, ci) => { th.style.display = (selected === 'All Brands' || brands[ci] === selected) ? '' : 'none'; });
+      bodyRows.forEach(tr => {
+        tr.querySelectorAll('td').forEach((td, ci) => { td.style.display = (selected === 'All Brands' || brands[ci] === selected) ? '' : 'none'; });
+      });
+    }
+
+    function searchAlternates() {
+      const keyword = document.getElementById('txtSearchAlts').value.trim().toUpperCase();
+      const rows = document.querySelectorAll('#altsBody tr');
+      const headCells = document.querySelectorAll('#altsHead th');
+      if (!keyword) {
+        rows.forEach(tr => { tr.style.display = ''; tr.querySelectorAll('td').forEach(td => td.style.background = ''); });
+        headCells.forEach(th => th.style.display = '');
+        return;
+      }
+      const colMatch = new Set();
+      rows.forEach(tr => {
+        let rowMatch = false;
+        tr.querySelectorAll('td').forEach((td, ci) => {
+          const val = (td.textContent || '').toUpperCase();
+          if (val.includes(keyword)) { td.style.background = 'rgba(59,130,246,0.1)'; rowMatch = true; colMatch.add(ci); }
+          else { td.style.background = ''; }
+        });
+        tr.style.display = rowMatch ? '' : 'none';
+      });
+      headCells.forEach((th, ci) => { th.style.display = colMatch.has(ci) ? '' : 'none'; });
+      rows.forEach(tr => {
+        if (tr.style.display === 'none') return;
+        tr.querySelectorAll('td').forEach((td, ci) => { td.style.display = colMatch.has(ci) ? '' : 'none'; });
+      });
+    }
+
+    // AbortSignal.throwIfAborted polyfill
+    if (!AbortSignal.prototype.throwIfAborted) {
+      AbortSignal.prototype.throwIfAborted = function () {
+        if (this.aborted) throw new DOMException('The operation was aborted.', 'AbortError');
+      };
+    }
+
+    // Session user info
+    (function(){
+      var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
+      var initial = document.getElementById('userInitial');
+      var initialLg = document.getElementById('userInitialLg');
+      var greeting = document.getElementById('userGreeting');
+      var emailDisp = document.getElementById('userEmailDisplay');
+      var planDrop = document.getElementById('userPlanDropdown');
+      var keyDisp = document.getElementById('userKeyDisplay');
+      var expiryDisp = document.getElementById('userExpiryDisplay');
+      var statusDisp = document.getElementById('userStatusDisplay');
+      var nameSidebar = document.getElementById('userNameSidebar');
+      var planSidebar = document.getElementById('userPlanSidebar');
+
+      var firstName = (s.name || 'User').split(' ')[0];
+      var initials = (s.name || '?').split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
+
+      if (initial) initial.textContent = initials;
+      if (initialLg) initialLg.textContent = initials;
+      if (nameSidebar) nameSidebar.textContent = firstName;
+      if (planSidebar && s.plan) planSidebar.textContent = s.plan;
+      if (greeting) greeting.textContent = 'Hello, ' + firstName + '!';
+      if (emailDisp) emailDisp.textContent = s.email || '';
+      if (planDrop) planDrop.textContent = s.plan || '';
+      if (keyDisp) keyDisp.textContent = s.licenseKey ? '•••' + s.licenseKey.slice(-6) : '';
+      if (expiryDisp) {
+        if (s.expiry) {
+          var exp = new Date(s.expiry);
+          expiryDisp.textContent = exp.toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+          var daysLeft = Math.ceil((exp - new Date()) / 86400000);
+          if (daysLeft <= 7 && daysLeft > 0) expiryDisp.style.color = '#FBBF24';
+          else if (daysLeft <= 0) expiryDisp.style.color = '#F87171';
+        } else {
+          expiryDisp.textContent = 'N/A';
+        }
+      }
+      if (statusDisp) {
+        var isActive = s.expiry ? new Date(s.expiry) > new Date() : true;
+        statusDisp.textContent = isActive ? 'Active' : 'Expired';
+        statusDisp.style.background = isActive ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)';
+        statusDisp.style.color = isActive ? '#34D399' : '#F87171';
+      }
+    })();
+
+    // Close dropdown on outside click
+    document.addEventListener('click', function(e) {
+      var wrapper = document.getElementById('sidebarUserMenu');
+      var dropdown = document.getElementById('sidebarUserDropdown');
+      if (wrapper && dropdown && !wrapper.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // ============ LOGOUT ============
+    function pmLogout() {
+      if (!confirm('Are you sure you want to logout?')) return;
+      var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+      var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
+      var d = localStorage.getItem('pm_device_id') || '';
+      if (s.licenseKey) {
+        var url = SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(s.licenseKey) + '&deviceId=' + encodeURIComponent(d);
+        try { fetch(url, { method: 'GET', keepalive: true }).catch(function(){}); } catch(e) {}
+      }
+      localStorage.removeItem('pm_session');
+      window.location.replace('/login.html');
+    }
+
+    // ============ IMAGE OCR via Google Vision API ============
+    const VISION_API_KEY = 'AIzaSyD9hv5dTxWfJhQa8eJ10jSJsyOyeDCxx4g';
+
+    async function ocrFromImage(imageFile) {
+      const arrayBuf = await imageFile.arrayBuffer();
+      const base64 = btoa(new Uint8Array(arrayBuf).reduce((s, b) => s + String.fromCharCode(b), ''));
+      const res = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requests: [{ image: { content: base64 }, features: [{ type: 'TEXT_DETECTION' }] }]
+        })
+      });
+      const data = await res.json();
+      const annotations = data.responses?.[0]?.textAnnotations;
+      if (!annotations || !annotations.length) return '';
+      return annotations[0].description || '';
+    }
+
+    async function ocrFromBlob(blob) {
+      const file = new File([blob], 'clipboard.png', { type: blob.type });
+      return await ocrFromImage(file);
+    }
+
+    // ============ DRAG & DROP + PASTE FILE EXTRACTION ============
+    async function extractTextFromFile(file) {
+      const name = file.name.toLowerCase();
+      const ext = name.split('.').pop();
+      if (['jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'].includes(ext) || file.type.startsWith('image/')) {
+        return await ocrFromImage(file);
+      }
+      if (['txt', 'csv'].includes(ext)) {
+        return await file.text();
+      }
+      if (['xlsx', 'xls'].includes(ext)) {
+        const buf = await file.arrayBuffer();
+        const wb = XLSX.read(buf, { type: 'array' });
+        let allText = [];
+        for (const sheetName of wb.SheetNames) {
+          const sheet = wb.Sheets[sheetName];
+          const csv = XLSX.utils.sheet_to_csv(sheet, { blankrows: false });
+          allText.push(csv);
+        }
+        return allText.join('\n');
+      }
+      if (ext === 'pdf') {
+        const buf = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+        let allText = [];
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const pageText = content.items.map(item => item.str).join(' ');
+          allText.push(pageText);
+        }
+        return allText.join('\n');
+      }
+      try { return await file.text(); } catch(e) { return ''; }
+    }
+
+    async function processExtractedText(rawText, targetId, sourceLabel) {
+      if (!rawText || !rawText.trim()) {
+        showToast('No text found in ' + sourceLabel, 'warning');
+        return;
+      }
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      if (targetId === 'txtListCleanerInput') {
+        el.value = rawText;
+        const brands = getSelectedBrands();
+        const normalized = normalizeOcrText(rawText);
+        const cleaned = applyCleaningLogic(normalized, brands);
+        const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const valid = [...new Set(lines.filter(l => isValidPartNumber(l, brands)))];
+        document.getElementById('listCleanerResult').textContent = valid.length ? valid.join('\n') : 'No valid part numbers found.';
+        showToast(valid.length ? `Extracted ${valid.length} part number(s) from ${sourceLabel}` : `No valid part numbers found in ${sourceLabel}`, valid.length ? 'success' : 'warning');
+      } else {
+        const brands = getSelectedBrands();
+        const normalized = normalizeOcrText(rawText);
+        const cleaned = applyCleaningLogic(normalized, brands);
+        const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        const valid = [...new Set(lines.filter(l => isValidPartNumber(l, brands)))];
+        if (valid.length) {
+          el.value = valid.join('\n');
+          showToast(`Loaded ${valid.length} part number(s) from ${sourceLabel}`, 'success');
+        } else {
+          el.value = rawText.trim();
+          showToast('No part numbers matched. Raw text loaded.', 'warning');
+        }
+      }
+    }
+
+    function initDragDropAndPaste() {
+      const dropTargetIds = [
+        'txtPriceParts', 'txtNameParts', 'txtOriginParts', 'txtDetailParts',
+        'txtWeightParts', 'txtAltParts', 'txtListCleanerInput', 'txtMcPartNo'
+      ];
+      const validExts = ['txt', 'csv', 'xlsx', 'xls', 'pdf', 'jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif'];
+
+      dropTargetIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const parent = el.parentElement;
+        if (!parent.classList.contains('drop-target-wrapper')) {
+          parent.classList.add('drop-target-wrapper');
+          const overlay = document.createElement('div');
+          overlay.className = 'drop-overlay';
+          overlay.innerHTML = '<div class="drop-overlay-text"><i class="ri-upload-2-line"></i> Drop file or image here</div>';
+          parent.appendChild(overlay);
+        }
+        let dragCounter = 0;
+        el.addEventListener('dragenter', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          dragCounter++;
+          el.classList.add('drag-hover');
+          parent.querySelector('.drop-overlay').classList.add('active');
+        });
+        el.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); });
+        el.addEventListener('dragleave', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          dragCounter--;
+          if (dragCounter <= 0) {
+            dragCounter = 0;
+            el.classList.remove('drag-hover');
+            parent.querySelector('.drop-overlay').classList.remove('active');
+          }
+        });
+        el.addEventListener('drop', async (e) => {
+          e.preventDefault(); e.stopPropagation();
+          dragCounter = 0;
+          el.classList.remove('drag-hover');
+          parent.querySelector('.drop-overlay').classList.remove('active');
+          const files = [...e.dataTransfer.files];
+          if (!files.length) return;
+          const file = files[0];
+          const ext = file.name.split('.').pop().toLowerCase();
+          if (!validExts.includes(ext) && !file.type.startsWith('image/')) {
+            showToast('Unsupported file type. Use: ' + validExts.join(', '), 'warning');
+            return;
+          }
+          const isImage = file.type.startsWith('image/');
+          showToast((isImage ? 'Running OCR on ' : 'Extracting text from ') + file.name + '...', 'info');
+          try {
+            const rawText = await extractTextFromFile(file);
+            await processExtractedText(rawText, id, file.name);
+          } catch (err) {
+            console.error('File extraction error:', err);
+            showToast('Error reading file: ' + err.message, 'error');
+          }
+        });
+        el.addEventListener('paste', async (e) => {
+          const clipboardData = e.clipboardData;
+          if (!clipboardData) return;
+          const items = [...clipboardData.items];
+          const imageItem = items.find(item => item.type.startsWith('image/'));
+          if (imageItem) {
+            e.preventDefault();
+            const blob = imageItem.getAsFile();
+            if (!blob) return;
+            showToast('Running OCR on pasted image...', 'info');
+            try {
+              const rawText = await ocrFromBlob(blob);
+              await processExtractedText(rawText, id, 'pasted image');
+            } catch (err) {
+              console.error('OCR error:', err);
+              showToast('Error reading image: ' + err.message, 'error');
+            }
+            return;
+          }
+          const fileItem = items.find(item => item.kind === 'file' && !item.type.startsWith('image/'));
+          if (fileItem) {
+            const file = fileItem.getAsFile();
+            if (file) {
+              e.preventDefault();
+              const ext = file.name.split('.').pop().toLowerCase();
+              if (validExts.includes(ext)) {
+                showToast('Extracting text from pasted file...', 'info');
+                try {
+                  const rawText = await extractTextFromFile(file);
+                  await processExtractedText(rawText, id, file.name);
+                } catch (err) {
+                  console.error('File extraction error:', err);
+                  showToast('Error reading file: ' + err.message, 'error');
+                }
+              }
+            }
+          }
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDragDropAndPaste);
+    } else {
+      initDragDropAndPaste();
+    }
+  </script>
+</body>
+</html>

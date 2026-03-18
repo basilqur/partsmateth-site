@@ -1148,10 +1148,10 @@
           // Show suspicious warning if present
           if (data.suspiciousWarning) {
             showToast(data.suspiciousWarning, 'error');
-            setTimeout(() => { window.location.href = '/webappdemoadmin.html'; }, 3000);
+            setTimeout(() => { window.location.href = '/webapp.html'; }, 3000);
           } else {
             showToast('Login successful! Redirecting...', 'success');
-            setTimeout(() => { window.location.href = '/webappdemoadmin.html'; }, 800);
+            setTimeout(() => { window.location.href = '/webapp.html'; }, 800);
           }
         } else if (data.suspiciousBlocked) {
           showToast(data.error || 'Account suspended. Contact support.', 'error');
@@ -1354,7 +1354,7 @@
       if (session) {
         try {
           const s = JSON.parse(session);
-          if (s.licenseKey) { window.location.href = '/webappdemoadmin.html'; return; }
+          if (s.licenseKey) { window.location.href = '/webapp.html'; return; }
         } catch(e) {}
       }
 
