@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — PartsMateTH</title>
+  <meta name="description" content="PartsMateTH Admin Control Panel">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','sans-serif'], display: ['Space Grotesk','sans-serif'] },
+          colors: {
+            brand: { blue:'#3B82F6', teal:'#14B8A6', cyan:'#06B6D4', dark:'#0A0F1C', darker:'#050810', card:'#0F1629', surface:'#131B2E', muted:'#1E293B', border:'#1E293B' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',sans-serif; background:#050810; color:#E2E8F0; overflow-x:hidden; min-height:100vh; visibility:hidden; }
+    body.authenticated { visibility:visible; }
+    .font-display { font-family:'Space Grotesk',sans-serif; }
+    .ambient-bg { position:fixed; inset:0; z-index:0; pointer-events:none; }
+    .ambient-bg::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle at 30% 20%,rgba(59,130,246,0.06) 0%,transparent 50%),radial-gradient(circle at 70% 80%,rgba(20,184,166,0.04) 0%,transparent 50%); animation:ambientMove 20s ease-in-out infinite; }
+    @keyframes ambientMove { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-3%,3%)} }
+    .gradient-text { background:linear-gradient(135deg,#3B82F6 0%,#14B8A6 50%,#06B6D4 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .glass-card { background:rgba(15,22,41,0.8); backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.06); border-radius:1rem; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .glass-card:hover { border-color:rgba(59,130,246,0.2); box-shadow:0 0 40px -10px rgba(59,130,246,0.1); }
+    .glass-header { background:rgba(5,8,16,0.85); backdrop-filter:blur(24px) saturate(180%); border-bottom:1px solid rgba(255,255,255,0.05); }
+    .btn-primary { position:relative; background:linear-gradient(135deg,#3B82F6,#14B8A6); color:white; font-weight:600; border-radius:0.75rem; transition:all 0.3s; overflow:hidden; border:none; cursor:pointer; }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px -5px rgba(59,130,246,0.4); }
+    .btn-primary:active { transform:translateY(0); }
+    .btn-ghost { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:#94A3B8; border-radius:0.75rem; transition:all 0.2s; cursor:pointer; }
+    .btn-ghost:hover { background:rgba(255,255,255,0.08); color:white; border-color:rgba(255,255,255,0.15); }
+    .btn-danger { background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.3); border-radius:0.75rem; cursor:pointer; font-weight:600; transition:all 0.2s; }
+    .btn-danger:hover { background:rgba(239,68,68,0.25); }
+    .input-field { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); color:#E2E8F0; border-radius:0.75rem; padding:0.625rem 1rem; width:100%; outline:none; font-size:0.875rem; transition:all 0.25s; }
+    .input-field:focus { border-color:rgba(59,130,246,0.5); box-shadow:0 0 0 3px rgba(59,130,246,0.1); background:rgba(255,255,255,0.05); }
+    .input-field::placeholder { color:#475569; }
+    .results-table { width:100%; border-collapse:collapse; font-size:0.8125rem; }
+    .results-table th { background:rgba(59,130,246,0.08); padding:0.75rem; text-align:left; font-weight:600; font-size:0.6875rem; color:#14B8A6; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid rgba(255,255,255,0.06); white-space:nowrap; position:sticky; top:0; z-index:1; }
+    .results-table td { padding:0.625rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.03); color:#CBD5E1; transition:background 0.15s; }
+    .results-table tr:hover td { background:rgba(59,130,246,0.04); }
+    .tab-panel { display:none; animation:fadeSlideIn 0.4s ease-out; }
+    .tab-panel.active { display:block; }
+    @keyframes fadeSlideIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .sidebar-btn { display:flex; align-items:center; gap:0.75rem; padding:0.625rem 1rem; border-radius:0.75rem; width:100%; border:none; background:transparent; color:#64748B; cursor:pointer; font-size:0.8125rem; font-weight:500; transition:all 0.2s; text-align:left; }
+    .sidebar-btn:hover { background:rgba(255,255,255,0.05); color:#CBD5E1; }
+    .sidebar-btn.active { background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(20,184,166,0.1)); color:white; box-shadow:0 0 20px -5px rgba(59,130,246,0.2); }
+    .sidebar-btn i { font-size:1.125rem; width:1.5rem; text-align:center; }
+    .stat-card { position:relative; overflow:hidden; }
+    .stat-card::after { content:''; position:absolute; top:-50%; right:-50%; width:100%; height:100%; background:radial-gradient(circle,rgba(59,130,246,0.06) 0%,transparent 70%); pointer-events:none; }
+    .badge { display:inline-flex; align-items:center; padding:0.125rem 0.5rem; border-radius:999px; font-size:0.65rem; font-weight:600; }
+    .badge-active { background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.25); }
+    .badge-inactive { background:rgba(239,68,68,0.15); color:#F87171; border:1px solid rgba(239,68,68,0.25); }
+    .badge-trial { background:rgba(245,158,11,0.15); color:#FBBF24; border:1px solid rgba(245,158,11,0.25); }
+    .badge-maintenance { background:rgba(245,158,11,0.18); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); animation:pulse-glow 2s ease-in-out infinite; }
+    @keyframes pulse-glow { 0%,100%{opacity:1} 50%{opacity:0.7} }
+    .maintenance-banner { background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(234,179,8,0.08)); border:1px solid rgba(245,158,11,0.25); border-radius:0.75rem; padding:0.75rem 1rem; display:flex; align-items:center; gap:0.75rem; }
+    .maintenance-banner i { color:#FBBF24; font-size:1.25rem; }
+    .badge-admin { background:rgba(139,92,246,0.15); color:#A78BFA; border:1px solid rgba(139,92,246,0.25); }
+    .badge-online { background:rgba(16,185,129,0.15); color:#34D399; border:1px solid rgba(16,185,129,0.25); }
+    .toast { position:fixed; bottom:2rem; right:1.5rem; padding:0.875rem 1.25rem; border-radius:0.75rem; font-size:0.8125rem; font-weight:500; z-index:1000; transform:translateX(120%); transition:transform 0.4s cubic-bezier(0.4,0,0.2,1); backdrop-filter:blur(12px); display:flex; align-items:center; gap:0.5rem; max-width:calc(100vw - 3rem); }
+    .toast.show { transform:translateX(0); }
+    .toast-success { background:rgba(16,185,129,0.2); color:#34D399; border:1px solid rgba(16,185,129,0.3); }
+    .toast-error { background:rgba(239,68,68,0.2); color:#F87171; border:1px solid rgba(239,68,68,0.3); }
+    .toast-warning { background:rgba(245,158,11,0.2); color:#FBBF24; border:1px solid rgba(245,158,11,0.3); }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); z-index:100; display:none; align-items:center; justify-content:center; }
+    .modal-overlay.show { display:flex; }
+    .modal-content { background:#0F1629; border:1px solid rgba(255,255,255,0.1); border-radius:1rem; max-width:500px; width:90%; max-height:85vh; overflow-y:auto; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); }
+    .switch { position:relative; display:inline-flex; width:2.5rem; height:1.375rem; cursor:pointer; }
+    .switch input { opacity:0; width:0; height:0; }
+    .switch .slider { position:absolute; inset:0; background:rgba(255,255,255,0.1); border-radius:999px; transition:0.3s; }
+    .switch .slider::before { content:''; position:absolute; height:1rem; width:1rem; left:0.1875rem; bottom:0.1875rem; background:white; border-radius:50%; transition:0.3s; }
+    .switch input:checked + .slider { background:linear-gradient(135deg,#3B82F6,#14B8A6); }
+    .switch input:checked + .slider::before { transform:translateX(1.125rem); }
+    ::-webkit-scrollbar { width:6px; height:6px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:3px; }
+    ::-webkit-scrollbar-thumb:hover { background:rgba(255,255,255,0.2); }
+    @media (max-width:768px) {
+      .admin-sidebar { position:fixed; left:-280px; top:0; height:100vh; z-index:60; transition:left 0.3s; }
+      .admin-sidebar.open { left:0; }
+      .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:55; display:none; }
+      .sidebar-overlay.show { display:block; }
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+<script>
+// ===== SESSION GATE (Admin only) =====
+(function(){
+  var s = localStorage.getItem('pm_session');
+  if (!s) { document.body.innerHTML=''; window.location.replace('/login.html'); return; }
+  try {
+    var d = JSON.parse(s);
+    if (!d.licenseKey || !d.name || !d.plan || !d.email) throw 0;
+    if (d.plan.toLowerCase() !== 'admin') {
+      alert('Access denied. Admin privileges required.');
+      window.location.replace('/webappdemoadmin.html');
+      return;
+    }
+  } catch(e) {
+    localStorage.removeItem('pm_session');
+    document.body.innerHTML='';
+    window.location.replace('/login.html');
+    return;
+  }
+  document.body.classList.add('authenticated');
+})();
+</script>
+
+<div class="ambient-bg"></div>
+<div id="toastEl" class="toast toast-success"><i class="ri-check-line"></i><span id="toastMsg"></span></div>
+
+<!-- Mobile sidebar overlay -->
+<div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar(false)"></div>
+
+<!-- Layout: Sidebar + Main -->
+<div class="flex min-h-screen relative z-10">
+
+  <!-- Sidebar -->
+  <aside id="adminSidebar" class="admin-sidebar w-64 bg-[#030712] border-r border-white/5 flex flex-col shrink-0 h-screen sticky top-0">
+    <!-- Logo -->
+    <div class="p-4 border-b border-white/5">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+          <i class="ri-shield-keyhole-line text-white text-sm"></i>
+        </div>
+        <div>
+          <span class="font-display text-sm font-bold gradient-text">Admin Panel</span>
+          <p class="text-[0.6rem] text-slate-500">PartsMateTH</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+      <p class="text-[0.6rem] font-semibold text-slate-600 uppercase tracking-widest px-3 mb-2">Dashboard</p>
+      <button class="sidebar-btn active" data-section="overview" onclick="switchSection('overview')">
+        <i class="ri-dashboard-line"></i> Overview
+      </button>
+
+      <p class="text-[0.6rem] font-semibold text-slate-600 uppercase tracking-widest px-3 mt-4 mb-2">Management</p>
+      <button class="sidebar-btn" data-section="users" onclick="switchSection('users')">
+        <i class="ri-user-line"></i> License Users
+      </button>
+      <button class="sidebar-btn" data-section="trials" onclick="switchSection('trials')">
+        <i class="ri-timer-line"></i> Trial Users
+      </button>
+      <button class="sidebar-btn" data-section="sellers" onclick="switchSection('sellers')">
+        <i class="ri-store-line"></i> Sellers
+      </button>
+      <button class="sidebar-btn" data-section="invites" onclick="switchSection('invites')">
+        <i class="ri-coupon-line"></i> Invites
+      </button>
+
+      <p class="text-[0.6rem] font-semibold text-slate-600 uppercase tracking-widest px-3 mt-4 mb-2">Support</p>
+      <button class="sidebar-btn" data-section="feedback" onclick="switchSection('feedback')">
+        <i class="ri-feedback-line"></i> Feedback
+      </button>
+      <button class="sidebar-btn" data-section="support" onclick="switchSection('support')">
+        <i class="ri-message-2-line"></i> Support Messages
+      </button>
+      <button class="sidebar-btn" data-section="errors" onclick="switchSection('errors')">
+        <i class="ri-error-warning-line"></i> Error Logs
+      </button>
+
+      <p class="text-[0.6rem] font-semibold text-slate-600 uppercase tracking-widest px-3 mt-4 mb-2">Configuration</p>
+      <button class="sidebar-btn" data-section="layout" onclick="switchSection('layout')">
+        <i class="ri-layout-line"></i> Layout Manager
+      </button>
+      <button class="sidebar-btn" data-section="features" onclick="switchSection('features')">
+        <i class="ri-toggle-line"></i> Feature Flags
+      </button>
+      <button class="sidebar-btn" data-section="appearance" onclick="switchSection('appearance')">
+        <i class="ri-palette-line"></i> Appearance
+      </button>
+      <button class="sidebar-btn" data-section="settings" onclick="switchSection('settings')">
+        <i class="ri-settings-3-line"></i> Admin Settings
+      </button>
+    </nav>
+
+    <!-- Footer -->
+    <div class="p-3 border-t border-white/5">
+      <button class="sidebar-btn" onclick="window.location.href='/webappdemoadmin.html'">
+        <i class="ri-arrow-left-line"></i> Back to App
+      </button>
+      <button class="sidebar-btn text-red-400 hover:text-red-300" onclick="adminLogout()">
+        <i class="ri-logout-box-r-line"></i> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-w-0">
+    <!-- Top bar (mobile) -->
+    <header class="glass-header sticky top-0 z-40 md:hidden">
+      <div class="flex items-center justify-between px-4 h-14">
+        <button onclick="toggleSidebar(true)" class="btn-ghost px-2 py-1.5"><i class="ri-menu-line text-lg"></i></button>
+        <span class="font-display text-sm font-bold gradient-text">Admin Panel</span>
+        <div class="w-8"></div>
+      </div>
+    </header>
+
+    <div class="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
+
+      <!-- ==================== OVERVIEW ==================== -->
+      <div id="sec-overview" class="tab-panel active">
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Dashboard Overview</h1>
+          <p class="text-sm text-slate-500 mt-1">System status and quick insights</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6" id="statsGrid">
+          <!-- Stats injected by JS -->
+        </div>
+        <!-- Online users -->
+        <div class="glass-card p-5 mb-6">
+          <h3 class="text-sm font-semibold flex items-center gap-2 mb-4">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Currently Online
+          </h3>
+          <div id="onlineList" class="space-y-2 text-sm text-slate-400">Loading...</div>
+        </div>
+        <!-- Recent activity -->
+        <div class="glass-card p-5">
+          <h3 class="text-sm font-semibold mb-4"><i class="ri-time-line text-brand-blue mr-2"></i>Recent Error Logs</h3>
+          <div id="recentErrors" class="space-y-1.5 text-sm max-h-60 overflow-y-auto">Loading...</div>
+        </div>
+      </div>
+
+      <!-- ==================== LICENSE USERS ==================== -->
+      <div id="sec-users" class="tab-panel">
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <div>
+            <h1 class="font-display text-2xl font-bold">License Users</h1>
+            <p class="text-sm text-slate-500 mt-1" id="usersCount">Loading...</p>
+          </div>
+          <div class="flex gap-2">
+            <input id="userSearch" class="input-field w-60" placeholder="🔍 Search name, email, key..." oninput="filterUsers()">
+            <button class="btn-ghost px-3 py-2 text-xs" onclick="loadAllData()"><i class="ri-refresh-line"></i> Refresh</button>
+          </div>
+        </div>
+        <div class="flex gap-1 mb-4 flex-wrap">
+          <button class="btn-ghost px-3 py-1.5 text-xs user-filter active" data-filter="all" onclick="setUserFilter('all')">All</button>
+          <button class="btn-ghost px-3 py-1.5 text-xs user-filter" data-filter="active" onclick="setUserFilter('active')">Active</button>
+          <button class="btn-ghost px-3 py-1.5 text-xs user-filter" data-filter="inactive" onclick="setUserFilter('inactive')">Inactive</button>
+          <button class="btn-ghost px-3 py-1.5 text-xs user-filter" data-filter="online" onclick="setUserFilter('online')">🟢 Online</button>
+          <button class="btn-ghost px-3 py-1.5 text-xs user-filter" data-filter="suspicious" onclick="setUserFilter('suspicious')">⚠️ Suspicious</button>
+        </div>
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="results-table" id="tblUsers">
+              <thead><tr>
+                <th>User</th><th>Key</th><th>Plan</th><th>Status</th><th>Country</th><th>Online</th><th>Last Active</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="usersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TRIAL USERS ==================== -->
+      <div id="sec-trials" class="tab-panel">
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Trial Users</h1>
+            <p class="text-sm text-slate-500 mt-1" id="trialsCount">Loading...</p>
+          </div>
+          <input id="trialSearch" class="input-field w-60" placeholder="🔍 Search..." oninput="filterTrials()">
+        </div>
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="results-table" id="tblTrials">
+              <thead><tr>
+                <th>User</th><th>Key</th><th>Status</th><th>Country</th><th>Start</th><th>End</th><th>Uses</th><th>Online</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="trialsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SELLERS ==================== -->
+      <div id="sec-sellers" class="tab-panel">
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Sellers</h1>
+            <p class="text-sm text-slate-500 mt-1" id="sellersCount">Loading...</p>
+          </div>
+          <input id="sellerSearch" class="input-field w-60" placeholder="🔍 Search..." oninput="filterSellers()">
+        </div>
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="results-table" id="tblSellers">
+              <thead><tr>
+                <th>Seller Code</th><th>Email</th><th>Phone</th><th>Country</th><th>Status</th><th>Tier</th><th>Sales</th><th>Revenue AED</th><th>Commission</th>
+              </tr></thead>
+              <tbody id="sellersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== INVITES ==================== -->
+      <div id="sec-invites" class="tab-panel">
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Invite Codes</h1>
+            <p class="text-sm text-slate-500 mt-1" id="invitesCount">Loading...</p>
+          </div>
+        </div>
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="results-table" id="tblInvites">
+              <thead><tr>
+                <th>Code</th><th>Seller</th><th>Type</th><th>Created</th><th>Paid Uses</th><th>Trial Uses</th><th>Status</th>
+              </tr></thead>
+              <tbody id="invitesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== FEEDBACK ==================== -->
+      <div id="sec-feedback" class="tab-panel">
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Feedback</h1>
+          <p class="text-sm text-slate-500 mt-1" id="feedbackCount">Loading...</p>
+        </div>
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="results-table" id="tblFeedback">
+              <thead><tr><th>License Key</th><th>Type</th><th>Message</th><th>Date</th></tr></thead>
+              <tbody id="feedbackBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SUPPORT MESSAGES ==================== -->
+      <div id="sec-support" class="tab-panel">
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Support Messages</h1>
+          <p class="text-sm text-slate-500 mt-1" id="supportCount">Loading...</p>
+        </div>
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="results-table" id="tblSupport">
+              <thead><tr><th>Msg No</th><th>Date</th><th>Name</th><th>Email</th><th>Phone</th><th>Country</th><th>Message</th></tr></thead>
+              <tbody id="supportBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ERROR LOGS ==================== -->
+      <div id="sec-errors" class="tab-panel">
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Error Logs</h1>
+          <p class="text-sm text-slate-500 mt-1" id="errorsCount">Loading...</p>
+        </div>
+        <div class="glass-card overflow-hidden">
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+            <table class="results-table" id="tblErrors">
+              <thead><tr><th>License Key</th><th>Source</th><th>Error</th><th>Time (UTC)</th></tr></thead>
+              <tbody id="errorsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== LAYOUT MANAGER ==================== -->
+      <div id="sec-layout" class="tab-panel">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Layout Manager</h1>
+            <p class="text-sm text-slate-500 mt-1">Configure which tabs are visible and their order in the webapp</p>
+          </div>
+          <button class="btn-ghost px-3 py-2 text-xs" onclick="resetLayout()"><i class="ri-refresh-line"></i> Reset</button>
+        </div>
+        <!-- Preview -->
+        <div class="glass-card p-4 mb-4">
+          <p class="text-xs text-slate-500 uppercase tracking-wider mb-2">Live Preview</p>
+          <div id="layoutPreview" class="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/5 overflow-x-auto"></div>
+        </div>
+        <!-- Tab list -->
+        <div id="layoutList" class="space-y-2"></div>
+      </div>
+
+      <!-- ==================== FEATURE FLAGS ==================== -->
+      <div id="sec-features" class="tab-panel">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Feature Flags</h1>
+            <p class="text-sm text-slate-500 mt-1" id="featuresCount"></p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn-ghost px-3 py-1.5 text-xs" onclick="toggleAllFeatures(true)"><i class="ri-toggle-line"></i> All On</button>
+            <button class="btn-ghost px-3 py-1.5 text-xs" onclick="toggleAllFeatures(false)">All Off</button>
+            <button class="btn-ghost px-3 py-1.5 text-xs" onclick="setAllMaintenance()" style="color:#FBBF24;border-color:rgba(245,158,11,0.3)"><i class="ri-tools-line"></i> All Maintenance</button>
+            <button class="btn-ghost px-3 py-1.5 text-xs" onclick="resetFeatures()"><i class="ri-refresh-line"></i> Reset</button>
+          </div>
+        </div>
+        <!-- Progress -->
+        <div class="w-full h-2 rounded-full bg-white/5 mb-6 overflow-hidden">
+          <div id="featuresBar" class="h-full rounded-full transition-all duration-500" style="background:linear-gradient(90deg,#3B82F6,#14B8A6);width:100%"></div>
+        </div>
+        <div id="featuresList" class="space-y-2"></div>
+      </div>
+
+      <!-- ==================== APPEARANCE ==================== -->
+      <div id="sec-appearance" class="tab-panel">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Appearance</h1>
+            <p class="text-sm text-slate-500 mt-1">Customize the webapp's look and feel</p>
+          </div>
+          <button class="btn-ghost px-3 py-2 text-xs" onclick="resetAppearance()"><i class="ri-refresh-line"></i> Reset</button>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-4">
+          <!-- Colors -->
+          <div class="glass-card p-5">
+            <h3 class="text-sm font-semibold mb-4 flex items-center gap-2"><i class="ri-palette-line text-brand-blue"></i> Brand Colors</h3>
+            <div class="space-y-4">
+              <div>
+                <label class="text-xs text-slate-500 block mb-1">Primary Color</label>
+                <div class="flex gap-3 items-center">
+                  <input type="color" id="appPrimary" value="#3B82F6" class="w-10 h-10 rounded-lg border border-white/10 cursor-pointer" onchange="saveAppearance()">
+                  <input class="input-field font-mono text-xs flex-1" id="appPrimaryHex" value="#3B82F6" onchange="document.getElementById('appPrimary').value=this.value;saveAppearance()">
+                </div>
+              </div>
+              <div>
+                <label class="text-xs text-slate-500 block mb-1">Accent Color</label>
+                <div class="flex gap-3 items-center">
+                  <input type="color" id="appAccent" value="#14B8A6" class="w-10 h-10 rounded-lg border border-white/10 cursor-pointer" onchange="saveAppearance()">
+                  <input class="input-field font-mono text-xs flex-1" id="appAccentHex" value="#14B8A6" onchange="document.getElementById('appAccent').value=this.value;saveAppearance()">
+                </div>
+              </div>
+              <div>
+                <label class="text-xs text-slate-500 block mb-2">Gradient Preview</label>
+                <div id="gradientPreview" class="h-12 rounded-xl" style="background:linear-gradient(135deg,#3B82F6,#14B8A6)"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Hero Content -->
+          <div class="glass-card p-5">
+            <h3 class="text-sm font-semibold mb-4 flex items-center gap-2"><i class="ri-text text-brand-teal"></i> Hero Section</h3>
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs text-slate-500 block mb-1">Platform Badge</label>
+                <input id="appBadge" class="input-field" value="Auto Parts Intelligence Platform" onchange="saveAppearance()">
+              </div>
+              <div>
+                <label class="text-xs text-slate-500 block mb-1">Hero Title</label>
+                <input id="appTitle" class="input-field" value="Welcome to PartsMateTH" onchange="saveAppearance()">
+              </div>
+              <div>
+                <label class="text-xs text-slate-500 block mb-1">Hero Subtitle</label>
+                <textarea id="appSubtitle" class="input-field" rows="2" onchange="saveAppearance()">Look up prices, names, origins, weights, and alternates for auto parts — all in one place.</textarea>
+              </div>
+            </div>
+          </div>
+          <!-- Advanced -->
+          <div class="glass-card p-5 lg:col-span-2">
+            <h3 class="text-sm font-semibold mb-4 flex items-center gap-2"><i class="ri-settings-3-line text-brand-cyan"></i> Advanced</h3>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label class="text-xs text-slate-500 block mb-1">Max Parts per Batch: <span id="batchVal">5</span></label>
+                <input type="range" id="appBatch" min="1" max="20" value="5" class="w-full accent-brand-teal" oninput="document.getElementById('batchVal').textContent=this.value;saveAppearance()">
+              </div>
+              <div>
+                <label class="text-xs text-slate-500 block mb-1">Batch Delay: <span id="delayVal">1500</span>ms</label>
+                <input type="range" id="appDelay" min="500" max="5000" step="100" value="1500" class="w-full accent-brand-teal" oninput="document.getElementById('delayVal').textContent=this.value;saveAppearance()">
+              </div>
+            </div>
+            <div class="flex gap-6 mt-4">
+              <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                <label class="switch"><input type="checkbox" id="appShowFeedback" checked onchange="saveAppearance()"><span class="slider"></span></label>
+                Show Feedback Section
+              </label>
+              <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+                <label class="switch"><input type="checkbox" id="appShowDisclaimer" checked onchange="saveAppearance()"><span class="slider"></span></label>
+                Show Disclaimers
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ADMIN SETTINGS ==================== -->
+      <div id="sec-settings" class="tab-panel">
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Admin Settings</h1>
+          <p class="text-sm text-slate-500 mt-1">From adminsettings sheet</p>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-4">
+          <div class="glass-card p-5">
+            <h3 class="text-sm font-semibold mb-3"><i class="ri-key-line text-brand-blue mr-2"></i>Auth Codes</h3>
+            <p id="settingsAuth" class="text-sm text-slate-400 font-mono">Loading...</p>
+          </div>
+          <div class="glass-card p-5">
+            <h3 class="text-sm font-semibold mb-3"><i class="ri-time-line text-brand-teal mr-2"></i>Hold Days</h3>
+            <p id="settingsHold" class="text-sm text-slate-400">Loading...</p>
+          </div>
+          <div class="glass-card p-5">
+            <h3 class="text-sm font-semibold mb-3"><i class="ri-bar-chart-line text-brand-cyan mr-2"></i>Commission Tiers</h3>
+            <pre id="settingsTiers" class="text-xs text-slate-400 whitespace-pre-wrap">Loading...</pre>
+          </div>
+          <div class="glass-card p-5">
+            <h3 class="text-sm font-semibold mb-3"><i class="ri-organization-chart text-violet-400 mr-2"></i>MLM Config</h3>
+            <pre id="settingsMLM" class="text-xs text-slate-400 whitespace-pre-wrap">Loading...</pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- User Detail Modal -->
+<div id="userModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+      <h3 class="font-display text-lg font-bold" id="modalName">User Details</h3>
+      <button onclick="closeModal()" class="btn-ghost p-1.5 rounded-lg"><i class="ri-close-line text-lg"></i></button>
+    </div>
+    <div class="p-5" id="modalBody"></div>
+    <div class="p-5 border-t border-white/10 flex flex-wrap gap-2" id="modalActions"></div>
+  </div>
+</div>
+
+<script>
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+  var allData = {};
+  var userFilter = 'all';
+
+  // ===== TOAST =====
+  function showToast(msg, type) {
+    var el = document.getElementById('toastEl');
+    el.className = 'toast toast-' + (type || 'success') + ' show';
+    document.getElementById('toastMsg').textContent = msg;
+    setTimeout(function(){ el.classList.remove('show'); }, 3000);
+  }
+
+  // ===== SIDEBAR =====
+  function switchSection(id) {
+    document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelectorAll('.sidebar-btn[data-section]').forEach(function(b){ b.classList.remove('active'); });
+    var sec = document.getElementById('sec-' + id);
+    if (sec) sec.classList.add('active');
+    var btn = document.querySelector('.sidebar-btn[data-section="'+id+'"]');
+    if (btn) btn.classList.add('active');
+    toggleSidebar(false);
+  }
+
+  function toggleSidebar(open) {
+    document.getElementById('adminSidebar').classList.toggle('open', open);
+    document.getElementById('sidebarOverlay').classList.toggle('show', open);
+  }
+
+  // ===== LOAD ALL DATA =====
+  async function loadAllData() {
+    showToast('Loading data...', 'warning');
+    try {
+      var res = await fetch(SCRIPT_URL + '?mode=adminGetAllData');
+      allData = await res.json();
+      renderAll();
+      showToast('Data loaded successfully');
+    } catch(e) {
+      showToast('Failed to load: ' + e.message, 'error');
+    }
+  }
+
+  function renderAll() {
+    renderOverview();
+    renderUsers();
+    renderTrials();
+    renderSellers();
+    renderInvites();
+    renderFeedback();
+    renderSupport();
+    renderErrors();
+    renderSettings();
+  }
+
+  // ===== OVERVIEW =====
+  function renderOverview() {
+    var lk = allData.licensekeys || [];
+    var tk = allData.trialkeys || [];
+    var allUsers = lk.concat(tk);
+    var active = allUsers.filter(function(u){ return (u[9]||'').toString().toUpperCase() === 'ACTIVE'; });
+    var onlineL = lk.filter(function(u){ return (u[21]||'').toString().trim().length > 0; }); // ActiveWebDevice col V (idx 21)
+    var onlineT = tk.filter(function(u){ return (u[20]||'').toString().trim().length > 0; }); // ActiveWebDevice col U (idx 20)
+    var online = onlineL.concat(onlineT);
+    var suspicious = allUsers.filter(function(u){ var f = (u[u.length-1]||'').toString().trim(); return f.length > 0 && f !== '0'; });
+    var sellers = allData.sellers || [];
+    var activeSellers = sellers.filter(function(s){ return (s[5]||'').toString().toUpperCase() === 'ACTIVE'; });
+
+    var stats = [
+      { label:'Licensed Users', value:lk.length, icon:'ri-user-line', color:'text-blue-400' },
+      { label:'Trial Users', value:tk.length, icon:'ri-timer-line', color:'text-amber-400' },
+      { label:'Active Users', value:active.length, icon:'ri-shield-check-line', color:'text-emerald-400' },
+      { label:'Online Now', value:online.length, icon:'ri-wifi-line', color:'text-teal-400' },
+      { label:'Suspicious', value:suspicious.length, icon:'ri-alarm-warning-line', color:'text-red-400' },
+      { label:'Active Sellers', value:activeSellers.length, icon:'ri-store-line', color:'text-violet-400' },
+      { label:'Total Invites', value:(allData.invites||[]).length, icon:'ri-coupon-line', color:'text-cyan-400' },
+      { label:'Error Logs', value:(allData.error_logs||[]).length, icon:'ri-error-warning-line', color:'text-orange-400' },
+    ];
+
+    var grid = document.getElementById('statsGrid');
+    grid.innerHTML = stats.map(function(s){
+      return '<div class="glass-card stat-card p-4"><p class="text-[0.65rem] text-slate-500 uppercase tracking-wider mb-1">'+s.label+'</p><div class="flex items-center justify-between"><span class="font-display text-2xl font-bold '+s.color+'">'+s.value+'</span><i class="'+s.icon+' text-xl '+s.color+' opacity-40"></i></div></div>';
+    }).join('');
+
+    // Online list
+    var onlineEl = document.getElementById('onlineList');
+    if (online.length === 0) { onlineEl.innerHTML = '<p class="text-slate-600">No users online</p>'; }
+    else {
+      onlineEl.innerHTML = online.slice(0, 15).map(function(u){
+        var name = u[2] || 'Unknown';
+        var email = u[3] || '';
+        var plan = u[6] || 'Trial';
+        var initials = name.split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
+        return '<div class="flex items-center justify-between py-2 px-3 rounded-lg bg-white/[0.03]">'+
+          '<div class="flex items-center gap-3">'+
+            '<div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center"><span class="text-[0.6rem] font-bold text-white">'+initials+'</span></div>'+
+            '<div><p class="text-sm font-medium text-white">'+name+'</p><p class="text-xs text-slate-500">'+email+'</p></div>'+
+          '</div>'+
+          '<span class="badge badge-online">'+plan+'</span>'+
+        '</div>';
+      }).join('');
+    }
+
+    // Recent errors
+    var errors = (allData.error_logs || []).slice(-10).reverse();
+    document.getElementById('recentErrors').innerHTML = errors.length ? errors.map(function(e){
+      return '<div class="flex items-start gap-2 py-1.5 px-2 rounded bg-white/[0.02]">'+
+        '<span class="text-red-400 text-xs shrink-0">'+((e[3]||'').toString().substring(0,16))+'</span>'+
+        '<span class="text-xs text-slate-400 truncate">['+(e[0]||'')+'] '+(e[1]||'')+': '+(e[2]||'')+'</span></div>';
+    }).join('') : '<p class="text-slate-600">No errors</p>';
+  }
+
+  // ===== USERS TABLE =====
+  function renderUsers() {
+    var data = allData.licensekeys || [];
+    document.getElementById('usersCount').textContent = data.length + ' licensed users';
+    var tbody = document.getElementById('usersBody');
+    tbody.innerHTML = '';
+    data.forEach(function(row, idx) {
+      var name = row[2]||''; var email = row[3]||''; var key = row[1]||'';
+      var plan = row[6]||'N/A'; var status = (row[9]||'').toString().toUpperCase();
+      var country = row[5]||''; var lastActive = row[19]||'';
+      var activeDevice = (row[21]||'').toString().trim();
+      var suspicious = (row[27]||'').toString().trim();
+      var initials = name.split(' ').map(function(w){return w[0]}).join('').substring(0,2).toUpperCase();
+
+      // Filter
+      if (userFilter === 'active' && status !== 'ACTIVE' && status !== 'ACTIVE TILL END DATE') return;
+      if (userFilter === 'inactive' && (status === 'ACTIVE' || status === 'ACTIVE TILL END DATE')) return;
+      if (userFilter === 'online' && !activeDevice) return;
+      if (userFilter === 'suspicious' && !suspicious) return;
+
+      var search = document.getElementById('userSearch').value.toLowerCase();
+      if (search && name.toLowerCase().indexOf(search) < 0 && email.toLowerCase().indexOf(search) < 0 && key.toLowerCase().indexOf(search) < 0) return;
+
+      var planBadge = plan.toLowerCase() === 'admin' ? 'badge-admin' : 'badge-active';
+      var statusBadge = (status === 'ACTIVE' || status === 'ACTIVE TILL END DATE') ? 'badge-active' : 'badge-inactive';
+
+      var tr = document.createElement('tr');
+      tr.style.cursor = 'pointer';
+      tr.onclick = function(){ showUserModal(row, 'licensekeys', idx); };
+      tr.innerHTML =
+        '<td><div class="flex items-center gap-2"><div class="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center shrink-0"><span class="text-[0.55rem] font-bold text-white">'+initials+'</span></div><div class="min-w-0"><p class="text-xs font-medium truncate max-w-[120px]">'+name+'</p><p class="text-[0.65rem] text-slate-500 truncate max-w-[120px]">'+email+'</p></div></div></td>'+
+        '<td><code class="text-[0.65rem] text-slate-500 font-mono">'+key.substring(0,12)+'</code></td>'+
+        '<td><span class="badge '+planBadge+'">'+plan+'</span></td>'+
+        '<td><span class="badge '+statusBadge+'">'+status+'</span>'+(suspicious ? ' <span class="text-amber-400 text-[0.6rem]">⚠️</span>' : '')+'</td>'+
+        '<td class="text-xs">'+country+'</td>'+
+        '<td>'+(activeDevice ? '<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span class="text-xs text-emerald-400">Online</span></span>' : '<span class="text-xs text-slate-600">Offline</span>')+'</td>'+
+        '<td class="text-xs text-slate-500">'+lastActive+'</td>'+
+        '<td onclick="event.stopPropagation()"><div class="flex gap-1">'+
+          (activeDevice ? '<button class="btn-danger px-2 py-1 text-[0.65rem]" onclick="kickUser(\''+key.replace(/'/g,"\\'")+'\',\'licensekeys\')"><i class="ri-shut-down-line"></i> Kick</button>' : '')+
+          '<button class="btn-ghost px-2 py-1 text-[0.65rem]" onclick="toggleUserStatus(\''+key.replace(/'/g,"\\'")+'\',\'licensekeys\',\''+status+'\')"><i class="ri-'+(status==='ACTIVE'?'lock':'lock-unlock')+'-line"></i></button>'+
+        '</div></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function filterUsers() { renderUsers(); }
+  function setUserFilter(f) {
+    userFilter = f;
+    document.querySelectorAll('.user-filter').forEach(function(b){ b.classList.toggle('active', b.dataset.filter === f); });
+    renderUsers();
+  }
+
+  // ===== TRIALS TABLE =====
+  function renderTrials() {
+    var data = allData.trialkeys || [];
+    document.getElementById('trialsCount').textContent = data.length + ' trial users';
+    var tbody = document.getElementById('trialsBody');
+    tbody.innerHTML = '';
+    data.forEach(function(row, idx) {
+      var name = row[2]||''; var email = row[3]||''; var key = row[1]||'';
+      var status = (row[9]||'').toString().toUpperCase();
+      var country = row[5]||''; var start = (row[7]||'').toString().substring(0,10);
+      var end = (row[8]||'').toString().substring(0,10);
+      var uses = row[10]||0;
+      var activeDevice = (row[20]||'').toString().trim();
+
+      var search = document.getElementById('trialSearch').value.toLowerCase();
+      if (search && name.toLowerCase().indexOf(search)<0 && email.toLowerCase().indexOf(search)<0 && key.toLowerCase().indexOf(search)<0) return;
+
+      var tr = document.createElement('tr');
+      tr.style.cursor = 'pointer';
+      tr.onclick = function(){ showUserModal(row, 'trialkeys', idx); };
+      tr.innerHTML =
+        '<td><div class="min-w-0"><p class="text-xs font-medium">'+name+'</p><p class="text-[0.65rem] text-slate-500">'+email+'</p></div></td>'+
+        '<td><code class="text-[0.65rem] text-slate-500 font-mono">'+key.substring(0,16)+'</code></td>'+
+        '<td><span class="badge '+(status==='ACTIVE'?'badge-active':'badge-inactive')+'">'+status+'</span></td>'+
+        '<td class="text-xs">'+country+'</td>'+
+        '<td class="text-xs">'+start+'</td>'+
+        '<td class="text-xs">'+end+'</td>'+
+        '<td class="text-xs text-center">'+uses+'</td>'+
+        '<td>'+(activeDevice?'<span class="badge badge-online">Online</span>':'<span class="text-xs text-slate-600">-</span>')+'</td>'+
+        '<td onclick="event.stopPropagation()">'+
+          (activeDevice ? '<button class="btn-danger px-2 py-1 text-[0.65rem]" onclick="kickUser(\''+key.replace(/'/g,"\\'")+'\',\'trialkeys\')"><i class="ri-shut-down-line"></i></button>' : '')+
+        '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+  function filterTrials() { renderTrials(); }
+
+  // ===== SELLERS TABLE =====
+  function renderSellers() {
+    var data = allData.sellers || [];
+    document.getElementById('sellersCount').textContent = data.length + ' sellers';
+    var tbody = document.getElementById('sellersBody');
+    tbody.innerHTML = '';
+    data.forEach(function(row) {
+      var code = row[0]||''; var email = row[1]||''; var phone = (row[3]||'').toString().replace(/^'/,'');
+      var country = row[4]||''; var status = (row[5]||'').toString().toUpperCase();
+      var tier = row[6]||''; var sales = row[7]||0; var revenue = row[8]||0;
+      var commission = row[9]||0;
+
+      var search = document.getElementById('sellerSearch').value.toLowerCase();
+      if (search && code.toLowerCase().indexOf(search)<0 && email.toLowerCase().indexOf(search)<0) return;
+
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="text-xs font-medium">'+code+'</td>'+
+        '<td class="text-xs">'+email+'</td>'+
+        '<td class="text-xs">'+phone+'</td>'+
+        '<td class="text-xs">'+country+'</td>'+
+        '<td><span class="badge '+(status==='ACTIVE'?'badge-active':'badge-inactive')+'">'+status+'</span></td>'+
+        '<td class="text-xs">'+tier+'</td>'+
+        '<td class="text-xs text-center">'+sales+'</td>'+
+        '<td class="text-xs">'+revenue+'</td>'+
+        '<td class="text-xs">'+commission+'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+  function filterSellers() { renderSellers(); }
+
+  // ===== INVITES TABLE =====
+  function renderInvites() {
+    var data = allData.invites || [];
+    document.getElementById('invitesCount').textContent = data.length + ' invite codes';
+    var tbody = document.getElementById('invitesBody');
+    tbody.innerHTML = '';
+    data.forEach(function(row) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="text-xs font-mono font-medium">'+(row[0]||'')+'</td>'+
+        '<td class="text-xs">'+(row[1]||'')+'</td>'+
+        '<td class="text-xs">'+(row[2]||'')+'</td>'+
+        '<td class="text-xs">'+(row[3]||'').toString().substring(0,10)+'</td>'+
+        '<td class="text-xs text-center">'+(row[4]||0)+'</td>'+
+        '<td class="text-xs text-center">'+(row[5]||0)+'</td>'+
+        '<td><span class="badge '+((row[6]||'').toString().toUpperCase()==='ACTIVE'?'badge-active':'badge-inactive')+'">'+(row[6]||'')+'</span></td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ===== FEEDBACK =====
+  function renderFeedback() {
+    var data = allData.feedback || [];
+    document.getElementById('feedbackCount').textContent = data.length + ' entries';
+    var tbody = document.getElementById('feedbackBody');
+    tbody.innerHTML = '';
+    data.forEach(function(row) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="text-xs font-mono">'+(row[0]||'')+'</td><td class="text-xs">'+(row[1]||'')+'</td><td class="text-xs max-w-xs truncate">'+(row[2]||'')+'</td><td class="text-xs">'+(row[3]||'').toString().substring(0,10)+'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ===== SUPPORT =====
+  function renderSupport() {
+    var data = allData.web_support_messages || [];
+    document.getElementById('supportCount').textContent = data.length + ' messages';
+    var tbody = document.getElementById('supportBody');
+    tbody.innerHTML = '';
+    data.forEach(function(row) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="text-xs font-mono">'+(row[0]||'')+'</td><td class="text-xs">'+(row[1]||'').toString().substring(0,16)+'</td><td class="text-xs">'+(row[2]||'')+'</td><td class="text-xs">'+(row[3]||'')+'</td><td class="text-xs">'+(row[4]||'')+'</td><td class="text-xs">'+(row[5]||'')+'</td><td class="text-xs max-w-[200px] truncate">'+(row[6]||'')+'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ===== ERRORS =====
+  function renderErrors() {
+    var data = allData.error_logs || [];
+    document.getElementById('errorsCount').textContent = data.length + ' errors';
+    var tbody = document.getElementById('errorsBody');
+    tbody.innerHTML = '';
+    data.forEach(function(row) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td class="text-xs font-mono">'+(row[0]||'')+'</td><td class="text-xs">'+(row[1]||'')+'</td><td class="text-xs max-w-xs truncate text-red-400">'+(row[2]||'')+'</td><td class="text-xs">'+(row[3]||'').toString().substring(0,19)+'</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ===== SETTINGS =====
+  function renderSettings() {
+    var data = allData.adminsettings || [];
+    if (data.length > 0) {
+      var row = data[0];
+      document.getElementById('settingsAuth').textContent = row[0] || 'N/A';
+      document.getElementById('settingsHold').textContent = (row[3] || 7) + ' days';
+      try { document.getElementById('settingsTiers').textContent = JSON.stringify(JSON.parse(row[1]), null, 2); } catch(e) { document.getElementById('settingsTiers').textContent = row[1] || 'N/A'; }
+      try { document.getElementById('settingsMLM').textContent = JSON.stringify(JSON.parse(row[2]), null, 2); } catch(e) { document.getElementById('settingsMLM').textContent = row[2] || 'N/A'; }
+    }
+  }
+
+  // ===== USER MODAL =====
+  function showUserModal(row, sheet, idx) {
+    var isLicense = sheet === 'licensekeys';
+    var cols = isLicense ? { active:21, heartbeat:22, devices:20, fingerprints:26, suspicious:27 } : { active:20, heartbeat:21, devices:19, fingerprints:25, suspicious:26 };
+    var name = row[2]||'Unknown';
+    document.getElementById('modalName').textContent = name;
+    var fields = [
+      ['Order No', row[0]], ['License Key', row[1]], ['Name', row[2]], ['Email', row[3]],
+      ['Phone', (row[4]||'').toString().replace(/^'/,'')], ['Country', row[5]],
+      isLicense ? ['Plan', row[6]] : null,
+      ['Start Date', (row[7]||'').toString().substring(0,10)], ['End Date', (row[8]||'').toString().substring(0,10)],
+      ['Status', row[9]],
+      isLicense ? ['Stripe ID', row[10]] : null,
+      ['Last Active', row[isLicense ? 19 : 18] || 'N/A'],
+      ['Active Device', (row[cols.active]||'') || 'None'],
+      ['Web Devices', (row[cols.devices]||'') || 'None'],
+      ['Suspicious Flag', (row[cols.suspicious]||'') || 'None'],
+    ].filter(Boolean);
+
+    document.getElementById('modalBody').innerHTML =
+      '<div class="grid grid-cols-2 gap-2">'+fields.map(function(f){
+        return '<div class="p-2 rounded-lg bg-white/[0.03]"><p class="text-[0.6rem] text-slate-500 uppercase tracking-wider">'+f[0]+'</p><p class="text-xs font-medium truncate" title="'+f[1]+'">'+f[1]+'</p></div>';
+      }).join('')+'</div>'+
+      ((row[cols.fingerprints]||'') ? '<div class="mt-3 p-3 rounded-lg bg-white/[0.02]"><p class="text-[0.6rem] text-slate-500 mb-1">Fingerprints</p><p class="text-[0.6rem] font-mono text-slate-500 break-all max-h-24 overflow-y-auto">'+(row[cols.fingerprints]||'').toString().substring(0,300)+'</p></div>' : '');
+
+    var key = (row[1]||'').toString().replace(/'/g,"\\'");
+    var status = (row[9]||'').toString().toUpperCase();
+    var activeDevice = (row[cols.active]||'').toString().trim();
+    document.getElementById('modalActions').innerHTML =
+      (activeDevice ? '<button class="btn-danger px-4 py-2 text-xs" onclick="kickUser(\''+key+'\',\''+sheet+'\');closeModal()"><i class="ri-shut-down-line"></i> Kick User</button>' : '')+
+      '<button class="btn-ghost px-4 py-2 text-xs" onclick="resetDevice(\''+key+'\',\''+sheet+'\');closeModal()"><i class="ri-restart-line"></i> Reset Devices</button>'+
+      '<button class="btn-ghost px-4 py-2 text-xs" onclick="toggleUserStatus(\''+key+'\',\''+sheet+'\',\''+status+'\');closeModal()"><i class="ri-'+(status==='ACTIVE'?'lock':'lock-unlock')+'-line"></i> '+(status==='ACTIVE'?'Suspend':'Activate')+'</button>';
+
+    document.getElementById('userModal').classList.add('show');
+  }
+
+  function closeModal() { document.getElementById('userModal').classList.remove('show'); }
+
+  // ===== ADMIN ACTIONS =====
+  async function kickUser(key, sheet) {
+    try {
+      var res = await fetch(SCRIPT_URL + '?mode=adminKickUser&licenseKey=' + encodeURIComponent(key) + '&sheet=' + encodeURIComponent(sheet));
+      var data = await res.json();
+      if (data.ok) { showToast('User kicked'); loadAllData(); }
+      else showToast(data.error || 'Failed', 'error');
+    } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  }
+
+  async function toggleUserStatus(key, sheet, currentStatus) {
+    var newStatus = (currentStatus === 'ACTIVE' || currentStatus === 'ACTIVE TILL END DATE') ? 'SUSPENDED' : 'ACTIVE';
+    try {
+      var res = await fetch(SCRIPT_URL + '?mode=adminSetUserStatus&licenseKey=' + encodeURIComponent(key) + '&sheet=' + encodeURIComponent(sheet) + '&status=' + encodeURIComponent(newStatus));
+      var data = await res.json();
+      if (data.ok) { showToast('User ' + newStatus.toLowerCase()); loadAllData(); }
+      else showToast(data.error || 'Failed', 'error');
+    } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  }
+
+  async function resetDevice(key, sheet) {
+    try {
+      var res = await fetch(SCRIPT_URL + '?mode=adminResetDevice&licenseKey=' + encodeURIComponent(key) + '&sheet=' + encodeURIComponent(sheet));
+      var data = await res.json();
+      if (data.ok) { showToast('Devices reset'); loadAllData(); }
+      else showToast(data.error || 'Failed', 'error');
+    } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  }
+
+  // ===== LAYOUT MANAGER =====
+  var defaultTabs = [
+    { id:'home', label:'Home', icon:'ri-home-5-line', visible:true },
+    { id:'prices', label:'Prices', icon:'ri-money-dollar-circle-line', visible:true },
+    { id:'names', label:'Names', icon:'ri-price-tag-3-line', visible:true },
+    { id:'country', label:'Country', icon:'ri-global-line', visible:true },
+    { id:'details', label:'Details', icon:'ri-search-eye-line', visible:true },
+    { id:'weight', label:'Weight', icon:'ri-scales-3-line', visible:true },
+    { id:'alternates', label:'Alternates', icon:'ri-refresh-line', visible:true },
+    { id:'listcleaner', label:'List Cleaner', icon:'ri-file-list-3-line', visible:true },
+    { id:'modelchecker', label:'Model Checker', icon:'ri-car-line', visible:true },
+  ];
+
+  function getLayoutConfig() {
+    try { return JSON.parse(localStorage.getItem('pm_admin_layout') || 'null') || JSON.parse(JSON.stringify(defaultTabs)); }
+    catch(e) { return JSON.parse(JSON.stringify(defaultTabs)); }
+  }
+
+  function saveLayoutConfig(tabs) {
+    localStorage.setItem('pm_admin_layout', JSON.stringify(tabs));
+    renderLayout();
+    showToast('Layout saved');
+  }
+
+  function resetLayout() { localStorage.removeItem('pm_admin_layout'); renderLayout(); showToast('Layout reset'); }
+
+  function renderLayout() {
+    var tabs = getLayoutConfig();
+    // Preview
+    var preview = document.getElementById('layoutPreview');
+    preview.innerHTML = tabs.filter(function(t){return t.visible}).map(function(t){
+      return '<div class="px-3 py-1.5 rounded-lg text-xs text-slate-400 whitespace-nowrap flex items-center gap-1.5"><i class="'+t.icon+'"></i>'+t.label+'</div>';
+    }).join('');
+
+    // List
+    var list = document.getElementById('layoutList');
+    list.innerHTML = tabs.map(function(t, idx){
+      return '<div class="glass-card p-3 flex items-center gap-3 '+(t.visible?'':'opacity-50')+'">'+
+        '<i class="ri-draggable text-slate-600"></i>'+
+        '<div class="w-8 h-8 rounded-lg '+(t.visible?'bg-blue-500/10':'bg-white/5')+' flex items-center justify-center"><i class="'+t.icon+' '+(t.visible?'text-blue-400':'text-slate-600')+'"></i></div>'+
+        '<div class="flex-1 min-w-0"><input class="bg-transparent text-sm font-medium text-white border-none outline-none w-full" value="'+t.label+'" onchange="updateTabLabel('+idx+',this.value)"><p class="text-[0.6rem] text-slate-600">ID: '+t.id+'</p></div>'+
+        '<div class="flex items-center gap-2">'+
+          '<button class="btn-ghost p-1 text-xs" onclick="moveTab('+idx+',-1)" '+(idx===0?'disabled style="opacity:0.3"':'')+'><i class="ri-arrow-up-line"></i></button>'+
+          '<button class="btn-ghost p-1 text-xs" onclick="moveTab('+idx+',1)" '+(idx===tabs.length-1?'disabled style="opacity:0.3"':'')+'><i class="ri-arrow-down-line"></i></button>'+
+          '<label class="switch"><input type="checkbox" '+(t.visible?'checked':'')+' onchange="toggleTabVisibility('+idx+')"><span class="slider"></span></label>'+
+        '</div></div>';
+    }).join('');
+  }
+
+  function toggleTabVisibility(idx) {
+    var tabs = getLayoutConfig();
+    tabs[idx].visible = !tabs[idx].visible;
+    saveLayoutConfig(tabs);
+  }
+
+  function updateTabLabel(idx, val) {
+    var tabs = getLayoutConfig();
+    tabs[idx].label = val.trim() || tabs[idx].label;
+    saveLayoutConfig(tabs);
+  }
+
+  function moveTab(idx, dir) {
+    var tabs = getLayoutConfig();
+    var newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= tabs.length) return;
+    var temp = tabs[idx]; tabs[idx] = tabs[newIdx]; tabs[newIdx] = temp;
+    saveLayoutConfig(tabs);
+  }
+
+  // ===== FEATURE FLAGS =====
+  var defaultFeatures = [
+    // status: 'enabled' | 'disabled' | 'maintenance'
+    { id:'feedback', label:'Feedback Form', desc:'Allow users to submit suggestions and complaints', status:'enabled', cat:'General' },
+    { id:'currency_toggle', label:'Currency Toggle', desc:'Show AED/USD currency switcher', status:'enabled', cat:'Prices' },
+    { id:'deep_search', label:'Deep Search', desc:'Enable deep search mode in Alternates', status:'enabled', cat:'Alternates' },
+    { id:'ocr', label:'OCR / Image Scan', desc:'Allow image upload and OCR text extraction', status:'enabled', cat:'List Cleaner' },
+    { id:'drag_drop', label:'Drag & Drop Files', desc:'Enable drag-and-drop file upload', status:'enabled', cat:'General' },
+    { id:'multi_parts', label:'Multi-Part Details', desc:'Allow checking multiple parts at once', status:'enabled', cat:'Details' },
+    { id:'vin_search', label:'VIN Search', desc:'Enable VIN/Chassis lookup', status:'enabled', cat:'Model Checker' },
+    { id:'part_search', label:'Part Number Search', desc:'Enable part number model search', status:'enabled', cat:'Model Checker' },
+    { id:'sort_clean', label:'Sort & Clean Buttons', desc:'Show sort and clean helper buttons', status:'enabled', cat:'General' },
+    { id:'disclaimer', label:'Disclaimer Notes', desc:'Show disclaimer notes', status:'enabled', cat:'General' },
+  ];
+
+  function getFeaturesConfig() {
+    try {
+      var stored = JSON.parse(localStorage.getItem('pm_admin_features') || 'null');
+      if (!stored) return JSON.parse(JSON.stringify(defaultFeatures));
+      // Migrate old format (enabled:bool → status:string)
+      return stored.map(function(f) {
+        if (f.status) return f;
+        return Object.assign({}, f, { status: f.enabled ? 'enabled' : 'disabled' });
+      });
+    }
+    catch(e) { return JSON.parse(JSON.stringify(defaultFeatures)); }
+  }
+
+  function saveFeaturesConfig(features) {
+    localStorage.setItem('pm_admin_features', JSON.stringify(features));
+    renderFeatures();
+  }
+
+  function resetFeatures() { localStorage.removeItem('pm_admin_features'); renderFeatures(); showToast('Features reset'); }
+
+  function toggleAllFeatures(on) {
+    var f = getFeaturesConfig();
+    f.forEach(function(x){ x.status = on ? 'enabled' : 'disabled'; });
+    saveFeaturesConfig(f);
+    showToast(on ? 'All features enabled' : 'All features disabled');
+  }
+
+  function setAllMaintenance() {
+    var f = getFeaturesConfig();
+    f.forEach(function(x){ x.status = 'maintenance'; });
+    saveFeaturesConfig(f);
+    showToast('All features set to maintenance');
+  }
+
+  function renderFeatures() {
+    var features = getFeaturesConfig();
+    var enabled = features.filter(function(f){return f.status==='enabled'}).length;
+    var maint = features.filter(function(f){return f.status==='maintenance'}).length;
+    document.getElementById('featuresCount').textContent = enabled + '/' + features.length + ' enabled' + (maint ? ', ' + maint + ' in maintenance' : '');
+    document.getElementById('featuresBar').style.width = (enabled/features.length*100) + '%';
+
+    // Group by category
+    var cats = {};
+    features.forEach(function(f, idx) {
+      if (!cats[f.cat]) cats[f.cat] = [];
+      cats[f.cat].push({ f:f, idx:idx });
+    });
+
+    var html = '';
+    // Maintenance banner if any features are in maintenance
+    if (maint > 0) {
+      html += '<div class="maintenance-banner mb-4"><i class="ri-tools-line"></i><div><p class="text-sm font-semibold text-yellow-400">'+maint+' feature'+(maint>1?'s':'')+' under maintenance</p><p class="text-xs text-yellow-500/70">These features are temporarily disabled and users will see a maintenance notice.</p></div></div>';
+    }
+    Object.keys(cats).forEach(function(cat) {
+      var catEnabled = cats[cat].filter(function(x){return x.f.status==='enabled'}).length;
+      var catMaint = cats[cat].filter(function(x){return x.f.status==='maintenance'}).length;
+      html += '<div class="glass-card p-4 mb-3"><h3 class="text-sm font-semibold mb-3">'+cat+' <span class="badge badge-trial">'+catEnabled+'/'+cats[cat].length+'</span>'+(catMaint?' <span class="badge badge-maintenance"><i class="ri-tools-line" style="font-size:0.6rem;margin-right:2px"></i>'+catMaint+'</span>':'')+'</h3>';
+      cats[cat].forEach(function(item) {
+        var f = item.f;
+        var isMaint = f.status === 'maintenance';
+        var isEnabled = f.status === 'enabled';
+        var bgClass = isMaint ? 'bg-yellow-500/[0.04] border border-yellow-500/20' : (isEnabled ? 'bg-white/[0.02]' : 'bg-white/[0.01] opacity-60');
+        html += '<div class="flex items-center justify-between py-2.5 px-3 rounded-xl mb-1 '+bgClass+'">' +
+          '<div class="flex-1 min-w-0">' +
+            '<div class="flex items-center gap-2"><p class="text-sm font-medium">'+f.label+'</p>' +
+            (isMaint ? '<span class="badge badge-maintenance text-[0.6rem]"><i class="ri-alert-line" style="font-size:0.55rem;margin-right:2px"></i>Maintenance</span>' : '') +
+            '</div>' +
+            '<p class="text-xs text-slate-500">'+f.desc+'</p>' +
+            (isMaint ? '<p class="text-[0.6rem] text-yellow-500/80 mt-1"><i class="ri-information-line"></i> Users see: "Under maintenance — back soon!"</p>' : '') +
+          '</div>' +
+          '<div class="flex items-center gap-2">' +
+            '<button class="px-2 py-1 rounded-lg text-[0.6rem] font-semibold transition-all '+(isMaint?'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30':'btn-ghost text-slate-600')+'" onclick="setFeatureStatus('+item.idx+',\'maintenance\')" title="Set maintenance"><i class="ri-tools-line"></i></button>' +
+            '<label class="switch"><input type="checkbox" '+(isEnabled?'checked':'')+' onchange="cycleFeature('+item.idx+')"><span class="slider"'+(isMaint?' style="background:linear-gradient(135deg,#F59E0B,#EAB308)"':'')+'></span></label>' +
+          '</div></div>';
+      });
+      html += '</div>';
+    });
+    document.getElementById('featuresList').innerHTML = html;
+  }
+
+  function cycleFeature(idx) {
+    var f = getFeaturesConfig();
+    // Toggle between enabled/disabled (maintenance is set via wrench button)
+    f[idx].status = f[idx].status === 'enabled' ? 'disabled' : 'enabled';
+    saveFeaturesConfig(f);
+  }
+
+  function setFeatureStatus(idx, status) {
+    var f = getFeaturesConfig();
+    f[idx].status = f[idx].status === status ? 'enabled' : status;
+    saveFeaturesConfig(f);
+    showToast(f[idx].label + (f[idx].status === 'maintenance' ? ' set to maintenance' : ' restored'));
+  }
+
+  // ===== APPEARANCE =====
+  function saveAppearance() {
+    var config = {
+      primary: document.getElementById('appPrimary').value,
+      accent: document.getElementById('appAccent').value,
+      badge: document.getElementById('appBadge').value,
+      title: document.getElementById('appTitle').value,
+      subtitle: document.getElementById('appSubtitle').value,
+      batch: document.getElementById('appBatch').value,
+      delay: document.getElementById('appDelay').value,
+      showFeedback: document.getElementById('appShowFeedback').checked,
+      showDisclaimer: document.getElementById('appShowDisclaimer').checked,
+    };
+    localStorage.setItem('pm_admin_appearance', JSON.stringify(config));
+    document.getElementById('appPrimaryHex').value = config.primary;
+    document.getElementById('appAccentHex').value = config.accent;
+    document.getElementById('gradientPreview').style.background = 'linear-gradient(135deg,' + config.primary + ',' + config.accent + ')';
+  }
+
+  function loadAppearance() {
+    try {
+      var c = JSON.parse(localStorage.getItem('pm_admin_appearance'));
+      if (!c) return;
+      document.getElementById('appPrimary').value = c.primary || '#3B82F6';
+      document.getElementById('appPrimaryHex').value = c.primary || '#3B82F6';
+      document.getElementById('appAccent').value = c.accent || '#14B8A6';
+      document.getElementById('appAccentHex').value = c.accent || '#14B8A6';
+      document.getElementById('appBadge').value = c.badge || '';
+      document.getElementById('appTitle').value = c.title || '';
+      document.getElementById('appSubtitle').value = c.subtitle || '';
+      document.getElementById('appBatch').value = c.batch || 5;
+      document.getElementById('batchVal').textContent = c.batch || 5;
+      document.getElementById('appDelay').value = c.delay || 1500;
+      document.getElementById('delayVal').textContent = c.delay || 1500;
+      document.getElementById('appShowFeedback').checked = c.showFeedback !== false;
+      document.getElementById('appShowDisclaimer').checked = c.showDisclaimer !== false;
+      document.getElementById('gradientPreview').style.background = 'linear-gradient(135deg,'+(c.primary||'#3B82F6')+','+(c.accent||'#14B8A6')+')';
+    } catch(e) {}
+  }
+
+  function resetAppearance() {
+    localStorage.removeItem('pm_admin_appearance');
+    loadAppearance();
+    showToast('Appearance reset');
+  }
+
+  // ===== LOGOUT =====
+  function adminLogout() {
+    if (!confirm('Logout?')) return;
+    var session = JSON.parse(localStorage.getItem('pm_session') || '{}');
+    var deviceId = localStorage.getItem('pm_device_id') || '';
+    if (session.licenseKey) {
+      fetch(SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(session.licenseKey) + '&deviceId=' + encodeURIComponent(deviceId)).catch(function(){});
+    }
+    localStorage.removeItem('pm_session');
+    window.location.replace('/login.html');
+  }
+
+  // ===== INIT =====
+  renderLayout();
+  renderFeatures();
+  loadAppearance();
+  loadAllData();
+</script>
+</body>
+</html>
