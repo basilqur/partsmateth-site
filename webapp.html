@@ -1543,15 +1543,19 @@
 
   <script>
     // ============ GLOBALS ============
-    const API = process.env.WEB_API;
-    const API_KEY = process.env.WEB_API_KEY;
-    const API_HEADERS = { 'Content-Type': 'application/json', 'x-api-key': API_KEY };
-    const GET_HEADERS = { 'x-api-key': API_KEY };
+    const API = '/api/proxy?path=';
+    const API_HEADERS = { 'Content-Type': 'application/json' };
+    const GET_HEADERS = {};
     let currentCurrency = 'AED';
     let abortControllers = {};
     let altResultsData = {};
 
-    function proxyUrl(path) { return API + path; }
+    function proxyUrl(path) { return API + encodeURIComponent(path); }
+
+    // For image URLs returned by the API (full URLs that need proxying)
+    function proxyImageUrl(fullUrl) {
+      return '/api/proxy?path=' + encodeURIComponent(new URL(fullUrl).pathname + new URL(fullUrl).search);
+    }
 
     // ============ SIDEBAR ============
     function openSidebar() {
@@ -1620,7 +1624,7 @@
         for (let i = 0; i < parts.length; i += 5) {
           const batch = parts.slice(i, i + 5);
           try {
-            const r = await fetch(API + '/getSticker', {
+            const r = await fetch(proxyUrl('/getSticker'), {
               method: 'POST',
               headers: API_HEADERS,
               body: JSON.stringify({ parts: batch })
@@ -2145,7 +2149,7 @@
       const result = document.getElementById('diagramResult');
       result.innerHTML = '<div class="flex items-center gap-2 text-slate-500 text-sm"><div class="spinner" style="width:1.25rem;height:1.25rem;border:2px solid rgba(255,255,255,0.08);border-top-color:#14B8A6;border-radius:50%;animation:spin 0.7s linear infinite"></div> Generating diagram...</div>';
       try {
-        const res = await fetch(API + '/diagram/generate?article=' + encodeURIComponent(part), { headers: GET_HEADERS });
+        const res = await fetch(proxyUrl('/diagram/generate?article=' + encodeURIComponent(part)), { headers: GET_HEADERS });
         const data = await res.json();
         if (data.diagramUrl) {
           // Fetch the image with API key as a blob to bypass auth on <img> tag
@@ -2161,7 +2165,7 @@
               </div>
             </div>`;
           try {
-            const imgRes = await fetch(data.diagramUrl, { headers: GET_HEADERS });
+            const imgRes = await fetch(proxyImageUrl(data.diagramUrl), {});
             if (!imgRes.ok) throw new Error('Image fetch failed: ' + imgRes.status);
             const blob = await imgRes.blob();
             const objectUrl = URL.createObjectURL(blob);
@@ -2171,12 +2175,13 @@
                 <div style="position:relative;width:100%;height:600px;overflow:hidden;cursor:grab;background:#0d1224;border-radius:8px;" id="diagramViewer">
                   <img src="${objectUrl}" alt="Diagram for ${data.article || part}" id="diagramImg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);max-width:100%;max-height:100%;transform-origin:center center;transition:transform 0.15s ease;user-select:none;" draggable="false">
                    <div style="position:absolute;top:10px;right:10px;z-index:10;display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
-                     <div style="display:flex;gap:4px;align-items:start;padding:8px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:10px;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(0,0,0,0.25);">
-                       <div style="display:grid;grid-template-columns:40px;grid-template-rows:40px 40px;gap:3px;">
+                     <div style="display:flex;gap:6px;align-items:stretch;padding:8px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:10px;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(0,0,0,0.25);">
+                       <div style="display:grid;grid-template-columns:40px;grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
                          <button onclick="diagramZoom(1)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom In">+</button>
                          <button onclick="diagramZoom(-1)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom Out">−</button>
+                         <div aria-hidden="true" style="width:40px;height:40px;"></div>
                        </div>
-                       <div style="display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:3px;">
+                       <div style="display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
                          <div></div>
                          <button onclick="diagramPan(0,60)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Up">▲</button>
                          <div></div>
@@ -2245,7 +2250,7 @@
     // ============ DIMENSIONS / HS CODE / CBM SHARED API ============
     async function fetchDimensionsData(partno) {
       const cleaned = partno.replace(/[-\s]/g, '');
-      const res = await fetch(API + '/dimensions/check?partno=' + encodeURIComponent(cleaned), { headers: GET_HEADERS });
+      const res = await fetch(proxyUrl('/dimensions/check?partno=' + encodeURIComponent(cleaned)), { headers: GET_HEADERS });
       return await res.json();
     }
 
@@ -2454,7 +2459,7 @@
           const batch = parts.slice(i, i + 5);
           let data = {};
           try {
-            const r = await fetch(API + '/getPrice', {
+            const r = await fetch(proxyUrl('/getPrice'), {
               method: 'POST', signal,
               headers: API_HEADERS,
               body: JSON.stringify({ parts: batch })
@@ -2512,7 +2517,7 @@
             for (const part of batch) {
               try {
                 const cleaned = part.replace(/[-\s]/g, '');
-                const r = await fetch(API + '/getWeights?partno=' + cleaned, { signal, headers: GET_HEADERS });
+                const r = await fetch(proxyUrl('/getWeights?partno=' + encodeURIComponent(cleaned)), { signal, headers: GET_HEADERS });
                 const d = await r.json();
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td><td>${d.brand || 'N/A'}</td>`;
@@ -2523,7 +2528,7 @@
             for (const part of batch) {
               try {
                 const cleaned = part.replace(/[-\s]/g, '');
-                const r = await fetch(API + '/getToyodiyName?partno=' + cleaned, { signal, headers: GET_HEADERS });
+                const r = await fetch(proxyUrl('/getToyodiyName?partno=' + encodeURIComponent(cleaned)), { signal, headers: GET_HEADERS });
                 const d = await r.json();
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td>`;
@@ -2533,7 +2538,7 @@
           } else {
             const endpoint = source === 'futtaim' ? '/getPrice' : '/getSticker';
             try {
-              const r = await fetch(API + endpoint, {
+              const r = await fetch(proxyUrl(endpoint), {
                 method: 'POST', signal,
                 headers: API_HEADERS,
                 body: JSON.stringify({ parts: batch })
@@ -2569,7 +2574,7 @@
         for (let i = 0; i < parts.length; i += 5) {
           const batch = parts.slice(i, i + 5);
           try {
-            const r = await fetch(API + '/getSticker', {
+            const r = await fetch(proxyUrl('/getSticker'), {
               method: 'POST', signal,
               headers: API_HEADERS,
               body: JSON.stringify({ parts: batch })
@@ -2619,7 +2624,7 @@
             continue;
           }
           try {
-            const r = await fetch(API + '/getDescription?partno=' + cleaned, { signal, headers: GET_HEADERS });
+            const r = await fetch(proxyUrl('/getDescription?partno=' + encodeURIComponent(cleaned)), { signal, headers: GET_HEADERS });
             const d = await r.json();
             const block = document.createElement('div');
             block.className = 'mb-5 p-4 rounded-lg bg-white/[0.02] border border-white/5';
@@ -2667,7 +2672,7 @@
         for (const part of parts) {
           try {
             const cleaned = part.replace(/[-\s]/g, '');
-            const r = await fetch(API + '/getWeights?partno=' + cleaned, { signal, headers: GET_HEADERS });
+            const r = await fetch(proxyUrl('/getWeights?partno=' + encodeURIComponent(cleaned)), { signal, headers: GET_HEADERS });
             const d = await r.json();
             const tr = document.createElement('tr');
             tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${d.name || 'N/A'}</td><td>${d.weight || '❌'}</td><td>${d.brand || 'N/A'}</td>`;
@@ -2880,13 +2885,11 @@
       window.location.replace('/login.html');
     }
 
-    // ============ IMAGE OCR via Google Vision API ============
-    const VISION_API_KEY = 'AIzaSyD9hv5dTxWfJhQa8eJ10jSJsyOyeDCxx4g';
-
+    // ============ IMAGE OCR via Google Vision API (proxied) ============
     async function ocrFromImage(imageFile) {
       const arrayBuf = await imageFile.arrayBuffer();
       const base64 = btoa(new Uint8Array(arrayBuf).reduce((s, b) => s + String.fromCharCode(b), ''));
-      const res = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`, {
+      const res = await fetch('/api/vision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
