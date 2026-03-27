@@ -849,7 +849,7 @@
 
           <div class="plan-toggle">
             <div class="plan-slider" id="planSlider"></div>
-            <button class="plan-btn active" data-plan="pro" onclick="switchPlan('pro')">Pro — 349 AED/mo</button>
+            <button class="plan-btn active" data-plan="pro" onclick="switchPlan('pro')">Pro — $49.99 per/month</button>
             <button class="plan-btn" data-plan="trial" onclick="switchPlan('trial')">7-Day Free Trial</button>
           </div>
 
@@ -880,7 +880,7 @@
           </div>
 
           <button onclick="handleSignup()" id="btnSignup" class="btn-primary">
-            <span id="signupBtnText">Subscribe Now — 349 AED/mo</span>
+            <span id="signupBtnText">Subscribe Now — $49.99/month</span>
           </button>
 
           <p class="terms-text">By signing up, you agree to our Terms of Service.</p>
@@ -1092,7 +1092,7 @@
         txt.textContent = 'Start 7-Day Free Trial';
         btn.classList.add('trial-btn');
       } else {
-        txt.textContent = 'Subscribe Now — 349 AED/mo';
+        txt.textContent = 'Subscribe Now — $49.99/month';
         btn.classList.remove('trial-btn');
       }
     }
@@ -1310,7 +1310,7 @@
         showToast('Connection error. Please try again.', 'error');
       } finally {
         btn.disabled = false;
-        const txt = selectedPlan === 'pro' ? 'Subscribe Now — 349 AED/mo' : 'Start 7-Day Free Trial';
+        const txt = selectedPlan === 'pro' ? 'Subscribe Now — $49.99/month' : 'Start 7-Day Free Trial';
         btn.innerHTML = `<span id="signupBtnText">${txt}</span>`;
         if (selectedPlan === 'trial') btn.classList.add('trial-btn');
       }
