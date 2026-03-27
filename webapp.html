@@ -2174,27 +2174,27 @@
               container.innerHTML = `
                 <div style="position:relative;width:100%;height:600px;overflow:hidden;cursor:grab;background:#0d1224;border-radius:8px;" id="diagramViewer">
                   <img src="${objectUrl}" alt="Diagram for ${data.article || part}" id="diagramImg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);max-width:100%;max-height:100%;transform-origin:center center;transition:transform 0.15s ease;user-select:none;" draggable="false">
-                   <div style="position:absolute;top:10px;right:10px;z-index:10;display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
-                     <div style="display:flex;gap:6px;align-items:stretch;padding:8px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:10px;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(0,0,0,0.25);">
-                       <div style="display:grid;grid-template-columns:40px;grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
-                         <button onclick="diagramZoom(1)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom In">+</button>
-                         <button onclick="diagramZoom(-1)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom Out">−</button>
-                         <div aria-hidden="true" style="width:40px;height:40px;"></div>
-                       </div>
-                       <div style="display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
-                         <div></div>
-                         <button onclick="diagramPan(0,60)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Up">▲</button>
-                         <div></div>
-                         <button onclick="diagramPan(60,0)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Left">◀</button>
-                         <button onclick="diagramReset()" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Reset">✕</button>
-                         <button onclick="diagramPan(-60,0)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Right">▶</button>
-                         <div></div>
-                         <button onclick="diagramPan(0,-60)" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Down">▼</button>
-                         <div></div>
-                       </div>
-                     </div>
-                     <div style="padding:4px 8px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:999px;color:rgba(255,255,255,0.75);font-size:11px;line-height:1;backdrop-filter:blur(10px);">Ctrl + scroll to zoom · drag to move</div>
-                   </div>
+                   <div id="diagramControls" style="position:absolute;top:10px;right:10px;z-index:10;display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+                      <div style="display:flex;gap:6px;align-items:stretch;padding:8px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:10px;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(0,0,0,0.25);">
+                        <div style="display:grid;grid-template-columns:40px;grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+                          <button data-hold="zoom" data-dir="1" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom In">+</button>
+                          <button data-hold="zoom" data-dir="-1" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom Out">−</button>
+                          <div aria-hidden="true" style="width:40px;height:40px;"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
+                          <div></div>
+                          <button data-hold="pan" data-dx="0" data-dy="60" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Up">▲</button>
+                          <div></div>
+                          <button data-hold="pan" data-dx="60" data-dy="0" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Left">◀</button>
+                          <button onclick="diagramReset()" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Reset">✕</button>
+                          <button data-hold="pan" data-dx="-60" data-dy="0" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Right">▶</button>
+                          <div></div>
+                          <button data-hold="pan" data-dx="0" data-dy="-60" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Down">▼</button>
+                          <div></div>
+                        </div>
+                      </div>
+                      <div style="padding:4px 8px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:999px;color:rgba(255,255,255,0.75);font-size:11px;line-height:1;backdrop-filter:blur(10px);" id="diagramHint">Ctrl + scroll to zoom · drag to move</div>
+                    </div>
                 </div>`;
               initDiagramViewer();
             }
@@ -2214,6 +2214,7 @@
 
     // ============ DIAGRAM VIEWER CONTROLS ============
     let dgScale = 1, dgX = 0, dgY = 0;
+    const isMobileDevice = () => window.innerWidth < 768 || 'ontouchstart' in window;
     function applyDiagramTransform() {
       const img = document.getElementById('diagramImg');
       if (img) { img.style.transform = `translate(calc(-50% + ${dgX}px), calc(-50% + ${dgY}px)) scale(${dgScale})`; }
@@ -2224,16 +2225,59 @@
     }
     function diagramPan(dx, dy) { dgX += dx; dgY += dy; applyDiagramTransform(); }
     function diagramReset() { dgScale = 1; dgX = 0; dgY = 0; applyDiagramTransform(); }
+
+    // Press-and-hold support for desktop buttons
+    let holdInterval = null;
+    function startHold(fn) { fn(); holdInterval = setInterval(fn, 100); }
+    function stopHold() { if (holdInterval) { clearInterval(holdInterval); holdInterval = null; } }
+    window.addEventListener('mouseup', stopHold);
+    window.addEventListener('mouseleave', stopHold);
+
     function initDiagramViewer() {
       dgScale = 1; dgX = 0; dgY = 0;
       const viewer = document.getElementById('diagramViewer');
       if (!viewer) return;
+
+      // Hide controls and show mobile hint on mobile
+      const controls = document.getElementById('diagramControls');
+      const hint = document.getElementById('diagramHint');
+      if (isMobileDevice()) {
+        if (controls) controls.style.display = 'none';
+        // Show a mobile-friendly hint instead
+        const mobileHint = document.createElement('div');
+        mobileHint.style.cssText = 'position:absolute;bottom:10px;left:50%;transform:translateX(-50%);z-index:10;padding:4px 12px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:999px;color:rgba(255,255,255,0.6);font-size:11px;line-height:1;backdrop-filter:blur(10px);white-space:nowrap;pointer-events:none;';
+        mobileHint.textContent = 'Pinch to zoom · drag to move';
+        viewer.appendChild(mobileHint);
+        // Auto-hide after 3s
+        setTimeout(() => { mobileHint.style.transition = 'opacity 0.5s'; mobileHint.style.opacity = '0'; setTimeout(() => mobileHint.remove(), 500); }, 3000);
+      } else {
+        // Desktop: attach press-and-hold to all holdable buttons
+        if (controls) {
+          controls.querySelectorAll('[data-hold]').forEach(btn => {
+            const type = btn.getAttribute('data-hold');
+            if (type === 'zoom') {
+              const dir = parseInt(btn.getAttribute('data-dir'));
+              btn.onmousedown = (e) => { e.preventDefault(); startHold(() => diagramZoom(dir)); };
+            } else if (type === 'pan') {
+              const dx = parseInt(btn.getAttribute('data-dx'));
+              const dy = parseInt(btn.getAttribute('data-dy'));
+              btn.onmousedown = (e) => { e.preventDefault(); startHold(() => diagramPan(dx, dy)); };
+            }
+          });
+        }
+      }
+
+      // Mouse drag (desktop)
       let dragging = false, startX, startY, origX, origY;
-      viewer.onmousedown = (e) => { dragging = true; startX = e.clientX; startY = e.clientY; origX = dgX; origY = dgY; viewer.style.cursor = 'grabbing'; e.preventDefault(); };
+      viewer.onmousedown = (e) => {
+        if (e.target.closest('[data-hold]') || e.target.closest('button')) return;
+        dragging = true; startX = e.clientX; startY = e.clientY; origX = dgX; origY = dgY; viewer.style.cursor = 'grabbing'; e.preventDefault();
+      };
       window.addEventListener('mousemove', (e) => { if (!dragging) return; dgX = origX + (e.clientX - startX); dgY = origY + (e.clientY - startY); applyDiagramTransform(); });
       window.addEventListener('mouseup', () => { if (dragging) { dragging = false; if (document.getElementById('diagramViewer')) document.getElementById('diagramViewer').style.cursor = 'grab'; } });
       viewer.onwheel = (e) => { if (e.ctrlKey) { e.preventDefault(); diagramZoom(e.deltaY < 0 ? 1 : -1); } };
-      // Touch support
+
+      // Touch support (mobile: drag + pinch zoom)
       let lastTouchDist = 0;
       viewer.ontouchstart = (e) => {
         if (e.touches.length === 1) { dragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY; origX = dgX; origY = dgY; }
@@ -2242,7 +2286,7 @@
       viewer.ontouchmove = (e) => {
         e.preventDefault();
         if (e.touches.length === 1 && dragging) { dgX = origX + (e.touches[0].clientX - startX); dgY = origY + (e.touches[0].clientY - startY); applyDiagramTransform(); }
-        if (e.touches.length === 2) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); dgScale = Math.max(0.2, Math.min(5, dgScale * (d / lastTouchDist))); lastTouchDist = d; applyDiagramTransform(); }
+        if (e.touches.length === 2) { const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); dgScale = Math.max(0.2, Math.min(8, dgScale * (d / lastTouchDist))); lastTouchDist = d; applyDiagramTransform(); }
       };
       viewer.ontouchend = () => { dragging = false; };
     }
