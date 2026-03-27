@@ -1299,6 +1299,11 @@
                 <div>
                   <label class="section-label" data-i18n="label.enterPartNumbers">Enter Part Numbers</label>
                   <textarea id="txtListCleanerInput" class="input-field" placeholder="Paste part numbers or text here..." rows="6"></textarea>
+                  <div id="pastedImagePreview" class="hidden mt-2 relative inline-block">
+                    <img id="pastedImageThumb" src="" alt="Pasted image" class="max-h-24 rounded-lg border border-slate-600 object-contain cursor-pointer" onclick="document.getElementById('pastedImageThumb').classList.toggle('max-h-24'); document.getElementById('pastedImageThumb').classList.toggle('max-h-64');">
+                    <button onclick="clearPastedImage()" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs leading-none" title="Remove image">&times;</button>
+                    <span class="text-[10px] text-slate-500 mt-1 block" data-i18n="label.clickProcessImage">Click Clean List or Read Text to process</span>
+                  </div>
                   <input type="file" id="fileUploadInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
                 </div>
                 <div class="flex gap-2">
@@ -1748,7 +1753,7 @@
         'label.partNumbers': 'Part Numbers', 'label.enterPartNumbers': 'Enter Part Numbers',
         'label.source': 'Source', 'label.currency': 'Currency',
         'label.filterByBrand': 'Filter by Brand', 'label.result': 'Result:',
-        'label.checkMultipleParts': 'Check Multiple Parts', 'label.allBrands': 'All Brands',
+        'label.checkMultipleParts': 'Check Multiple Parts', 'label.allBrands': 'All Brands', 'label.clickProcessImage': 'Click Clean List or Read Text to process',
         // Feedback
         'feedback.suggestion': 'Suggestion', 'feedback.complaint': 'Complaint',
         // Loaders
@@ -1937,7 +1942,7 @@
         'label.filterByBrand': 'Filtrer par marque',
         'label.result': 'Résultat :',
         'label.checkMultipleParts': 'Vérifier plusieurs pièces',
-        'label.allBrands': 'Toutes les marques',
+        'label.allBrands': 'Toutes les marques', 'label.clickProcessImage': 'Cliquez sur Nettoyer ou Lire pour traiter',
         'feedback.suggestion': 'Suggestion',
         'feedback.complaint': 'Réclamation',
         'loader.fetchingPrices': 'Récupération des prix...',
@@ -2140,7 +2145,7 @@
         'label.filterByBrand': 'تصفية حسب العلامة',
         'label.result': 'النتيجة:',
         'label.checkMultipleParts': 'فحص عدة قطع',
-        'label.allBrands': 'جميع العلامات',
+        'label.allBrands': 'جميع العلامات', 'label.clickProcessImage': 'انقر على تنظيف القائمة أو قراءة النص للمعالجة',
         'feedback.suggestion': 'اقتراح',
         'feedback.complaint': 'شكوى',
         'loader.fetchingPrices': 'جارٍ جلب الأسعار...',
@@ -2343,7 +2348,7 @@
         'label.filterByBrand': 'ब्रांड द्वारा फ़िल्टर',
         'label.result': 'परिणाम:',
         'label.checkMultipleParts': 'कई भाग जाँचें',
-        'label.allBrands': 'सभी ब्रांड',
+        'label.allBrands': 'सभी ब्रांड', 'label.clickProcessImage': 'प्रोसेस करने के लिए क्लीन लिस्ट या रीड टेक्स्ट पर क्लिक करें',
         'feedback.suggestion': 'सुझाव',
         'feedback.complaint': 'शिकायत',
         'loader.fetchingPrices': 'कीमतें ला रहे हैं...',
@@ -2524,7 +2529,7 @@
         'label.filterByBrand': 'برانڈ سے فلٹر',
         'label.result': 'نتیجہ:',
         'label.checkMultipleParts': 'ملٹی پارٹس چیک کریں',
-        'label.allBrands': 'تمام برانڈز',
+        'label.allBrands': 'تمام برانڈز', 'label.clickProcessImage': 'پروسیس کرنے کے لیے کلین لسٹ یا ریڈ ٹیکسٹ پر کلک کریں',
         'feedback.suggestion': 'تجویز',
         'feedback.complaint': 'شکایت',
         'loader.fetchingPrices': 'قیمتیں لا رہے ہیں...',
@@ -2677,7 +2682,7 @@
         'label.filterByBrand': 'Фильтр по марке',
         'label.result': 'Результат:',
         'label.checkMultipleParts': 'Проверить несколько деталей',
-        'label.allBrands': 'Все бренды',
+        'label.allBrands': 'Все бренды', 'label.clickProcessImage': 'Нажмите «Очистить» или «Читать текст» для обработки',
         'feedback.suggestion': 'Предложение',
         'feedback.complaint': 'Жалоба',
         'loader.fetchingPrices': 'Загрузка цен...',
@@ -2880,7 +2885,7 @@
         'label.filterByBrand': 'د برانډ له مخې فلټر',
         'label.result': 'پایله:',
         'label.checkMultipleParts': 'ګڼ برخې وګورئ',
-        'label.allBrands': 'ټول برانډونه',
+        'label.allBrands': 'ټول برانډونه', 'label.clickProcessImage': 'د پروسس لپاره کلین لیست یا متن ولولئ کلیک وکړئ',
         'feedback.suggestion': 'وړاندیز',
         'feedback.complaint': 'شکایت',
         'loader.fetchingPrices': 'نرخونه راوړل...',
@@ -3083,7 +3088,7 @@
         'label.filterByBrand': '브랜드 필터',
         'label.result': '결과:',
         'label.checkMultipleParts': '여러 부품 확인',
-        'label.allBrands': '모든 브랜드',
+        'label.allBrands': '모든 브랜드', 'label.clickProcessImage': '처리하려면 목록 정리 또는 텍스트 읽기를 클릭하세요',
         'feedback.suggestion': '제안',
         'feedback.complaint': '불만',
         'loader.fetchingPrices': '가격 가져오는 중...',
@@ -3286,7 +3291,7 @@
         'label.filterByBrand': 'Markaya Göre Filtrele',
         'label.result': 'Sonuç:',
         'label.checkMultipleParts': 'Birden Fazla Parça Kontrol Et',
-        'label.allBrands': 'Tüm Markalar',
+        'label.allBrands': 'Tüm Markalar', 'label.clickProcessImage': 'İşlemek için Listeyi Temizle veya Metni Oku\'ya tıklayın',
         'feedback.suggestion': 'Öneri',
         'feedback.complaint': 'Şikâyet',
         'loader.fetchingPrices': 'Fiyatlar getiriliyor...',
@@ -3489,7 +3494,7 @@
         'label.filterByBrand': '按品牌筛选',
         'label.result': '结果：',
         'label.checkMultipleParts': '检查多个零件',
-        'label.allBrands': '所有品牌',
+        'label.allBrands': '所有品牌', 'label.clickProcessImage': '点击清理列表或读取文本进行处理',
         'feedback.suggestion': '建议',
         'feedback.complaint': '投诉',
         'loader.fetchingPrices': '正在获取价格...',
@@ -4258,12 +4263,12 @@
 
     async function cleanList() {
       let input = document.getElementById('txtListCleanerInput').value;
-      // Check for uploaded image
-      if (window._uploadedImageBase64 && input.startsWith('[Image loaded:')) {
+      // Check for uploaded/pasted image
+      if (window._uploadedImageBase64) {
         showToast('Processing image...', 'success');
         try {
           input = await ocrFromBase64(window._uploadedImageBase64);
-          window._uploadedImageBase64 = null;
+          clearPastedImage();
         } catch(e) { showToast('OCR failed: ' + e.message, 'error'); return; }
       }
       if (!input.trim()) { showToast('Please enter text or upload an image first', 'warning'); return; }
@@ -4278,12 +4283,12 @@
 
     async function readText() {
       let input = document.getElementById('txtListCleanerInput').value;
-      // Check for uploaded image
-      if (window._uploadedImageBase64 && input.startsWith('[Image loaded:')) {
+      // Check for uploaded/pasted image
+      if (window._uploadedImageBase64) {
         showToast('Processing image...', 'success');
         try {
           input = await ocrFromBase64(window._uploadedImageBase64);
-          window._uploadedImageBase64 = null;
+          clearPastedImage();
         } catch(e) { showToast('OCR failed: ' + e.message, 'error'); return; }
       }
       if (!input.trim()) { showToast('Please enter text or upload an image first', 'warning'); return; }
@@ -4303,6 +4308,19 @@
       modal.classList.remove('flex');
     }
 
+    function showPastedImagePreview(dataUrl) {
+      document.getElementById('pastedImageThumb').src = dataUrl;
+      document.getElementById('pastedImagePreview').classList.remove('hidden');
+      // Store base64 for OCR
+      window._uploadedImageBase64 = dataUrl.split(',')[1];
+    }
+
+    function clearPastedImage() {
+      document.getElementById('pastedImagePreview').classList.add('hidden');
+      document.getElementById('pastedImageThumb').src = '';
+      window._uploadedImageBase64 = null;
+    }
+
     function handleFileUpload(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -4312,14 +4330,11 @@
       }
       const reader = new FileReader();
       reader.onload = function(e) {
-        // Show thumbnail preview in textarea as indicator
-        document.getElementById('txtListCleanerInput').value = '[Image loaded: ' + file.name + ']';
-        // Store base64 for OCR processing
-        window._uploadedImageBase64 = e.target.result.split(',')[1];
+        showPastedImagePreview(e.target.result);
         showToast('Image loaded! Click Clean List or Read Text to process.', 'success');
       };
       reader.readAsDataURL(file);
-      event.target.value = ''; // reset so same file can be re-uploaded
+      event.target.value = '';
     }
 
     function toggleAllBrands() {
@@ -5339,6 +5354,17 @@
             e.preventDefault();
             const blob = imageItem.getAsFile();
             if (!blob) return;
+            // For List Cleaner: show thumbnail preview instead of auto-processing
+            if (id === 'txtListCleanerInput') {
+              const reader = new FileReader();
+              reader.onload = function(ev) {
+                showPastedImagePreview(ev.target.result);
+                showToast('Image pasted! Click Clean List or Read Text to process.', 'success');
+              };
+              reader.readAsDataURL(blob);
+              return;
+            }
+            // For other inputs: auto-process as before
             showToast('Running OCR on pasted image...', 'info');
             try {
               const rawText = await ocrFromBlob(blob);
