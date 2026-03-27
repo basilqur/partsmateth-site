@@ -1299,10 +1299,14 @@
                 <div>
                   <label class="section-label" data-i18n="label.enterPartNumbers">Enter Part Numbers</label>
                   <textarea id="txtListCleanerInput" class="input-field" placeholder="Paste part numbers or text here..." rows="6"></textarea>
+                  <input type="file" id="fileUploadInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
                 </div>
                 <div class="flex gap-2">
-                  <button onclick="alert('Scan feature coming soon')" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                  <button onclick="showSnipGuide()" class="btn-primary px-4 py-2.5 text-sm flex-1">
                     <span class="flex items-center justify-center gap-1.5"><i class="ri-camera-line"></i> <span data-i18n="btn.scan">Scan</span></span>
+                  </button>
+                  <button onclick="document.getElementById('fileUploadInput').click()" class="btn-primary px-4 py-2.5 text-sm flex-1">
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-upload-2-line"></i> <span data-i18n="btn.uploadImage">Upload Image</span></span>
                   </button>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -1594,6 +1598,51 @@
   <!-- Toast -->
   <div id="toast" class="toast toast-success">Message</div>
 
+  <!-- Snip Guide Modal -->
+  <div id="snipGuideModal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/70 backdrop-blur-sm" onclick="if(event.target===this)closeSnipGuide()">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-lg w-[95%] max-h-[85vh] overflow-y-auto p-6 shadow-2xl relative">
+      <button onclick="closeSnipGuide()" class="absolute top-3 right-3 text-slate-400 hover:text-white text-xl"><i class="ri-close-line"></i></button>
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="ri-screenshot-2-line text-emerald-400"></i> <span data-i18n="snip.title">Screenshot Guide</span></h3>
+      
+      <!-- Windows 10/11 -->
+      <div class="mb-4 bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+        <h4 class="text-sm font-bold text-blue-400 mb-2 flex items-center gap-2"><i class="ri-windows-line"></i> <span data-i18n="snip.win10Title">Windows 10 / 11 (Recommended)</span></h4>
+        <ol class="text-sm text-slate-300 space-y-2 list-decimal list-inside">
+          <li data-i18n="snip.win10Step1">Press <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> to open Snip & Sketch</li>
+          <li data-i18n="snip.win10Step2">Select the area of the screen you want to capture</li>
+          <li data-i18n="snip.win10Step3">Come back here and paste with <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> or right-click → Paste in the text box</li>
+        </ol>
+      </div>
+
+      <!-- Windows 7/8 -->
+      <div class="mb-4 bg-slate-500/10 border border-slate-500/20 rounded-xl p-4">
+        <h4 class="text-sm font-bold text-slate-400 mb-2 flex items-center gap-2"><i class="ri-windows-line"></i> <span data-i18n="snip.win7Title">Windows 7 / 8</span></h4>
+        <ol class="text-sm text-slate-400 space-y-2 list-decimal list-inside">
+          <li data-i18n="snip.win7Step1">Open Start Menu and search for "Snipping Tool"</li>
+          <li data-i18n="snip.win7Step2">Click "New" and select the area to capture</li>
+          <li data-i18n="snip.win7Step3">Save the screenshot, then use the <strong class="text-emerald-400">Upload Image</strong> button below to upload it</li>
+        </ol>
+      </div>
+
+      <!-- Mac -->
+      <div class="mb-4 bg-slate-500/10 border border-slate-500/20 rounded-xl p-4">
+        <h4 class="text-sm font-bold text-slate-400 mb-2 flex items-center gap-2"><i class="ri-apple-line"></i> <span data-i18n="snip.macTitle">macOS</span></h4>
+        <ol class="text-sm text-slate-400 space-y-2 list-decimal list-inside">
+          <li data-i18n="snip.macStep1">Press <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd> to capture a selected area</li>
+          <li data-i18n="snip.macStep2">The screenshot is saved to your desktop — use <strong class="text-emerald-400">Upload Image</strong> to upload it</li>
+        </ol>
+      </div>
+
+      <!-- Alternative -->
+      <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 text-center">
+        <p class="text-sm text-emerald-400 mb-3" data-i18n="snip.altText">Or simply upload an image file directly:</p>
+        <button onclick="closeSnipGuide();document.getElementById('fileUploadInput').click()" class="btn-primary px-5 py-2.5 text-sm">
+          <span class="flex items-center justify-center gap-1.5"><i class="ri-upload-2-line"></i> <span data-i18n="btn.uploadImage">Upload Image</span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ============ GLOBALS ============
     const API = '/api/proxy?path=';
@@ -1685,7 +1734,16 @@
         'btn.readText': 'Read Text', 'btn.generate': 'Generate', 'btn.calculate': 'Calculate',
         'btn.submitFeedback': 'Submit Feedback', 'btn.sort': 'Sort', 'btn.clean': 'Clean',
         'btn.stop': 'Stop', 'btn.search': 'Search', 'btn.check': 'Check',
-        'btn.quick': 'Quick', 'btn.deep': 'Deep', 'btn.scan': 'Scan', 'btn.back': 'Back',
+        'btn.quick': 'Quick', 'btn.deep': 'Deep', 'btn.scan': 'Scan', 'btn.back': 'Back', 'btn.uploadImage': 'Upload Image',
+        'snip.title': 'Screenshot Guide', 'snip.win10Title': 'Windows 10 / 11 (Recommended)', 'snip.win7Title': 'Windows 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': 'Press <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> to open Snip & Sketch',
+        'snip.win10Step2': 'Select the area of the screen you want to capture',
+        'snip.win10Step3': 'Come back here and paste with <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> or right-click → Paste in the text box',
+        'snip.win7Step1': 'Open Start Menu and search for "Snipping Tool"', 'snip.win7Step2': 'Click "New" and select the area to capture',
+        'snip.win7Step3': 'Save the screenshot, then use the <strong class="text-emerald-400">Upload Image</strong> button below to upload it',
+        'snip.macStep1': 'Press <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd> to capture a selected area',
+        'snip.macStep2': 'The screenshot is saved to your desktop — use <strong class="text-emerald-400">Upload Image</strong> to upload it',
+        'snip.altText': 'Or simply upload an image file directly:',
         // Labels
         'label.partNumbers': 'Part Numbers', 'label.enterPartNumbers': 'Enter Part Numbers',
         'label.source': 'Source', 'label.currency': 'Currency',
@@ -1862,6 +1920,16 @@
         'btn.deep': 'Approfondi',
         'btn.scan': 'Scanner',
         'btn.back': 'Retour',
+        'btn.uploadImage': 'Télécharger image',
+        'snip.title': 'Guide de capture d\'écran', 'snip.win10Title': 'Windows 10 / 11 (Recommandé)', 'snip.win7Title': 'Windows 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': 'Appuyez sur <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> pour ouvrir Capture d\'écran',
+        'snip.win10Step2': 'Sélectionnez la zone de l\'écran à capturer',
+        'snip.win10Step3': 'Revenez ici et collez avec <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> ou clic droit → Coller',
+        'snip.win7Step1': 'Ouvrez le menu Démarrer et recherchez "Outil Capture d\'écran"', 'snip.win7Step2': 'Cliquez sur "Nouveau" et sélectionnez la zone',
+        'snip.win7Step3': 'Enregistrez la capture, puis utilisez le bouton <strong class="text-emerald-400">Télécharger image</strong>',
+        'snip.macStep1': 'Appuyez sur <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd>',
+        'snip.macStep2': 'La capture est enregistrée sur le bureau — utilisez <strong class="text-emerald-400">Télécharger image</strong>',
+        'snip.altText': 'Ou téléchargez directement un fichier image :',
         'label.partNumbers': 'Numéros de pièces',
         'label.enterPartNumbers': 'Entrer les numéros',
         'label.source': 'Source',
@@ -2055,6 +2123,16 @@
         'btn.deep': 'عميق',
         'btn.scan': 'مسح',
         'btn.back': 'رجوع',
+        'btn.uploadImage': 'تحميل صورة',
+        'snip.title': 'دليل لقطة الشاشة', 'snip.win10Title': 'ويندوز 10 / 11 (موصى به)', 'snip.win7Title': 'ويندوز 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': 'اضغط <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> لفتح أداة القص',
+        'snip.win10Step2': 'حدد المنطقة التي تريد التقاطها',
+        'snip.win10Step3': 'عد إلى هنا والصق بـ <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> أو انقر بزر الماوس الأيمن → لصق',
+        'snip.win7Step1': 'افتح قائمة ابدأ وابحث عن "أداة القطع"', 'snip.win7Step2': 'انقر "جديد" وحدد المنطقة',
+        'snip.win7Step3': 'احفظ لقطة الشاشة، ثم استخدم زر <strong class="text-emerald-400">تحميل صورة</strong>',
+        'snip.macStep1': 'اضغط <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd>',
+        'snip.macStep2': 'يتم حفظ اللقطة على سطح المكتب — استخدم <strong class="text-emerald-400">تحميل صورة</strong>',
+        'snip.altText': 'أو قم بتحميل ملف صورة مباشرة:',
         'label.partNumbers': 'أرقام القطع',
         'label.enterPartNumbers': 'أدخل أرقام القطع',
         'label.source': 'المصدر',
@@ -2248,6 +2326,16 @@
         'btn.deep': 'गहन',
         'btn.scan': 'स्कैन',
         'btn.back': 'वापस',
+        'btn.uploadImage': 'छवि अपलोड करें',
+        'snip.title': 'स्क्रीनशॉट गाइड', 'snip.win10Title': 'Windows 10 / 11 (अनुशंसित)', 'snip.win7Title': 'Windows 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> दबाएं',
+        'snip.win10Step2': 'कैप्चर करने के लिए स्क्रीन का क्षेत्र चुनें',
+        'snip.win10Step3': 'यहाँ वापस आएँ और <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> से पेस्ट करें',
+        'snip.win7Step1': 'स्टार्ट मेनू खोलें और "Snipping Tool" खोजें', 'snip.win7Step2': '"New" पर क्लिक करें और क्षेत्र चुनें',
+        'snip.win7Step3': 'स्क्रीनशॉट सेव करें, फिर <strong class="text-emerald-400">छवि अपलोड करें</strong> बटन का उपयोग करें',
+        'snip.macStep1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd> दबाएं',
+        'snip.macStep2': 'स्क्रीनशॉट डेस्कटॉप पर सेव होता है — <strong class="text-emerald-400">छवि अपलोड करें</strong> का उपयोग करें',
+        'snip.altText': 'या सीधे एक छवि फ़ाइल अपलोड करें:',
         'label.partNumbers': 'भाग संख्या',
         'label.enterPartNumbers': 'भाग संख्या दर्ज करें',
         'label.source': 'स्रोत',
@@ -2419,6 +2507,16 @@
         'btn.deep': 'گہرا',
         'btn.scan': 'سکین',
         'btn.back': 'واپس',
+        'btn.uploadImage': 'تصویر اپ لوڈ کریں',
+        'snip.title': 'اسکرین شاٹ گائیڈ', 'snip.win10Title': 'ونڈوز 10 / 11 (تجویز کردہ)', 'snip.win7Title': 'ونڈوز 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> دبائیں',
+        'snip.win10Step2': 'اسکرین کا علاقہ منتخب کریں',
+        'snip.win10Step3': 'یہاں واپس آئیں اور <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> سے پیسٹ کریں',
+        'snip.win7Step1': 'اسٹارٹ مینو کھولیں اور "Snipping Tool" تلاش کریں', 'snip.win7Step2': '"New" پر کلک کریں اور علاقہ منتخب کریں',
+        'snip.win7Step3': 'اسکرین شاٹ محفوظ کریں، پھر <strong class="text-emerald-400">تصویر اپ لوڈ کریں</strong> بٹن استعمال کریں',
+        'snip.macStep1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd> دبائیں',
+        'snip.macStep2': 'اسکرین شاٹ ڈیسک ٹاپ پر محفوظ ہوتا ہے — <strong class="text-emerald-400">تصویر اپ لوڈ کریں</strong> استعمال کریں',
+        'snip.altText': 'یا براہ راست تصویر فائل اپ لوڈ کریں:',
         'label.partNumbers': 'پارٹ نمبر',
         'label.enterPartNumbers': 'پارٹ نمبر درج کریں',
         'label.source': 'ماخذ',
@@ -2562,6 +2660,16 @@
         'btn.deep': 'Глубокий',
         'btn.scan': 'Сканировать',
         'btn.back': 'Назад',
+        'btn.uploadImage': 'Загрузить изображение',
+        'snip.title': 'Руководство по скриншотам', 'snip.win10Title': 'Windows 10 / 11 (Рекомендуется)', 'snip.win7Title': 'Windows 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': 'Нажмите <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd>',
+        'snip.win10Step2': 'Выберите область экрана для захвата',
+        'snip.win10Step3': 'Вернитесь сюда и вставьте с помощью <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd>',
+        'snip.win7Step1': 'Откройте меню Пуск и найдите "Ножницы"', 'snip.win7Step2': 'Нажмите "Создать" и выберите область',
+        'snip.win7Step3': 'Сохраните скриншот, затем используйте кнопку <strong class="text-emerald-400">Загрузить изображение</strong>',
+        'snip.macStep1': 'Нажмите <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd>',
+        'snip.macStep2': 'Скриншот сохранится на рабочем столе — используйте <strong class="text-emerald-400">Загрузить изображение</strong>',
+        'snip.altText': 'Или загрузите файл изображения напрямую:',
         'label.partNumbers': 'Номера деталей',
         'label.enterPartNumbers': 'Введите номера деталей',
         'label.source': 'Источник',
@@ -2755,6 +2863,16 @@
         'btn.deep': 'ژور',
         'btn.scan': 'سکین',
         'btn.back': 'شاته',
+        'btn.uploadImage': 'عکس اپلوډ کړئ',
+        'snip.title': 'د سکرین شاټ لارښود', 'snip.win10Title': 'وینډوز 10 / 11 (وړاندیز شوی)', 'snip.win7Title': 'وینډوز 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> فشار ورکړئ',
+        'snip.win10Step2': 'د سکرین ساحه وټاکئ',
+        'snip.win10Step3': 'دلته بیرته راشئ او <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> سره پیسټ کړئ',
+        'snip.win7Step1': 'د سټارټ مینو خلاص کړئ او "Snipping Tool" وپلټئ', 'snip.win7Step2': '"New" کلیک وکړئ او ساحه وټاکئ',
+        'snip.win7Step3': 'سکرین شاټ خوندي کړئ، بیا <strong class="text-emerald-400">عکس اپلوډ کړئ</strong> تڼۍ وکاروئ',
+        'snip.macStep1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd> فشار ورکړئ',
+        'snip.macStep2': 'سکرین شاټ ډیسکټاپ کې خوندي شو — <strong class="text-emerald-400">عکس اپلوډ کړئ</strong> وکاروئ',
+        'snip.altText': 'یا مستقیم د عکس فایل اپلوډ کړئ:',
         'label.partNumbers': 'د برخې شمیرې',
         'label.enterPartNumbers': 'د برخې شمیرې دننه کړئ',
         'label.source': 'سرچینه',
@@ -2948,6 +3066,16 @@
         'btn.deep': '정밀',
         'btn.scan': '스캔',
         'btn.back': '뒤로',
+        'btn.uploadImage': '이미지 업로드',
+        'snip.title': '스크린샷 가이드', 'snip.win10Title': 'Windows 10 / 11 (권장)', 'snip.win7Title': 'Windows 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd>를 누르세요',
+        'snip.win10Step2': '캡처할 화면 영역을 선택하세요',
+        'snip.win10Step3': '여기로 돌아와서 <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd>로 붙여넣기',
+        'snip.win7Step1': '시작 메뉴를 열고 "캡처 도구"를 검색하세요', 'snip.win7Step2': '"새로 만들기"를 클릭하고 영역을 선택하세요',
+        'snip.win7Step3': '스크린샷을 저장한 후 <strong class="text-emerald-400">이미지 업로드</strong> 버튼을 사용하세요',
+        'snip.macStep1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd>를 누르세요',
+        'snip.macStep2': '스크린샷이 바탕화면에 저장됩니다 — <strong class="text-emerald-400">이미지 업로드</strong>를 사용하세요',
+        'snip.altText': '또는 이미지 파일을 직접 업로드하세요:',
         'label.partNumbers': '부품 번호',
         'label.enterPartNumbers': '부품 번호 입력',
         'label.source': '소스',
@@ -3141,6 +3269,16 @@
         'btn.deep': 'Derin',
         'btn.scan': 'Tara',
         'btn.back': 'Geri',
+        'btn.uploadImage': 'Resim Yükle',
+        'snip.title': 'Ekran Görüntüsü Kılavuzu', 'snip.win10Title': 'Windows 10 / 11 (Önerilen)', 'snip.win7Title': 'Windows 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> tuşlarına basın',
+        'snip.win10Step2': 'Yakalamak istediğiniz ekran alanını seçin',
+        'snip.win10Step3': 'Buraya geri dönün ve <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> ile yapıştırın',
+        'snip.win7Step1': 'Başlat Menüsünü açın ve "Ekran Alıntısı Aracı" arayın', 'snip.win7Step2': '"Yeni" tıklayın ve alanı seçin',
+        'snip.win7Step3': 'Ekran görüntüsünü kaydedin, sonra <strong class="text-emerald-400">Resim Yükle</strong> butonunu kullanın',
+        'snip.macStep1': '<kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd> tuşlarına basın',
+        'snip.macStep2': 'Ekran görüntüsü masaüstüne kaydedilir — <strong class="text-emerald-400">Resim Yükle</strong> kullanın',
+        'snip.altText': 'Veya doğrudan bir resim dosyası yükleyin:',
         'label.partNumbers': 'Parça Numaraları',
         'label.enterPartNumbers': 'Parça Numarası Girin',
         'label.source': 'Kaynak',
@@ -3334,6 +3472,16 @@
         'btn.deep': '深度',
         'btn.scan': '扫描',
         'btn.back': '返回',
+        'btn.uploadImage': '上传图片',
+        'snip.title': '截图指南', 'snip.win10Title': 'Windows 10 / 11（推荐）', 'snip.win7Title': 'Windows 7 / 8', 'snip.macTitle': 'macOS',
+        'snip.win10Step1': '按 <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Win</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">S</kbd> 打开截图工具',
+        'snip.win10Step2': '选择要捕获的屏幕区域',
+        'snip.win10Step3': '返回此处，使用 <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Ctrl</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">V</kbd> 粘贴',
+        'snip.win7Step1': '打开开始菜单，搜索"截图工具"', 'snip.win7Step2': '点击"新建"并选择区域',
+        'snip.win7Step3': '保存截图，然后使用 <strong class="text-emerald-400">上传图片</strong> 按钮上传',
+        'snip.macStep1': '按 <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Cmd</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">Shift</kbd> + <kbd class="px-1.5 py-0.5 bg-slate-700 rounded text-xs font-mono text-white">4</kbd> 捕获选定区域',
+        'snip.macStep2': '截图保存到桌面 — 使用 <strong class="text-emerald-400">上传图片</strong> 上传',
+        'snip.altText': '或直接上传图片文件：',
         'label.partNumbers': '零件编号',
         'label.enterPartNumbers': '输入零件编号',
         'label.source': '来源',
@@ -3507,7 +3655,12 @@
         const key = el.getAttribute('data-i18n');
         const translated = t(key);
         if (translated && translated !== key) {
-          el.textContent = translated;
+          // Use innerHTML for snip guide elements (they contain HTML like <kbd> tags)
+          if (key.startsWith('snip.')) {
+            el.innerHTML = translated;
+          } else {
+            el.textContent = translated;
+          }
         }
       });
       
@@ -4093,9 +4246,27 @@
       return text;
     }
 
-    function cleanList() {
-      const input = document.getElementById('txtListCleanerInput').value;
-      if (!input.trim()) { showToast('Please enter text first', 'warning'); return; }
+    async function ocrFromBase64(base64) {
+      const apiKey = 'AIzaSyD9hv5dTxWfJhQa8eJ10jSJsyOyeDCxx4g';
+      const url = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
+      const body = { requests: [{ image: { content: base64 }, features: [{ type: 'TEXT_DETECTION' }] }] };
+      const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const data = await res.json();
+      const text = data?.responses?.[0]?.textAnnotations?.[0]?.description;
+      return text || '';
+    }
+
+    async function cleanList() {
+      let input = document.getElementById('txtListCleanerInput').value;
+      // Check for uploaded image
+      if (window._uploadedImageBase64 && input.startsWith('[Image loaded:')) {
+        showToast('Processing image...', 'success');
+        try {
+          input = await ocrFromBase64(window._uploadedImageBase64);
+          window._uploadedImageBase64 = null;
+        } catch(e) { showToast('OCR failed: ' + e.message, 'error'); return; }
+      }
+      if (!input.trim()) { showToast('Please enter text or upload an image first', 'warning'); return; }
       const brands = getSelectedBrands();
       const normalized = normalizeOcrText(input);
       const cleaned = applyCleaningLogic(normalized, brands);
@@ -4105,12 +4276,50 @@
       showToast(valid.length ? `Extracted ${valid.length} part number(s)` : 'No valid part numbers found', valid.length ? 'success' : 'warning');
     }
 
-    function readText() {
-      const input = document.getElementById('txtListCleanerInput').value;
-      if (!input.trim()) { showToast('Please enter text first', 'warning'); return; }
+    async function readText() {
+      let input = document.getElementById('txtListCleanerInput').value;
+      // Check for uploaded image
+      if (window._uploadedImageBase64 && input.startsWith('[Image loaded:')) {
+        showToast('Processing image...', 'success');
+        try {
+          input = await ocrFromBase64(window._uploadedImageBase64);
+          window._uploadedImageBase64 = null;
+        } catch(e) { showToast('OCR failed: ' + e.message, 'error'); return; }
+      }
+      if (!input.trim()) { showToast('Please enter text or upload an image first', 'warning'); return; }
       const normalized = normalizeOcrText(input);
       document.getElementById('listCleanerResult').textContent = normalized;
       showToast('Full text displayed', 'success');
+    }
+
+    function showSnipGuide() {
+      const modal = document.getElementById('snipGuideModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+    function closeSnipGuide() {
+      const modal = document.getElementById('snipGuideModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Please upload an image file', 'warning');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Show thumbnail preview in textarea as indicator
+        document.getElementById('txtListCleanerInput').value = '[Image loaded: ' + file.name + ']';
+        // Store base64 for OCR processing
+        window._uploadedImageBase64 = e.target.result.split(',')[1];
+        showToast('Image loaded! Click Clean List or Read Text to process.', 'success');
+      };
+      reader.readAsDataURL(file);
+      event.target.value = ''; // reset so same file can be re-uploaded
     }
 
     function toggleAllBrands() {
@@ -4184,7 +4393,8 @@
     function stopFetch(key) { if (abortControllers[key]) abortControllers[key].abort(); }
 
     // ============ DIAGRAM GENERATOR ============
-    let dgScale = 1, dgX = 0, dgY = 0;
+    // Use var here to avoid TDZ issues if any early event/inline handler touches the viewer before this line executes.
+    var dgScale = 1, dgX = 0, dgY = 0;
     async function fetchDiagram() {
       const part = document.getElementById('txtDiagramPart').value.trim();
       if (!part) { showToast('Please enter a part number', 'warning'); return; }
