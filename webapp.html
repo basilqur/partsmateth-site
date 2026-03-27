@@ -51,6 +51,38 @@
     body.authenticated { visibility: visible; }
     .font-display { font-family: 'Space Grotesk', sans-serif; }
 
+
+    /* Language selector */
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      color: #94A3B8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s, color 0.15s;
+    }
+    .lang-option:hover { background: rgba(255,255,255,0.06); color: #E2E8F0; }
+    .lang-option.active { background: rgba(59,130,246,0.12); color: #3B82F6; font-weight: 600; }
+
+    /* RTL support */
+    html[dir="rtl"] .sidebar { left: auto; right: 0; border-right: none; border-left: 1px solid rgba(255,255,255,0.06); }
+    html[dir="rtl"] .main-content { margin-left: 0; margin-right: 240px; }
+    html[dir="rtl"] .sidebar-nav-item { text-align: right; }
+    html[dir="rtl"] .top-bar { direction: rtl; }
+    html[dir="rtl"] .input-field { text-align: right; }
+    html[dir="rtl"] textarea.input-field { text-align: right; }
+    @media (max-width: 768px) {
+      html[dir="rtl"] .main-content { margin-right: 0; }
+      html[dir="rtl"] .sidebar { transform: translateX(100%); left: auto; right: 0; }
+      html[dir="rtl"] .sidebar.open { transform: translateX(0); }
+    }
+
     /* ===== SIDEBAR LAYOUT ===== */
     .app-layout {
       display: flex;
@@ -699,47 +731,47 @@
       <!-- Navigation -->
       <nav class="sidebar-nav">
         <button class="sidebar-nav-item active" data-tab="home" onclick="switchTab('home')">
-          <i class="ri-search-line"></i> Search Parts
+          <i class="ri-search-line"></i> <span data-i18n="nav.searchParts">Search Parts</span>
         </button>
         <button class="sidebar-nav-item" data-tab="prices" onclick="switchTab('prices')">
-          <i class="ri-money-dollar-circle-line"></i> Prices
+          <i class="ri-money-dollar-circle-line"></i> <span data-i18n="nav.prices">Prices</span>
         </button>
         <button class="sidebar-nav-item" data-tab="names" onclick="switchTab('names')">
-          <i class="ri-price-tag-3-line"></i> Names
+          <i class="ri-price-tag-3-line"></i> <span data-i18n="nav.names">Names</span>
         </button>
         <button class="sidebar-nav-item" data-tab="country" onclick="switchTab('country')">
-          <i class="ri-global-line"></i> Countries
+          <i class="ri-global-line"></i> <span data-i18n="nav.countries">Countries</span>
         </button>
         <button class="sidebar-nav-item" data-tab="weight" onclick="switchTab('weight')">
-          <i class="ri-scales-3-line"></i> Weights
+          <i class="ri-scales-3-line"></i> <span data-i18n="nav.weights">Weights</span>
         </button>
         <button class="sidebar-nav-item" data-tab="alternates" onclick="switchTab('alternates')">
-          <i class="ri-refresh-line"></i> Alternates
+          <i class="ri-refresh-line"></i> <span data-i18n="nav.alternates">Alternates</span>
         </button>
         <button class="sidebar-nav-item" data-tab="listcleaner" onclick="switchTab('listcleaner')">
-          <i class="ri-file-list-3-line"></i> List Cleaner
+          <i class="ri-file-list-3-line"></i> <span data-i18n="nav.listCleaner">List Cleaner</span>
         </button>
         <button class="sidebar-nav-item" data-tab="modelchecker" onclick="switchTab('modelchecker')">
-          <i class="ri-car-line"></i> Model Checker
+          <i class="ri-car-line"></i> <span data-i18n="nav.modelChecker">Model Checker</span>
         </button>
 
-        <div class="sidebar-section-label">Tools</div>
+        <div class="sidebar-section-label" data-i18n="nav.tools">Tools</div>
         <button class="sidebar-nav-item" data-tab="diagram" onclick="switchTab('diagram')">
-          <i class="ri-image-line"></i> Diagram Generator
+          <i class="ri-image-line"></i> <span data-i18n="nav.diagramGenerator">Diagram Generator</span>
         </button>
         <button class="sidebar-nav-item" data-tab="dimensions" onclick="switchTab('dimensions')">
-          <i class="ri-ruler-line"></i> Dimensions Checker
+          <i class="ri-ruler-line"></i> <span data-i18n="nav.dimensionsChecker">Dimensions Checker</span>
         </button>
         <button class="sidebar-nav-item" data-tab="hscode" onclick="switchTab('hscode')">
-          <i class="ri-barcode-box-line"></i> HS Code Checker
+          <i class="ri-barcode-box-line"></i> <span data-i18n="nav.hsCodeChecker">HS Code Checker</span>
         </button>
         <button class="sidebar-nav-item" data-tab="cbm" onclick="switchTab('cbm')">
-          <i class="ri-box-3-line"></i> CBM Calculator
+          <i class="ri-box-3-line"></i> <span data-i18n="nav.cbmCalculator">CBM Calculator</span>
         </button>
 
-        <div class="sidebar-section-label">More</div>
+        <div class="sidebar-section-label" data-i18n="nav.more">More</div>
         <button class="sidebar-nav-item" data-tab="details" onclick="switchTab('details')">
-          <i class="ri-search-eye-line"></i> Part Details
+          <i class="ri-search-eye-line"></i> <span data-i18n="nav.partDetails">Part Details</span>
         </button>
       </nav>
 
@@ -771,25 +803,25 @@
             </div>
             <div class="p-2.5 space-y-1.5">
               <div class="flex items-center justify-between px-2 py-1">
-                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">Plan</span>
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider" data-i18n="user.plan">Plan</span>
                 <span id="userPlanDropdown" class="text-xs font-semibold text-blue-400"></span>
               </div>
               <div class="flex items-center justify-between px-2 py-1">
-                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">License</span>
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider" data-i18n="user.license">License</span>
                 <span id="userKeyDisplay" class="text-xs font-mono text-slate-300 max-w-[120px] truncate"></span>
               </div>
               <div class="flex items-center justify-between px-2 py-1">
-                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">Expires</span>
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider" data-i18n="user.expires">Expires</span>
                 <span id="userExpiryDisplay" class="text-xs font-medium text-slate-300"></span>
               </div>
               <div class="flex items-center justify-between px-2 py-1">
-                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider">Status</span>
+                <span class="text-[0.65rem] text-slate-500 uppercase tracking-wider" data-i18n="user.status">Status</span>
                 <span id="userStatusDisplay" class="text-[0.6rem] font-semibold px-2 py-0.5 rounded-full"></span>
               </div>
             </div>
             <div class="p-2.5 border-t border-white/10">
               <button onclick="pmLogout()" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-colors text-red-400 text-xs font-medium cursor-pointer">
-                <i class="ri-logout-box-r-line"></i> Logout
+                <i class="ri-logout-box-r-line"></i> <span data-i18n="user.logout">Logout</span>
               </button>
             </div>
           </div>
@@ -806,12 +838,33 @@
             <i class="ri-menu-line text-lg"></i>
           </button>
           <div>
-            <h1 id="pageTitle" class="font-display text-base font-bold text-white">Parts Intelligence</h1>
-            <p id="pageSubtitle" class="text-[0.65rem] text-slate-500">Search across verified global databases</p>
+            <h1 id="pageTitle" class="font-display text-base font-bold text-white" data-i18n="topbar.title">Parts Intelligence</h1>
+            <p id="pageSubtitle" class="text-[0.65rem] text-slate-500" data-i18n="topbar.subtitle">Search across verified global databases</p>
+          </div>
+        </div>
+        
+        <!-- Language Selector -->
+        <div class="relative" id="langSelectorWrap" style="margin-left:auto;margin-right:0.5rem;">
+          <button id="langBtn" onclick="document.getElementById('langDropdown').classList.toggle('hidden')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-slate-400 text-xs hover:bg-white/[0.08] hover:text-slate-200 transition-colors cursor-pointer">
+            <i class="ri-translate-2"></i>
+            <span id="langBtnLabel">English</span>
+            <i class="ri-arrow-down-s-line text-[0.6rem]"></i>
+          </button>
+          <div id="langDropdown" class="hidden absolute right-0 top-full mt-1 w-52 rounded-xl bg-[#0D1224] border border-white/10 shadow-2xl shadow-black/50 z-[60] overflow-hidden max-h-80 overflow-y-auto">
+            <button class="lang-option" data-lang="en">🇬🇧 English</button>
+            <button class="lang-option" data-lang="fr">🇫🇷 Français – French</button>
+            <button class="lang-option" data-lang="ar">🇸🇦 عربي – Arabic</button>
+            <button class="lang-option" data-lang="hi">🇮🇳 हिंदी – Hindi</button>
+            <button class="lang-option" data-lang="ur">🇵🇰 اردو – Urdu</button>
+            <button class="lang-option" data-lang="ru">🇷🇺 Русский – Russian</button>
+            <button class="lang-option" data-lang="ps">🇦🇫 پښتو – Pashto</button>
+            <button class="lang-option" data-lang="ko">🇰🇷 한국어 – Korean</button>
+            <button class="lang-option" data-lang="tr">🇹🇷 Türkçe – Turkish</button>
+            <button class="lang-option" data-lang="zh">🇨🇳 中文 – Chinese</button>
           </div>
         </div>
         <button class="quick-search-btn" onclick="switchTab('home')">
-          <kbd>⌘K</kbd> Quick Search
+          <kbd>⌘K</kbd> <span data-i18n="topbar.quickSearch">Quick Search</span>
         </button>
       </div>
 
@@ -839,7 +892,7 @@
               <div class="table-wrap overflow-x-auto max-h-[400px] overflow-y-auto">
                 <table class="results-table" id="tblHomeResults">
                   <thead><tr>
-                    <th>Part No.</th><th>Name</th><th>Price (THB)</th><th>Origin</th><th>Status</th>
+                    <th data-i18n="th.partNo">Part No.</th><th data-i18n="th.name">Name</th><th data-i18n="th.price">Price (THB)</th><th data-i18n="th.origin">Origin</th><th data-i18n="th.status">Status</th>
                   </tr></thead>
                   <tbody id="homeResultsBody"></tbody>
                 </table>
@@ -851,63 +904,63 @@
           <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 mb-10">
             <button class="feature-card" onclick="switchTab('prices')">
               <div class="icon-wrap"><i class="ri-money-dollar-circle-line text-blue-400"></i></div>
-              <div class="label">Prices</div>
-              <div class="desc hidden sm:block">Check part pricing</div>
+              <div class="label" data-i18n="card.prices">Prices</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.prices">Check part pricing</div>
             </button>
             <button class="feature-card" onclick="switchTab('names')">
               <div class="icon-wrap"><i class="ri-price-tag-3-line text-teal-400"></i></div>
-              <div class="label">Names</div>
-              <div class="desc hidden sm:block">Identify part names</div>
+              <div class="label" data-i18n="card.names">Names</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.names">Identify part names</div>
             </button>
             <button class="feature-card" onclick="switchTab('country')">
               <div class="icon-wrap"><i class="ri-global-line text-cyan-400"></i></div>
-              <div class="label">Country</div>
-              <div class="desc hidden sm:block">Find origin country</div>
+              <div class="label" data-i18n="card.country">Country</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.country">Find origin country</div>
             </button>
             <button class="feature-card" onclick="switchTab('details')">
               <div class="icon-wrap"><i class="ri-search-eye-line text-violet-400"></i></div>
-              <div class="label">Details</div>
-              <div class="desc hidden sm:block">Full part info</div>
+              <div class="label" data-i18n="card.details">Details</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.details">Full part info</div>
             </button>
             <button class="feature-card" onclick="switchTab('weight')">
               <div class="icon-wrap"><i class="ri-scales-3-line text-amber-400"></i></div>
-              <div class="label">Weight</div>
-              <div class="desc hidden sm:block">Check part weight</div>
+              <div class="label" data-i18n="card.weight">Weight</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.weight">Check part weight</div>
             </button>
             <button class="feature-card" onclick="switchTab('alternates')">
               <div class="icon-wrap"><i class="ri-refresh-line text-rose-400"></i></div>
-              <div class="label">Alternates</div>
-              <div class="desc hidden sm:block">Find replacements</div>
+              <div class="label" data-i18n="card.alternates">Alternates</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.alternates">Find replacements</div>
             </button>
             <button class="feature-card" onclick="switchTab('listcleaner')">
               <div class="icon-wrap"><i class="ri-file-list-3-line text-emerald-400"></i></div>
-              <div class="label">List Cleaner</div>
-              <div class="desc hidden sm:block">Extract part numbers</div>
+              <div class="label" data-i18n="card.listCleaner">List Cleaner</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.listCleaner">Extract part numbers</div>
             </button>
             <button class="feature-card" onclick="switchTab('modelchecker')">
               <div class="icon-wrap"><i class="ri-car-line text-orange-400"></i></div>
-              <div class="label">Model Checker</div>
-              <div class="desc hidden sm:block">Check compatibility</div>
+              <div class="label" data-i18n="card.modelChecker">Model Checker</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.modelChecker">Check compatibility</div>
             </button>
             <button class="feature-card" onclick="switchTab('diagram')">
               <div class="icon-wrap"><i class="ri-image-line text-pink-400"></i></div>
-              <div class="label">Diagram</div>
-              <div class="desc hidden sm:block">Generate diagrams</div>
+              <div class="label" data-i18n="card.diagram">Diagram</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.diagram">Generate diagrams</div>
             </button>
             <button class="feature-card" onclick="switchTab('dimensions')">
               <div class="icon-wrap"><i class="ri-ruler-line text-indigo-400"></i></div>
-              <div class="label">Dimensions</div>
-              <div class="desc hidden sm:block">Check part size</div>
+              <div class="label" data-i18n="card.dimensions">Dimensions</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.dimensions">Check part size</div>
             </button>
             <button class="feature-card" onclick="switchTab('hscode')">
               <div class="icon-wrap"><i class="ri-barcode-box-line text-lime-400"></i></div>
-              <div class="label">HS Code</div>
-              <div class="desc hidden sm:block">Lookup HS codes</div>
+              <div class="label" data-i18n="card.hsCode">HS Code</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.hsCode">Lookup HS codes</div>
             </button>
             <button class="feature-card" onclick="switchTab('cbm')">
               <div class="icon-wrap"><i class="ri-box-3-line text-sky-400"></i></div>
-              <div class="label">CBM</div>
-              <div class="desc hidden sm:block">Volume & weight</div>
+              <div class="label" data-i18n="card.cbm">CBM</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.cbm">Volume & weight</div>
             </button>
           </div>
 
@@ -918,7 +971,7 @@
                 <div class="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                   <i class="ri-lightbulb-line text-emerald-400 text-sm"></i>
                 </div>
-                <h3 class="font-display text-sm font-semibold text-white">Suggestion</h3>
+                <h3 class="font-display text-sm font-semibold text-white" data-i18n="feedback.suggestion">Suggestion</h3>
               </div>
               <textarea id="txtSuggestion" class="input-field" placeholder="Share your suggestion..." rows="3"></textarea>
             </div>
@@ -927,14 +980,14 @@
                 <div class="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center">
                   <i class="ri-error-warning-line text-amber-400 text-sm"></i>
                 </div>
-                <h3 class="font-display text-sm font-semibold text-white">Complaint</h3>
+                <h3 class="font-display text-sm font-semibold text-white" data-i18n="feedback.complaint">Complaint</h3>
               </div>
               <textarea id="txtComplaint" class="input-field" placeholder="Report an issue..." rows="3"></textarea>
             </div>
           </div>
           <div class="flex justify-center mt-4">
             <button onclick="sendFeedback()" class="btn-primary px-6 py-2.5 text-sm">
-              <span class="flex items-center gap-2"><i class="ri-send-plane-line"></i> Submit Feedback</span>
+              <span class="flex items-center gap-2"><i class="ri-send-plane-line"></i> <span data-i18n="btn.submitFeedback">Submit Feedback</span></span>
             </button>
           </div>
         </div>
@@ -946,19 +999,19 @@
               <i class="ri-money-dollar-circle-line text-blue-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Prices Checker</h2>
-              <p class="text-xs text-slate-500">Check estimated internet, Dubai genuine futtaim & OFP prices</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.prices.title">Prices Checker</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.prices.subtitle">Check estimated internet, Dubai genuine futtaim & OFP prices</p>
             </div>
           </div>
           <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-1 space-y-3">
               <div class="glass-card p-4 space-y-3">
                 <div>
-                  <label class="section-label">Part Numbers</label>
+                  <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtPriceParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
                 </div>
                 <div class="flex items-center justify-between">
-                  <span class="text-xs text-slate-500 font-medium">Currency</span>
+                  <span class="text-xs text-slate-500 font-medium" data-i18n="label.currency">Currency</span>
                   <div class="currency-toggle">
                     <button id="btnAED" class="active" onclick="setCurrency('AED')">AED</button>
                     <button id="btnUSD" onclick="setCurrency('USD')">USD</button>
@@ -966,19 +1019,19 @@
                 </div>
                 <div class="flex gap-2">
                   <button onclick="fetchPrices()" class="btn-primary px-4 py-2.5 text-sm flex-1">
-                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Prices</span>
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> <span data-i18n="btn.checkPrices">Check Prices</span></span>
                   </button>
-                  <button id="stopPrices" class="stop-btn" onclick="stopPricesFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                  <button id="stopPrices" class="stop-btn" onclick="stopPricesFetch()"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
                 </div>
                 <div class="flex gap-2">
                   <button onclick="sortInput('txtPriceParts')" class="btn-ghost px-3 py-1.5 text-xs flex-1">
-                    <i class="ri-sort-asc"></i> Sort
+                    <i class="ri-sort-asc"></i> <span data-i18n="btn.sort">Sort</span>
                   </button>
                   <button onclick="cleanInput('txtPriceParts')" class="btn-ghost px-3 py-1.5 text-xs flex-1">
-                    <i class="ri-eraser-line"></i> Clean
+                    <i class="ri-eraser-line"></i> <span data-i18n="btn.clean">Clean</span>
                   </button>
                 </div>
-                <div id="priceLoader" class="loader"><div class="spinner"></div><span>Fetching prices...</span></div>
+                <div id="priceLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.fetchingPrices">Fetching prices...</span></div>
               </div>
             </div>
             <div class="lg:col-span-2">
@@ -986,7 +1039,7 @@
                 <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
                   <table class="results-table" id="tblPrices">
                     <thead><tr>
-                      <th>Part No.</th><th>Part Name</th><th>Internet</th><th>Dubai Genuine (Futtaim)</th><th>OFP</th><th>Match</th>
+                      <th data-i18n="th.partNo">Part No.</th><th data-i18n="th.partName">Part Name</th><th data-i18n="th.internet">Internet</th><th data-i18n="th.dubaiGenuine">Dubai Genuine (Futtaim)</th><th data-i18n="th.ofp">OFP</th><th data-i18n="th.match">Match</th>
                     </tr></thead>
                     <tbody id="pricesBody"></tbody>
                   </table>
@@ -1003,19 +1056,19 @@
               <i class="ri-price-tag-3-line text-teal-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Name Checker</h2>
-              <p class="text-xs text-slate-500">Look up part names from different sources</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.names.title">Name Checker</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.names.subtitle">Look up part names from different sources</p>
             </div>
           </div>
           <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-1 space-y-3">
               <div class="glass-card p-4 space-y-3">
                 <div>
-                  <label class="section-label">Part Numbers</label>
+                  <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtNameParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
                 </div>
                 <div>
-                  <label class="section-label">Source</label>
+                  <label class="section-label" data-i18n="label.source">Source</label>
                   <div class="grid grid-cols-2 gap-2">
                     <label class="radio-card"><input type="radio" name="nameSource" value="universal" checked><span>Universal</span></label>
                     <label class="radio-card"><input type="radio" name="nameSource" value="toyota"><span>Toyota TH</span></label>
@@ -1025,18 +1078,18 @@
                 </div>
                 <div class="flex gap-2">
                   <button onclick="fetchNames()" class="btn-primary px-4 py-2.5 text-sm flex-1">
-                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Names</span>
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> <span data-i18n="btn.checkNames">Check Names</span></span>
                   </button>
-                  <button id="stopNames" class="stop-btn" onclick="stopNamesFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                  <button id="stopNames" class="stop-btn" onclick="stopNamesFetch()"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
                 </div>
-                <div id="nameLoader" class="loader"><div class="spinner"></div><span>Fetching names...</span></div>
+                <div id="nameLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.fetchingNames">Fetching names...</span></div>
               </div>
             </div>
             <div class="lg:col-span-2">
               <div class="glass-card p-1 overflow-hidden">
                 <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
                   <table class="results-table" id="tblNames">
-                    <thead><tr><th>Part Number</th><th>Part Name</th></tr></thead>
+                    <thead><tr><th data-i18n="th.partNumber">Part Number</th><th data-i18n="th.partName">Part Name</th></tr></thead>
                     <tbody id="namesBody"></tbody>
                   </table>
                 </div>
@@ -1052,31 +1105,31 @@
               <i class="ri-global-line text-cyan-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Country / Origin</h2>
-              <p class="text-xs text-slate-500">Find where parts are manufactured</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.country.title">Country / Origin</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.country.subtitle">Find where parts are manufactured</p>
             </div>
           </div>
           <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-1 space-y-3">
               <div class="glass-card p-4 space-y-3">
                 <div>
-                  <label class="section-label">Part Numbers</label>
+                  <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtOriginParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
                 </div>
                 <div class="flex gap-2">
                   <button onclick="fetchOrigins()" class="btn-primary px-4 py-2.5 text-sm flex-1">
-                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Origins</span>
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> <span data-i18n="btn.checkOrigins">Check Origins</span></span>
                   </button>
-                  <button id="stopOrigins" class="stop-btn" onclick="stopOriginsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                  <button id="stopOrigins" class="stop-btn" onclick="stopOriginsFetch()"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
                 </div>
-                <div id="originLoader" class="loader"><div class="spinner"></div><span>Fetching origins...</span></div>
+                <div id="originLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.fetchingOrigins">Fetching origins...</span></div>
               </div>
             </div>
             <div class="lg:col-span-2">
               <div class="glass-card p-1 overflow-hidden">
                 <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
                   <table class="results-table" id="tblOrigins">
-                    <thead><tr><th>Part Number</th><th>Part Name</th><th>Origin</th></tr></thead>
+                    <thead><tr><th data-i18n="th.partNumber">Part Number</th><th data-i18n="th.partName">Part Name</th><th data-i18n="th.origin">Origin</th></tr></thead>
                     <tbody id="originsBody"></tbody>
                   </table>
                 </div>
@@ -1092,28 +1145,28 @@
               <i class="ri-search-eye-line text-violet-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Part Details</h2>
-              <p class="text-xs text-slate-500">Get comprehensive part information</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.details.title">Part Details</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.details.subtitle">Get comprehensive part information</p>
             </div>
           </div>
           <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-1 space-y-3">
               <div class="glass-card p-4 space-y-3">
                 <div>
-                  <label class="section-label">Part Number(s)</label>
+                  <label class="section-label" data-i18n="label.partNumbers">Part Number(s)</label>
                   <textarea id="txtDetailParts" class="input-field" placeholder="Enter part number(s)..." rows="4"></textarea>
                 </div>
                 <label class="chk-label">
                   <input type="checkbox" id="chkMultiParts">
-                  <span>Check Multiple Parts</span>
+                  <span data-i18n="label.checkMultipleParts">Check Multiple Parts</span>
                 </label>
                 <div class="flex gap-2">
                   <button onclick="fetchDetails()" class="btn-primary px-4 py-2.5 text-sm flex-1">
-                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Get Details</span>
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> <span data-i18n="btn.getDetails">Get Details</span></span>
                   </button>
-                  <button id="stopDetails" class="stop-btn" onclick="stopDetailsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                  <button id="stopDetails" class="stop-btn" onclick="stopDetailsFetch()"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
                 </div>
-                <div id="detailLoader" class="loader"><div class="spinner"></div><span>Fetching details...</span></div>
+                <div id="detailLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.fetchingDetails">Fetching details...</span></div>
                 <div id="detailProgress" class="hidden space-y-1">
                   <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
                     <div id="detailProgressBar" class="h-full bg-gradient-to-r from-blue-500 to-teal-400 transition-all duration-300 rounded-full" style="width:0%"></div>
@@ -1127,7 +1180,7 @@
                 <div id="detailsResult" class="detail-block" style="min-height:200px;">
                   <div class="flex flex-col items-center justify-center h-48 text-slate-600">
                     <i class="ri-search-eye-line text-3xl mb-2"></i>
-                    <span class="text-sm">Results will appear here</span>
+                    <span class="text-sm" data-i18n="placeholder.results">Results will appear here</span>
                   </div>
                 </div>
               </div>
@@ -1142,31 +1195,31 @@
               <i class="ri-scales-3-line text-amber-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Weight Checker</h2>
-              <p class="text-xs text-slate-500">Look up part weights and brands</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.weight.title">Weight Checker</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.weight.subtitle">Look up part weights and brands</p>
             </div>
           </div>
           <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-1 space-y-3">
               <div class="glass-card p-4 space-y-3">
                 <div>
-                  <label class="section-label">Part Numbers</label>
+                  <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtWeightParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
                 </div>
                 <div class="flex gap-2">
                   <button onclick="fetchWeights()" class="btn-primary px-4 py-2.5 text-sm flex-1">
-                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> Check Weights</span>
+                    <span class="flex items-center justify-center gap-2"><i class="ri-search-line"></i> <span data-i18n="btn.checkWeights">Check Weights</span></span>
                   </button>
-                  <button id="stopWeights" class="stop-btn" onclick="stopWeightsFetch()"><i class="ri-stop-circle-line"></i> Stop</button>
+                  <button id="stopWeights" class="stop-btn" onclick="stopWeightsFetch()"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
                 </div>
-                <div id="weightLoader" class="loader"><div class="spinner"></div><span>Fetching weights...</span></div>
+                <div id="weightLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.fetchingWeights">Fetching weights...</span></div>
               </div>
             </div>
             <div class="lg:col-span-2">
               <div class="glass-card p-1 overflow-hidden">
                 <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
                   <table class="results-table" id="tblWeights">
-                    <thead><tr><th>Part Number</th><th>Part Name</th><th>Weight (kgs)</th><th>Brand</th></tr></thead>
+                    <thead><tr><th data-i18n="th.partNumber">Part Number</th><th data-i18n="th.partName">Part Name</th><th data-i18n="th.weight">Weight (kgs)</th><th data-i18n="th.brand">Brand</th></tr></thead>
                     <tbody id="weightsBody"></tbody>
                   </table>
                 </div>
@@ -1182,30 +1235,30 @@
               <i class="ri-refresh-line text-rose-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Alternates Check</h2>
-              <p class="text-xs text-slate-500">Find alternate part numbers across brands</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.alternates.title">Alternates Check</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.alternates.subtitle">Find alternate part numbers across brands</p>
             </div>
           </div>
           <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-1 space-y-3">
               <div class="glass-card p-4 space-y-3">
                 <div>
-                  <label class="section-label">Part Numbers</label>
+                  <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtAltParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="5"></textarea>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <button onclick="fetchAlternates(false)" class="btn-primary px-4 py-2.5 text-sm">
-                    <span class="flex items-center justify-center gap-1.5"><i class="ri-flashlight-line"></i> Quick</span>
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-flashlight-line"></i> <span data-i18n="btn.quick">Quick</span></span>
                   </button>
                   <button onclick="fetchAlternates(true)" class="btn-primary px-4 py-2.5 text-sm">
-                    <span class="flex items-center justify-center gap-1.5"><i class="ri-search-2-line"></i> Deep</span>
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-search-2-line"></i> <span data-i18n="btn.deep">Deep</span></span>
                   </button>
                 </div>
-                <button id="stopAlts" class="stop-btn w-full justify-center" onclick="stopFetch('alts')"><i class="ri-stop-circle-line"></i> Stop</button>
-                <div id="altLoader" class="loader"><div class="spinner"></div><span>Searching alternates...</span></div>
+                <button id="stopAlts" class="stop-btn w-full justify-center" onclick="stopFetch('alts')"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
+                <div id="altLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.searchingAlternates">Searching alternates...</span></div>
                 <div id="altFilterWrap" class="hidden space-y-2">
                   <div>
-                    <label class="section-label">Filter by Brand</label>
+                    <label class="section-label" data-i18n="label.filterByBrand" data-i18n="label.filterByBrand">Filter by Brand</label>
                     <select id="cmbBrandFilter" class="input-field text-sm" onchange="filterAltBrand()">
                       <option>All Brands</option>
                     </select>
@@ -1236,35 +1289,35 @@
               <i class="ri-file-list-3-line text-emerald-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">List Cleaner</h2>
-              <p class="text-xs text-slate-500">Process text and images to extract part information</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.listCleaner.title">List Cleaner</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.listCleaner.subtitle">Process text and images to extract part information</p>
             </div>
           </div>
           <div class="grid lg:grid-cols-3 gap-4">
             <div class="lg:col-span-1 space-y-3">
               <div class="glass-card p-4 space-y-3">
                 <div>
-                  <label class="section-label">Enter Part Numbers</label>
+                  <label class="section-label" data-i18n="label.enterPartNumbers">Enter Part Numbers</label>
                   <textarea id="txtListCleanerInput" class="input-field" placeholder="Paste part numbers or text here..." rows="6"></textarea>
                 </div>
                 <div class="flex gap-2">
                   <button onclick="alert('Scan feature coming soon')" class="btn-primary px-4 py-2.5 text-sm flex-1">
-                    <span class="flex items-center justify-center gap-1.5"><i class="ri-camera-line"></i> Scan</span>
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-camera-line"></i> <span data-i18n="btn.scan">Scan</span></span>
                   </button>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <button onclick="cleanList()" class="btn-primary px-4 py-2.5 text-sm">
-                    <span class="flex items-center justify-center gap-1.5"><i class="ri-eraser-line"></i> Clean List</span>
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-eraser-line"></i> <span data-i18n="btn.cleanList">Clean List</span></span>
                   </button>
                   <button onclick="readText()" class="btn-primary px-4 py-2.5 text-sm">
-                    <span class="flex items-center justify-center gap-1.5"><i class="ri-file-text-line"></i> Read Text</span>
+                    <span class="flex items-center justify-center gap-1.5"><i class="ri-file-text-line"></i> <span data-i18n="btn.readText">Read Text</span></span>
                   </button>
                 </div>
                 <div>
-                  <label class="section-label mb-2">Filter by Brand</label>
+                  <label class="section-label mb-2" data-i18n="label.filterByBrand" data-i18n="label.filterByBrand">Filter by Brand</label>
                   <div class="flex items-center gap-2 mb-2">
                     <input type="checkbox" id="chkAllBrands" checked onchange="toggleAllBrands()" class="accent-brand-teal">
-                    <label for="chkAllBrands" class="text-sm text-cyan-400 font-semibold cursor-pointer">All Brands</label>
+                    <label for="chkAllBrands" class="text-sm text-cyan-400 font-semibold cursor-pointer" data-i18n="label.allBrands">All Brands</label>
                   </div>
                   <div class="space-y-1 max-h-48 overflow-y-auto" id="brandCheckboxes">
                     <label class="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" class="brand-check accent-brand-teal" value="Toyota"> Toyota</label>
@@ -1282,7 +1335,7 @@
             </div>
             <div class="lg:col-span-2">
               <div class="glass-card p-4">
-                <h3 class="section-label mb-3">Result:</h3>
+                <h3 class="section-label mb-3" data-i18n="label.result">Result:</h3>
                 <div id="listCleanerResult" class="min-h-[300px] bg-slate-900/50 rounded-lg p-4 text-sm text-slate-300 whitespace-pre-wrap font-mono"></div>
               </div>
             </div>
@@ -1299,7 +1352,7 @@
             <div class="text-center mb-6">
               <div class="flex items-center justify-center gap-3 mb-2">
                 <i class="ri-search-line text-3xl text-brand-blue"></i>
-                <h2 class="font-display text-2xl sm:text-3xl font-bold text-white">Model Checker</h2>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-white" data-i18n="mc.title">Model Checker</h2>
                 <i class="ri-truck-line text-3xl text-brand-teal"></i>
               </div>
             </div>
@@ -1343,20 +1396,20 @@
               </div>
               <div>
                 <h2 class="font-display text-lg font-bold text-white">Check by Part Number</h2>
-                <p class="text-xs text-slate-500">Find which models a part fits</p>
+                <p class="text-xs text-slate-500" data-i18n="mc.partNoSubtitle">Find which models a part fits</p>
               </div>
             </div>
             <div class="glass-card p-4 mb-4">
               <div class="flex gap-2">
                 <input id="txtMcPartNo" class="input-field flex-1" placeholder="Enter part number...">
-                <button onclick="mcSearchPartNo()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Search</span></button>
-                <button id="mcStopPartNo" class="stop-btn" onclick="stopFetch('mcPartNo')"><i class="ri-stop-circle-line"></i> Stop</button>
+                <button onclick="mcSearchPartNo()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.search">Search</span></span></button>
+                <button id="mcStopPartNo" class="stop-btn" onclick="stopFetch('mcPartNo')"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
               </div>
               <div id="mcPartNoProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
-              <div id="mcPartNoLoader" class="loader"><div class="spinner"></div><span>Searching models...</span></div>
+              <div id="mcPartNoLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.searchingModels">Searching models...</span></div>
             </div>
             <div id="mcPartNoBack" class="hidden mb-3">
-              <button onclick="mcPartNoGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> Back</button>
+              <button onclick="mcPartNoGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> <span data-i18n="btn.back">Back</span></button>
             </div>
             <div class="glass-card p-1 overflow-hidden">
               <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
@@ -1375,15 +1428,15 @@
                 <i class="ri-car-line text-teal-400 text-lg"></i>
               </div>
               <div>
-                <h2 class="font-display text-lg font-bold text-white">Check by VIN / Chassis Number</h2>
-                <p class="text-xs text-slate-500">Look up vehicle configuration and parts</p>
+                <h2 class="font-display text-lg font-bold text-white" data-i18n="mc.vinTitle">Check by VIN / Chassis Number</h2>
+                <p class="text-xs text-slate-500" data-i18n="mc.vinSubtitle">Look up vehicle configuration and parts</p>
               </div>
             </div>
             <div class="glass-card p-4 mb-4 space-y-3">
               <div class="flex gap-2">
                 <input id="txtVinInput" class="input-field flex-1" placeholder="Enter VIN / Chassis No. Here">
-                <button onclick="mcSearchVin()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Search</span></button>
-                <button id="mcStopVin" class="stop-btn" onclick="stopFetch('mcVin')"><i class="ri-stop-circle-line"></i> Stop</button>
+                <button onclick="mcSearchVin()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.search">Search</span></span></button>
+                <button id="mcStopVin" class="stop-btn" onclick="stopFetch('mcVin')"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
               </div>
               <div id="vinSearchBarWrap" class="hidden">
                 <div class="flex gap-2">
@@ -1392,10 +1445,10 @@
                 </div>
               </div>
               <div id="mcVinProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
-              <div id="mcVinLoader" class="loader"><div class="spinner"></div><span>Searching...</span></div>
+              <div id="mcVinLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.searching">Searching...</span></div>
             </div>
             <div id="mcVinBack" class="hidden mb-3">
-              <button onclick="mcVinGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> Back</button>
+              <button onclick="mcVinGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> <span data-i18n="btn.back">Back</span></button>
             </div>
             <div class="glass-card p-1 overflow-hidden">
               <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
@@ -1416,21 +1469,21 @@
               <i class="ri-image-line text-pink-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Diagram Generator</h2>
-              <p class="text-xs text-slate-500">Generate part diagrams from part numbers</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.diagram.title">Diagram Generator</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.diagram.subtitle">Generate part diagrams from part numbers</p>
             </div>
           </div>
           <div class="glass-card p-4 mb-4">
             <div class="flex gap-2">
               <input id="txtDiagramPart" class="input-field flex-1" placeholder="Enter part number e.g. 16401-0C030 , 23220-0C051 , 90915-YZZD4">
-              <button onclick="fetchDiagram()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Generate</span></button>
+              <button onclick="fetchDiagram()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.generate">Generate</span></span></button>
             </div>
-            <div id="diagramLoader" class="loader"><div class="spinner"></div><span>Generating diagram...</span></div>
+            <div id="diagramLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.generatingDiagram">Generating diagram...</span></div>
           </div>
           <div id="diagramResult" class="glass-card p-5 overflow-auto" style="min-height:200px;">
             <div class="flex flex-col items-center justify-center h-48 text-slate-600">
               <i class="ri-image-line text-3xl mb-2"></i>
-              <span class="text-sm">Diagram will appear here</span>
+              <span class="text-sm" data-i18n="placeholder.diagram">Diagram will appear here</span>
             </div>
           </div>
         </div>
@@ -1442,21 +1495,21 @@
               <i class="ri-ruler-line text-indigo-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">Dimensions Checker</h2>
-              <p class="text-xs text-slate-500">Check parcel dimensions for any part</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.dimensions.title">Dimensions Checker</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.dimensions.subtitle">Check parcel dimensions for any part</p>
             </div>
           </div>
           <div class="glass-card p-4 mb-4">
             <div class="flex gap-2">
               <input id="txtDimPart" class="input-field flex-1" placeholder="Enter part number e.g. 11213-0C011">
-              <button onclick="fetchDimensions()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Check</span></button>
+              <button onclick="fetchDimensions()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.check">Check</span></span></button>
             </div>
-            <div id="dimLoader" class="loader"><div class="spinner"></div><span>Fetching dimensions...</span></div>
+            <div id="dimLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.fetchingDimensions">Fetching dimensions...</span></div>
           </div>
           <div id="dimResult" class="glass-card p-5 overflow-auto" style="min-height:200px;">
             <div class="flex flex-col items-center justify-center h-48 text-slate-600">
               <i class="ri-ruler-line text-3xl mb-2"></i>
-              <span class="text-sm">Results will appear here</span>
+              <span class="text-sm" data-i18n="placeholder.results">Results will appear here</span>
             </div>
           </div>
         </div>
@@ -1468,21 +1521,21 @@
               <i class="ri-barcode-box-line text-lime-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">HS Code Checker</h2>
-              <p class="text-xs text-slate-500">Look up Harmonized System codes for parts</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.hscode.title">HS Code Checker</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.hscode.subtitle">Look up Harmonized System codes for parts</p>
             </div>
           </div>
           <div class="glass-card p-4 mb-4">
             <div class="flex gap-2">
               <input id="txtHscodePart" class="input-field flex-1" placeholder="Enter part number e.g. 11213-0C011">
-              <button onclick="fetchHsCode()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Check</span></button>
+              <button onclick="fetchHsCode()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.check">Check</span></span></button>
             </div>
-            <div id="hscodeLoader" class="loader"><div class="spinner"></div><span>Fetching HS code...</span></div>
+            <div id="hscodeLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.fetchingHsCode">Fetching HS code...</span></div>
           </div>
           <div id="hscodeResult" class="glass-card p-5 overflow-auto" style="min-height:200px;">
             <div class="flex flex-col items-center justify-center h-48 text-slate-600">
               <i class="ri-barcode-box-line text-3xl mb-2"></i>
-              <span class="text-sm">Results will appear here</span>
+              <span class="text-sm" data-i18n="placeholder.results">Results will appear here</span>
             </div>
           </div>
         </div>
@@ -1494,21 +1547,21 @@
               <i class="ri-box-3-line text-sky-400 text-lg"></i>
             </div>
             <div>
-              <h2 class="font-display text-lg font-bold text-white">CBM Calculator</h2>
-              <p class="text-xs text-slate-500">Calculate cubic meters, volumetric & actual weight</p>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.cbm.title">CBM Calculator</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.cbm.subtitle">Calculate cubic meters, volumetric & actual weight</p>
             </div>
           </div>
           <div class="glass-card p-4 mb-4">
             <div class="flex gap-2">
               <input id="txtCbmPart" class="input-field flex-1" placeholder="Enter part number e.g. 11213-0C011">
-              <button onclick="fetchCbm()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Calculate</span></button>
+              <button onclick="fetchCbm()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.calculate">Calculate</span></span></button>
             </div>
-            <div id="cbmLoader" class="loader"><div class="spinner"></div><span>Calculating CBM...</span></div>
+            <div id="cbmLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.calculatingCbm">Calculating CBM...</span></div>
           </div>
           <div id="cbmResult" class="glass-card p-5 overflow-auto" style="min-height:200px;">
             <div class="flex flex-col items-center justify-center h-48 text-slate-600">
               <i class="ri-box-3-line text-3xl mb-2"></i>
-              <span class="text-sm">Results will appear here</span>
+              <span class="text-sm" data-i18n="placeholder.results">Results will appear here</span>
             </div>
           </div>
         </div>
@@ -1516,26 +1569,26 @@
 
       <!-- Footer -->
       <footer class="border-t border-white/5 mt-8 py-5 text-center text-xs text-slate-600">
-        <p>PartsMateTH &copy; 2026 &middot; Auto Parts Intelligence</p>
+        <p data-i18n="footer.copyright">PartsMateTH © 2026 · Auto Parts Intelligence</p>
       </footer>
     </div>
   </div>
 
   <!-- Mobile Bottom Navigation -->
   <nav class="mobile-nav">
-    <button class="mob-tab active" data-tab="home"><i class="ri-home-5-line"></i>Home</button>
-    <button class="mob-tab" data-tab="prices"><i class="ri-money-dollar-circle-line"></i>Prices</button>
-    <button class="mob-tab" data-tab="names"><i class="ri-price-tag-3-line"></i>Names</button>
-    <button class="mob-tab" data-tab="country"><i class="ri-global-line"></i>Country</button>
-    <button class="mob-tab" data-tab="details"><i class="ri-search-eye-line"></i>Details</button>
-    <button class="mob-tab" data-tab="weight"><i class="ri-scales-3-line"></i>Weight</button>
-    <button class="mob-tab" data-tab="alternates"><i class="ri-refresh-line"></i>Alts</button>
-    <button class="mob-tab" data-tab="listcleaner"><i class="ri-file-list-3-line"></i>List</button>
-    <button class="mob-tab" data-tab="modelchecker"><i class="ri-car-line"></i>Model</button>
-    <button class="mob-tab" data-tab="diagram"><i class="ri-image-line"></i>Diagram</button>
-    <button class="mob-tab" data-tab="dimensions"><i class="ri-ruler-line"></i>Dims</button>
-    <button class="mob-tab" data-tab="hscode"><i class="ri-barcode-box-line"></i>HS</button>
-    <button class="mob-tab" data-tab="cbm"><i class="ri-box-3-line"></i>CBM</button>
+    <button class="mob-tab active" data-tab="home"><i class="ri-home-5-line"></i><span data-i18n="mob.home">Home</span></button>
+    <button class="mob-tab" data-tab="prices"><i class="ri-money-dollar-circle-line"></i><span data-i18n="mob.prices">Prices</span></button>
+    <button class="mob-tab" data-tab="names"><i class="ri-price-tag-3-line"></i><span data-i18n="mob.names">Names</span></button>
+    <button class="mob-tab" data-tab="country"><i class="ri-global-line"></i><span data-i18n="mob.country">Country</span></button>
+    <button class="mob-tab" data-tab="details"><i class="ri-search-eye-line"></i><span data-i18n="mob.details">Details</span></button>
+    <button class="mob-tab" data-tab="weight"><i class="ri-scales-3-line"></i><span data-i18n="mob.weight">Weight</span></button>
+    <button class="mob-tab" data-tab="alternates"><i class="ri-refresh-line"></i><span data-i18n="mob.alts">Alts</span></button>
+    <button class="mob-tab" data-tab="listcleaner"><i class="ri-file-list-3-line"></i><span data-i18n="mob.list">List</span></button>
+    <button class="mob-tab" data-tab="modelchecker"><i class="ri-car-line"></i><span data-i18n="mob.model">Model</span></button>
+    <button class="mob-tab" data-tab="diagram"><i class="ri-image-line"></i><span data-i18n="mob.diagram">Diagram</span></button>
+    <button class="mob-tab" data-tab="dimensions"><i class="ri-ruler-line"></i><span data-i18n="mob.dims">Dims</span></button>
+    <button class="mob-tab" data-tab="hscode"><i class="ri-barcode-box-line"></i><span data-i18n="mob.hs">HS</span></button>
+    <button class="mob-tab" data-tab="cbm"><i class="ri-box-3-line"></i><span data-i18n="mob.cbm">CBM</span></button>
   </nav>
 
   <!-- Toast -->
@@ -1551,6 +1604,1813 @@
     let altResultsData = {};
 
     function proxyUrl(path) { return API + encodeURIComponent(path); }
+
+    // ============ INTERNATIONALIZATION ============
+    const RTL_LANGS = ['ar', 'ur', 'ps'];
+    
+    const LANG_LABELS = {
+      en: '🇬🇧 English', fr: '🇫🇷 Français', ar: '🇸🇦 عربي', hi: '🇮🇳 हिंदी',
+      ur: '🇵🇰 اردو', ru: '🇷🇺 Русский', ps: '🇦🇫 پښتو', ko: '🇰🇷 한국어',
+      tr: '🇹🇷 Türkçe', zh: '🇨🇳 中文'
+    };
+
+    const i18n = {
+      en: {
+        // Navigation
+        'nav.searchParts': 'Search Parts', 'nav.prices': 'Prices', 'nav.names': 'Names',
+        'nav.countries': 'Countries', 'nav.weights': 'Weights', 'nav.alternates': 'Alternates',
+        'nav.listCleaner': 'List Cleaner', 'nav.modelChecker': 'Model Checker',
+        'nav.diagramGenerator': 'Diagram Generator', 'nav.dimensionsChecker': 'Dimensions Checker',
+        'nav.hsCodeChecker': 'HS Code Checker', 'nav.cbmCalculator': 'CBM Calculator',
+        'nav.partDetails': 'Part Details', 'nav.tools': 'Tools', 'nav.more': 'More',
+        // User
+        'user.plan': 'Plan', 'user.license': 'License', 'user.expires': 'Expires',
+        'user.status': 'Status', 'user.logout': 'Logout',
+        // Top bar
+        'topbar.quickSearch': 'Quick Search',
+        // Tab titles (used by pageTitles)
+        'page.home.title': 'Parts Intelligence', 'page.home.subtitle': 'Search across verified global databases',
+        'page.prices.title': 'Prices Checker', 'page.prices.subtitle': 'Check estimated pricing across sources',
+        'page.names.title': 'Name Checker', 'page.names.subtitle': 'Look up part names from different sources',
+        'page.country.title': 'Country / Origin', 'page.country.subtitle': 'Find where parts are manufactured',
+        'page.details.title': 'Part Details', 'page.details.subtitle': 'Get comprehensive part information',
+        'page.weight.title': 'Weight Checker', 'page.weight.subtitle': 'Look up part weights and brands',
+        'page.alternates.title': 'Alternates Check', 'page.alternates.subtitle': 'Find alternate part numbers',
+        'page.listcleaner.title': 'List Cleaner', 'page.listcleaner.subtitle': 'Process text to extract part numbers',
+        'page.modelchecker.title': 'Model Checker', 'page.modelchecker.subtitle': 'Check part compatibility by model',
+        'page.diagram.title': 'Diagram Generator', 'page.diagram.subtitle': 'Generate part diagrams from part numbers',
+        'page.dimensions.title': 'Dimensions Checker', 'page.dimensions.subtitle': 'Check parcel dimensions for parts',
+        'page.hscode.title': 'HS Code Checker', 'page.hscode.subtitle': 'Look up Harmonized System codes',
+        'page.cbm.title': 'CBM Calculator', 'page.cbm.subtitle': 'Calculate volume and shipping weight',
+        // Tab headings
+        'tab.prices.title': 'Prices Checker',
+        'tab.prices.subtitle': 'Check estimated internet, Dubai genuine futtaim & OFP prices',
+        'tab.names.title': 'Name Checker',
+        'tab.names.subtitle': 'Look up part names from different sources',
+        'tab.country.title': 'Country / Origin',
+        'tab.country.subtitle': 'Find where parts are manufactured',
+        'tab.details.title': 'Part Details',
+        'tab.details.subtitle': 'Get comprehensive part information',
+        'tab.weight.title': 'Weight Checker',
+        'tab.weight.subtitle': 'Look up part weights and brands',
+        'tab.alternates.title': 'Alternates Check',
+        'tab.alternates.subtitle': 'Find alternate part numbers across brands',
+        'tab.listCleaner.title': 'List Cleaner',
+        'tab.listCleaner.subtitle': 'Process text and images to extract part information',
+        'tab.diagram.title': 'Diagram Generator',
+        'tab.diagram.subtitle': 'Generate part diagrams from part numbers',
+        'tab.dimensions.title': 'Dimensions Checker',
+        'tab.dimensions.subtitle': 'Check parcel dimensions for any part',
+        'tab.hscode.title': 'HS Code Checker',
+        'tab.hscode.subtitle': 'Look up Harmonized System codes for parts',
+        'tab.cbm.title': 'CBM Calculator',
+        'tab.cbm.subtitle': 'Calculate cubic meters, volumetric & actual weight',
+        // Cards
+        'card.prices': 'Prices', 'card.names': 'Names', 'card.country': 'Country',
+        'card.details': 'Details', 'card.weight': 'Weight', 'card.alternates': 'Alternates',
+        'card.listCleaner': 'List Cleaner', 'card.modelChecker': 'Model Checker',
+        'card.diagram': 'Diagram', 'card.dimensions': 'Dimensions',
+        'card.hsCode': 'HS Code', 'card.cbm': 'CBM',
+        'cardDesc.prices': 'Check part pricing', 'cardDesc.names': 'Identify part names',
+        'cardDesc.country': 'Find origin country', 'cardDesc.details': 'Full part info',
+        'cardDesc.weight': 'Check part weight', 'cardDesc.alternates': 'Find replacements',
+        'cardDesc.listCleaner': 'Extract part numbers', 'cardDesc.modelChecker': 'Check compatibility',
+        'cardDesc.diagram': 'Generate diagrams', 'cardDesc.dimensions': 'Check part size',
+        'cardDesc.hsCode': 'Lookup HS codes', 'cardDesc.cbm': 'Volume & weight',
+        // Buttons
+        'btn.checkPrices': 'Check Prices', 'btn.checkNames': 'Check Names',
+        'btn.checkOrigins': 'Check Origins', 'btn.getDetails': 'Get Details',
+        'btn.checkWeights': 'Check Weights', 'btn.cleanList': 'Clean List',
+        'btn.readText': 'Read Text', 'btn.generate': 'Generate', 'btn.calculate': 'Calculate',
+        'btn.submitFeedback': 'Submit Feedback', 'btn.sort': 'Sort', 'btn.clean': 'Clean',
+        'btn.stop': 'Stop', 'btn.search': 'Search', 'btn.check': 'Check',
+        'btn.quick': 'Quick', 'btn.deep': 'Deep', 'btn.scan': 'Scan', 'btn.back': 'Back',
+        // Labels
+        'label.partNumbers': 'Part Numbers', 'label.enterPartNumbers': 'Enter Part Numbers',
+        'label.source': 'Source', 'label.currency': 'Currency',
+        'label.filterByBrand': 'Filter by Brand', 'label.result': 'Result:',
+        'label.checkMultipleParts': 'Check Multiple Parts', 'label.allBrands': 'All Brands',
+        // Feedback
+        'feedback.suggestion': 'Suggestion', 'feedback.complaint': 'Complaint',
+        // Loaders
+        'loader.fetchingPrices': 'Fetching prices...', 'loader.fetchingNames': 'Fetching names...',
+        'loader.fetchingOrigins': 'Fetching origins...', 'loader.fetchingDetails': 'Fetching details...',
+        'loader.fetchingWeights': 'Fetching weights...', 'loader.searchingAlternates': 'Searching alternates...',
+        'loader.searchingModels': 'Searching models...', 'loader.searching': 'Searching...',
+        'loader.generatingDiagram': 'Generating diagram...', 'loader.fetchingDimensions': 'Fetching dimensions...',
+        'loader.fetchingHsCode': 'Fetching HS code...', 'loader.calculatingCbm': 'Calculating CBM...',
+        // Table headers
+        'th.partNo': 'Part No.', 'th.name': 'Name', 'th.price': 'Price (THB)',
+        'th.origin': 'Origin', 'th.status': 'Status', 'th.partName': 'Part Name',
+        'th.partNumber': 'Part Number', 'th.internet': 'Internet',
+        'th.dubaiGenuine': 'Dubai Genuine (Futtaim)', 'th.ofp': 'OFP', 'th.match': 'Match',
+        'th.weight': 'Weight (kgs)', 'th.brand': 'Brand',
+        // Placeholders
+        'placeholder.results': 'Results will appear here',
+        'placeholder.diagram': 'Diagram will appear here',
+        // Model checker
+        'mc.title': 'Model Checker', 'mc.vinTitle': 'Check by VIN / Chassis Number',
+        'mc.partNoSubtitle': 'Find which models a part fits',
+        'mc.vinSubtitle': 'Look up vehicle configuration and parts',
+        // Mobile nav
+        'mob.home': 'Home', 'mob.prices': 'Prices', 'mob.names': 'Names',
+        'mob.country': 'Country', 'mob.details': 'Details', 'mob.weight': 'Weight',
+        'mob.alts': 'Alts', 'mob.list': 'List', 'mob.model': 'Model',
+        'mob.diagram': 'Diagram', 'mob.dims': 'Dims', 'mob.hs': 'HS', 'mob.cbm': 'CBM',
+        // Footer
+        'footer.copyright': 'PartsMateTH © 2026 · Auto Parts Intelligence',
+        // Placeholders (input)
+        'ph.searchParts': 'Search part numbers, names, or brands...',
+        'ph.enterPartNumbers': 'Enter part numbers, one per line...',
+        'ph.enterPartNumber': 'Enter part number...',
+        'ph.enterPartNumberEg': 'Enter part number e.g. 11213-0C011',
+        'ph.enterPartNumberDiagram': 'Enter part number e.g. 16401-0C030 , 23220-0C051 , 90915-YZZD4',
+        'ph.enterVin': 'Enter VIN / Chassis No. Here',
+        'ph.searchPartsVin': 'Search parts in this VIN e.g. filter, shock, 17801',
+        'ph.shareSuggestion': 'Share your suggestion...',
+        'ph.reportIssue': 'Report an issue...',
+        'ph.pastePartNumbers': 'Paste part numbers or text here...',
+        'ph.searchAlternates': '🔍 Search alternates...',
+        'ph.enterPartNumbers2': 'Enter part number(s)...',
+      },
+      // Other languages - users will fill these in
+      fr: {
+        'nav.searchParts': 'Rechercher',
+        'nav.prices': 'Prix',
+        'nav.names': 'Noms',
+        'nav.countries': 'Pays',
+        'nav.weights': 'Poids',
+        'nav.alternates': 'Alternatives',
+        'nav.listCleaner': 'Nettoyeur de liste',
+        'nav.modelChecker': 'Vérificateur de modèle',
+        'nav.diagramGenerator': 'Générateur de diagramme',
+        'nav.dimensionsChecker': 'Vérificateur de dimensions',
+        'nav.hsCodeChecker': 'Vérificateur de code HS',
+        'nav.cbmCalculator': 'Calculateur CBM',
+        'nav.partDetails': 'Détails de la pièce',
+        'nav.tools': 'Outils',
+        'nav.more': 'Plus',
+        'user.plan': 'Forfait',
+        'user.license': 'Licence',
+        'user.expires': 'Expire',
+        'user.status': 'Statut',
+        'user.logout': 'Déconnexion',
+        'topbar.quickSearch': 'Recherche rapide',
+        'page.home.title': 'Intelligence des pièces',
+        'page.home.subtitle': 'Rechercher dans les bases de données mondiales vérifiées',
+        'page.prices.title': 'Vérificateur de prix',
+        'page.prices.subtitle': 'Vérifier les prix estimés sur Internet, Al Futtaim et OFP',
+        'page.names.title': 'Vérificateur de noms',
+        'page.names.subtitle': 'Rechercher les noms de pièces de différentes sources',
+        'page.country.title': 'Pays / Origine',
+        'page.country.subtitle': 'Trouver le pays de fabrication',
+        'page.details.title': 'Détails de la pièce',
+        'page.details.subtitle': 'Obtenir des informations complètes',
+        'page.weight.title': 'Vérificateur de poids',
+        'page.weight.subtitle': 'Rechercher les poids et marques',
+        'page.alternates.title': 'Vérificateur d\'alternatives',
+        'page.alternates.subtitle': 'Trouver des numéros alternatifs',
+        'page.listcleaner.title': 'Nettoyeur de liste',
+        'page.listcleaner.subtitle': 'Traiter le texte pour extraire les numéros',
+        'page.modelchecker.title': 'Vérificateur de modèle',
+        'page.modelchecker.subtitle': 'Vérifier la compatibilité par modèle',
+        'page.diagram.title': 'Générateur de diagramme',
+        'page.diagram.subtitle': 'Générer des diagrammes de pièces',
+        'page.dimensions.title': 'Vérificateur de dimensions',
+        'page.dimensions.subtitle': 'Vérifier les dimensions des colis',
+        'page.hscode.title': 'Vérificateur de code HS',
+        'page.hscode.subtitle': 'Rechercher les codes du système harmonisé',
+        'page.cbm.title': 'Calculateur CBM',
+        'page.cbm.subtitle': 'Calculer le volume et le poids d\'expédition',
+        'tab.prices.title': 'Vérificateur de prix',
+        'tab.prices.subtitle': 'Vérifiez les prix estimés sur Internet, Dubai Genuine Futtaim et OFP',
+        'tab.names.title': 'Vérificateur de noms',
+        'tab.names.subtitle': 'Rechercher les noms de pièces de différentes sources',
+        'tab.country.title': 'Pays / Origine',
+        'tab.country.subtitle': 'Trouver le pays de fabrication',
+        'tab.details.title': 'Détails de la pièce',
+        'tab.details.subtitle': 'Obtenir des informations complètes sur la pièce',
+        'tab.weight.title': 'Vérificateur de poids',
+        'tab.weight.subtitle': 'Rechercher les poids et marques des pièces',
+        'tab.alternates.title': 'Vérificateur d\'alternatives',
+        'tab.alternates.subtitle': 'Trouver des numéros de pièces alternatifs entre les marques',
+        'tab.listCleaner.title': 'Nettoyeur de liste',
+        'tab.listCleaner.subtitle': 'Traiter le texte et les images pour extraire les informations',
+        'tab.diagram.title': 'Générateur de diagramme',
+        'tab.diagram.subtitle': 'Générer des diagrammes à partir des numéros de pièces',
+        'tab.dimensions.title': 'Vérificateur de dimensions',
+        'tab.dimensions.subtitle': 'Vérifier les dimensions des colis pour toute pièce',
+        'tab.hscode.title': 'Vérificateur de code HS',
+        'tab.hscode.subtitle': 'Rechercher les codes du système harmonisé pour les pièces',
+        'tab.cbm.title': 'Calculateur CBM',
+        'tab.cbm.subtitle': 'Calculer les mètres cubes, le poids volumétrique et réel',
+        'card.prices': 'Prix',
+        'card.names': 'Noms',
+        'card.country': 'Pays',
+        'card.details': 'Détails',
+        'card.weight': 'Poids',
+        'card.alternates': 'Alternatives',
+        'card.listCleaner': 'Nettoyeur',
+        'card.modelChecker': 'Modèle',
+        'card.diagram': 'Diagramme',
+        'card.dimensions': 'Dimensions',
+        'card.hsCode': 'Code HS',
+        'card.cbm': 'CBM',
+        'cardDesc.prices': 'Vérifier les prix',
+        'cardDesc.names': 'Identifier les noms',
+        'cardDesc.country': 'Trouver le pays d\'origine',
+        'cardDesc.details': 'Info complète',
+        'cardDesc.weight': 'Vérifier le poids',
+        'cardDesc.alternates': 'Trouver des remplacements',
+        'cardDesc.listCleaner': 'Extraire les numéros',
+        'cardDesc.modelChecker': 'Vérifier la compatibilité',
+        'cardDesc.diagram': 'Générer des diagrammes',
+        'cardDesc.dimensions': 'Vérifier la taille',
+        'cardDesc.hsCode': 'Rechercher les codes HS',
+        'cardDesc.cbm': 'Volume et poids',
+        'btn.checkPrices': 'Vérifier les prix',
+        'btn.checkNames': 'Vérifier les noms',
+        'btn.checkOrigins': 'Vérifier les origines',
+        'btn.getDetails': 'Obtenir les détails',
+        'btn.checkWeights': 'Vérifier le poids',
+        'btn.cleanList': 'Nettoyer la liste',
+        'btn.readText': 'Lire le texte',
+        'btn.generate': 'Générer',
+        'btn.calculate': 'Calculer',
+        'btn.submitFeedback': 'Soumettre',
+        'btn.sort': 'Trier',
+        'btn.clean': 'Nettoyer',
+        'btn.stop': 'Arrêter',
+        'btn.search': 'Rechercher',
+        'btn.check': 'Vérifier',
+        'btn.quick': 'Rapide',
+        'btn.deep': 'Approfondi',
+        'btn.scan': 'Scanner',
+        'btn.back': 'Retour',
+        'label.partNumbers': 'Numéros de pièces',
+        'label.enterPartNumbers': 'Entrer les numéros',
+        'label.source': 'Source',
+        'label.currency': 'Devise',
+        'label.filterByBrand': 'Filtrer par marque',
+        'label.result': 'Résultat :',
+        'label.checkMultipleParts': 'Vérifier plusieurs pièces',
+        'label.allBrands': 'Toutes les marques',
+        'feedback.suggestion': 'Suggestion',
+        'feedback.complaint': 'Réclamation',
+        'loader.fetchingPrices': 'Récupération des prix...',
+        'loader.fetchingNames': 'Récupération des noms...',
+        'loader.fetchingOrigins': 'Récupération des origines...',
+        'loader.fetchingDetails': 'Récupération des détails...',
+        'loader.fetchingWeights': 'Récupération des poids...',
+        'loader.searchingAlternates': 'Recherche d\'alternatives...',
+        'loader.searchingModels': 'Recherche des modèles...',
+        'loader.searching': 'Recherche...',
+        'loader.generatingDiagram': 'Génération du diagramme...',
+        'loader.fetchingDimensions': 'Récupération des dimensions...',
+        'loader.fetchingHsCode': 'Récupération du code HS...',
+        'loader.calculatingCbm': 'Calcul CBM...',
+        'th.partNo': 'N° Pièce',
+        'th.name': 'Nom',
+        'th.price': 'Prix (THB)',
+        'th.origin': 'Origine',
+        'th.status': 'Statut',
+        'th.partName': 'Nom de la pièce',
+        'th.partNumber': 'Numéro de pièce',
+        'th.internet': 'Internet',
+        'th.dubaiGenuine': 'Dubai Genuine (Futtaim)',
+        'th.ofp': 'OFP',
+        'th.match': 'Correspondance',
+        'th.weight': 'Poids (kg)',
+        'th.brand': 'Marque',
+        'placeholder.results': 'Les résultats apparaîtront ici',
+        'placeholder.diagram': 'Le diagramme apparaîtra ici',
+        'mc.title': 'Vérificateur de modèle',
+        'mc.vinTitle': 'Vérifier par VIN / Numéro de châssis',
+        'mc.partNoSubtitle': 'Trouver quels modèles une pièce convient',
+        'mc.vinSubtitle': 'Rechercher la configuration du véhicule et les pièces',
+        'mob.home': 'Accueil',
+        'mob.prices': 'Prix',
+        'mob.names': 'Noms',
+        'mob.country': 'Pays',
+        'mob.details': 'Détails',
+        'mob.weight': 'Poids',
+        'mob.alts': 'Alts',
+        'mob.list': 'Liste',
+        'mob.model': 'Modèle',
+        'mob.diagram': 'Diag',
+        'mob.dims': 'Dims',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · Intelligence des pièces auto',
+        'ph.searchParts': 'Rechercher numéros, noms ou marques...',
+        'ph.enterPartNumbers': 'Entrez les numéros de pièces, un par ligne...',
+        'ph.enterPartNumber': 'Entrez le numéro de pièce...',
+        'ph.enterPartNumberEg': 'Entrez le numéro de pièce ex: 11213-0C011',
+        'ph.enterPartNumberDiagram': 'Entrez le numéro ex: 16401-0C030, 23220-0C051',
+        'ph.enterVin': 'Entrez le VIN / N° de châssis',
+        'ph.searchPartsVin': 'Rechercher des pièces dans ce VIN',
+        'ph.shareSuggestion': 'Partagez votre suggestion...',
+        'ph.reportIssue': 'Signaler un problème...',
+        'ph.pastePartNumbers': 'Collez les numéros de pièces ou le texte ici...',
+        'ph.searchAlternates': '🔍 Rechercher des alternatives...',
+        'ph.enterPartNumbers2': 'Entrez le(s) numéro(s) de pièce...'
+      },
+      ar: {
+        'nav.searchParts': 'البحث عن قطع',
+        'nav.prices': 'الأسعار',
+        'nav.names': 'الأسماء',
+        'nav.countries': 'البلدان',
+        'nav.weights': 'الأوزان',
+        'nav.alternates': 'البدائل',
+        'nav.listCleaner': 'منظف القائمة',
+        'nav.modelChecker': 'فاحص الموديل',
+        'nav.diagramGenerator': 'مولّد المخططات',
+        'nav.dimensionsChecker': 'فاحص الأبعاد',
+        'nav.hsCodeChecker': 'فاحص رمز HS',
+        'nav.cbmCalculator': 'حاسبة CBM',
+        'nav.partDetails': 'تفاصيل القطعة',
+        'nav.tools': 'أدوات',
+        'nav.more': 'المزيد',
+        'user.plan': 'الخطة',
+        'user.license': 'الترخيص',
+        'user.expires': 'ينتهي',
+        'user.status': 'الحالة',
+        'user.logout': 'تسجيل الخروج',
+        'topbar.quickSearch': 'بحث سريع',
+        'page.home.title': 'ذكاء القطع',
+        'page.home.subtitle': 'البحث في قواعد البيانات العالمية الموثقة',
+        'page.prices.title': 'فاحص الأسعار',
+        'page.prices.subtitle': 'تحقق من الأسعار التقديرية',
+        'page.names.title': 'فاحص الأسماء',
+        'page.names.subtitle': 'ابحث عن أسماء القطع من مصادر مختلفة',
+        'page.country.title': 'البلد / المنشأ',
+        'page.country.subtitle': 'اعثر على بلد التصنيع',
+        'page.details.title': 'تفاصيل القطعة',
+        'page.details.subtitle': 'احصل على معلومات شاملة',
+        'page.weight.title': 'فاحص الوزن',
+        'page.weight.subtitle': 'ابحث عن أوزان وعلامات القطع',
+        'page.alternates.title': 'فحص البدائل',
+        'page.alternates.subtitle': 'اعثر على أرقام بديلة',
+        'page.listcleaner.title': 'منظف القائمة',
+        'page.listcleaner.subtitle': 'معالجة النص لاستخراج الأرقام',
+        'page.modelchecker.title': 'فاحص الموديل',
+        'page.modelchecker.subtitle': 'تحقق من التوافق بالموديل',
+        'page.diagram.title': 'مولّد المخططات',
+        'page.diagram.subtitle': 'توليد مخططات من أرقام القطع',
+        'page.dimensions.title': 'فاحص الأبعاد',
+        'page.dimensions.subtitle': 'تحقق من أبعاد الطرود',
+        'page.hscode.title': 'فاحص رمز HS',
+        'page.hscode.subtitle': 'ابحث عن رموز النظام المنسق',
+        'page.cbm.title': 'حاسبة CBM',
+        'page.cbm.subtitle': 'حساب الحجم ووزن الشحن',
+        'tab.prices.title': 'فاحص الأسعار',
+        'tab.prices.subtitle': 'تحقق من أسعار الإنترنت ودبي جنيوين فطيم و OFP التقديرية',
+        'tab.names.title': 'فاحص الأسماء',
+        'tab.names.subtitle': 'ابحث عن أسماء القطع من مصادر مختلفة',
+        'tab.country.title': 'البلد / المنشأ',
+        'tab.country.subtitle': 'اعثر على بلد التصنيع',
+        'tab.details.title': 'تفاصيل القطعة',
+        'tab.details.subtitle': 'احصل على معلومات شاملة عن القطعة',
+        'tab.weight.title': 'فاحص الوزن',
+        'tab.weight.subtitle': 'ابحث عن أوزان وعلامات القطع',
+        'tab.alternates.title': 'فحص البدائل',
+        'tab.alternates.subtitle': 'اعثر على أرقام قطع بديلة عبر العلامات التجارية',
+        'tab.listCleaner.title': 'منظف القائمة',
+        'tab.listCleaner.subtitle': 'معالجة النص والصور لاستخراج المعلومات',
+        'tab.diagram.title': 'مولّد المخططات',
+        'tab.diagram.subtitle': 'توليد مخططات من أرقام القطع',
+        'tab.dimensions.title': 'فاحص الأبعاد',
+        'tab.dimensions.subtitle': 'تحقق من أبعاد الطرود لأي قطعة',
+        'tab.hscode.title': 'فاحص رمز HS',
+        'tab.hscode.subtitle': 'ابحث عن رموز النظام المنسق للقطع',
+        'tab.cbm.title': 'حاسبة CBM',
+        'tab.cbm.subtitle': 'حساب الأمتار المكعبة والوزن الحجمي والفعلي',
+        'card.prices': 'الأسعار',
+        'card.names': 'الأسماء',
+        'card.country': 'البلد',
+        'card.details': 'التفاصيل',
+        'card.weight': 'الوزن',
+        'card.alternates': 'البدائل',
+        'card.listCleaner': 'المنظف',
+        'card.modelChecker': 'الموديل',
+        'card.diagram': 'المخطط',
+        'card.dimensions': 'الأبعاد',
+        'card.hsCode': 'رمز HS',
+        'card.cbm': 'CBM',
+        'cardDesc.prices': 'تحقق من الأسعار',
+        'cardDesc.names': 'تعرف على الأسماء',
+        'cardDesc.country': 'اعثر على بلد المنشأ',
+        'cardDesc.details': 'معلومات كاملة',
+        'cardDesc.weight': 'تحقق من الوزن',
+        'cardDesc.alternates': 'اعثر على بدائل',
+        'cardDesc.listCleaner': 'استخراج الأرقام',
+        'cardDesc.modelChecker': 'تحقق من التوافق',
+        'cardDesc.diagram': 'توليد المخططات',
+        'cardDesc.dimensions': 'تحقق من الحجم',
+        'cardDesc.hsCode': 'ابحث عن رموز HS',
+        'cardDesc.cbm': 'الحجم والوزن',
+        'btn.checkPrices': 'تحقق من الأسعار',
+        'btn.checkNames': 'تحقق من الأسماء',
+        'btn.checkOrigins': 'تحقق من المنشأ',
+        'btn.getDetails': 'احصل على التفاصيل',
+        'btn.checkWeights': 'تحقق من الوزن',
+        'btn.cleanList': 'تنظيف القائمة',
+        'btn.readText': 'قراءة النص',
+        'btn.generate': 'توليد',
+        'btn.calculate': 'حساب',
+        'btn.submitFeedback': 'إرسال',
+        'btn.sort': 'ترتيب',
+        'btn.clean': 'تنظيف',
+        'btn.stop': 'إيقاف',
+        'btn.search': 'بحث',
+        'btn.check': 'تحقق',
+        'btn.quick': 'سريع',
+        'btn.deep': 'عميق',
+        'btn.scan': 'مسح',
+        'btn.back': 'رجوع',
+        'label.partNumbers': 'أرقام القطع',
+        'label.enterPartNumbers': 'أدخل أرقام القطع',
+        'label.source': 'المصدر',
+        'label.currency': 'العملة',
+        'label.filterByBrand': 'تصفية حسب العلامة',
+        'label.result': 'النتيجة:',
+        'label.checkMultipleParts': 'فحص عدة قطع',
+        'label.allBrands': 'جميع العلامات',
+        'feedback.suggestion': 'اقتراح',
+        'feedback.complaint': 'شكوى',
+        'loader.fetchingPrices': 'جارٍ جلب الأسعار...',
+        'loader.fetchingNames': 'جارٍ جلب الأسماء...',
+        'loader.fetchingOrigins': 'جارٍ جلب المنشأ...',
+        'loader.fetchingDetails': 'جارٍ جلب التفاصيل...',
+        'loader.fetchingWeights': 'جارٍ جلب الأوزان...',
+        'loader.searchingAlternates': 'جارٍ البحث عن بدائل...',
+        'loader.searchingModels': 'جارٍ البحث عن الموديلات...',
+        'loader.searching': 'جارٍ البحث...',
+        'loader.generatingDiagram': 'جارٍ توليد المخطط...',
+        'loader.fetchingDimensions': 'جارٍ جلب الأبعاد...',
+        'loader.fetchingHsCode': 'جارٍ جلب رمز HS...',
+        'loader.calculatingCbm': 'جارٍ حساب CBM...',
+        'th.partNo': 'رقم القطعة',
+        'th.name': 'الاسم',
+        'th.price': 'السعر (THB)',
+        'th.origin': 'المنشأ',
+        'th.status': 'الحالة',
+        'th.partName': 'اسم القطعة',
+        'th.partNumber': 'رقم القطعة',
+        'th.internet': 'الإنترنت',
+        'th.dubaiGenuine': 'دبي جنيوين (فطيم)',
+        'th.ofp': 'OFP',
+        'th.match': 'التطابق',
+        'th.weight': 'الوزن (كجم)',
+        'th.brand': 'العلامة',
+        'placeholder.results': 'ستظهر النتائج هنا',
+        'placeholder.diagram': 'سيظهر المخطط هنا',
+        'mc.title': 'فاحص الموديل',
+        'mc.vinTitle': 'التحقق بالرقم التعريفي / رقم الهيكل',
+        'mc.partNoSubtitle': 'اعثر على الموديلات المتوافقة',
+        'mc.vinSubtitle': 'ابحث عن تكوين المركبة والقطع',
+        'mob.home': 'الرئيسية',
+        'mob.prices': 'الأسعار',
+        'mob.names': 'الأسماء',
+        'mob.country': 'البلد',
+        'mob.details': 'التفاصيل',
+        'mob.weight': 'الوزن',
+        'mob.alts': 'بدائل',
+        'mob.list': 'القائمة',
+        'mob.model': 'الموديل',
+        'mob.diagram': 'مخطط',
+        'mob.dims': 'أبعاد',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · ذكاء قطع غيار السيارات',
+        'ph.searchParts': 'ابحث عن أرقام أو أسماء أو علامات...',
+        'ph.enterPartNumbers': 'أدخل أرقام القطع، واحد في كل سطر...',
+        'ph.enterPartNumber': 'أدخل رقم القطعة...',
+        'ph.enterPartNumberEg': 'أدخل رقم القطعة مثال: 11213-0C011',
+        'ph.enterPartNumberDiagram': 'أدخل الرقم مثال: 16401-0C030',
+        'ph.enterVin': 'أدخل رقم الهيكل / VIN',
+        'ph.searchPartsVin': 'ابحث عن قطع في هذا VIN',
+        'ph.shareSuggestion': 'شارك اقتراحك...',
+        'ph.reportIssue': 'أبلغ عن مشكلة...',
+        'ph.pastePartNumbers': 'الصق الأرقام أو النص هنا...',
+        'ph.searchAlternates': '🔍 ابحث عن بدائل...',
+        'ph.enterPartNumbers2': 'أدخل رقم/أرقام القطعة...'
+      },
+      hi: {
+        'nav.searchParts': 'पार्ट्स खोजें',
+        'nav.prices': 'कीमतें',
+        'nav.names': 'नाम',
+        'nav.countries': 'देश',
+        'nav.weights': 'वजन',
+        'nav.alternates': 'विकल्प',
+        'nav.listCleaner': 'सूची क्लीनर',
+        'nav.modelChecker': 'मॉडल जाँच',
+        'nav.diagramGenerator': 'डायग्राम जनरेटर',
+        'nav.dimensionsChecker': 'आयाम जाँच',
+        'nav.hsCodeChecker': 'HS कोड जाँच',
+        'nav.cbmCalculator': 'CBM कैलकुलेटर',
+        'nav.partDetails': 'भाग विवरण',
+        'nav.tools': 'उपकरण',
+        'nav.more': 'और',
+        'user.plan': 'योजना',
+        'user.license': 'लाइसेंस',
+        'user.expires': 'समाप्ति',
+        'user.status': 'स्थिति',
+        'user.logout': 'लॉग आउट',
+        'topbar.quickSearch': 'त्वरित खोज',
+        'page.home.title': 'पार्ट्स इंटेलिजेंस',
+        'page.home.subtitle': 'सत्यापित वैश्विक डेटाबेस में खोजें',
+        'page.prices.title': 'कीमत जाँच',
+        'page.prices.subtitle': 'अनुमानित कीमतों की जाँच करें',
+        'page.names.title': 'नाम जाँच',
+        'page.names.subtitle': 'विभिन्न स्रोतों से भाग नाम खोजें',
+        'page.country.title': 'देश / उत्पत्ति',
+        'page.country.subtitle': 'निर्माण देश खोजें',
+        'page.details.title': 'भाग विवरण',
+        'page.details.subtitle': 'व्यापक जानकारी प्राप्त करें',
+        'page.weight.title': 'वजन जाँच',
+        'page.weight.subtitle': 'भाग वजन और ब्रांड खोजें',
+        'page.alternates.title': 'विकल्प जाँच',
+        'page.alternates.subtitle': 'वैकल्पिक भाग संख्या खोजें',
+        'page.listcleaner.title': 'सूची क्लीनर',
+        'page.listcleaner.subtitle': 'टेक्स्ट से भाग संख्या निकालें',
+        'page.modelchecker.title': 'मॉडल जाँच',
+        'page.modelchecker.subtitle': 'मॉडल द्वारा संगतता जाँचें',
+        'page.diagram.title': 'डायग्राम जनरेटर',
+        'page.diagram.subtitle': 'भाग संख्या से डायग्राम बनाएं',
+        'page.dimensions.title': 'आयाम जाँच',
+        'page.dimensions.subtitle': 'पार्सल आयाम जाँचें',
+        'page.hscode.title': 'HS कोड जाँच',
+        'page.hscode.subtitle': 'हार्मोनाइज्ड सिस्टम कोड खोजें',
+        'page.cbm.title': 'CBM कैलकुलेटर',
+        'page.cbm.subtitle': 'आयतन और शिपिंग वजन गणना',
+        'tab.prices.title': 'कीमत जाँच',
+        'tab.prices.subtitle': 'अनुमानित इंटरनेट, दुबई जेनुइन फटिम और OFP कीमतें जाँचें',
+        'tab.names.title': 'नाम जाँच',
+        'tab.names.subtitle': 'विभिन्न स्रोतों से भाग नाम खोजें',
+        'tab.country.title': 'देश / उत्पत्ति',
+        'tab.country.subtitle': 'पता करें कि भाग कहाँ बने हैं',
+        'tab.details.title': 'भाग विवरण',
+        'tab.details.subtitle': 'व्यापक भाग जानकारी प्राप्त करें',
+        'tab.weight.title': 'वजन जाँच',
+        'tab.weight.subtitle': 'भाग वजन और ब्रांड खोजें',
+        'tab.alternates.title': 'विकल्प जाँच',
+        'tab.alternates.subtitle': 'ब्रांडों में वैकल्पिक भाग संख्या खोजें',
+        'tab.listCleaner.title': 'सूची क्लीनर',
+        'tab.listCleaner.subtitle': 'टेक्स्ट और छवियों से भाग जानकारी निकालें',
+        'tab.diagram.title': 'डायग्राम जनरेटर',
+        'tab.diagram.subtitle': 'भाग संख्या से डायग्राम बनाएं',
+        'tab.dimensions.title': 'आयाम जाँच',
+        'tab.dimensions.subtitle': 'किसी भी भाग के लिए पार्सल आयाम जाँचें',
+        'tab.hscode.title': 'HS कोड जाँच',
+        'tab.hscode.subtitle': 'भागों के लिए हार्मोनाइज्ड सिस्टम कोड खोजें',
+        'tab.cbm.title': 'CBM कैलकुलेटर',
+        'tab.cbm.subtitle': 'घन मीटर, आयतन और वास्तविक वजन गणना',
+        'card.prices': 'कीमतें',
+        'card.names': 'नाम',
+        'card.country': 'देश',
+        'card.details': 'विवरण',
+        'card.weight': 'वजन',
+        'card.alternates': 'विकल्प',
+        'card.listCleaner': 'क्लीनर',
+        'card.modelChecker': 'मॉडल',
+        'card.diagram': 'डायग्राम',
+        'card.dimensions': 'आयाम',
+        'card.hsCode': 'HS कोड',
+        'card.cbm': 'CBM',
+        'cardDesc.prices': 'कीमत जाँचें',
+        'cardDesc.names': 'नाम पहचानें',
+        'cardDesc.country': 'मूल देश खोजें',
+        'cardDesc.details': 'पूर्ण जानकारी',
+        'cardDesc.weight': 'वजन जाँचें',
+        'cardDesc.alternates': 'प्रतिस्थापन खोजें',
+        'cardDesc.listCleaner': 'संख्या निकालें',
+        'cardDesc.modelChecker': 'संगतता जाँचें',
+        'cardDesc.diagram': 'डायग्राम बनाएं',
+        'cardDesc.dimensions': 'आकार जाँचें',
+        'cardDesc.hsCode': 'HS कोड खोजें',
+        'cardDesc.cbm': 'आयतन और वजन',
+        'btn.checkPrices': 'कीमत जाँचें',
+        'btn.checkNames': 'नाम जाँचें',
+        'btn.checkOrigins': 'उत्पत्ति जाँचें',
+        'btn.getDetails': 'विवरण प्राप्त करें',
+        'btn.checkWeights': 'वजन जाँचें',
+        'btn.cleanList': 'सूची साफ़ करें',
+        'btn.readText': 'टेक्स्ट पढ़ें',
+        'btn.generate': 'बनाएं',
+        'btn.calculate': 'गणना',
+        'btn.submitFeedback': 'सबमिट करें',
+        'btn.sort': 'क्रमबद्ध',
+        'btn.clean': 'साफ़',
+        'btn.stop': 'रोकें',
+        'btn.search': 'खोजें',
+        'btn.check': 'जाँचें',
+        'btn.quick': 'त्वरित',
+        'btn.deep': 'गहन',
+        'btn.scan': 'स्कैन',
+        'btn.back': 'वापस',
+        'label.partNumbers': 'भाग संख्या',
+        'label.enterPartNumbers': 'भाग संख्या दर्ज करें',
+        'label.source': 'स्रोत',
+        'label.currency': 'मुद्रा',
+        'label.filterByBrand': 'ब्रांड द्वारा फ़िल्टर',
+        'label.result': 'परिणाम:',
+        'label.checkMultipleParts': 'कई भाग जाँचें',
+        'label.allBrands': 'सभी ब्रांड',
+        'feedback.suggestion': 'सुझाव',
+        'feedback.complaint': 'शिकायत',
+        'loader.fetchingPrices': 'कीमतें ला रहे हैं...',
+        'loader.fetchingNames': 'नाम ला रहे हैं...',
+        'loader.fetchingOrigins': 'उत्पत्ति ला रहे हैं...',
+        'loader.fetchingDetails': 'विवरण ला रहे हैं...',
+        'loader.fetchingWeights': 'वजन ला रहे हैं...',
+        'loader.searchingAlternates': 'विकल्प खोज रहे हैं...',
+        'loader.searchingModels': 'मॉडल खोज रहे हैं...',
+        'loader.searching': 'खोज रहे हैं...',
+        'loader.generatingDiagram': 'डायग्राम बना रहे हैं...',
+        'loader.fetchingDimensions': 'आयाम ला रहे हैं...',
+        'loader.fetchingHsCode': 'HS कोड ला रहे हैं...',
+        'loader.calculatingCbm': 'CBM गणना कर रहे हैं...',
+        'th.partNo': 'भाग संख्या',
+        'th.name': 'नाम',
+        'th.price': 'कीमत (THB)',
+        'th.origin': 'उत्पत्ति',
+        'th.status': 'स्थिति',
+        'th.partName': 'भाग का नाम',
+        'th.partNumber': 'भाग संख्या',
+        'th.internet': 'इंटरनेट',
+        'th.dubaiGenuine': 'दुबई जेनुइन (फटिम)',
+        'th.ofp': 'OFP',
+        'th.match': 'मिलान',
+        'th.weight': 'वजन (किलो)',
+        'th.brand': 'ब्रांड',
+        'placeholder.results': 'परिणाम यहाँ दिखाई देंगे',
+        'placeholder.diagram': 'डायग्राम यहाँ दिखाई देगा',
+        'mc.title': 'मॉडल जाँच',
+        'mc.vinTitle': 'VIN / चेसिस नंबर से जाँचें',
+        'mc.partNoSubtitle': 'कौन से मॉडल में फिट होता है खोजें',
+        'mc.vinSubtitle': 'वाहन कॉन्फ़िगरेशन और भाग देखें',
+        'mob.home': 'होम',
+        'mob.prices': 'कीमतें',
+        'mob.names': 'नाम',
+        'mob.country': 'देश',
+        'mob.details': 'विवरण',
+        'mob.weight': 'वजन',
+        'mob.alts': 'विकल्प',
+        'mob.list': 'सूची',
+        'mob.model': 'मॉडल',
+        'mob.diagram': 'डायग्राम',
+        'mob.dims': 'आयाम',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · ऑटो पार्ट्स इंटेलिजेंस',
+        'ph.searchParts': 'भाग संख्या, नाम या ब्रांड खोजें...',
+        'ph.enterPartNumbers': 'भाग संख्या दर्ज करें, प्रति पंक्ति एक...',
+        'ph.enterPartNumber': 'भाग संख्या दर्ज करें...',
+        'ph.enterPartNumberEg': 'भाग संख्या दर्ज करें जैसे: 11213-0C011',
+        'ph.enterPartNumberDiagram': 'भाग संख्या दर्ज करें जैसे: 16401-0C030',
+        'ph.enterVin': 'VIN / चेसिस नंबर दर्ज करें',
+        'ph.searchPartsVin': 'इस VIN में भाग खोजें',
+        'ph.shareSuggestion': 'अपना सुझाव साझा करें...',
+        'ph.reportIssue': 'समस्या की रिपोर्ट करें...',
+        'ph.pastePartNumbers': 'भाग संख्या या टेक्स्ट यहाँ पेस्ट करें...',
+        'ph.searchAlternates': '🔍 विकल्प खोजें...',
+        'ph.enterPartNumbers2': 'भाग संख्या दर्ज करें...'
+      },
+      ur: {
+        'nav.searchParts': 'پارٹس تلاش کریں',
+        'nav.prices': 'قیمتیں',
+        'nav.names': 'نام',
+        'nav.countries': 'ممالک',
+        'nav.weights': 'وزن',
+        'nav.alternates': 'متبادل',
+        'nav.listCleaner': 'فہرست صاف کرنے والا',
+        'nav.modelChecker': 'ماڈل چیکر',
+        'nav.diagramGenerator': 'ڈایاگرام جنریٹر',
+        'nav.dimensionsChecker': 'سائز چیکر',
+        'nav.hsCodeChecker': 'HS کوڈ چیکر',
+        'nav.cbmCalculator': 'CBM کیلکولیٹر',
+        'nav.partDetails': 'حصے کی تفصیلات',
+        'nav.tools': 'ٹولز',
+        'nav.more': 'مزید',
+        'user.plan': 'پلان',
+        'user.license': 'لائسنس',
+        'user.expires': 'میعاد',
+        'user.status': 'حالت',
+        'user.logout': 'لاگ آؤٹ',
+        'topbar.quickSearch': 'فوری تلاش',
+        'page.home.title': 'پارٹس انٹیلی جنس',
+        'page.home.subtitle': 'تصدیق شدہ عالمی ڈیٹابیس میں تلاش کریں',
+        'page.prices.title': 'قیمت چیکر',
+        'page.prices.subtitle': 'تخمینی قیمتیں چیک کریں',
+        'page.names.title': 'نام چیکر',
+        'page.names.subtitle': 'مختلف ذرائع سے پارٹ نام تلاش کریں',
+        'page.country.title': 'ملک / اصل',
+        'page.country.subtitle': 'تصنیع کا ملک تلاش کریں',
+        'page.details.title': 'حصے کی تفصیلات',
+        'page.details.subtitle': 'جامع معلومات حاصل کریں',
+        'page.weight.title': 'وزن چیکر',
+        'page.weight.subtitle': 'پارٹ وزن اور برانڈ تلاش کریں',
+        'page.alternates.title': 'متبادل چیک',
+        'page.alternates.subtitle': 'متبادل پارٹ نمبر تلاش کریں',
+        'page.listcleaner.title': 'فہرست صاف کرنے والا',
+        'page.listcleaner.subtitle': 'متن سے پارٹ نمبر نکالیں',
+        'page.modelchecker.title': 'ماڈل چیکر',
+        'page.modelchecker.subtitle': 'ماڈل کے ذریعے مطابقت چیک کریں',
+        'page.diagram.title': 'ڈایاگرام جنریٹر',
+        'page.diagram.subtitle': 'پارٹ نمبر سے ڈایاگرام بنائیں',
+        'page.dimensions.title': 'سائز چیکر',
+        'page.dimensions.subtitle': 'پارسل کے سائز چیک کریں',
+        'page.hscode.title': 'HS کوڈ چیکر',
+        'page.hscode.subtitle': 'HS کوڈ تلاش کریں',
+        'page.cbm.title': 'CBM کیلکولیٹر',
+        'page.cbm.subtitle': 'حجم اور شپنگ وزن حساب کریں',
+        'card.prices': 'قیمتیں',
+        'card.names': 'نام',
+        'card.country': 'ملک',
+        'card.details': 'تفصیلات',
+        'card.weight': 'وزن',
+        'card.alternates': 'متبادل',
+        'card.listCleaner': 'کلینر',
+        'card.modelChecker': 'ماڈل',
+        'card.diagram': 'ڈایاگرام',
+        'card.dimensions': 'سائز',
+        'card.hsCode': 'HS کوڈ',
+        'card.cbm': 'CBM',
+        'cardDesc.prices': 'قیمت چیک کریں',
+        'cardDesc.names': 'نام پہچانیں',
+        'cardDesc.country': 'اصل ملک تلاش کریں',
+        'cardDesc.details': 'مکمل معلومات',
+        'cardDesc.weight': 'وزن چیک کریں',
+        'cardDesc.alternates': 'متبادل تلاش کریں',
+        'cardDesc.listCleaner': 'نمبر نکالیں',
+        'cardDesc.modelChecker': 'مطابقت چیک کریں',
+        'cardDesc.diagram': 'ڈایاگرام بنائیں',
+        'cardDesc.dimensions': 'سائز چیک کریں',
+        'cardDesc.hsCode': 'HS کوڈ تلاش کریں',
+        'cardDesc.cbm': 'حجم اور وزن',
+        'btn.checkPrices': 'قیمت چیک کریں',
+        'btn.checkNames': 'نام چیک کریں',
+        'btn.checkOrigins': 'اصل چیک کریں',
+        'btn.getDetails': 'تفصیلات حاصل کریں',
+        'btn.checkWeights': 'وزن چیک کریں',
+        'btn.cleanList': 'فہرست صاف کریں',
+        'btn.readText': 'متن پڑھیں',
+        'btn.generate': 'بنائیں',
+        'btn.calculate': 'حساب کریں',
+        'btn.submitFeedback': 'جمع کریں',
+        'btn.sort': 'ترتیب',
+        'btn.clean': 'صاف',
+        'btn.stop': 'روکیں',
+        'btn.search': 'تلاش',
+        'btn.check': 'چیک',
+        'btn.quick': 'فوری',
+        'btn.deep': 'گہرا',
+        'btn.scan': 'سکین',
+        'btn.back': 'واپس',
+        'label.partNumbers': 'پارٹ نمبر',
+        'label.enterPartNumbers': 'پارٹ نمبر درج کریں',
+        'label.source': 'ماخذ',
+        'label.currency': 'کرنسی',
+        'label.filterByBrand': 'برانڈ سے فلٹر',
+        'label.result': 'نتیجہ:',
+        'label.checkMultipleParts': 'ملٹی پارٹس چیک کریں',
+        'label.allBrands': 'تمام برانڈز',
+        'feedback.suggestion': 'تجویز',
+        'feedback.complaint': 'شکایت',
+        'loader.fetchingPrices': 'قیمتیں لا رہے ہیں...',
+        'loader.fetchingNames': 'نام لا رہے ہیں...',
+        'loader.fetchingOrigins': 'اصل لا رہے ہیں...',
+        'loader.fetchingDetails': 'تفصیلات لا رہے ہیں...',
+        'loader.fetchingWeights': 'وزن لا رہے ہیں...',
+        'loader.searchingAlternates': 'متبادل تلاش کر رہے ہیں...',
+        'loader.searchingModels': 'ماڈلز تلاش کر رہے ہیں...',
+        'loader.searching': 'تلاش کر رہے ہیں...',
+        'loader.generatingDiagram': 'ڈایاگرام بنا رہے ہیں...',
+        'loader.fetchingDimensions': 'سائز لا رہے ہیں...',
+        'loader.fetchingHsCode': 'HS کوڈ لا رہے ہیں...',
+        'loader.calculatingCbm': 'CBM حساب کر رہے ہیں...',
+        'th.partNo': 'پارٹ نمبر',
+        'th.name': 'نام',
+        'th.price': 'قیمت (THB)',
+        'th.origin': 'اصل',
+        'th.status': 'حالت',
+        'th.partName': 'پارٹ کا نام',
+        'th.partNumber': 'پارٹ نمبر',
+        'th.internet': 'انٹرنیٹ',
+        'th.dubaiGenuine': 'دبئی جینوئن (فطیم)',
+        'th.ofp': 'OFP',
+        'th.match': 'مطابقت',
+        'th.weight': 'وزن (کلوگرام)',
+        'th.brand': 'برانڈ',
+        'placeholder.results': 'نتائج یہاں ظاہر ہوں گے',
+        'placeholder.diagram': 'ڈایاگرام یہاں ظاہر ہوگا',
+        'mc.title': 'ماڈل چیکر',
+        'mc.vinTitle': 'VIN / چیسس نمبر سے چیک کریں',
+        'mc.partNoSubtitle': 'کون سے ماڈل فٹ ہوتے ہیں تلاش کریں',
+        'mc.vinSubtitle': 'گاڑی کی ترتیب اور پارٹس دیکھیں',
+        'mob.home': 'ہوم',
+        'mob.prices': 'قیمتیں',
+        'mob.names': 'نام',
+        'mob.country': 'ملک',
+        'mob.details': 'تفصیلات',
+        'mob.weight': 'وزن',
+        'mob.alts': 'متبادل',
+        'mob.list': 'فہرست',
+        'mob.model': 'ماڈل',
+        'mob.diagram': 'ڈایاگرام',
+        'mob.dims': 'سائز',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · آٹو پارٹس انٹیلی جنس',
+        'ph.searchParts': 'پارٹ نمبر، نام یا برانڈ تلاش کریں...',
+        'ph.enterPartNumbers': 'پارٹ نمبر درج کریں، فی لائن ایک...',
+        'ph.enterPartNumber': 'پارٹ نمبر درج کریں...',
+        'ph.enterPartNumberEg': 'پارٹ نمبر درج کریں جیسے: 11213-0C011',
+        'ph.enterPartNumberDiagram': 'پارٹ نمبر درج کریں جیسے: 16401-0C030',
+        'ph.enterVin': 'VIN / چیسس نمبر درج کریں',
+        'ph.searchPartsVin': 'اس VIN میں پارٹس تلاش کریں',
+        'ph.shareSuggestion': 'اپنی تجویز شیئر کریں...',
+        'ph.reportIssue': 'مسئلہ رپورٹ کریں...',
+        'ph.pastePartNumbers': 'پارٹ نمبر یا متن یہاں پیسٹ کریں...',
+        'ph.searchAlternates': '🔍 متبادل تلاش کریں...',
+        'ph.enterPartNumbers2': 'پارٹ نمبر درج کریں...',
+        'tab.prices.title': 'قیمت چیکر',
+        'tab.prices.subtitle': 'تخمینی قیمتیں چیک کریں',
+        'tab.names.title': 'نام چیکر',
+        'tab.names.subtitle': 'مختلف ذرائع سے پارٹ نام تلاش کریں',
+        'tab.country.title': 'ملک / اصل',
+        'tab.country.subtitle': 'تصنیع کا ملک تلاش کریں',
+        'tab.details.title': 'حصے کی تفصیلات',
+        'tab.details.subtitle': 'جامع معلومات حاصل کریں',
+        'tab.weight.title': 'وزن چیکر',
+        'tab.weight.subtitle': 'پارٹ وزن اور برانڈ تلاش کریں',
+        'tab.alternates.title': 'متبادل چیک',
+        'tab.alternates.subtitle': 'متبادل پارٹ نمبر تلاش کریں',
+        'tab.listCleaner.title': 'فہرست صاف کرنے والا',
+        'tab.listCleaner.subtitle': 'متن سے پارٹ نمبر نکالیں',
+        'tab.diagram.title': 'ڈایاگرام جنریٹر',
+        'tab.diagram.subtitle': 'پارٹ نمبر سے ڈایاگرام بنائیں',
+        'tab.dimensions.title': 'سائز چیکر',
+        'tab.dimensions.subtitle': 'پارسل کے سائز چیک کریں',
+        'tab.hscode.title': 'HS کوڈ چیکر',
+        'tab.hscode.subtitle': 'HS کوڈ تلاش کریں',
+        'tab.cbm.title': 'CBM کیلکولیٹر',
+        'tab.cbm.subtitle': 'حجم اور شپنگ وزن حساب کریں'
+      },
+      ru: {
+        'nav.searchParts': 'Поиск деталей',
+        'nav.prices': 'Цены',
+        'nav.names': 'Названия',
+        'nav.countries': 'Страны',
+        'nav.weights': 'Вес',
+        'nav.alternates': 'Альтернативы',
+        'nav.listCleaner': 'Очистка списка',
+        'nav.modelChecker': 'Проверка модели',
+        'nav.diagramGenerator': 'Генератор диаграмм',
+        'nav.dimensionsChecker': 'Проверка размеров',
+        'nav.hsCodeChecker': 'Проверка кода HS',
+        'nav.cbmCalculator': 'Калькулятор CBM',
+        'nav.partDetails': 'Подробности детали',
+        'nav.tools': 'Инструменты',
+        'nav.more': 'Ещё',
+        'user.plan': 'Тариф',
+        'user.license': 'Лицензия',
+        'user.expires': 'Истекает',
+        'user.status': 'Статус',
+        'user.logout': 'Выйти',
+        'topbar.quickSearch': 'Быстрый поиск',
+        'btn.checkPrices': 'Проверить цены',
+        'btn.checkNames': 'Проверить названия',
+        'btn.checkOrigins': 'Проверить происхождение',
+        'btn.getDetails': 'Получить детали',
+        'btn.checkWeights': 'Проверить вес',
+        'btn.cleanList': 'Очистить список',
+        'btn.readText': 'Прочитать текст',
+        'btn.generate': 'Создать',
+        'btn.calculate': 'Рассчитать',
+        'btn.submitFeedback': 'Отправить',
+        'btn.sort': 'Сортировка',
+        'btn.clean': 'Очистить',
+        'btn.stop': 'Стоп',
+        'btn.search': 'Поиск',
+        'btn.check': 'Проверить',
+        'btn.quick': 'Быстрый',
+        'btn.deep': 'Глубокий',
+        'btn.scan': 'Сканировать',
+        'btn.back': 'Назад',
+        'label.partNumbers': 'Номера деталей',
+        'label.enterPartNumbers': 'Введите номера деталей',
+        'label.source': 'Источник',
+        'label.currency': 'Валюта',
+        'label.filterByBrand': 'Фильтр по марке',
+        'label.result': 'Результат:',
+        'label.checkMultipleParts': 'Проверить несколько деталей',
+        'label.allBrands': 'Все бренды',
+        'feedback.suggestion': 'Предложение',
+        'feedback.complaint': 'Жалоба',
+        'loader.fetchingPrices': 'Загрузка цен...',
+        'loader.fetchingNames': 'Загрузка названий...',
+        'loader.fetchingOrigins': 'Загрузка происхождения...',
+        'loader.fetchingDetails': 'Загрузка деталей...',
+        'loader.fetchingWeights': 'Загрузка веса...',
+        'loader.searchingAlternates': 'Поиск альтернатив...',
+        'loader.searchingModels': 'Поиск моделей...',
+        'loader.searching': 'Поиск...',
+        'loader.generatingDiagram': 'Создание диаграммы...',
+        'loader.fetchingDimensions': 'Загрузка размеров...',
+        'loader.fetchingHsCode': 'Загрузка кода HS...',
+        'loader.calculatingCbm': 'Расчёт CBM...',
+        'th.partNo': '№ детали',
+        'th.name': 'Название',
+        'th.price': 'Цена (THB)',
+        'th.origin': 'Происхождение',
+        'th.status': 'Статус',
+        'th.partName': 'Название детали',
+        'th.partNumber': 'Номер детали',
+        'th.internet': 'Интернет',
+        'th.dubaiGenuine': 'Dubai Genuine (Futtaim)',
+        'th.ofp': 'OFP',
+        'th.match': 'Совпадение',
+        'th.weight': 'Вес (кг)',
+        'th.brand': 'Бренд',
+        'placeholder.results': 'Результаты появятся здесь',
+        'placeholder.diagram': 'Диаграмма появится здесь',
+        'mc.title': 'Проверка модели',
+        'mc.vinTitle': 'Проверка по VIN / номеру кузова',
+        'mc.partNoSubtitle': 'Найти подходящие модели',
+        'mc.vinSubtitle': 'Поиск конфигурации и деталей',
+        'mob.home': 'Главная',
+        'mob.prices': 'Цены',
+        'mob.names': 'Имена',
+        'mob.country': 'Страна',
+        'mob.details': 'Детали',
+        'mob.weight': 'Вес',
+        'mob.alts': 'Альт',
+        'mob.list': 'Список',
+        'mob.model': 'Модель',
+        'mob.diagram': 'Диагр',
+        'mob.dims': 'Разм',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · Автозапчасти Интеллект',
+        'ph.searchParts': 'Поиск номеров, названий или марок...',
+        'ph.enterPartNumbers': 'Введите номера деталей, по одному на строку...',
+        'ph.enterPartNumber': 'Введите номер детали...',
+        'ph.enterPartNumberEg': 'Введите номер, напр.: 11213-0C011',
+        'ph.enterPartNumberDiagram': 'Введите номер, напр.: 16401-0C030',
+        'ph.enterVin': 'Введите VIN / номер кузова',
+        'ph.searchPartsVin': 'Поиск деталей в этом VIN',
+        'ph.shareSuggestion': 'Поделитесь предложением...',
+        'ph.reportIssue': 'Сообщить о проблеме...',
+        'ph.pastePartNumbers': 'Вставьте номера или текст сюда...',
+        'ph.searchAlternates': '🔍 Поиск альтернатив...',
+        'ph.enterPartNumbers2': 'Введите номер(а) детали...',
+        'page.home.title': 'Поиск деталей',
+        'page.home.subtitle': '',
+        'page.prices.title': 'Цены',
+        'page.prices.subtitle': '',
+        'page.names.title': 'Названия',
+        'page.names.subtitle': '',
+        'page.country.title': 'Страны',
+        'page.country.subtitle': '',
+        'page.details.title': 'Подробности детали',
+        'page.details.subtitle': '',
+        'page.weight.title': 'Вес',
+        'page.weight.subtitle': '',
+        'page.alternates.title': 'Альтернативы',
+        'page.alternates.subtitle': '',
+        'page.listcleaner.title': 'Очистка списка',
+        'page.listcleaner.subtitle': '',
+        'page.modelchecker.title': 'Проверка модели',
+        'page.modelchecker.subtitle': '',
+        'page.diagram.title': 'Генератор диаграмм',
+        'page.diagram.subtitle': '',
+        'page.dimensions.title': 'Проверка размеров',
+        'page.dimensions.subtitle': '',
+        'page.hscode.title': 'Проверка кода HS',
+        'page.hscode.subtitle': '',
+        'page.cbm.title': 'Калькулятор CBM',
+        'page.cbm.subtitle': '',
+        'tab.prices.title': 'Цены',
+        'tab.prices.subtitle': '',
+        'tab.names.title': 'Названия',
+        'tab.names.subtitle': '',
+        'tab.country.title': 'Страны',
+        'tab.country.subtitle': '',
+        'tab.details.title': 'Подробности детали',
+        'tab.details.subtitle': '',
+        'tab.weight.title': 'Вес',
+        'tab.weight.subtitle': '',
+        'tab.alternates.title': 'Альтернативы',
+        'tab.alternates.subtitle': '',
+        'tab.listCleaner.title': 'Очистка списка',
+        'tab.listCleaner.subtitle': '',
+        'tab.diagram.title': 'Генератор диаграмм',
+        'tab.diagram.subtitle': '',
+        'tab.dimensions.title': 'Проверка размеров',
+        'tab.dimensions.subtitle': '',
+        'tab.hscode.title': 'Проверка кода HS',
+        'tab.hscode.subtitle': '',
+        'tab.cbm.title': 'Калькулятор CBM',
+        'tab.cbm.subtitle': '',
+        'card.prices': 'Цены',
+        'card.names': 'Названия',
+        'card.country': 'Страны',
+        'card.details': 'Подробности детали',
+        'card.weight': 'Вес',
+        'card.alternates': 'Альтернативы',
+        'card.listCleaner': 'Очистка списка',
+        'card.modelChecker': 'Проверка модели',
+        'card.diagram': 'Генератор диаграмм',
+        'card.dimensions': 'Проверка размеров',
+        'card.hsCode': 'Проверка кода HS',
+        'card.cbm': 'Калькулятор CBM'
+      },
+      ps: {
+        'nav.searchParts': 'پرزې لټول',
+        'nav.prices': 'نرخونه',
+        'nav.names': 'نومونه',
+        'nav.countries': 'هیوادونه',
+        'nav.weights': 'وزنونه',
+        'nav.alternates': 'بدیلونه',
+        'nav.listCleaner': 'لیست پاکوونکی',
+        'nav.modelChecker': 'ماډل چیکر',
+        'nav.diagramGenerator': 'ډایاګرام جوړونکی',
+        'nav.dimensionsChecker': 'اندازې چیکر',
+        'nav.hsCodeChecker': 'HS کوډ چیکر',
+        'nav.cbmCalculator': 'CBM حسابکونکی',
+        'nav.partDetails': 'د برخې جزئیات',
+        'nav.tools': 'اوزار',
+        'nav.more': 'نور',
+        'user.plan': 'پلان',
+        'user.license': 'جواز',
+        'user.expires': 'پای ته رسیدل',
+        'user.status': 'حالت',
+        'user.logout': 'ننوتل',
+        'topbar.quickSearch': 'چټکه لټون',
+        'btn.checkPrices': 'بیه وګورئ',
+        'btn.checkNames': 'نوم وګورئ',
+        'btn.checkOrigins': 'اصل وګورئ',
+        'btn.getDetails': 'جزئیات ترلاسه کړئ',
+        'btn.checkWeights': 'وزن وګورئ',
+        'btn.cleanList': 'لیست پاک کړئ',
+        'btn.readText': 'متن ولولئ',
+        'btn.generate': 'جوړول',
+        'btn.calculate': 'حساب',
+        'btn.submitFeedback': 'سپارل',
+        'btn.sort': 'ترتیب',
+        'btn.clean': 'پاکول',
+        'btn.stop': 'ودرول',
+        'btn.search': 'لټون',
+        'btn.check': 'وګورئ',
+        'btn.quick': 'چټک',
+        'btn.deep': 'ژور',
+        'btn.scan': 'سکین',
+        'btn.back': 'شاته',
+        'label.partNumbers': 'د برخې شمیرې',
+        'label.enterPartNumbers': 'د برخې شمیرې دننه کړئ',
+        'label.source': 'سرچینه',
+        'label.currency': 'اسعار',
+        'label.filterByBrand': 'د برانډ له مخې فلټر',
+        'label.result': 'پایله:',
+        'label.checkMultipleParts': 'ګڼ برخې وګورئ',
+        'label.allBrands': 'ټول برانډونه',
+        'feedback.suggestion': 'وړاندیز',
+        'feedback.complaint': 'شکایت',
+        'loader.fetchingPrices': 'نرخونه راوړل...',
+        'loader.fetchingNames': 'نومونه راوړل...',
+        'loader.fetchingOrigins': 'اصل راوړل...',
+        'loader.fetchingDetails': 'جزئیات راوړل...',
+        'loader.fetchingWeights': 'وزنونه راوړل...',
+        'loader.searchingAlternates': 'بدیلونه لټول...',
+        'loader.searchingModels': 'ماډلونه لټول...',
+        'loader.searching': 'لټون...',
+        'loader.generatingDiagram': 'ډایاګرام جوړول...',
+        'loader.fetchingDimensions': 'اندازې راوړل...',
+        'loader.fetchingHsCode': 'HS کوډ راوړل...',
+        'loader.calculatingCbm': 'CBM حسابول...',
+        'th.partNo': 'د برخې شمیره',
+        'th.name': 'نوم',
+        'th.price': 'بیه (THB)',
+        'th.origin': 'اصل',
+        'th.status': 'حالت',
+        'th.partName': 'د برخې نوم',
+        'th.partNumber': 'د برخې شمیره',
+        'th.internet': 'انټرنیټ',
+        'th.dubaiGenuine': 'دوبۍ جنیوین (فطیم)',
+        'th.ofp': 'OFP',
+        'th.match': 'مطابقت',
+        'th.weight': 'وزن (کلوګرام)',
+        'th.brand': 'برانډ',
+        'placeholder.results': 'پایلې به دلته ښکاره شي',
+        'placeholder.diagram': 'ډایاګرام به دلته ښکاره شي',
+        'mc.title': 'ماډل چیکر',
+        'mc.vinTitle': 'د VIN / چیسس نمبر سره وګورئ',
+        'mc.partNoSubtitle': 'کوم ماډلونه فټ کیږي ومومئ',
+        'mc.vinSubtitle': 'د ګاډي ترتیب او پرزې وګورئ',
+        'mob.home': 'کور',
+        'mob.prices': 'نرخ',
+        'mob.names': 'نوم',
+        'mob.country': 'هیواد',
+        'mob.details': 'تفصیل',
+        'mob.weight': 'وزن',
+        'mob.alts': 'بدیل',
+        'mob.list': 'لیست',
+        'mob.model': 'ماډل',
+        'mob.diagram': 'ډایاګ',
+        'mob.dims': 'اندازې',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · د آټو پارټس استخبارات',
+        'ph.searchParts': 'شمیرې، نومونه یا برانډونه ولټوئ...',
+        'ph.enterPartNumbers': 'د برخې شمیرې دننه کړئ، فی لین یو...',
+        'ph.enterPartNumber': 'د برخې شمیره دننه کړئ...',
+        'ph.enterPartNumberEg': 'شمیره دننه کړئ لکه: 11213-0C011',
+        'ph.enterPartNumberDiagram': 'شمیره دننه کړئ لکه: 16401-0C030',
+        'ph.enterVin': 'VIN / چیسس شمیره دننه کړئ',
+        'ph.searchPartsVin': 'پدې VIN کې پرزې ولټوئ',
+        'ph.shareSuggestion': 'خپل وړاندیز شریک کړئ...',
+        'ph.reportIssue': 'ستونزه راپور کړئ...',
+        'ph.pastePartNumbers': 'شمیرې یا متن دلته پیسټ کړئ...',
+        'ph.searchAlternates': '🔍 بدیلونه ولټوئ...',
+        'ph.enterPartNumbers2': 'د برخې شمیره دننه کړئ...',
+        'page.home.title': 'پرزې لټول',
+        'page.home.subtitle': '',
+        'page.prices.title': 'نرخونه',
+        'page.prices.subtitle': '',
+        'page.names.title': 'نومونه',
+        'page.names.subtitle': '',
+        'page.country.title': 'هیوادونه',
+        'page.country.subtitle': '',
+        'page.details.title': 'د برخې جزئیات',
+        'page.details.subtitle': '',
+        'page.weight.title': 'وزنونه',
+        'page.weight.subtitle': '',
+        'page.alternates.title': 'بدیلونه',
+        'page.alternates.subtitle': '',
+        'page.listcleaner.title': 'لیست پاکوونکی',
+        'page.listcleaner.subtitle': '',
+        'page.modelchecker.title': 'ماډل چیکر',
+        'page.modelchecker.subtitle': '',
+        'page.diagram.title': 'ډایاګرام جوړونکی',
+        'page.diagram.subtitle': '',
+        'page.dimensions.title': 'اندازې چیکر',
+        'page.dimensions.subtitle': '',
+        'page.hscode.title': 'HS کوډ چیکر',
+        'page.hscode.subtitle': '',
+        'page.cbm.title': 'CBM حسابکونکی',
+        'page.cbm.subtitle': '',
+        'tab.prices.title': 'نرخونه',
+        'tab.prices.subtitle': '',
+        'tab.names.title': 'نومونه',
+        'tab.names.subtitle': '',
+        'tab.country.title': 'هیوادونه',
+        'tab.country.subtitle': '',
+        'tab.details.title': 'د برخې جزئیات',
+        'tab.details.subtitle': '',
+        'tab.weight.title': 'وزنونه',
+        'tab.weight.subtitle': '',
+        'tab.alternates.title': 'بدیلونه',
+        'tab.alternates.subtitle': '',
+        'tab.listCleaner.title': 'لیست پاکوونکی',
+        'tab.listCleaner.subtitle': '',
+        'tab.diagram.title': 'ډایاګرام جوړونکی',
+        'tab.diagram.subtitle': '',
+        'tab.dimensions.title': 'اندازې چیکر',
+        'tab.dimensions.subtitle': '',
+        'tab.hscode.title': 'HS کوډ چیکر',
+        'tab.hscode.subtitle': '',
+        'tab.cbm.title': 'CBM حسابکونکی',
+        'tab.cbm.subtitle': '',
+        'card.prices': 'نرخونه',
+        'card.names': 'نومونه',
+        'card.country': 'هیوادونه',
+        'card.details': 'د برخې جزئیات',
+        'card.weight': 'وزنونه',
+        'card.alternates': 'بدیلونه',
+        'card.listCleaner': 'لیست پاکوونکی',
+        'card.modelChecker': 'ماډل چیکر',
+        'card.diagram': 'ډایاګرام جوړونکی',
+        'card.dimensions': 'اندازې چیکر',
+        'card.hsCode': 'HS کوډ چیکر',
+        'card.cbm': 'CBM حسابکونکی'
+      },
+      ko: {
+        'nav.searchParts': '부품 검색',
+        'nav.prices': '가격',
+        'nav.names': '이름',
+        'nav.countries': '국가',
+        'nav.weights': '무게',
+        'nav.alternates': '대체품',
+        'nav.listCleaner': '목록 정리',
+        'nav.modelChecker': '모델 확인',
+        'nav.diagramGenerator': '다이어그램 생성',
+        'nav.dimensionsChecker': '치수 확인',
+        'nav.hsCodeChecker': 'HS 코드 확인',
+        'nav.cbmCalculator': 'CBM 계산기',
+        'nav.partDetails': '부품 상세',
+        'nav.tools': '도구',
+        'nav.more': '더보기',
+        'user.plan': '플랜',
+        'user.license': '라이선스',
+        'user.expires': '만료',
+        'user.status': '상태',
+        'user.logout': '로그아웃',
+        'topbar.quickSearch': '빠른 검색',
+        'btn.checkPrices': '가격 확인',
+        'btn.checkNames': '이름 확인',
+        'btn.checkOrigins': '원산지 확인',
+        'btn.getDetails': '상세 보기',
+        'btn.checkWeights': '무게 확인',
+        'btn.cleanList': '목록 정리',
+        'btn.readText': '텍스트 읽기',
+        'btn.generate': '생성',
+        'btn.calculate': '계산',
+        'btn.submitFeedback': '제출',
+        'btn.sort': '정렬',
+        'btn.clean': '정리',
+        'btn.stop': '중지',
+        'btn.search': '검색',
+        'btn.check': '확인',
+        'btn.quick': '빠른',
+        'btn.deep': '정밀',
+        'btn.scan': '스캔',
+        'btn.back': '뒤로',
+        'label.partNumbers': '부품 번호',
+        'label.enterPartNumbers': '부품 번호 입력',
+        'label.source': '소스',
+        'label.currency': '통화',
+        'label.filterByBrand': '브랜드 필터',
+        'label.result': '결과:',
+        'label.checkMultipleParts': '여러 부품 확인',
+        'label.allBrands': '모든 브랜드',
+        'feedback.suggestion': '제안',
+        'feedback.complaint': '불만',
+        'loader.fetchingPrices': '가격 가져오는 중...',
+        'loader.fetchingNames': '이름 가져오는 중...',
+        'loader.fetchingOrigins': '원산지 가져오는 중...',
+        'loader.fetchingDetails': '상세 가져오는 중...',
+        'loader.fetchingWeights': '무게 가져오는 중...',
+        'loader.searchingAlternates': '대체품 검색 중...',
+        'loader.searchingModels': '모델 검색 중...',
+        'loader.searching': '검색 중...',
+        'loader.generatingDiagram': '다이어그램 생성 중...',
+        'loader.fetchingDimensions': '치수 가져오는 중...',
+        'loader.fetchingHsCode': 'HS 코드 가져오는 중...',
+        'loader.calculatingCbm': 'CBM 계산 중...',
+        'th.partNo': '부품 번호',
+        'th.name': '이름',
+        'th.price': '가격 (THB)',
+        'th.origin': '원산지',
+        'th.status': '상태',
+        'th.partName': '부품명',
+        'th.partNumber': '부품 번호',
+        'th.internet': '인터넷',
+        'th.dubaiGenuine': 'Dubai Genuine (Futtaim)',
+        'th.ofp': 'OFP',
+        'th.match': '일치',
+        'th.weight': '무게 (kg)',
+        'th.brand': '브랜드',
+        'placeholder.results': '여기에 결과가 표시됩니다',
+        'placeholder.diagram': '여기에 다이어그램이 표시됩니다',
+        'mc.title': '모델 확인',
+        'mc.vinTitle': 'VIN / 차대 번호로 확인',
+        'mc.partNoSubtitle': '적합한 모델 찾기',
+        'mc.vinSubtitle': '차량 구성 및 부품 조회',
+        'mob.home': '홈',
+        'mob.prices': '가격',
+        'mob.names': '이름',
+        'mob.country': '국가',
+        'mob.details': '상세',
+        'mob.weight': '무게',
+        'mob.alts': '대체',
+        'mob.list': '목록',
+        'mob.model': '모델',
+        'mob.diagram': '다이어그램',
+        'mob.dims': '치수',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · 자동차 부품 인텔리전스',
+        'ph.searchParts': '부품 번호, 이름 또는 브랜드 검색...',
+        'ph.enterPartNumbers': '부품 번호를 입력하세요, 줄당 하나...',
+        'ph.enterPartNumber': '부품 번호 입력...',
+        'ph.enterPartNumberEg': '부품 번호 입력 예: 11213-0C011',
+        'ph.enterPartNumberDiagram': '부품 번호 입력 예: 16401-0C030',
+        'ph.enterVin': 'VIN / 차대 번호 입력',
+        'ph.searchPartsVin': '이 VIN에서 부품 검색',
+        'ph.shareSuggestion': '제안을 공유하세요...',
+        'ph.reportIssue': '문제 신고...',
+        'ph.pastePartNumbers': '부품 번호나 텍스트를 붙여넣으세요...',
+        'ph.searchAlternates': '🔍 대체품 검색...',
+        'ph.enterPartNumbers2': '부품 번호 입력...',
+        'page.home.title': '부품 검색',
+        'page.home.subtitle': '',
+        'page.prices.title': '가격',
+        'page.prices.subtitle': '',
+        'page.names.title': '이름',
+        'page.names.subtitle': '',
+        'page.country.title': '국가',
+        'page.country.subtitle': '',
+        'page.details.title': '부품 상세',
+        'page.details.subtitle': '',
+        'page.weight.title': '무게',
+        'page.weight.subtitle': '',
+        'page.alternates.title': '대체품',
+        'page.alternates.subtitle': '',
+        'page.listcleaner.title': '목록 정리',
+        'page.listcleaner.subtitle': '',
+        'page.modelchecker.title': '모델 확인',
+        'page.modelchecker.subtitle': '',
+        'page.diagram.title': '다이어그램 생성',
+        'page.diagram.subtitle': '',
+        'page.dimensions.title': '치수 확인',
+        'page.dimensions.subtitle': '',
+        'page.hscode.title': 'HS 코드 확인',
+        'page.hscode.subtitle': '',
+        'page.cbm.title': 'CBM 계산기',
+        'page.cbm.subtitle': '',
+        'tab.prices.title': '가격',
+        'tab.prices.subtitle': '',
+        'tab.names.title': '이름',
+        'tab.names.subtitle': '',
+        'tab.country.title': '국가',
+        'tab.country.subtitle': '',
+        'tab.details.title': '부품 상세',
+        'tab.details.subtitle': '',
+        'tab.weight.title': '무게',
+        'tab.weight.subtitle': '',
+        'tab.alternates.title': '대체품',
+        'tab.alternates.subtitle': '',
+        'tab.listCleaner.title': '목록 정리',
+        'tab.listCleaner.subtitle': '',
+        'tab.diagram.title': '다이어그램 생성',
+        'tab.diagram.subtitle': '',
+        'tab.dimensions.title': '치수 확인',
+        'tab.dimensions.subtitle': '',
+        'tab.hscode.title': 'HS 코드 확인',
+        'tab.hscode.subtitle': '',
+        'tab.cbm.title': 'CBM 계산기',
+        'tab.cbm.subtitle': '',
+        'card.prices': '가격',
+        'card.names': '이름',
+        'card.country': '국가',
+        'card.details': '부품 상세',
+        'card.weight': '무게',
+        'card.alternates': '대체품',
+        'card.listCleaner': '목록 정리',
+        'card.modelChecker': '모델 확인',
+        'card.diagram': '다이어그램 생성',
+        'card.dimensions': '치수 확인',
+        'card.hsCode': 'HS 코드 확인',
+        'card.cbm': 'CBM 계산기'
+      },
+      tr: {
+        'nav.searchParts': 'Parça Ara',
+        'nav.prices': 'Fiyatlar',
+        'nav.names': 'İsimler',
+        'nav.countries': 'Ülkeler',
+        'nav.weights': 'Ağırlık',
+        'nav.alternates': 'Alternatifler',
+        'nav.listCleaner': 'Liste Temizleyici',
+        'nav.modelChecker': 'Model Kontrolü',
+        'nav.diagramGenerator': 'Diyagram Oluşturucu',
+        'nav.dimensionsChecker': 'Boyut Kontrolü',
+        'nav.hsCodeChecker': 'HS Kodu Kontrolü',
+        'nav.cbmCalculator': 'CBM Hesaplayıcı',
+        'nav.partDetails': 'Parça Detayları',
+        'nav.tools': 'Araçlar',
+        'nav.more': 'Diğer',
+        'user.plan': 'Plan',
+        'user.license': 'Lisans',
+        'user.expires': 'Son Kullanma',
+        'user.status': 'Durum',
+        'user.logout': 'Çıkış',
+        'topbar.quickSearch': 'Hızlı Arama',
+        'btn.checkPrices': 'Fiyatları Kontrol Et',
+        'btn.checkNames': 'İsimleri Kontrol Et',
+        'btn.checkOrigins': 'Menşeileri Kontrol Et',
+        'btn.getDetails': 'Detayları Al',
+        'btn.checkWeights': 'Ağırlığı Kontrol Et',
+        'btn.cleanList': 'Listeyi Temizle',
+        'btn.readText': 'Metni Oku',
+        'btn.generate': 'Oluştur',
+        'btn.calculate': 'Hesapla',
+        'btn.submitFeedback': 'Gönder',
+        'btn.sort': 'Sırala',
+        'btn.clean': 'Temizle',
+        'btn.stop': 'Durdur',
+        'btn.search': 'Ara',
+        'btn.check': 'Kontrol Et',
+        'btn.quick': 'Hızlı',
+        'btn.deep': 'Derin',
+        'btn.scan': 'Tara',
+        'btn.back': 'Geri',
+        'label.partNumbers': 'Parça Numaraları',
+        'label.enterPartNumbers': 'Parça Numarası Girin',
+        'label.source': 'Kaynak',
+        'label.currency': 'Para Birimi',
+        'label.filterByBrand': 'Markaya Göre Filtrele',
+        'label.result': 'Sonuç:',
+        'label.checkMultipleParts': 'Birden Fazla Parça Kontrol Et',
+        'label.allBrands': 'Tüm Markalar',
+        'feedback.suggestion': 'Öneri',
+        'feedback.complaint': 'Şikâyet',
+        'loader.fetchingPrices': 'Fiyatlar getiriliyor...',
+        'loader.fetchingNames': 'İsimler getiriliyor...',
+        'loader.fetchingOrigins': 'Menşeiler getiriliyor...',
+        'loader.fetchingDetails': 'Detaylar getiriliyor...',
+        'loader.fetchingWeights': 'Ağırlıklar getiriliyor...',
+        'loader.searchingAlternates': 'Alternatifler aranıyor...',
+        'loader.searchingModels': 'Modeller aranıyor...',
+        'loader.searching': 'Aranıyor...',
+        'loader.generatingDiagram': 'Diyagram oluşturuluyor...',
+        'loader.fetchingDimensions': 'Boyutlar getiriliyor...',
+        'loader.fetchingHsCode': 'HS kodu getiriliyor...',
+        'loader.calculatingCbm': 'CBM hesaplanıyor...',
+        'th.partNo': 'Parça No.',
+        'th.name': 'Ad',
+        'th.price': 'Fiyat (THB)',
+        'th.origin': 'Menşei',
+        'th.status': 'Durum',
+        'th.partName': 'Parça Adı',
+        'th.partNumber': 'Parça Numarası',
+        'th.internet': 'İnternet',
+        'th.dubaiGenuine': 'Dubai Genuine (Futtaim)',
+        'th.ofp': 'OFP',
+        'th.match': 'Eşleşme',
+        'th.weight': 'Ağırlık (kg)',
+        'th.brand': 'Marka',
+        'placeholder.results': 'Sonuçlar burada görünecek',
+        'placeholder.diagram': 'Diyagram burada görünecek',
+        'mc.title': 'Model Kontrolü',
+        'mc.vinTitle': 'VIN / Şasi Numarası ile Kontrol',
+        'mc.partNoSubtitle': 'Uygun modelleri bulun',
+        'mc.vinSubtitle': 'Araç yapılandırması ve parçaları arayın',
+        'mob.home': 'Ana',
+        'mob.prices': 'Fiyat',
+        'mob.names': 'İsim',
+        'mob.country': 'Ülke',
+        'mob.details': 'Detay',
+        'mob.weight': 'Ağırlık',
+        'mob.alts': 'Alt',
+        'mob.list': 'Liste',
+        'mob.model': 'Model',
+        'mob.diagram': 'Diyag',
+        'mob.dims': 'Boyut',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · Oto Yedek Parça Zekâsı',
+        'ph.searchParts': 'Parça numarası, isim veya marka arayın...',
+        'ph.enterPartNumbers': 'Parça numaralarını girin, satır başına bir...',
+        'ph.enterPartNumber': 'Parça numarası girin...',
+        'ph.enterPartNumberEg': 'Parça no girin örn: 11213-0C011',
+        'ph.enterPartNumberDiagram': 'Parça no girin örn: 16401-0C030',
+        'ph.enterVin': 'VIN / Şasi No girin',
+        'ph.searchPartsVin': 'Bu VIN\'de parça arayın',
+        'ph.shareSuggestion': 'Önerinizi paylaşın...',
+        'ph.reportIssue': 'Sorun bildirin...',
+        'ph.pastePartNumbers': 'Parça numaraları veya metin yapıştırın...',
+        'ph.searchAlternates': '🔍 Alternatif arayın...',
+        'ph.enterPartNumbers2': 'Parça numaras(lar)ı girin...',
+        'page.home.title': 'Parça Ara',
+        'page.home.subtitle': '',
+        'page.prices.title': 'Fiyatlar',
+        'page.prices.subtitle': '',
+        'page.names.title': 'İsimler',
+        'page.names.subtitle': '',
+        'page.country.title': 'Ülkeler',
+        'page.country.subtitle': '',
+        'page.details.title': 'Parça Detayları',
+        'page.details.subtitle': '',
+        'page.weight.title': 'Ağırlık',
+        'page.weight.subtitle': '',
+        'page.alternates.title': 'Alternatifler',
+        'page.alternates.subtitle': '',
+        'page.listcleaner.title': 'Liste Temizleyici',
+        'page.listcleaner.subtitle': '',
+        'page.modelchecker.title': 'Model Kontrolü',
+        'page.modelchecker.subtitle': '',
+        'page.diagram.title': 'Diyagram Oluşturucu',
+        'page.diagram.subtitle': '',
+        'page.dimensions.title': 'Boyut Kontrolü',
+        'page.dimensions.subtitle': '',
+        'page.hscode.title': 'HS Kodu Kontrolü',
+        'page.hscode.subtitle': '',
+        'page.cbm.title': 'CBM Hesaplayıcı',
+        'page.cbm.subtitle': '',
+        'tab.prices.title': 'Fiyatlar',
+        'tab.prices.subtitle': '',
+        'tab.names.title': 'İsimler',
+        'tab.names.subtitle': '',
+        'tab.country.title': 'Ülkeler',
+        'tab.country.subtitle': '',
+        'tab.details.title': 'Parça Detayları',
+        'tab.details.subtitle': '',
+        'tab.weight.title': 'Ağırlık',
+        'tab.weight.subtitle': '',
+        'tab.alternates.title': 'Alternatifler',
+        'tab.alternates.subtitle': '',
+        'tab.listCleaner.title': 'Liste Temizleyici',
+        'tab.listCleaner.subtitle': '',
+        'tab.diagram.title': 'Diyagram Oluşturucu',
+        'tab.diagram.subtitle': '',
+        'tab.dimensions.title': 'Boyut Kontrolü',
+        'tab.dimensions.subtitle': '',
+        'tab.hscode.title': 'HS Kodu Kontrolü',
+        'tab.hscode.subtitle': '',
+        'tab.cbm.title': 'CBM Hesaplayıcı',
+        'tab.cbm.subtitle': '',
+        'card.prices': 'Fiyatlar',
+        'card.names': 'İsimler',
+        'card.country': 'Ülkeler',
+        'card.details': 'Parça Detayları',
+        'card.weight': 'Ağırlık',
+        'card.alternates': 'Alternatifler',
+        'card.listCleaner': 'Liste Temizleyici',
+        'card.modelChecker': 'Model Kontrolü',
+        'card.diagram': 'Diyagram Oluşturucu',
+        'card.dimensions': 'Boyut Kontrolü',
+        'card.hsCode': 'HS Kodu Kontrolü',
+        'card.cbm': 'CBM Hesaplayıcı'
+      },
+      zh: {
+        'nav.searchParts': '搜索零件',
+        'nav.prices': '价格',
+        'nav.names': '名称',
+        'nav.countries': '国家',
+        'nav.weights': '重量',
+        'nav.alternates': '替代件',
+        'nav.listCleaner': '列表清理',
+        'nav.modelChecker': '型号检查',
+        'nav.diagramGenerator': '图表生成器',
+        'nav.dimensionsChecker': '尺寸检查',
+        'nav.hsCodeChecker': 'HS编码检查',
+        'nav.cbmCalculator': 'CBM计算器',
+        'nav.partDetails': '零件详情',
+        'nav.tools': '工具',
+        'nav.more': '更多',
+        'user.plan': '计划',
+        'user.license': '许可证',
+        'user.expires': '到期',
+        'user.status': '状态',
+        'user.logout': '退出登录',
+        'topbar.quickSearch': '快速搜索',
+        'btn.checkPrices': '检查价格',
+        'btn.checkNames': '检查名称',
+        'btn.checkOrigins': '检查产地',
+        'btn.getDetails': '获取详情',
+        'btn.checkWeights': '检查重量',
+        'btn.cleanList': '清理列表',
+        'btn.readText': '读取文本',
+        'btn.generate': '生成',
+        'btn.calculate': '计算',
+        'btn.submitFeedback': '提交',
+        'btn.sort': '排序',
+        'btn.clean': '清理',
+        'btn.stop': '停止',
+        'btn.search': '搜索',
+        'btn.check': '检查',
+        'btn.quick': '快速',
+        'btn.deep': '深度',
+        'btn.scan': '扫描',
+        'btn.back': '返回',
+        'label.partNumbers': '零件编号',
+        'label.enterPartNumbers': '输入零件编号',
+        'label.source': '来源',
+        'label.currency': '货币',
+        'label.filterByBrand': '按品牌筛选',
+        'label.result': '结果：',
+        'label.checkMultipleParts': '检查多个零件',
+        'label.allBrands': '所有品牌',
+        'feedback.suggestion': '建议',
+        'feedback.complaint': '投诉',
+        'loader.fetchingPrices': '正在获取价格...',
+        'loader.fetchingNames': '正在获取名称...',
+        'loader.fetchingOrigins': '正在获取产地...',
+        'loader.fetchingDetails': '正在获取详情...',
+        'loader.fetchingWeights': '正在获取重量...',
+        'loader.searchingAlternates': '正在搜索替代件...',
+        'loader.searchingModels': '正在搜索型号...',
+        'loader.searching': '搜索中...',
+        'loader.generatingDiagram': '正在生成图表...',
+        'loader.fetchingDimensions': '正在获取尺寸...',
+        'loader.fetchingHsCode': '正在获取HS编码...',
+        'loader.calculatingCbm': '正在计算CBM...',
+        'th.partNo': '零件编号',
+        'th.name': '名称',
+        'th.price': '价格 (THB)',
+        'th.origin': '产地',
+        'th.status': '状态',
+        'th.partName': '零件名称',
+        'th.partNumber': '零件编号',
+        'th.internet': '网络',
+        'th.dubaiGenuine': '迪拜正品 (Futtaim)',
+        'th.ofp': 'OFP',
+        'th.match': '匹配',
+        'th.weight': '重量 (公斤)',
+        'th.brand': '品牌',
+        'placeholder.results': '结果将显示在此处',
+        'placeholder.diagram': '图表将显示在此处',
+        'mc.title': '型号检查',
+        'mc.vinTitle': '通过VIN/车架号检查',
+        'mc.partNoSubtitle': '查找适配的型号',
+        'mc.vinSubtitle': '查询车辆配置和零件',
+        'mob.home': '主页',
+        'mob.prices': '价格',
+        'mob.names': '名称',
+        'mob.country': '国家',
+        'mob.details': '详情',
+        'mob.weight': '重量',
+        'mob.alts': '替代',
+        'mob.list': '列表',
+        'mob.model': '型号',
+        'mob.diagram': '图表',
+        'mob.dims': '尺寸',
+        'mob.hs': 'HS',
+        'mob.cbm': 'CBM',
+        'footer.copyright': 'PartsMateTH © 2026 · 汽车零件智能平台',
+        'ph.searchParts': '搜索零件编号、名称或品牌...',
+        'ph.enterPartNumbers': '输入零件编号，每行一个...',
+        'ph.enterPartNumber': '输入零件编号...',
+        'ph.enterPartNumberEg': '输入零件编号 例: 11213-0C011',
+        'ph.enterPartNumberDiagram': '输入零件编号 例: 16401-0C030',
+        'ph.enterVin': '输入 VIN / 车架号',
+        'ph.searchPartsVin': '在此VIN中搜索零件',
+        'ph.shareSuggestion': '分享您的建议...',
+        'ph.reportIssue': '报告问题...',
+        'ph.pastePartNumbers': '在此粘贴零件编号或文本...',
+        'ph.searchAlternates': '🔍 搜索替代件...',
+        'ph.enterPartNumbers2': '输入零件编号...',
+        'page.home.title': '搜索零件',
+        'page.home.subtitle': '',
+        'page.prices.title': '价格',
+        'page.prices.subtitle': '',
+        'page.names.title': '名称',
+        'page.names.subtitle': '',
+        'page.country.title': '国家',
+        'page.country.subtitle': '',
+        'page.details.title': '零件详情',
+        'page.details.subtitle': '',
+        'page.weight.title': '重量',
+        'page.weight.subtitle': '',
+        'page.alternates.title': '替代件',
+        'page.alternates.subtitle': '',
+        'page.listcleaner.title': '列表清理',
+        'page.listcleaner.subtitle': '',
+        'page.modelchecker.title': '型号检查',
+        'page.modelchecker.subtitle': '',
+        'page.diagram.title': '图表生成器',
+        'page.diagram.subtitle': '',
+        'page.dimensions.title': '尺寸检查',
+        'page.dimensions.subtitle': '',
+        'page.hscode.title': 'HS编码检查',
+        'page.hscode.subtitle': '',
+        'page.cbm.title': 'CBM计算器',
+        'page.cbm.subtitle': '',
+        'tab.prices.title': '价格',
+        'tab.prices.subtitle': '',
+        'tab.names.title': '名称',
+        'tab.names.subtitle': '',
+        'tab.country.title': '国家',
+        'tab.country.subtitle': '',
+        'tab.details.title': '零件详情',
+        'tab.details.subtitle': '',
+        'tab.weight.title': '重量',
+        'tab.weight.subtitle': '',
+        'tab.alternates.title': '替代件',
+        'tab.alternates.subtitle': '',
+        'tab.listCleaner.title': '列表清理',
+        'tab.listCleaner.subtitle': '',
+        'tab.diagram.title': '图表生成器',
+        'tab.diagram.subtitle': '',
+        'tab.dimensions.title': '尺寸检查',
+        'tab.dimensions.subtitle': '',
+        'tab.hscode.title': 'HS编码检查',
+        'tab.hscode.subtitle': '',
+        'tab.cbm.title': 'CBM计算器',
+        'tab.cbm.subtitle': '',
+        'card.prices': '价格',
+        'card.names': '名称',
+        'card.country': '国家',
+        'card.details': '零件详情',
+        'card.weight': '重量',
+        'card.alternates': '替代件',
+        'card.listCleaner': '列表清理',
+        'card.modelChecker': '型号检查',
+        'card.diagram': '图表生成器',
+        'card.dimensions': '尺寸检查',
+        'card.hsCode': 'HS编码检查',
+        'card.cbm': 'CBM计算器'
+      }
+    };
+
+    let currentLang = 'en';
+
+    function t(key) {
+      return (i18n[currentLang] && i18n[currentLang][key]) || i18n.en[key] || key;
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('pm_lang', lang);
+      
+      // Set direction
+      const isRtl = RTL_LANGS.includes(lang);
+      document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+      document.documentElement.lang = lang;
+      
+      // Update all data-i18n elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const translated = t(key);
+        if (translated && translated !== key) {
+          el.textContent = translated;
+        }
+      });
+      
+      // Update placeholders
+      const phMap = {
+        'homeSearchInput': 'ph.searchParts',
+        'txtPriceParts': 'ph.enterPartNumbers',
+        'txtNameParts': 'ph.enterPartNumbers',
+        'txtOriginParts': 'ph.enterPartNumbers',
+        'txtWeightParts': 'ph.enterPartNumbers',
+        'txtAltParts': 'ph.enterPartNumbers',
+        'txtDetailParts': 'ph.enterPartNumbers2',
+        'txtListCleanerInput': 'ph.pastePartNumbers',
+        'txtMcPartNo': 'ph.enterPartNumber',
+        'txtVinInput': 'ph.enterVin',
+        'txtVinPartSearch': 'ph.searchPartsVin',
+        'txtDiagramPart': 'ph.enterPartNumberDiagram',
+        'txtDimPart': 'ph.enterPartNumberEg',
+        'txtHscodePart': 'ph.enterPartNumberEg',
+        'txtCbmPart': 'ph.enterPartNumberEg',
+        'txtSuggestion': 'ph.shareSuggestion',
+        'txtComplaint': 'ph.reportIssue',
+        'txtSearchAlts': 'ph.searchAlternates',
+      };
+      Object.entries(phMap).forEach(([id, key]) => {
+        const el = document.getElementById(id);
+        if (el) el.placeholder = t(key);
+      });
+      
+      // Update page titles map for tab switching
+      pageTitles.home = [t('page.home.title'), t('page.home.subtitle')];
+      pageTitles.prices = [t('page.prices.title'), t('page.prices.subtitle')];
+      pageTitles.names = [t('page.names.title'), t('page.names.subtitle')];
+      pageTitles.country = [t('page.country.title'), t('page.country.subtitle')];
+      pageTitles.details = [t('page.details.title'), t('page.details.subtitle')];
+      pageTitles.weight = [t('page.weight.title'), t('page.weight.subtitle')];
+      pageTitles.alternates = [t('page.alternates.title'), t('page.alternates.subtitle')];
+      pageTitles.listcleaner = [t('page.listcleaner.title'), t('page.listcleaner.subtitle')];
+      pageTitles.modelchecker = [t('page.modelchecker.title'), t('page.modelchecker.subtitle')];
+      pageTitles.diagram = [t('page.diagram.title'), t('page.diagram.subtitle')];
+      pageTitles.dimensions = [t('page.dimensions.title'), t('page.dimensions.subtitle')];
+      pageTitles.hscode = [t('page.hscode.title'), t('page.hscode.subtitle')];
+      pageTitles.cbm = [t('page.cbm.title'), t('page.cbm.subtitle')];
+      
+      // Re-apply current tab title
+      const activeTab = document.querySelector('.sidebar-nav-item.active');
+      if (activeTab) {
+        const tab = activeTab.getAttribute('data-tab');
+        const titles = pageTitles[tab] || ['PartsMateTH', ''];
+        document.getElementById('pageTitle').textContent = titles[0];
+        document.getElementById('pageSubtitle').textContent = titles[1];
+      }
+      
+      // Update language button label
+      document.getElementById('langBtnLabel').textContent = LANG_LABELS[lang] || lang;
+      
+      // Highlight active language in dropdown
+      document.querySelectorAll('.lang-option').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+      });
+      
+      // Close dropdown
+      document.getElementById('langDropdown').classList.add('hidden');
+    }
+
+    // Init language selector clicks
+    document.querySelectorAll('.lang-option').forEach(btn => {
+      btn.addEventListener('click', () => applyLanguage(btn.getAttribute('data-lang')));
+    });
+    
+    // Close language dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#langSelectorWrap')) {
+        document.getElementById('langDropdown').classList.add('hidden');
+      }
+    });
+
+    // Load saved language on startup
+    (function initLang() {
+      const saved = localStorage.getItem('pm_lang');
+      if (saved && i18n[saved]) {
+        applyLanguage(saved);
+      }
+    })();
+
 
     // For image URLs returned by the API (full URLs that need proxying)
     function proxyImageUrl(fullUrl) {
@@ -2178,8 +4038,8 @@
                       <div style="display:flex;gap:6px;align-items:stretch;padding:8px;background:rgba(10,14,28,0.72);border:1px solid rgba(255,255,255,0.1);border-radius:10px;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(0,0,0,0.25);">
                         <div style="display:grid;grid-template-columns:40px;grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
                           <button data-hold="zoom" data-dir="1" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom In">+</button>
-                          <button data-hold="zoom" data-dir="-1" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom Out">−</button>
                           <div aria-hidden="true" style="width:40px;height:40px;"></div>
+                          <button data-hold="zoom" data-dir="-1" style="width:40px;height:40px;background:rgba(20,20,30,0.9);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);" title="Zoom Out">−</button>
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:3px;padding:3px;background:rgba(20,20,30,0.45);border:1px solid rgba(255,255,255,0.08);border-radius:8px;">
                           <div></div>
