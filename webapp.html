@@ -881,7 +881,7 @@
                 <input type="text" id="homeSearchInput" placeholder="Search part numbers, names, or brands..." onkeydown="if(event.key==='Enter')homeQuickSearch()">
               </div>
               <button onclick="homeQuickSearch()" class="btn-primary px-6 py-2.5 text-sm">
-                <span>Search</span>
+                <span data-i18n="btn.search">Search</span>
               </button>
             </div>
           </div>
@@ -1627,6 +1627,7 @@
         'user.plan': 'Plan', 'user.license': 'License', 'user.expires': 'Expires',
         'user.status': 'Status', 'user.logout': 'Logout',
         // Top bar
+        'topbar.title': 'Parts Intelligence', 'topbar.subtitle': 'Search across verified global databases',
         'topbar.quickSearch': 'Quick Search',
         // Tab titles (used by pageTitles)
         'page.home.title': 'Parts Intelligence', 'page.home.subtitle': 'Search across verified global databases',
@@ -1768,6 +1769,7 @@
         'user.expires': 'Expire',
         'user.status': 'Statut',
         'user.logout': 'Déconnexion',
+        'topbar.title': 'Intelligence des pièces', 'topbar.subtitle': 'Rechercher dans les bases de données mondiales vérifiées',
         'topbar.quickSearch': 'Recherche rapide',
         'page.home.title': 'Intelligence des pièces',
         'page.home.subtitle': 'Rechercher dans les bases de données mondiales vérifiées',
@@ -1960,6 +1962,7 @@
         'user.expires': 'ينتهي',
         'user.status': 'الحالة',
         'user.logout': 'تسجيل الخروج',
+        'topbar.title': 'ذكاء القطع', 'topbar.subtitle': 'البحث في قواعد البيانات العالمية الموثقة',
         'topbar.quickSearch': 'بحث سريع',
         'page.home.title': 'ذكاء القطع',
         'page.home.subtitle': 'البحث في قواعد البيانات العالمية الموثقة',
@@ -2152,6 +2155,7 @@
         'user.expires': 'समाप्ति',
         'user.status': 'स्थिति',
         'user.logout': 'लॉग आउट',
+        'topbar.title': 'पार्ट्स इंटेलिजेंस', 'topbar.subtitle': 'सत्यापित वैश्विक डेटाबेस में खोजें',
         'topbar.quickSearch': 'त्वरित खोज',
         'page.home.title': 'पार्ट्स इंटेलिजेंस',
         'page.home.subtitle': 'सत्यापित वैश्विक डेटाबेस में खोजें',
@@ -2344,6 +2348,7 @@
         'user.expires': 'میعاد',
         'user.status': 'حالت',
         'user.logout': 'لاگ آؤٹ',
+        'topbar.title': 'پارٹس انٹیلی جنس', 'topbar.subtitle': 'تصدیق شدہ عالمی ڈیٹابیس میں تلاش کریں',
         'topbar.quickSearch': 'فوری تلاش',
         'page.home.title': 'پارٹس انٹیلی جنس',
         'page.home.subtitle': 'تصدیق شدہ عالمی ڈیٹابیس میں تلاش کریں',
@@ -2536,6 +2541,7 @@
         'user.expires': 'Истекает',
         'user.status': 'Статус',
         'user.logout': 'Выйти',
+        'topbar.title': 'Интеллект запчастей', 'topbar.subtitle': 'Поиск по проверенным мировым базам данных',
         'topbar.quickSearch': 'Быстрый поиск',
         'btn.checkPrices': 'Проверить цены',
         'btn.checkNames': 'Проверить названия',
@@ -2728,6 +2734,7 @@
         'user.expires': 'پای ته رسیدل',
         'user.status': 'حالت',
         'user.logout': 'ننوتل',
+        'topbar.title': 'د پرزو استخبارات', 'topbar.subtitle': 'تصدیق شوو نړیوالو ډیټابیسونو کې ولټوئ',
         'topbar.quickSearch': 'چټکه لټون',
         'btn.checkPrices': 'بیه وګورئ',
         'btn.checkNames': 'نوم وګورئ',
@@ -2920,6 +2927,7 @@
         'user.expires': '만료',
         'user.status': '상태',
         'user.logout': '로그아웃',
+        'topbar.title': '부품 인텔리전스', 'topbar.subtitle': '검증된 글로벌 데이터베이스 검색',
         'topbar.quickSearch': '빠른 검색',
         'btn.checkPrices': '가격 확인',
         'btn.checkNames': '이름 확인',
@@ -3112,6 +3120,7 @@
         'user.expires': 'Son Kullanma',
         'user.status': 'Durum',
         'user.logout': 'Çıkış',
+        'topbar.title': 'Parça Zekâsı', 'topbar.subtitle': 'Doğrulanmış küresel veritabanlarında arama',
         'topbar.quickSearch': 'Hızlı Arama',
         'btn.checkPrices': 'Fiyatları Kontrol Et',
         'btn.checkNames': 'İsimleri Kontrol Et',
@@ -3304,6 +3313,7 @@
         'user.expires': '到期',
         'user.status': '状态',
         'user.logout': '退出登录',
+        'topbar.title': '零件智能平台', 'topbar.subtitle': '在已验证的全球数据库中搜索',
         'topbar.quickSearch': '快速搜索',
         'btn.checkPrices': '检查价格',
         'btn.checkNames': '检查名称',
@@ -4174,6 +4184,7 @@
     function stopFetch(key) { if (abortControllers[key]) abortControllers[key].abort(); }
 
     // ============ DIAGRAM GENERATOR ============
+    let dgScale = 1, dgX = 0, dgY = 0;
     async function fetchDiagram() {
       const part = document.getElementById('txtDiagramPart').value.trim();
       if (!part) { showToast('Please enter a part number', 'warning'); return; }
@@ -4245,7 +4256,7 @@
 
 
     // ============ DIAGRAM VIEWER CONTROLS ============
-    let dgScale = 1, dgX = 0, dgY = 0;
+    // dgScale, dgX, dgY moved above fetchDiagram to avoid TDZ
     const isMobileDevice = () => window.innerWidth < 768 || 'ontouchstart' in window;
     function applyDiagramTransform() {
       const img = document.getElementById('diagramImg');
