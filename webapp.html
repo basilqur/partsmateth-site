@@ -4031,6 +4031,27 @@
       }
     });
 
+    // Page titles per tab
+    const pageTitles = {
+      home: ['Parts Intelligence', 'Search across verified global databases'],
+      prices: ['Prices Checker', 'Check estimated pricing across sources'],
+      names: ['Name Checker', 'Look up part names from different sources'],
+      country: ['Country / Origin', 'Find where parts are manufactured'],
+      details: ['Part Details', 'Get comprehensive part information'],
+      weight: ['Weight Checker', 'Look up part weights and brands'],
+      alternates: ['Alternates Check', 'Find alternate part numbers'],
+      listcleaner: ['List Cleaner', 'Process text to extract part numbers'],
+      modelchecker: ['Model Checker', 'Check part compatibility by model'],
+      diagram: ['Diagram Generator', 'Generate part diagrams from part numbers'],
+      dimensions: ['Dimensions Checker', 'Check parcel dimensions for parts'],
+      hscode: ['HS Code Checker', 'Look up Harmonized System codes'],
+      cbm: ['CBM Calculator', 'Calculate volume and shipping weight'],
+    };
+
+    // ============ TAB SWITCHING ============
+    let currentMobileTab = 'home';
+    const mainMobileTabs = ['home','prices','names','alternates'];
+
     // Load saved language on startup
     (function initLang() {
       const saved = localStorage.getItem('pm_lang');
@@ -4054,27 +4075,6 @@
       document.getElementById('sidebar').classList.remove('open');
       document.getElementById('sidebarOverlay').classList.remove('active');
     }
-
-    // Page titles per tab
-    const pageTitles = {
-      home: ['Parts Intelligence', 'Search across verified global databases'],
-      prices: ['Prices Checker', 'Check estimated pricing across sources'],
-      names: ['Name Checker', 'Look up part names from different sources'],
-      country: ['Country / Origin', 'Find where parts are manufactured'],
-      details: ['Part Details', 'Get comprehensive part information'],
-      weight: ['Weight Checker', 'Look up part weights and brands'],
-      alternates: ['Alternates Check', 'Find alternate part numbers'],
-      listcleaner: ['List Cleaner', 'Process text to extract part numbers'],
-      modelchecker: ['Model Checker', 'Check part compatibility by model'],
-      diagram: ['Diagram Generator', 'Generate part diagrams from part numbers'],
-      dimensions: ['Dimensions Checker', 'Check parcel dimensions for parts'],
-      hscode: ['HS Code Checker', 'Look up Harmonized System codes'],
-      cbm: ['CBM Calculator', 'Calculate volume and shipping weight'],
-    };
-
-    // ============ TAB SWITCHING ============
-    let currentMobileTab = 'home';
-    const mainMobileTabs = ['home','prices','names','alternates'];
 
     function switchTab(tab) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
