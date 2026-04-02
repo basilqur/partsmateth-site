@@ -946,7 +946,7 @@
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
       <!-- Logo -->
-      <div class="sidebar-logo">
+      <a href="/login.html" class="sidebar-logo" style="text-decoration:none; cursor:pointer;">
         <div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
           <img src="/app-tabs-images/partsmateth logo.png" alt="PartsMateTH" class="w-full h-full object-contain">
         </div>
@@ -954,7 +954,7 @@
           <div class="font-display font-bold text-sm text-white leading-none">PartsMateTH</div>
           <div class="text-[0.625rem] text-slate-500 mt-0.5">Web Platform</div>
         </div>
-      </div>
+      </a>
 
       <!-- Navigation -->
       <nav class="sidebar-nav">
@@ -1854,6 +1854,11 @@
       </button>
       <button class="drawer-item" data-tab="cbm" onclick="switchTabFromDrawer('cbm')">
         <i class="ri-box-3-line text-sky-400"></i><span data-i18n="mob.cbm">CBM</span>
+      </button>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.06); margin-top:0.75rem; padding-top:0.75rem;">
+      <button class="drawer-item" onclick="closeMoreDrawer(); window.location.href='/login.html';" style="width:100%; flex-direction:row; gap:0.5rem; justify-content:center; color:#f87171;">
+        <i class="ri-logout-box-r-line" style="font-size:1.1rem; color:#f87171;"></i><span style="font-size:0.75rem; font-weight:600;">Log Out</span>
       </button>
     </div>
   </div>
