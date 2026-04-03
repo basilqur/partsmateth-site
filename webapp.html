@@ -1579,7 +1579,7 @@
               <div class="glass-card p-4 space-y-3">
                 <div>
                   <label class="section-label" data-i18n="label.enterPartNumbers">Enter Part Numbers</label>
-                  <textarea id="txtListCleanerInput" class="input-field" placeholder="Paste part numbers or text here..." rows="6"></textarea>
+                  <textarea id="txtListCleanerInput" class="input-field" placeholder="Paste image, part numbers, or text here..." rows="6"></textarea>
                   <div id="pastedImagePreview" class="hidden mt-2 relative inline-block">
                     <img id="pastedImageThumb" src="" alt="Pasted image" class="max-h-24 rounded-lg border border-slate-600 object-contain cursor-pointer" onclick="document.getElementById('pastedImageThumb').classList.toggle('max-h-24'); document.getElementById('pastedImageThumb').classList.toggle('max-h-64');">
                     <button onclick="clearPastedImage()" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs leading-none" title="Remove image">&times;</button>
@@ -1665,9 +1665,9 @@
                 </button>
                 <p class="text-sm text-slate-400" data-i18n="mc.modelDesc">Choose the region, year, make, model, frame, and specifications step-by-step.</p>
               </div>
-              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4 opacity-40">
-                <button disabled class="btn-ghost px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0 border border-white/10 rounded-xl cursor-not-allowed">
-                  <span class="flex items-center justify-center gap-2"><i class="ri-global-line"></i> <span data-i18n="mc.btnUniversal">Universal Checker for All Brands</span> <i class="ri-tools-line"></i> <span data-i18n="mc.comingSoon">Coming Soon</span></span>
+              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4">
+                <button onclick="showMcView('universal')" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
+                  <span class="flex items-center justify-center gap-2"><i class="ri-global-line"></i> <span data-i18n="mc.btnUniversal">Universal Checker for All Brands</span></span>
                 </button>
                 <p class="text-sm text-slate-400" data-i18n="mc.universalDesc">Cross-check compatibility across multiple car brands using part numbers or vehicle information.</p>
               </div>
@@ -1747,6 +1747,75 @@
                 <table class="results-table hidden" id="tblVinDiagrams"><thead><tr></tr></thead><tbody></tbody></table>
                 <table class="results-table hidden" id="tblVinDiagramParts"><thead><tr></tr></thead><tbody></tbody></table>
                 <table class="results-table hidden" id="tblVinSearchResult"><thead><tr></tr></thead><tbody></tbody></table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Universal Checker View -->
+          <div id="mcUniversal" class="hidden">
+            <div class="flex items-center gap-3 mb-5">
+              <button onclick="showMcView('home')" class="btn-ghost p-2 rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line text-lg"></i></button>
+              <div class="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                <i class="ri-global-line text-purple-400 text-lg"></i>
+              </div>
+              <div>
+                <h2 class="font-display text-lg font-bold text-white" data-i18n="mc.btnUniversal">Universal Checker for All Brands</h2>
+                <p class="text-xs text-slate-500">Search any brand's catalog by part number or keyword</p>
+              </div>
+            </div>
+            <div class="glass-card p-4 mb-4 space-y-3">
+              <div class="flex gap-2">
+                <input id="txtUniversalSearch" class="input-field flex-1" placeholder="Enter part number, VIN, or keyword...">
+                <button onclick="ucSearch()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.search">Search</span></span></button>
+                <button id="mcStopUniversal" class="stop-btn" onclick="stopFetch('mcUniversal')"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
+              </div>
+              <div id="ucPartSearchWrap" class="hidden">
+                <div class="flex gap-2">
+                  <input id="txtUcPartSearch" class="input-field flex-1" placeholder="Search parts within this vehicle e.g. filter, brake, 17801">
+                  <button onclick="ucSearchParts()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i></span></button>
+                </div>
+              </div>
+              <div id="mcUniversalProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
+              <div id="mcUniversalLoader" class="loader"><div class="spinner"></div><span>Searching catalog...</span></div>
+            </div>
+            <div id="mcUniversalBack" class="hidden mb-3">
+              <button onclick="ucGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> <span data-i18n="btn.back">Back</span></button>
+            </div>
+            <!-- Vehicle Info Banner -->
+            <div id="ucVehicleInfo" class="hidden mb-4 glass-card p-3">
+              <div class="flex flex-wrap gap-2" id="ucVehicleInfoBadges"></div>
+            </div>
+            <!-- Results area -->
+            <div id="ucResultsArea">
+              <!-- Search results / categories -->
+              <div id="ucViewSearch" class="hidden">
+                <div id="ucCategoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4"></div>
+                <div id="ucDiagramsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+              </div>
+              <!-- Groups tree -->
+              <div id="ucViewGroups" class="hidden">
+                <div id="ucGroupsTree" class="space-y-1"></div>
+              </div>
+              <!-- Parts list with diagram -->
+              <div id="ucViewParts" class="hidden">
+                <div class="flex flex-col lg:flex-row gap-4">
+                  <div id="ucDiagramWrap" class="lg:w-1/2">
+                    <div class="glass-card p-2 overflow-hidden">
+                      <img id="ucDiagramImg" class="w-full rounded-lg cursor-zoom-in" style="max-height:500px; object-fit:contain;" onclick="this.classList.toggle('max-h-none')" />
+                    </div>
+                  </div>
+                  <div class="lg:w-1/2">
+                    <div class="glass-card p-1 overflow-hidden">
+                      <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+                        <table class="results-table" id="tblUcParts"><thead><tr></tr></thead><tbody></tbody></table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Catalog search results (parts in VIN) -->
+              <div id="ucViewCatalogSearch" class="hidden">
+                <div id="ucCatalogSearchResults" class="space-y-4"></div>
               </div>
             </div>
           </div>
@@ -2175,7 +2244,7 @@
         'ph.searchPartsVin': 'Search parts in this VIN e.g. filter, shock, 17801',
         'ph.shareSuggestion': 'Share your suggestion...',
         'ph.reportIssue': 'Report an issue...',
-        'ph.pastePartNumbers': 'Paste part numbers or text here...',
+        'ph.pastePartNumbers': 'Paste image, part numbers, or text here...',
         'ph.searchAlternates': '🔍 Search alternates...',
         'ph.enterPartNumbers2': 'Enter part number(s)...',
         // Model Checker section
@@ -4299,30 +4368,35 @@
     let currentVinModelUrl = '';
 
     function mcSetLoading(section, on, msg) {
-      const loaderId = section === 'partno' ? 'mcPartNoLoader' : 'mcVinLoader';
-      const stopId = section === 'partno' ? 'mcStopPartNo' : 'mcStopVin';
-      const progressId = section === 'partno' ? 'mcPartNoProgress' : 'mcVinProgress';
+      const ids = {
+        partno: ['mcPartNoLoader','mcStopPartNo','mcPartNoProgress'],
+        vin: ['mcVinLoader','mcStopVin','mcVinProgress'],
+        universal: ['mcUniversalLoader','mcStopUniversal','mcUniversalProgress']
+      };
+      const [loaderId, stopId, progressId] = ids[section] || ids.partno;
       const loader = document.getElementById(loaderId);
       const stop = document.getElementById(stopId);
       const progress = document.getElementById(progressId);
       if (on) {
-        if (msg) loader.querySelector('span').textContent = msg;
-        loader.classList.add('show');
-        stop.classList.add('show');
+        if (msg && loader) loader.querySelector('span').textContent = msg;
+        if (loader) loader.classList.add('show');
+        if (stop) stop.classList.add('show');
         if (progress) progress.classList.add('show');
       } else {
-        loader.classList.remove('show');
-        stop.classList.remove('show');
+        if (loader) loader.classList.remove('show');
+        if (stop) stop.classList.remove('show');
         if (progress) progress.classList.remove('show');
       }
     }
 
     function showMcView(view) {
-      ['mcHome','mcPartNo','mcVin'].forEach(id => document.getElementById(id).classList.add('hidden'));
-      const el = document.getElementById(view === 'home' ? 'mcHome' : view === 'partno' ? 'mcPartNo' : 'mcVin');
+      ['mcHome','mcPartNo','mcVin','mcUniversal'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+      const map = { home:'mcHome', partno:'mcPartNo', vin:'mcVin', universal:'mcUniversal' };
+      const el = document.getElementById(map[view]);
       if (el) el.classList.remove('hidden');
       if (view === 'partno') { mcPartNoHistory = ['xref']; updateMcPartNoView(); }
       if (view === 'vin') { mcVinHistory = ['info']; currentVinModelUrl = ''; updateMcVinView(); }
+      if (view === 'universal') { ucHistory = []; ucCurrentVehicleUrl = ''; ucClearAll(); }
     }
 
     function updateMcPartNoView() {
@@ -4553,6 +4627,217 @@
       finally { mcSetLoading('vin', false); }
     }
 
+    // ============ UNIVERSAL CHECKER ============
+    let ucHistory = [];
+    let ucCurrentVehicleUrl = '';
+
+    function ucClearAll() {
+      ['ucViewSearch','ucViewGroups','ucViewParts','ucViewCatalogSearch','ucVehicleInfo','mcUniversalBack','ucPartSearchWrap'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.classList.add('hidden');
+      });
+      ['ucCategoriesGrid','ucDiagramsGrid','ucGroupsTree','ucCatalogSearchResults','ucVehicleInfoBadges'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.innerHTML = '';
+      });
+    }
+
+    function ucUpdateNav() {
+      document.getElementById('mcUniversalBack').classList.toggle('hidden', ucHistory.length <= 1);
+      document.getElementById('ucPartSearchWrap').classList.toggle('hidden', !ucCurrentVehicleUrl);
+    }
+
+    function ucGoBack() {
+      if (ucHistory.length > 1) {
+        ucHistory.pop();
+        const prev = ucHistory[ucHistory.length - 1];
+        if (prev.type === 'search' || prev.type === 'category') ucRenderSearch(prev.data);
+        else if (prev.type === 'groups') ucRenderGroups(prev.data);
+        else if (prev.type === 'parts') ucRenderParts(prev.data);
+        else if (prev.type === 'catalogSearch') ucRenderCatalogSearch(prev.data);
+        ucUpdateNav();
+      }
+    }
+
+    function ucShowVehicleInfo(vehicleInfo) {
+      const wrap = document.getElementById('ucVehicleInfo');
+      const badges = document.getElementById('ucVehicleInfoBadges');
+      if (!vehicleInfo || vehicleInfo.length === 0) { wrap.classList.add('hidden'); return; }
+      wrap.classList.remove('hidden');
+      badges.innerHTML = vehicleInfo.map(item => {
+        return Object.entries(item).map(([k,v]) => `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs"><span class="text-slate-500">${k}</span><span class="text-white font-medium">${v}</span></span>`).join('');
+      }).join('');
+    }
+
+    async function ucSearch() {
+      const q = document.getElementById('txtUniversalSearch').value.trim();
+      if (!q) { showToast('Please enter a search term', 'warning'); return; }
+      mcSetLoading('universal', true, 'Searching catalog...');
+      abortControllers.mcUniversal = new AbortController();
+      ucCurrentVehicleUrl = '';
+      try {
+        const res = await fetch(proxyUrl('/catalog/search?q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const data = await res.json();
+        ucShowVehicleInfo(data.vehicleInfo);
+        ucHistory = [{ type: 'search', data }];
+        ucRenderSearch(data);
+        ucUpdateNav();
+        if (!data.categories?.length && !data.diagrams?.length) showToast('No results found', 'warning');
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('universal', false); }
+    }
+
+    function ucRenderSearch(data) {
+      ['ucViewSearch'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+      ['ucViewGroups','ucViewParts','ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const catGrid = document.getElementById('ucCategoriesGrid');
+      catGrid.innerHTML = '';
+      (data.categories || []).forEach(cat => {
+        if (!cat.url) {
+          const h = document.createElement('div');
+          h.className = 'col-span-full text-sm font-bold text-white/70 uppercase tracking-wider mt-2 border-b border-white/10 pb-1';
+          h.textContent = cat.title;
+          catGrid.appendChild(h);
+        } else {
+          const card = document.createElement('button');
+          card.className = 'glass-card p-3 text-left hover:bg-white/10 transition-all group flex items-center gap-3 rounded-xl';
+          card.innerHTML = `<div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0"><i class="ri-folder-line text-purple-400"></i></div><span class="text-sm text-slate-200 group-hover:text-white">${cat.title}</span><i class="ri-arrow-right-s-line text-slate-600 ml-auto"></i>`;
+          card.onclick = () => ucLoadCategory(cat.url);
+          catGrid.appendChild(card);
+        }
+      });
+      const diagGrid = document.getElementById('ucDiagramsGrid');
+      diagGrid.innerHTML = '';
+      (data.diagrams || []).forEach(d => {
+        const card = document.createElement('button');
+        card.className = 'glass-card p-2 hover:bg-white/10 transition-all rounded-xl overflow-hidden flex flex-col';
+        card.innerHTML = `<div class="aspect-square bg-black/20 rounded-lg overflow-hidden mb-2 flex items-center justify-center">${d.imageLink ? `<img src="${d.imageLink}" class="w-full h-full object-contain" loading="lazy" onerror="this.parentElement.innerHTML='<i class=\\'ri-image-line text-2xl text-slate-600\\'></i>'" />` : '<i class="ri-image-line text-2xl text-slate-600"></i>'}</div><span class="text-xs text-slate-300 text-center line-clamp-2">${d.label}</span>`;
+        card.onclick = () => ucLoadGroups(d.clickLink);
+        diagGrid.appendChild(card);
+      });
+    }
+
+    async function ucLoadCategory(url) {
+      mcSetLoading('universal', true, 'Loading category...');
+      abortControllers.mcUniversal = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/catalog/category?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const data = await res.json();
+        ucShowVehicleInfo(data.vehicleInfo);
+        ucHistory.push({ type: 'category', data });
+        ucRenderSearch(data);
+        ucUpdateNav();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('universal', false); }
+    }
+
+    async function ucLoadGroups(url) {
+      mcSetLoading('universal', true, 'Loading parts groups...');
+      abortControllers.mcUniversal = new AbortController();
+      ucCurrentVehicleUrl = url;
+      try {
+        const res = await fetch(proxyUrl('/catalog/groups?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const data = await res.json();
+        ucShowVehicleInfo(data.vehicleInfo);
+        ucHistory.push({ type: 'groups', data });
+        ucRenderGroups(data);
+        ucUpdateNav();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('universal', false); }
+    }
+
+    function ucRenderGroups(data) {
+      ['ucViewGroups'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+      ['ucViewSearch','ucViewParts','ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const tree = document.getElementById('ucGroupsTree');
+      tree.innerHTML = '';
+      function renderGroup(groups, container, depth) {
+        groups.forEach(g => {
+          const isClickable = !!g.url;
+          const hasChildren = g.children && g.children.length > 0;
+          const row = document.createElement('div');
+          row.style.paddingLeft = (depth * 16 + 8) + 'px';
+          row.className = 'flex items-center gap-2 py-2 px-3 rounded-lg ' + (isClickable ? 'hover:bg-white/5 cursor-pointer' : 'opacity-80');
+          row.innerHTML = `<i class="${hasChildren ? 'ri-folder-line text-yellow-400' : 'ri-file-list-line text-blue-400'} text-base"></i><span class="text-sm ${isClickable ? 'text-slate-200' : 'text-slate-400 font-semibold uppercase text-xs tracking-wider'}">${g.name}</span>${isClickable ? '<i class="ri-arrow-right-s-line text-slate-600 ml-auto"></i>' : ''}`;
+          if (isClickable) row.onclick = () => ucLoadParts(g.url);
+          container.appendChild(row);
+          if (hasChildren) {
+            const childWrap = document.createElement('div');
+            childWrap.className = 'border-l border-white/5 ml-6';
+            container.appendChild(childWrap);
+            renderGroup(g.children, childWrap, depth + 1);
+          }
+        });
+      }
+      renderGroup(data.groups || [], tree, 0);
+    }
+
+    async function ucLoadParts(url) {
+      mcSetLoading('universal', true, 'Loading parts...');
+      abortControllers.mcUniversal = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/catalog/parts?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const data = await res.json();
+        ucShowVehicleInfo(data.vehicleInfo);
+        ucHistory.push({ type: 'parts', data });
+        ucRenderParts(data);
+        ucUpdateNav();
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('universal', false); }
+    }
+
+    function ucRenderParts(data) {
+      ['ucViewParts'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+      ['ucViewSearch','ucViewGroups','ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const img = document.getElementById('ucDiagramImg');
+      const wrap = document.getElementById('ucDiagramWrap');
+      if (data.diagram?.imageLink) { img.src = data.diagram.imageLink; wrap.classList.remove('hidden'); }
+      else { wrap.classList.add('hidden'); }
+      const tbl = document.getElementById('tblUcParts');
+      tbl.querySelector('thead tr').innerHTML = '<th>#</th><th>Part Number</th><th>Name</th><th>Qty</th><th>Code</th><th>Period</th><th>Note</th>';
+      const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
+      (data.parts || []).forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/5';
+        const partLink = p.link ? `<a href="${p.link}" target="_blank" class="text-blue-400 hover:underline font-mono">${p.number}</a>` : `<span class="font-mono">${p.number}</span>`;
+        tr.innerHTML = `<td class="text-slate-500 text-xs">${p.code||''}</td><td>${partLink}</td><td>${p.name||''}</td><td class="text-center">${p.quantity||''}</td><td class="text-xs text-slate-400">${p.restrictions||''}</td><td class="text-xs text-slate-500">${(p.from||'') + (p.to ? ' → '+p.to : '')}</td><td class="text-xs text-slate-500">${p.application||''}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function ucSearchParts() {
+      const q = document.getElementById('txtUcPartSearch').value.trim();
+      if (!q) return;
+      if (!ucCurrentVehicleUrl) { showToast('Please select a vehicle first', 'warning'); return; }
+      mcSetLoading('universal', true, 'Searching parts...');
+      abortControllers.mcUniversal = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/catalog/VINSearch?url=' + encodeURIComponent(ucCurrentVehicleUrl) + '&q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const data = await res.json();
+        const results = Array.isArray(data) ? data : (data.results || []);
+        ucHistory.push({ type: 'catalogSearch', data: results });
+        ucRenderCatalogSearch(results);
+        ucUpdateNav();
+        if (!results.length) showToast('No parts found', 'warning');
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('universal', false); }
+    }
+
+    function ucRenderCatalogSearch(results) {
+      ['ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.remove('hidden'));
+      ['ucViewSearch','ucViewGroups','ucViewParts'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      const container = document.getElementById('ucCatalogSearchResults');
+      container.innerHTML = '';
+      results.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-4 rounded-xl';
+        let partsHtml = '';
+        if (r.parts?.length) {
+          partsHtml = `<table class="results-table w-full mt-3"><thead><tr><th>Part No</th><th>Name</th><th>Code</th></tr></thead><tbody>${r.parts.map(p => `<tr class="hover:bg-white/5"><td class="font-mono text-blue-400">${p.number||''}</td><td>${p.name||''}</td><td class="text-xs text-slate-400">${p.code||''}</td></tr>`).join('')}</tbody></table>`;
+        }
+        card.innerHTML = `<div class="flex flex-col sm:flex-row gap-3">${r.imageLink ? `<div class="sm:w-48 shrink-0"><img src="${r.imageLink}" class="w-full rounded-lg bg-black/20" loading="lazy" onerror="this.style.display='none'" /></div>` : ''}<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-2 flex-wrap"><span class="text-sm font-semibold text-white">${r.label||'Diagram'}</span>${r.magnifierLink ? `<a href="${r.magnifierLink}" target="_blank" class="text-xs text-blue-400 hover:underline"><i class="ri-zoom-in-line"></i> Full</a>` : ''}</div>${partsHtml}</div></div>`;
+        container.appendChild(card);
+      });
+    }
+
     // Enter key support
     document.addEventListener('DOMContentLoaded', () => {
       ['txtMcPartNo'].forEach(id => {
@@ -4567,12 +4852,13 @@
         const el = document.getElementById(id);
         if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') mcSearchVinPart(); });
       });
-      // New feature inputs
       const enterMap = {
         txtDiagramPart: fetchDiagram,
         txtDimPart: fetchDimensions,
         txtHscodePart: fetchHsCode,
         txtCbmPart: fetchCbm,
+        txtUniversalSearch: ucSearch,
+        txtUcPartSearch: ucSearchParts,
       };
       Object.entries(enterMap).forEach(([id, fn]) => {
         const el = document.getElementById(id);
@@ -5862,30 +6148,25 @@
             e.preventDefault();
             const blob = imageItem.getAsFile();
             if (!blob) return;
-            const reader = new FileReader();
-            reader.onload = async function(ev) {
-              if (id === 'txtListCleanerInput') {
-                // List Cleaner: show thumbnail preview, process on button click
+            // For List Cleaner: show thumbnail preview instead of auto-processing
+            if (id === 'txtListCleanerInput') {
+              const reader = new FileReader();
+              reader.onload = function(ev) {
                 showPastedImagePreview(ev.target.result, id);
                 showToast('Image pasted! Click Clean List or Read Text to process.', 'success');
-              } else {
-                // All other textareas: OCR immediately and insert text
-                showToast('Running OCR on pasted image...', 'info');
-                try {
-                  const base64 = ev.target.result.split(',')[1];
-                  const text = await ocrFromBase64(base64);
-                  if (text) {
-                    const el = document.getElementById(id);
-                    const existing = el.value.trim();
-                    el.value = existing ? existing + '\n' + text : text;
-                    showToast('OCR text extracted and inserted!', 'success');
-                  }
-                } catch (err) {
-                  showToast('OCR failed: ' + err.message, 'error');
-                }
-              }
-            };
-            reader.readAsDataURL(blob);
+              };
+              reader.readAsDataURL(blob);
+              return;
+            }
+            // For other inputs: auto-process with cleaned OCR
+            showToast('Running OCR on pasted image...', 'info');
+            try {
+              const rawText = await ocrFromBlob(blob);
+              await processExtractedText(rawText, id, 'pasted image');
+            } catch (err) {
+              console.error('OCR error:', err);
+              showToast('Error reading image: ' + err.message, 'error');
+            }
             return;
           }
           const fileItem = items.find(item => item.kind === 'file' && !item.type.startsWith('image/'));
