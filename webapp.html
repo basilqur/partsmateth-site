@@ -435,6 +435,7 @@
       display: flex; border-radius: 0.5rem; overflow: hidden;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.03);
+      align-items: center;
     }
     .currency-toggle button {
       padding: 0.375rem 1rem; font-size: 0.75rem; font-weight: 600;
@@ -445,8 +446,51 @@
       background: linear-gradient(135deg, #3B82F6, #14B8A6);
       color: #fff;
     }
+    .currency-more-select {
+      padding: 0.375rem 0.5rem; font-size: 0.7rem; font-weight: 600;
+      background: transparent; color: #64748B;
+      border: none; border-left: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer; outline: none;
+      -webkit-appearance: none; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748B' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.25rem center;
+      padding-right: 1.25rem; max-width: 6rem;
+    }
+    .currency-more-select option {
+      background: #0F1629; color: #E2E8F0;
+    }
 
-    /* Loader */
+    /* Pasted image preview chip */
+    .pasted-img-preview {
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0.5rem;
+      padding: 0.375rem 0.5rem;
+    }
+    .pasted-img-preview.hidden { display: none; }
+    .pasted-img-preview img {
+      width: 2.5rem; height: 2.5rem;
+      object-fit: cover; border-radius: 0.375rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+    }
+    .pasted-img-preview .pip-label {
+      font-size: 0.6875rem; color: #94A3B8;
+    }
+    .pasted-img-preview .pip-remove {
+      width: 1.25rem; height: 1.25rem;
+      background: rgba(239,68,68,0.2); color: #f87171;
+      border: none; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; line-height: 1; transition: background 0.2s;
+    }
+    .pasted-img-preview .pip-remove:hover { background: rgba(239,68,68,0.4); }
+
+
     .loader { display: none; }
     .loader.show, .loader.active {
       display: flex; align-items: center; gap: 0.75rem;
@@ -1237,12 +1281,16 @@
                 <div>
                   <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtPriceParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                  <div id="imgPreview_txtPriceParts" class="pasted-img-preview hidden"></div>
                 </div>
                 <div class="flex items-center justify-between">
                   <span class="text-xs text-slate-500 font-medium" data-i18n="label.currency">Currency</span>
                   <div class="currency-toggle">
                     <button id="btnAED" class="active" onclick="setCurrency('AED')">AED</button>
                     <button id="btnUSD" onclick="setCurrency('USD')">USD</button>
+                    <select id="currencyMoreSelect" class="currency-more-select" onchange="setCurrency(this.value)">
+                      <option value="" disabled selected>More ▾</option>
+                    </select>
                   </div>
                 </div>
                 <div class="flex gap-2">
@@ -1294,6 +1342,7 @@
                 <div>
                   <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtNameParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                  <div id="imgPreview_txtNameParts" class="pasted-img-preview hidden"></div>
                 </div>
                 <div>
                   <label class="section-label" data-i18n="label.source">Source</label>
@@ -1343,6 +1392,7 @@
                 <div>
                   <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtOriginParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                  <div id="imgPreview_txtOriginParts" class="pasted-img-preview hidden"></div>
                 </div>
                 <div class="flex gap-2">
                   <button onclick="fetchOrigins()" class="btn-primary px-4 py-2.5 text-sm flex-1">
@@ -1383,6 +1433,7 @@
                 <div>
                   <label class="section-label" data-i18n="label.partNumbers">Part Number(s)</label>
                   <textarea id="txtDetailParts" class="input-field" placeholder="Enter part number(s)..." rows="4"></textarea>
+                  <div id="imgPreview_txtDetailParts" class="pasted-img-preview hidden"></div>
                 </div>
                 <label class="chk-label">
                   <input type="checkbox" id="chkMultiParts">
@@ -1433,6 +1484,7 @@
                 <div>
                   <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtWeightParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="6"></textarea>
+                  <div id="imgPreview_txtWeightParts" class="pasted-img-preview hidden"></div>
                 </div>
                 <div class="flex gap-2">
                   <button onclick="fetchWeights()" class="btn-primary px-4 py-2.5 text-sm flex-1">
@@ -1473,6 +1525,7 @@
                 <div>
                   <label class="section-label" data-i18n="label.partNumbers">Part Numbers</label>
                   <textarea id="txtAltParts" class="input-field" placeholder="Enter part numbers, one per line..." rows="5"></textarea>
+                  <div id="imgPreview_txtAltParts" class="pasted-img-preview hidden"></div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <button onclick="fetchAlternates(false)" class="btn-primary px-4 py-2.5 text-sm">
@@ -1942,7 +1995,48 @@
     const API_HEADERS = { 'Content-Type': 'application/json' };
     const GET_HEADERS = {};
     let currentCurrency = 'AED';
+    let exchangeRates = { AED: 1 }; // AED-based rates
     let abortControllers = {};
+
+    // Fetch exchange rates from server
+    (async function loadExchangeRates() {
+      try {
+        const res = await fetch('https://api.partsmateth.com/exchange-rates');
+        const data = await res.json();
+        if (data.conversion_rates) {
+          const usdToAed = data.conversion_rates.AED || 3.6725;
+          // Normalize all rates to AED base
+          Object.keys(data.conversion_rates).forEach(code => {
+            exchangeRates[code] = data.conversion_rates[code] / usdToAed;
+          });
+          exchangeRates.AED = 1;
+          exchangeRates.USD = 1 / usdToAed;
+          // Populate the "More" dropdown
+          const select = document.getElementById('currencyMoreSelect');
+          if (select) {
+            const popular = ['EUR','GBP','SAR','QAR','KWD','BHD','OMR','INR','PKR','THB','JPY','CNY','TRY','RUB','CAD','AUD','SGD','MYR','EGP','CHF'];
+            const allCodes = Object.keys(data.conversion_rates).filter(c => c !== 'AED' && c !== 'USD');
+            const popularSet = new Set(popular);
+            const popCodes = popular.filter(c => allCodes.includes(c));
+            const restCodes = allCodes.filter(c => !popularSet.has(c)).sort();
+            select.innerHTML = '<option value="" disabled selected>More ▾</option>';
+            if (popCodes.length) {
+              const og = document.createElement('optgroup');
+              og.label = 'Popular';
+              popCodes.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; og.appendChild(o); });
+              select.appendChild(og);
+            }
+            const og2 = document.createElement('optgroup');
+            og2.label = 'All Currencies';
+            restCodes.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; og2.appendChild(o); });
+            select.appendChild(og2);
+          }
+        }
+      } catch (e) {
+        console.warn('Exchange rates fetch failed, using defaults', e);
+        exchangeRates.USD = 1 / 3.6725;
+      }
+    })();
     let altResultsData = {};
 
     function proxyUrl(path) { return API + encodeURIComponent(path); }
@@ -4660,17 +4754,55 @@
       modal.classList.remove('flex');
     }
 
-    function showPastedImagePreview(dataUrl) {
-      document.getElementById('pastedImageThumb').src = dataUrl;
-      document.getElementById('pastedImagePreview').classList.remove('hidden');
-      // Store base64 for OCR
-      window._uploadedImageBase64 = dataUrl.split(',')[1];
+    // Generic pasted image store: { textareaId: base64string }
+    window._pastedImages = {};
+
+    function showPastedImagePreview(dataUrl, textareaId) {
+      // For List Cleaner, use existing dedicated preview
+      if (textareaId === 'txtListCleanerInput') {
+        document.getElementById('pastedImageThumb').src = dataUrl;
+        document.getElementById('pastedImagePreview').classList.remove('hidden');
+        window._uploadedImageBase64 = dataUrl.split(',')[1];
+        return;
+      }
+      // For all other textareas, use generic chip preview
+      const previewEl = document.getElementById('imgPreview_' + textareaId);
+      if (!previewEl) return;
+      window._pastedImages[textareaId] = dataUrl.split(',')[1];
+      previewEl.innerHTML = `
+        <img src="${dataUrl}" alt="Pasted" onclick="this.classList.toggle('expanded')" title="Click to expand">
+        <span class="pip-label">📷 Image pasted – will OCR on search</span>
+        <button class="pip-remove" onclick="clearPastedImageFor('${textareaId}')" title="Remove">✕</button>
+      `;
+      previewEl.classList.remove('hidden');
     }
 
     function clearPastedImage() {
       document.getElementById('pastedImagePreview').classList.add('hidden');
       document.getElementById('pastedImageThumb').src = '';
       window._uploadedImageBase64 = null;
+    }
+
+    function clearPastedImageFor(textareaId) {
+      if (textareaId === 'txtListCleanerInput') { clearPastedImage(); return; }
+      const previewEl = document.getElementById('imgPreview_' + textareaId);
+      if (previewEl) { previewEl.classList.add('hidden'); previewEl.innerHTML = ''; }
+      delete window._pastedImages[textareaId];
+    }
+
+    // Process pasted image OCR for a textarea, returns extracted text or null
+    async function processPastedImageOCR(textareaId) {
+      const base64 = window._pastedImages[textareaId];
+      if (!base64) return null;
+      showToast('Running OCR on pasted image...', 'info');
+      try {
+        const text = await ocrFromBase64(base64);
+        clearPastedImageFor(textareaId);
+        return text;
+      } catch (e) {
+        showToast('OCR failed: ' + e.message, 'error');
+        return null;
+      }
     }
 
     function handleFileUpload(event) {
@@ -4707,6 +4839,18 @@
       return document.getElementById(id).value.toUpperCase()
         .split('\n').map(s => s.trim()).filter(Boolean);
     }
+    // Async version: checks for pasted image, OCRs it, puts text in textarea, returns lines
+    async function getLinesWithOCR(id) {
+      if (window._pastedImages[id]) {
+        const ocrText = await processPastedImageOCR(id);
+        if (ocrText) {
+          const el = document.getElementById(id);
+          const existing = el.value.trim();
+          el.value = existing ? existing + '\n' + ocrText : ocrText;
+        }
+      }
+      return getLines(id);
+    }
     function sortInput(id) {
       const el = document.getElementById(id);
       const lines = el.value.split('\n').map(s => s.trim()).filter(Boolean).sort();
@@ -4721,25 +4865,28 @@
       showToast(`Cleaned! ${unique.length} unique parts.`);
     }
     function setCurrency(c) {
-      const wasAED = currentCurrency === 'AED';
       currentCurrency = c;
       document.getElementById('btnAED').classList.toggle('active', c === 'AED');
       document.getElementById('btnUSD').classList.toggle('active', c === 'USD');
+      const moreSelect = document.getElementById('currencyMoreSelect');
+      if (c !== 'AED' && c !== 'USD') {
+        // Set dropdown to show selected currency
+        moreSelect.value = c;
+      } else {
+        // Reset dropdown to "More"
+        moreSelect.selectedIndex = 0;
+      }
+      const rate = exchangeRates[c] || 1;
+      const sym = c === 'USD' ? ' $' : ' ' + c;
       const rows = document.querySelectorAll('#pricesBody tr');
       rows.forEach(tr => {
         [2, 3, 4].forEach(ci => {
           const td = tr.children[ci];
-          if (!td) return;
-          const raw = td.textContent.replace(/[^0-9.\-]/g, '');
-          const val = parseFloat(raw);
-          if (isNaN(val)) return;
-          if (c === 'USD' && wasAED) {
-            const converted = ci === 4 ? mround(val / 3.67) : Math.round(val / 3.67 * 100) / 100;
-            td.textContent = converted + ' $';
-          } else if (c === 'AED' && !wasAED) {
-            const converted = ci === 4 ? mround(val * 3.67) : Math.round(val * 3.67 * 100) / 100;
-            td.textContent = converted + ' AED';
-          }
+          if (!td || !td.dataset.aed) return;
+          const aedVal = parseFloat(td.dataset.aed);
+          if (isNaN(aedVal)) return;
+          const converted = ci === 4 ? mround(aedVal * rate) : Math.round(aedVal * rate * 100) / 100;
+          td.textContent = converted + sym;
         });
       });
     }
@@ -5108,15 +5255,15 @@
     // ============ PRICES ============
     function stopPricesFetch() { stopFetch('prices'); }
     async function fetchPrices() {
-      const parts = getLines('txtPriceParts');
+      const parts = await getLinesWithOCR('txtPriceParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('prices');
       const tbody = document.getElementById('pricesBody');
       tbody.innerHTML = '';
       setLoading('priceLoader', true);
       setStop('stopPrices', true);
-      const sym = currentCurrency === 'AED' ? ' AED' : ' $';
-      const factor = currentCurrency === 'AED' ? 1 : 1 / 3.67;
+      const rate = exchangeRates[currentCurrency] || 1;
+      const sym = currentCurrency === 'USD' ? ' $' : ' ' + currentCurrency;
       try {
         for (let i = 0; i < parts.length; i += 5) {
           signal.throwIfAborted?.();
@@ -5137,18 +5284,27 @@
             } else {
               const item = data[part];
               const name = item.name || 'N/A';
-              const price = parseFloat(item.price) || 0;
+              const price = parseFloat(item.price) || 0; // price in AED
               const source = item.source || 'not_found';
               const matchedFrom = item.matchedFrom || '';
-              const internet = price * 1.4;
-              const oem = price * 0.6;
+              const internet = price * 1.4;  // AED
+              const oem = price * 0.6;       // AED
               let matchType = '<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">Exact</span>';
               if (source === 'closest') { matchType = `<span class="text-xs px-2 py-0.5 rounded-full bg-red-500/10 text-red-400">Closest → ${matchedFrom}</span>`; tr.className = 'match-closest'; }
               else if (source === 'fuzzy') { matchType = `<span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400">Fuzzy → ${matchedFrom}</span>`; tr.className = 'match-fuzzy'; }
+
+              const fmtCell = (aedVal, isOem) => {
+                if (aedVal <= 0) return '<span class="text-slate-500">N/A</span>';
+                const converted = isOem ? mround(aedVal * rate) : Math.round(aedVal * rate * 100) / 100;
+                return `<span data-aed="${aedVal}">${converted}${sym}</span>`;
+              };
+
+              const tdInternet = price > 0 ? `<td data-aed="${internet}">${Math.round(internet * rate * 100) / 100}${sym}</td>` : '<td class="text-slate-500">N/A</td>';
+              const tdGenuine = price > 0 ? `<td data-aed="${price}">${Math.round(price * rate * 100) / 100}${sym}</td>` : '<td class="text-slate-500">N/A</td>';
+              const tdOem = price > 0 ? `<td data-aed="${oem}">${mround(oem * rate).toFixed(1)}${sym}</td>` : '<td class="text-slate-500">N/A</td>';
+
               tr.innerHTML = `<td class="font-mono text-xs">${part}</td><td>${name}</td>` +
-                `<td>${price > 0 ? (Math.round(internet * factor * 100) / 100) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
-                `<td>${price > 0 ? (Math.round(price * factor * 100) / 100) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
-                `<td>${price > 0 ? mround(oem * factor).toFixed(1) + sym : '<span class="text-slate-500">N/A</span>'}</td>` +
+                tdInternet + tdGenuine + tdOem +
                 `<td>${matchType}</td>`;
             }
             tbody.appendChild(tr);
@@ -5164,7 +5320,7 @@
     // ============ NAMES ============
     function stopNamesFetch() { stopFetch('names'); }
     async function fetchNames() {
-      const parts = getLines('txtNameParts');
+      const parts = await getLinesWithOCR('txtNameParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const source = document.querySelector('input[name="nameSource"]:checked').value;
       const signal = newAbort('names');
@@ -5227,7 +5383,7 @@
     // ============ ORIGINS ============
     function stopOriginsFetch() { stopFetch('origins'); }
     async function fetchOrigins() {
-      const parts = getLines('txtOriginParts');
+      const parts = await getLinesWithOCR('txtOriginParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('origins');
       const tbody = document.getElementById('originsBody');
@@ -5264,7 +5420,7 @@
     function stopDetailsFetch() { stopFetch('details'); }
     async function fetchDetails() {
       const multi = document.getElementById('chkMultiParts').checked;
-      const parts = getLines('txtDetailParts');
+      const parts = await getLinesWithOCR('txtDetailParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('details');
       const result = document.getElementById('detailsResult');
@@ -5325,7 +5481,7 @@
     // ============ WEIGHTS ============
     function stopWeightsFetch() { stopFetch('weights'); }
     async function fetchWeights() {
-      const parts = getLines('txtWeightParts');
+      const parts = await getLinesWithOCR('txtWeightParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('weights');
       const tbody = document.getElementById('weightsBody');
@@ -5353,7 +5509,7 @@
     // ============ ALTERNATES ============
     let currentAltPart = null;
     async function fetchAlternates(deep) {
-      const parts = getLines('txtAltParts');
+      const parts = await getLinesWithOCR('txtAltParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('alts');
       altResultsData = {};
@@ -5706,25 +5862,13 @@
             e.preventDefault();
             const blob = imageItem.getAsFile();
             if (!blob) return;
-            // For List Cleaner: show thumbnail preview instead of auto-processing
-            if (id === 'txtListCleanerInput') {
-              const reader = new FileReader();
-              reader.onload = function(ev) {
-                showPastedImagePreview(ev.target.result);
-                showToast('Image pasted! Click Clean List or Read Text to process.', 'success');
-              };
-              reader.readAsDataURL(blob);
-              return;
-            }
-            // For other inputs: auto-process as before
-            showToast('Running OCR on pasted image...', 'info');
-            try {
-              const rawText = await ocrFromBlob(blob);
-              await processExtractedText(rawText, id, 'pasted image');
-            } catch (err) {
-              console.error('OCR error:', err);
-              showToast('Error reading image: ' + err.message, 'error');
-            }
+            // Show thumbnail preview for ALL textareas — OCR happens on button click
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+              showPastedImagePreview(ev.target.result, id);
+              showToast('Image pasted! Click the action button to process.', 'success');
+            };
+            reader.readAsDataURL(blob);
             return;
           }
           const fileItem = items.find(item => item.kind === 'file' && !item.type.startsWith('image/'));
