@@ -2001,7 +2001,7 @@
     // Fetch exchange rates from server
     (async function loadExchangeRates() {
       try {
-        const res = await fetch('https://api.partsmateth.com/exchange-rates');
+        const res = await fetch(proxyUrl('/exchange-rates'), { headers: GET_HEADERS });
         const data = await res.json();
         if (data.conversion_rates) {
           const usdToAed = data.conversion_rates.AED || 3.6725;
@@ -5255,7 +5255,7 @@
     // ============ PRICES ============
     function stopPricesFetch() { stopFetch('prices'); }
     async function fetchPrices() {
-      const parts = await getLinesWithOCR('txtPriceParts');
+      const parts = getLines('txtPriceParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('prices');
       const tbody = document.getElementById('pricesBody');
@@ -5320,7 +5320,7 @@
     // ============ NAMES ============
     function stopNamesFetch() { stopFetch('names'); }
     async function fetchNames() {
-      const parts = await getLinesWithOCR('txtNameParts');
+      const parts = getLines('txtNameParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const source = document.querySelector('input[name="nameSource"]:checked').value;
       const signal = newAbort('names');
@@ -5383,7 +5383,7 @@
     // ============ ORIGINS ============
     function stopOriginsFetch() { stopFetch('origins'); }
     async function fetchOrigins() {
-      const parts = await getLinesWithOCR('txtOriginParts');
+      const parts = getLines('txtOriginParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('origins');
       const tbody = document.getElementById('originsBody');
@@ -5420,7 +5420,7 @@
     function stopDetailsFetch() { stopFetch('details'); }
     async function fetchDetails() {
       const multi = document.getElementById('chkMultiParts').checked;
-      const parts = await getLinesWithOCR('txtDetailParts');
+      const parts = getLines('txtDetailParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('details');
       const result = document.getElementById('detailsResult');
@@ -5481,7 +5481,7 @@
     // ============ WEIGHTS ============
     function stopWeightsFetch() { stopFetch('weights'); }
     async function fetchWeights() {
-      const parts = await getLinesWithOCR('txtWeightParts');
+      const parts = getLines('txtWeightParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('weights');
       const tbody = document.getElementById('weightsBody');
@@ -5509,7 +5509,7 @@
     // ============ ALTERNATES ============
     let currentAltPart = null;
     async function fetchAlternates(deep) {
-      const parts = await getLinesWithOCR('txtAltParts');
+      const parts = getLines('txtAltParts');
       if (!parts.length) { showToast('Please enter part numbers.', 'error'); return; }
       const signal = newAbort('alts');
       altResultsData = {};
@@ -5862,11 +5862,28 @@
             e.preventDefault();
             const blob = imageItem.getAsFile();
             if (!blob) return;
-            // Show thumbnail preview for ALL textareas — OCR happens on button click
             const reader = new FileReader();
-            reader.onload = function(ev) {
-              showPastedImagePreview(ev.target.result, id);
-              showToast('Image pasted! Click the action button to process.', 'success');
+            reader.onload = async function(ev) {
+              if (id === 'txtListCleanerInput') {
+                // List Cleaner: show thumbnail preview, process on button click
+                showPastedImagePreview(ev.target.result, id);
+                showToast('Image pasted! Click Clean List or Read Text to process.', 'success');
+              } else {
+                // All other textareas: OCR immediately and insert text
+                showToast('Running OCR on pasted image...', 'info');
+                try {
+                  const base64 = ev.target.result.split(',')[1];
+                  const text = await ocrFromBase64(base64);
+                  if (text) {
+                    const el = document.getElementById(id);
+                    const existing = el.value.trim();
+                    el.value = existing ? existing + '\n' + text : text;
+                    showToast('OCR text extracted and inserted!', 'success');
+                  }
+                } catch (err) {
+                  showToast('OCR failed: ' + err.message, 'error');
+                }
+              }
             };
             reader.readAsDataURL(blob);
             return;
