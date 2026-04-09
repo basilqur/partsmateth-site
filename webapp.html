@@ -1840,7 +1840,10 @@
               <div class="flex flex-col lg:flex-row gap-4">
                 <div id="ucDiagramWrap" class="lg:w-1/2">
                   <div class="glass-card p-2 overflow-hidden relative">
-                    <img id="ucDiagramImg" class="w-full rounded-lg cursor-zoom-in" style="max-height:600px; object-fit:contain;" onclick="this.style.maxHeight = this.style.maxHeight === 'none' ? '600px' : 'none'" />
+                    <div id="ucDiagramContainer" style="position:relative; display:inline-block; width:100%;">
+                      <img id="ucDiagramImg" class="w-full rounded-lg" style="max-height:600px; object-fit:contain; display:block;" />
+                      <div id="ucHotspotsLayer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;"></div>
+                    </div>
                   </div>
                 </div>
                 <div class="lg:w-1/2 flex-1">
@@ -4854,18 +4857,131 @@
       document.getElementById('ucViewParts').classList.remove('hidden');
       const img = document.getElementById('ucDiagramImg');
       const wrap = document.getElementById('ucDiagramWrap');
-      if (data.diagram?.imageLink) { img.src = ucProxyImg(data.diagram.imageLink); wrap.classList.remove('hidden'); }
-      else { wrap.classList.add('hidden'); }
+      const hotspotsLayer = document.getElementById('ucHotspotsLayer');
+      hotspotsLayer.innerHTML = '';
+
+      if (data.diagram?.imageLink) {
+        img.src = ucProxyImg(data.diagram.imageLink);
+        wrap.classList.remove('hidden');
+
+        // Render hotspots after image loads
+        img.onload = function() {
+          ucRenderHotspots(data.diagram.hotspots || [], img);
+        };
+      } else { wrap.classList.add('hidden'); }
+
       const tbl = document.getElementById('tblUcParts');
       tbl.querySelector('thead tr').innerHTML = '<th>#</th><th>Name</th><th>Code</th><th>Note</th><th>Qty</th><th>Range</th>';
       const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
       (data.parts || []).forEach(p => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-white/5';
+        tr.className = 'hover:bg-white/5 uc-part-row';
+        tr.setAttribute('data-code', p.code || '');
         tr.innerHTML = '<td class="text-blue-400 font-mono text-xs">' + (p.number||'') + '</td><td class="text-sm">' + (p.name||'') + '</td><td class="text-xs text-slate-400">' + (p.code||'') + '</td><td class="text-xs text-slate-500 max-w-[200px] truncate" title="' + (p.note||'').replace(/"/g,'&quot;') + '">' + (p.note||'') + '</td><td class="text-center text-xs">' + (p.quantity||'') + '</td><td class="text-xs text-slate-500">' + (p.range || ((p.from||'') + (p.to ? ' \u2192 '+p.to : ''))) + '</td>';
+        // Table row hover -> highlight hotspots
+        tr.addEventListener('mouseenter', () => ucHighlightCode(p.code, true));
+        tr.addEventListener('mouseleave', () => ucHighlightCode(p.code, false));
         tbody.appendChild(tr);
       });
       if (data.vehicleInfo) ucShowVehicleInfo(data.vehicleInfo);
+    }
+
+    function ucRenderHotspots(hotspots, img) {
+      const layer = document.getElementById('ucHotspotsLayer');
+      layer.innerHTML = '';
+      if (!hotspots.length) return;
+
+      // The hotspot positions are in original image pixel coords.
+      // We need to scale them relative to the displayed image size.
+      const natW = img.naturalWidth;
+      const natH = img.naturalHeight;
+      if (!natW || !natH) return;
+
+      hotspots.forEach(h => {
+        const [px, py] = (h.position || '0,0').split(',').map(Number);
+        const [sw, sh] = (h.size || '60,25').split(',').map(Number);
+
+        const dot = document.createElement('div');
+        dot.className = 'uc-hotspot';
+        dot.setAttribute('data-code', h.codeOnImage || '');
+        dot.style.cssText = `
+          position:absolute;
+          left:${(px / natW) * 100}%;
+          top:${(py / natH) * 100}%;
+          width:${(sw / natW) * 100}%;
+          height:${(sh / natH) * 100}%;
+          border:2px solid rgba(59,130,246,0.5);
+          border-radius:4px;
+          cursor:pointer;
+          pointer-events:all;
+          transition: all 0.2s ease;
+          background: transparent;
+        `;
+        // Tooltip
+        const label = h.title || h.codeOnImage || '';
+        if (label) dot.title = label;
+
+        // Hotspot hover -> highlight table rows
+        dot.addEventListener('mouseenter', () => {
+          ucHighlightCode(h.codeOnImage, true);
+          dot.style.background = 'rgba(59,130,246,0.25)';
+          dot.style.borderColor = 'rgba(59,130,246,1)';
+          dot.style.zIndex = '10';
+        });
+        dot.addEventListener('mouseleave', () => {
+          ucHighlightCode(h.codeOnImage, false);
+          dot.style.background = 'transparent';
+          dot.style.borderColor = 'rgba(59,130,246,0.5)';
+          dot.style.zIndex = '';
+        });
+
+        // Show content popup on click if has HTML content
+        if (h.content) {
+          dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            ucShowHotspotPopup(h, dot);
+          });
+        }
+
+        layer.appendChild(dot);
+      });
+    }
+
+    function ucHighlightCode(code, on) {
+      if (!code) return;
+      // Highlight table rows
+      document.querySelectorAll('.uc-part-row').forEach(tr => {
+        if (tr.getAttribute('data-code') === code) {
+          tr.style.background = on ? 'rgba(59,130,246,0.15)' : '';
+          if (on) tr.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      });
+      // Highlight hotspots
+      document.querySelectorAll('.uc-hotspot').forEach(dot => {
+        if (dot.getAttribute('data-code') === code) {
+          dot.style.background = on ? 'rgba(59,130,246,0.3)' : 'transparent';
+          dot.style.borderColor = on ? 'rgba(59,130,246,1)' : 'rgba(59,130,246,0.5)';
+          dot.style.boxShadow = on ? '0 0 8px rgba(59,130,246,0.6)' : 'none';
+        }
+      });
+    }
+
+    function ucShowHotspotPopup(hotspot, anchor) {
+      // Remove existing popup
+      document.querySelectorAll('.uc-hotspot-popup').forEach(el => el.remove());
+      const popup = document.createElement('div');
+      popup.className = 'uc-hotspot-popup glass-card';
+      popup.style.cssText = 'position:fixed; z-index:9999; padding:12px; max-width:400px; max-height:300px; overflow:auto; border-radius:12px; font-size:12px; color:#e2e8f0;';
+      popup.innerHTML = '<div style="margin-bottom:6px; font-weight:600; color:#60a5fa;">' + (hotspot.codeOnImage||'') + '</div>' + hotspot.content;
+      document.body.appendChild(popup);
+      // Position near anchor
+      const r = anchor.getBoundingClientRect();
+      popup.style.left = Math.min(r.right + 8, window.innerWidth - 420) + 'px';
+      popup.style.top = Math.max(r.top, 8) + 'px';
+      // Close on click outside
+      setTimeout(() => {
+        document.addEventListener('click', function closer() { popup.remove(); document.removeEventListener('click', closer); }, { once: true });
+      }, 50);
     }
 
     let ucVINSearchRunning = false;
