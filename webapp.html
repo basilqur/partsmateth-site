@@ -4802,13 +4802,21 @@
       });
     }
 
+    function ucProxyImg(url) {
+      if (!url) return '';
+      const m = url.match(/\/proxy\/image\?id=(.+)/);
+      if (m) return proxyUrl('/proxy/image?id=' + m[1]);
+      return url;
+    }
+
     function ucRenderDiagrams(diagrams) {
       const grid = document.getElementById('ucDiagramsGrid');
       grid.innerHTML = '';
       diagrams.forEach(d => {
         const card = document.createElement('button');
         card.className = 'glass-card p-2 hover:bg-white/10 transition-all rounded-xl overflow-hidden flex flex-col';
-        card.innerHTML = '<div class="aspect-square bg-white/5 rounded-lg overflow-hidden mb-2 flex items-center justify-center">' + (d.imageLink ? '<img src="' + d.imageLink + '" class="w-full h-full object-contain" loading="lazy" onerror="this.parentElement.innerHTML=\'<i class=\\\'ri-image-line text-2xl text-slate-600\\\'></i>\'" />' : '<i class="ri-image-line text-2xl text-slate-600"></i>') + '</div><span class="text-xs text-blue-400 text-center line-clamp-2 hover:underline">' + d.label + '</span>';
+        const imgUrl = ucProxyImg(d.imageLink);
+        card.innerHTML = '<div class="aspect-square bg-white rounded-lg overflow-hidden mb-2 flex items-center justify-center">' + (imgUrl ? '<img src="' + imgUrl + '" class="w-full h-full object-contain" loading="lazy" onerror="this.parentElement.innerHTML=\'<i class=\\\'ri-image-line text-2xl text-slate-600\\\'></i>\'" />' : '<i class="ri-image-line text-2xl text-slate-600"></i>') + '</div><span class="text-xs text-blue-400 text-center line-clamp-2 hover:underline">' + d.label + '</span>';
         card.onclick = () => ucLoadParts(d.clickLink);
         grid.appendChild(card);
       });
@@ -4846,7 +4854,7 @@
       document.getElementById('ucViewParts').classList.remove('hidden');
       const img = document.getElementById('ucDiagramImg');
       const wrap = document.getElementById('ucDiagramWrap');
-      if (data.diagram?.imageLink) { img.src = data.diagram.imageLink; wrap.classList.remove('hidden'); }
+      if (data.diagram?.imageLink) { img.src = ucProxyImg(data.diagram.imageLink); wrap.classList.remove('hidden'); }
       else { wrap.classList.add('hidden'); }
       const tbl = document.getElementById('tblUcParts');
       tbl.querySelector('thead tr').innerHTML = '<th>#</th><th>Name</th><th>Code</th><th>Note</th><th>Qty</th><th>Range</th>';
@@ -4860,24 +4868,25 @@
       if (data.vehicleInfo) ucShowVehicleInfo(data.vehicleInfo);
     }
 
+    let ucVINSearchRunning = false;
     async function ucVINSearch() {
+      if (ucVINSearchRunning) return;
       const q = document.getElementById('txtUcVINSearch').value.trim();
       if (!q) { showToast('Enter a search term', 'warning'); return; }
       const baseUrl = ucGetBaseUrl();
       if (!baseUrl) { showToast('No vehicle data available', 'warning'); return; }
-      let searchUrl = baseUrl.replace('/vehicle?', '/search?');
-      searchUrl = searchUrl.replace(/([?&])c=/, '$1s=' + encodeURIComponent(q) + '&c=');
+      ucVINSearchRunning = true;
       mcSetLoading('universal', true, 'Searching parts...');
       abortControllers.mcUniversal = new AbortController();
       try {
-        const res = await fetch(proxyUrl('/catalog/VINSearch?url=' + encodeURIComponent(searchUrl) + '&q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const res = await fetch(proxyUrl('/catalog/VINSearch?url=' + encodeURIComponent(baseUrl) + '&q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
         const data = await res.json();
         const results = Array.isArray(data) ? data : (data.results || []);
         document.getElementById('ucSearchHint').classList.add('hidden');
         ucRenderVINSearchResults(results);
         if (!results.length) showToast('No parts found', 'warning');
       } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
-      finally { mcSetLoading('universal', false); }
+      finally { mcSetLoading('universal', false); ucVINSearchRunning = false; }
     }
 
     function ucRenderVINSearchResults(results) {
@@ -4890,7 +4899,8 @@
         if (r.parts?.length) {
           partsHtml = '<table class="results-table w-full mt-3"><thead><tr><th><i class="ri-search-line text-xs"></i></th><th>Number</th><th>Name</th><th>Code</th></tr></thead><tbody>' + r.parts.map(p => '<tr class="hover:bg-white/5"><td class="text-blue-400 text-xs"><i class="ri-search-line"></i></td><td class="font-mono text-blue-400">' + (p.number||'') + '</td><td>' + (p.name||'') + '</td><td class="text-xs text-slate-400">' + (p.code||'') + '</td></tr>').join('') + '</tbody></table>';
         }
-        card.innerHTML = '<div class="flex flex-col sm:flex-row gap-3">' + (r.imageLink ? '<div class="sm:w-48 shrink-0 cursor-pointer" onclick="ucLoadParts(\'' + (r.clickLink||'').replace(/'/g,"\\'") + '\')"><img src="' + r.imageLink + '" class="w-full rounded-lg bg-white/5" loading="lazy" onerror="this.style.display=\'none\'" /><div class="text-xs text-blue-400 text-center mt-1 hover:underline">' + (r.label||'') + '</div></div>' : '') + '<div class="flex-1 min-w-0"><div class="text-sm font-semibold text-white mb-2">' + (r.label||'Diagram') + '</div>' + partsHtml + '</div></div>';
+        const imgUrl = ucProxyImg(r.imageLink);
+        card.innerHTML = '<div class="flex flex-col sm:flex-row gap-3">' + (imgUrl ? '<div class="sm:w-48 shrink-0 cursor-pointer" onclick="ucLoadParts(\'' + (r.clickLink||'').replace(/'/g,"\\'") + '\')"><img src="' + imgUrl + '" class="w-full rounded-lg bg-white" loading="lazy" onerror="this.style.display=\'none\'" /><div class="text-xs text-blue-400 text-center mt-1 hover:underline">' + (r.label||'') + '</div></div>' : '') + '<div class="flex-1 min-w-0"><div class="text-sm font-semibold text-white mb-2">' + (r.label||'Diagram') + '</div>' + partsHtml + '</div></div>';
         container.appendChild(card);
       });
     }
