@@ -1760,62 +1760,96 @@
               </div>
               <div>
                 <h2 class="font-display text-lg font-bold text-white" data-i18n="mc.btnUniversal">Universal Checker for All Brands</h2>
-                <p class="text-xs text-slate-500">Search any brand's catalog by part number or keyword</p>
+                <p class="text-xs text-slate-500">Search any brand's catalog by VIN or part number</p>
               </div>
             </div>
-            <div class="glass-card p-4 mb-4 space-y-3">
+            <!-- Initial search bar -->
+            <div id="ucInitialSearch" class="glass-card p-4 mb-4 space-y-3">
               <div class="flex gap-2">
-                <input id="txtUniversalSearch" class="input-field flex-1" placeholder="Enter part number, VIN, or keyword...">
+                <input id="txtUniversalSearch" class="input-field flex-1" placeholder="Enter VIN or part number...">
                 <button onclick="ucSearch()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> <span data-i18n="btn.search">Search</span></span></button>
                 <button id="mcStopUniversal" class="stop-btn" onclick="stopFetch('mcUniversal')"><i class="ri-stop-circle-line"></i> <span data-i18n="btn.stop">Stop</span></button>
-              </div>
-              <div id="ucPartSearchWrap" class="hidden">
-                <div class="flex gap-2">
-                  <input id="txtUcPartSearch" class="input-field flex-1" placeholder="Search parts within this vehicle e.g. filter, brake, 17801">
-                  <button onclick="ucSearchParts()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i></span></button>
-                </div>
               </div>
               <div id="mcUniversalProgress" class="progress-bar-wrap"><div class="progress-bar-inner"></div></div>
               <div id="mcUniversalLoader" class="loader"><div class="spinner"></div><span>Searching catalog...</span></div>
             </div>
+            <!-- Back button -->
             <div id="mcUniversalBack" class="hidden mb-3">
               <button onclick="ucGoBack()" class="btn-ghost px-3 py-1.5 text-sm rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line"></i> <span data-i18n="btn.back">Back</span></button>
             </div>
-            <!-- Vehicle Info Banner -->
-            <div id="ucVehicleInfo" class="hidden mb-4 glass-card p-3">
-              <div class="flex flex-wrap gap-2" id="ucVehicleInfoBadges"></div>
+            <!-- Vehicle Info Table -->
+            <div id="ucVehicleInfo" class="hidden mb-4">
+              <div class="glass-card p-0 overflow-hidden rounded-xl">
+                <div id="ucVehicleInfoTitle" class="px-4 py-2.5 bg-blue-500/10 border-b border-white/5 text-sm font-semibold text-blue-300"></div>
+                <div class="table-wrap overflow-x-auto">
+                  <table class="results-table w-full" id="tblUcVehicleInfo"><thead><tr></tr></thead><tbody></tbody></table>
+                </div>
+              </div>
             </div>
-            <!-- Results area -->
-            <div id="ucResultsArea">
-              <!-- Search results / categories -->
-              <div id="ucViewSearch" class="hidden">
-                <div id="ucCategoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-4"></div>
-                <div id="ucDiagramsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
+            <!-- 3 Tabs: Categories / Search / Groups -->
+            <div id="ucTabsWrap" class="hidden mb-4">
+              <div class="flex gap-1 border-b-2 border-blue-400/30 mb-4">
+                <button id="ucTabCategories" onclick="ucSwitchTab('categories')" class="flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all bg-blue-500/20 text-blue-300 border-b-2 border-blue-400 -mb-[2px]"><i class="ri-image-line"></i> CATEGORIES</button>
+                <button id="ucTabSearch" onclick="ucSwitchTab('search')" class="flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all text-slate-400 hover:text-slate-200 hover:bg-white/5"><i class="ri-search-line"></i> SEARCH</button>
+                <button id="ucTabGroups" onclick="ucSwitchTab('groups')" class="flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all text-slate-400 hover:text-slate-200 hover:bg-white/5"><i class="ri-settings-3-line"></i> GROUPS</button>
               </div>
-              <!-- Groups tree -->
-              <div id="ucViewGroups" class="hidden">
-                <div id="ucGroupsTree" class="space-y-1"></div>
-              </div>
-              <!-- Parts list with diagram -->
-              <div id="ucViewParts" class="hidden">
+              <!-- Categories Tab Content -->
+              <div id="ucContentCategories">
                 <div class="flex flex-col lg:flex-row gap-4">
-                  <div id="ucDiagramWrap" class="lg:w-1/2">
-                    <div class="glass-card p-2 overflow-hidden">
-                      <img id="ucDiagramImg" class="w-full rounded-lg cursor-zoom-in" style="max-height:500px; object-fit:contain;" onclick="this.classList.toggle('max-h-none')" />
+                  <div class="lg:w-1/4 shrink-0">
+                    <div class="mb-3">
+                      <input id="txtUcCategoryFilter" class="input-field w-full text-sm" placeholder="For example: engine" oninput="ucFilterCategories()">
                     </div>
+                    <div id="ucCategorySidebar" class="space-y-0.5 max-h-[500px] overflow-y-auto"></div>
                   </div>
-                  <div class="lg:w-1/2">
-                    <div class="glass-card p-1 overflow-hidden">
-                      <div class="table-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
-                        <table class="results-table" id="tblUcParts"><thead><tr></tr></thead><tbody></tbody></table>
-                      </div>
-                    </div>
+                  <div class="flex-1">
+                    <div id="ucCategoryTitle" class="text-base font-semibold text-slate-300 mb-3"></div>
+                    <div id="ucDiagramsGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></div>
                   </div>
                 </div>
               </div>
-              <!-- Catalog search results (parts in VIN) -->
-              <div id="ucViewCatalogSearch" class="hidden">
-                <div id="ucCatalogSearchResults" class="space-y-4"></div>
+              <!-- Search Tab Content -->
+              <div id="ucContentSearch" class="hidden">
+                <div id="ucSearchDescription" class="text-sm text-slate-400 mb-3"></div>
+                <div class="flex gap-2 mb-4">
+                  <input id="txtUcVINSearch" class="input-field flex-1" placeholder="Example: air filter">
+                  <button onclick="ucVINSearch()" class="btn-primary px-5 py-2.5 text-sm"><span class="relative z-10 flex items-center gap-1"><i class="ri-search-line"></i> Search</span></button>
+                </div>
+                <div id="ucSearchHint" class="glass-card p-4 rounded-xl bg-blue-500/5 border border-blue-400/10">
+                  <h4 class="text-base font-semibold text-blue-300 mb-2">Search in:</h4>
+                  <ul class="text-sm text-slate-400 space-y-1 list-disc list-inside">
+                    <li>By part name for example: filter, filt, crankshaft, spark plug</li>
+                    <li>By part number: 0423468010, 1784150010</li>
+                    <li>By catalog code of the product: 23265, 22100A</li>
+                  </ul>
+                </div>
+                <div id="ucVINSearchResults" class="space-y-4 mt-4"></div>
+              </div>
+              <!-- Groups Tab Content -->
+              <div id="ucContentGroups" class="hidden">
+                <div id="ucGroupsDescription" class="text-sm text-slate-400 mb-3"></div>
+                <div class="mb-3">
+                  <input id="txtUcGroupFilter" class="input-field w-full text-sm" placeholder="For example: engine" oninput="ucFilterGroups()">
+                </div>
+                <div id="ucGroupsTree" class="space-y-0.5"></div>
+              </div>
+            </div>
+            <!-- Parts View (shared across all tabs) -->
+            <div id="ucViewParts" class="hidden">
+              <div id="ucPartsTitle" class="text-base font-semibold text-slate-300 mb-3"></div>
+              <div class="flex flex-col lg:flex-row gap-4">
+                <div id="ucDiagramWrap" class="lg:w-1/2">
+                  <div class="glass-card p-2 overflow-hidden relative">
+                    <img id="ucDiagramImg" class="w-full rounded-lg cursor-zoom-in" style="max-height:600px; object-fit:contain;" onclick="this.style.maxHeight = this.style.maxHeight === 'none' ? '600px' : 'none'" />
+                  </div>
+                </div>
+                <div class="lg:w-1/2 flex-1">
+                  <div class="glass-card p-1 overflow-hidden">
+                    <div class="table-wrap overflow-x-auto max-h-[600px] overflow-y-auto">
+                      <table class="results-table w-full" id="tblUcParts"><thead><tr></tr></thead><tbody></tbody></table>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -4396,7 +4430,7 @@
       if (el) el.classList.remove('hidden');
       if (view === 'partno') { mcPartNoHistory = ['xref']; updateMcPartNoView(); }
       if (view === 'vin') { mcVinHistory = ['info']; currentVinModelUrl = ''; updateMcVinView(); }
-      if (view === 'universal') { ucHistory = []; ucCurrentVehicleUrl = ''; ucClearAll(); }
+      if (view === 'universal') { ucHistory = []; ucClearAll(); }
     }
 
     function updateMcPartNoView() {
@@ -4629,145 +4663,169 @@
 
     // ============ UNIVERSAL CHECKER ============
     let ucHistory = [];
-    let ucCurrentVehicleUrl = '';
+    let ucBaseSearchData = null;
+    let ucBaseCategoryUrls = [];
+    let ucActiveCategory = null;
+    let ucCurrentTab = 'categories';
+    let ucGroupsData = null;
 
     function ucClearAll() {
-      ['ucViewSearch','ucViewGroups','ucViewParts','ucViewCatalogSearch','ucVehicleInfo','mcUniversalBack','ucPartSearchWrap'].forEach(id => {
+      ['ucViewParts','ucVehicleInfo','mcUniversalBack','ucTabsWrap'].forEach(id => {
         const el = document.getElementById(id); if (el) el.classList.add('hidden');
       });
-      ['ucCategoriesGrid','ucDiagramsGrid','ucGroupsTree','ucCatalogSearchResults','ucVehicleInfoBadges'].forEach(id => {
+      ['ucDiagramsGrid','ucGroupsTree','ucCategorySidebar','ucVINSearchResults'].forEach(id => {
         const el = document.getElementById(id); if (el) el.innerHTML = '';
       });
+      ucBaseSearchData = null; ucBaseCategoryUrls = []; ucActiveCategory = null; ucGroupsData = null;
     }
 
     function ucUpdateNav() {
       document.getElementById('mcUniversalBack').classList.toggle('hidden', ucHistory.length <= 1);
-      document.getElementById('ucPartSearchWrap').classList.toggle('hidden', !ucCurrentVehicleUrl);
     }
 
     function ucGoBack() {
       if (ucHistory.length > 1) {
         ucHistory.pop();
         const prev = ucHistory[ucHistory.length - 1];
-        if (prev.type === 'search' || prev.type === 'category') ucRenderSearch(prev.data);
-        else if (prev.type === 'groups') ucRenderGroups(prev.data);
-        else if (prev.type === 'parts') ucRenderParts(prev.data);
-        else if (prev.type === 'catalogSearch') ucRenderCatalogSearch(prev.data);
+        if (prev.type === 'search') {
+          document.getElementById('ucViewParts').classList.add('hidden');
+          document.getElementById('ucTabsWrap').classList.remove('hidden');
+          ucSwitchTab(ucCurrentTab);
+        } else if (prev.type === 'parts') ucRenderParts(prev.data);
         ucUpdateNav();
       }
     }
 
     function ucShowVehicleInfo(vehicleInfo) {
       const wrap = document.getElementById('ucVehicleInfo');
-      const badges = document.getElementById('ucVehicleInfoBadges');
       if (!vehicleInfo || vehicleInfo.length === 0) { wrap.classList.add('hidden'); return; }
       wrap.classList.remove('hidden');
-      badges.innerHTML = vehicleInfo.map(item => {
-        return Object.entries(item).map(([k,v]) => `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs"><span class="text-slate-500">${k}</span><span class="text-white font-medium">${v}</span></span>`).join('');
-      }).join('');
+      const item = vehicleInfo[0];
+      document.getElementById('ucVehicleInfoTitle').textContent = '\u{1F4CB} ' + (item.Brand||'') + ' Parts Catalogs ' + (item.Name||'');
+      const thead = document.querySelector('#tblUcVehicleInfo thead tr');
+      const tbody = document.querySelector('#tblUcVehicleInfo tbody');
+      const keys = Object.keys(item);
+      thead.innerHTML = keys.map(k => '<th class="text-xs">' + k + '</th>').join('');
+      tbody.innerHTML = '<tr>' + keys.map(k => '<td class="text-xs">' + (item[k]||'') + '</td>').join('') + '</tr>';
+    }
+
+    function ucGetBaseUrl() {
+      const cat = ucBaseCategoryUrls.find(c => c.url);
+      return cat ? cat.url : '';
+    }
+
+    function ucSwitchTab(tab) {
+      ucCurrentTab = tab;
+      document.getElementById('ucViewParts').classList.add('hidden');
+      document.getElementById('ucTabsWrap').classList.remove('hidden');
+      ['ucTabCategories','ucTabSearch','ucTabGroups'].forEach(id => {
+        document.getElementById(id).className = 'flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all text-slate-400 hover:text-slate-200 hover:bg-white/5';
+      });
+      const activeId = 'ucTab' + tab.charAt(0).toUpperCase() + tab.slice(1);
+      document.getElementById(activeId).className = 'flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold rounded-t-lg transition-all bg-blue-500/20 text-blue-300 border-b-2 border-blue-400 -mb-[2px]';
+      ['ucContentCategories','ucContentSearch','ucContentGroups'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('ucContent' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+      if (tab === 'groups' && !ucGroupsData) ucLoadGroupsTab();
+      if (tab === 'search') {
+        const info = ucBaseSearchData?.vehicleInfo?.[0];
+        document.getElementById('ucSearchDescription').textContent = info ? 'Search in ' + info.Brand + ' ' + info.Name + ' ' + info.Model + ' ' + info.Description : '';
+      }
+      if (tab === 'groups') {
+        const info = ucBaseSearchData?.vehicleInfo?.[0];
+        document.getElementById('ucGroupsDescription').textContent = info ? 'Groups for ' + info.Brand + ' ' + info.Name + ' ' + info.Model + ' ' + (info['Vehicle Date']||'') : '';
+      }
+      while (ucHistory.length > 1) ucHistory.pop();
+      ucUpdateNav();
     }
 
     async function ucSearch() {
       const q = document.getElementById('txtUniversalSearch').value.trim();
-      if (!q) { showToast('Please enter a search term', 'warning'); return; }
+      if (!q) { showToast('Please enter a VIN or part number', 'warning'); return; }
       mcSetLoading('universal', true, 'Searching catalog...');
       abortControllers.mcUniversal = new AbortController();
-      ucCurrentVehicleUrl = '';
+      ucClearAll();
       try {
         const res = await fetch(proxyUrl('/catalog/search?q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
         const data = await res.json();
+        ucBaseSearchData = data;
+        ucBaseCategoryUrls = (data.categories || []).map(c => ({ title: c.title, url: c.url }));
         ucShowVehicleInfo(data.vehicleInfo);
         ucHistory = [{ type: 'search', data }];
-        ucRenderSearch(data);
+        document.getElementById('ucTabsWrap').classList.remove('hidden');
+        ucCurrentTab = 'categories';
+        ucBuildCategorySidebar(data);
+        ucRenderDiagrams(data.diagrams || []);
+        ucSwitchTab('categories');
         ucUpdateNav();
         if (!data.categories?.length && !data.diagrams?.length) showToast('No results found', 'warning');
       } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
       finally { mcSetLoading('universal', false); }
     }
 
-    function ucRenderSearch(data) {
-      ['ucViewSearch'].forEach(id => document.getElementById(id).classList.remove('hidden'));
-      ['ucViewGroups','ucViewParts','ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.add('hidden'));
-      const catGrid = document.getElementById('ucCategoriesGrid');
-      catGrid.innerHTML = '';
-      (data.categories || []).forEach(cat => {
-        if (!cat.url) {
-          const h = document.createElement('div');
-          h.className = 'col-span-full text-sm font-bold text-white/70 uppercase tracking-wider mt-2 border-b border-white/10 pb-1';
-          h.textContent = cat.title;
-          catGrid.appendChild(h);
-        } else {
-          const card = document.createElement('button');
-          card.className = 'glass-card p-3 text-left hover:bg-white/10 transition-all group flex items-center gap-3 rounded-xl';
-          card.innerHTML = `<div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0"><i class="ri-folder-line text-purple-400"></i></div><span class="text-sm text-slate-200 group-hover:text-white">${cat.title}</span><i class="ri-arrow-right-s-line text-slate-600 ml-auto"></i>`;
-          card.onclick = () => ucLoadCategory(cat.url);
-          catGrid.appendChild(card);
-        }
-      });
-      const diagGrid = document.getElementById('ucDiagramsGrid');
-      diagGrid.innerHTML = '';
-      (data.diagrams || []).forEach(d => {
-        const card = document.createElement('button');
-        card.className = 'glass-card p-2 hover:bg-white/10 transition-all rounded-xl overflow-hidden flex flex-col';
-        card.innerHTML = `<div class="aspect-square bg-black/20 rounded-lg overflow-hidden mb-2 flex items-center justify-center">${d.imageLink ? `<img src="${d.imageLink}" class="w-full h-full object-contain" loading="lazy" onerror="this.parentElement.innerHTML='<i class=\\'ri-image-line text-2xl text-slate-600\\'></i>'" />` : '<i class="ri-image-line text-2xl text-slate-600"></i>'}</div><span class="text-xs text-slate-300 text-center line-clamp-2">${d.label}</span>`;
-        card.onclick = () => ucLoadGroups(d.clickLink);
-        diagGrid.appendChild(card);
+    function ucBuildCategorySidebar(data) {
+      const sidebar = document.getElementById('ucCategorySidebar');
+      sidebar.innerHTML = '';
+      const categories = data.categories || [];
+      const activeTitle = categories.find(c => !c.url)?.title || categories[0]?.title || '';
+      ucActiveCategory = activeTitle;
+      document.getElementById('ucCategoryTitle').textContent = activeTitle;
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        const isActive = cat.title === activeTitle;
+        btn.className = 'uc-cat-btn w-full text-left px-3 py-2 rounded-lg text-sm transition-all ' + (isActive ? 'bg-white/10 text-white font-semibold border-l-2 border-blue-400' : 'text-slate-300 hover:bg-white/5 hover:text-white');
+        btn.setAttribute('data-title', cat.title);
+        btn.innerHTML = (isActive ? '<span class="mr-1">\u25B6</span>' : '') + '<span>' + cat.title + '</span>';
+        btn.onclick = () => {
+          if (cat.url) { ucLoadCategory(cat.url, cat.title); }
+          else {
+            ucActiveCategory = cat.title;
+            ucHighlightActiveCategory();
+            document.getElementById('ucCategoryTitle').textContent = cat.title;
+            ucRenderDiagrams(ucBaseSearchData.diagrams || []);
+          }
+        };
+        sidebar.appendChild(btn);
       });
     }
 
-    async function ucLoadCategory(url) {
+    function ucHighlightActiveCategory() {
+      document.querySelectorAll('.uc-cat-btn').forEach(btn => {
+        const t = btn.getAttribute('data-title');
+        btn.className = 'uc-cat-btn w-full text-left px-3 py-2 rounded-lg text-sm transition-all ' + (t === ucActiveCategory ? 'bg-white/10 text-white font-semibold border-l-2 border-blue-400' : 'text-slate-300 hover:bg-white/5 hover:text-white');
+      });
+    }
+
+    function ucFilterCategories() {
+      const q = document.getElementById('txtUcCategoryFilter').value.toLowerCase();
+      document.querySelectorAll('.uc-cat-btn').forEach(btn => {
+        btn.style.display = btn.getAttribute('data-title').toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+
+    function ucRenderDiagrams(diagrams) {
+      const grid = document.getElementById('ucDiagramsGrid');
+      grid.innerHTML = '';
+      diagrams.forEach(d => {
+        const card = document.createElement('button');
+        card.className = 'glass-card p-2 hover:bg-white/10 transition-all rounded-xl overflow-hidden flex flex-col';
+        card.innerHTML = '<div class="aspect-square bg-white/5 rounded-lg overflow-hidden mb-2 flex items-center justify-center">' + (d.imageLink ? '<img src="' + d.imageLink + '" class="w-full h-full object-contain" loading="lazy" onerror="this.parentElement.innerHTML=\'<i class=\\\'ri-image-line text-2xl text-slate-600\\\'></i>\'" />' : '<i class="ri-image-line text-2xl text-slate-600"></i>') + '</div><span class="text-xs text-blue-400 text-center line-clamp-2 hover:underline">' + d.label + '</span>';
+        card.onclick = () => ucLoadParts(d.clickLink);
+        grid.appendChild(card);
+      });
+    }
+
+    async function ucLoadCategory(url, title) {
       mcSetLoading('universal', true, 'Loading category...');
       abortControllers.mcUniversal = new AbortController();
       try {
         const res = await fetch(proxyUrl('/catalog/category?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
         const data = await res.json();
-        ucShowVehicleInfo(data.vehicleInfo);
-        ucHistory.push({ type: 'category', data });
-        ucRenderSearch(data);
-        ucUpdateNav();
+        ucActiveCategory = title;
+        ucHighlightActiveCategory();
+        document.getElementById('ucCategoryTitle').textContent = title;
+        ucRenderDiagrams(data.diagrams || []);
       } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
       finally { mcSetLoading('universal', false); }
-    }
-
-    async function ucLoadGroups(url) {
-      mcSetLoading('universal', true, 'Loading parts groups...');
-      abortControllers.mcUniversal = new AbortController();
-      ucCurrentVehicleUrl = url;
-      try {
-        const res = await fetch(proxyUrl('/catalog/groups?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
-        const data = await res.json();
-        ucShowVehicleInfo(data.vehicleInfo);
-        ucHistory.push({ type: 'groups', data });
-        ucRenderGroups(data);
-        ucUpdateNav();
-      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
-      finally { mcSetLoading('universal', false); }
-    }
-
-    function ucRenderGroups(data) {
-      ['ucViewGroups'].forEach(id => document.getElementById(id).classList.remove('hidden'));
-      ['ucViewSearch','ucViewParts','ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.add('hidden'));
-      const tree = document.getElementById('ucGroupsTree');
-      tree.innerHTML = '';
-      function renderGroup(groups, container, depth) {
-        groups.forEach(g => {
-          const isClickable = !!g.url;
-          const hasChildren = g.children && g.children.length > 0;
-          const row = document.createElement('div');
-          row.style.paddingLeft = (depth * 16 + 8) + 'px';
-          row.className = 'flex items-center gap-2 py-2 px-3 rounded-lg ' + (isClickable ? 'hover:bg-white/5 cursor-pointer' : 'opacity-80');
-          row.innerHTML = `<i class="${hasChildren ? 'ri-folder-line text-yellow-400' : 'ri-file-list-line text-blue-400'} text-base"></i><span class="text-sm ${isClickable ? 'text-slate-200' : 'text-slate-400 font-semibold uppercase text-xs tracking-wider'}">${g.name}</span>${isClickable ? '<i class="ri-arrow-right-s-line text-slate-600 ml-auto"></i>' : ''}`;
-          if (isClickable) row.onclick = () => ucLoadParts(g.url);
-          container.appendChild(row);
-          if (hasChildren) {
-            const childWrap = document.createElement('div');
-            childWrap.className = 'border-l border-white/5 ml-6';
-            container.appendChild(childWrap);
-            renderGroup(g.children, childWrap, depth + 1);
-          }
-        });
-      }
-      renderGroup(data.groups || [], tree, 0);
     }
 
     async function ucLoadParts(url) {
@@ -4776,7 +4834,6 @@
       try {
         const res = await fetch(proxyUrl('/catalog/parts?url=' + encodeURIComponent(url)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
         const data = await res.json();
-        ucShowVehicleInfo(data.vehicleInfo);
         ucHistory.push({ type: 'parts', data });
         ucRenderParts(data);
         ucUpdateNav();
@@ -4785,56 +4842,134 @@
     }
 
     function ucRenderParts(data) {
-      ['ucViewParts'].forEach(id => document.getElementById(id).classList.remove('hidden'));
-      ['ucViewSearch','ucViewGroups','ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('ucTabsWrap').classList.add('hidden');
+      document.getElementById('ucViewParts').classList.remove('hidden');
       const img = document.getElementById('ucDiagramImg');
       const wrap = document.getElementById('ucDiagramWrap');
       if (data.diagram?.imageLink) { img.src = data.diagram.imageLink; wrap.classList.remove('hidden'); }
       else { wrap.classList.add('hidden'); }
       const tbl = document.getElementById('tblUcParts');
-      tbl.querySelector('thead tr').innerHTML = '<th>#</th><th>Part Number</th><th>Name</th><th>Qty</th><th>Code</th><th>Period</th><th>Note</th>';
+      tbl.querySelector('thead tr').innerHTML = '<th>#</th><th>Name</th><th>Code</th><th>Note</th><th>Qty</th><th>Range</th>';
       const tbody = tbl.querySelector('tbody'); tbody.innerHTML = '';
       (data.parts || []).forEach(p => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5';
-        const partLink = p.link ? `<a href="${p.link}" target="_blank" class="text-blue-400 hover:underline font-mono">${p.number}</a>` : `<span class="font-mono">${p.number}</span>`;
-        tr.innerHTML = `<td class="text-slate-500 text-xs">${p.code||''}</td><td>${partLink}</td><td>${p.name||''}</td><td class="text-center">${p.quantity||''}</td><td class="text-xs text-slate-400">${p.restrictions||''}</td><td class="text-xs text-slate-500">${(p.from||'') + (p.to ? ' → '+p.to : '')}</td><td class="text-xs text-slate-500">${p.application||''}</td>`;
+        tr.innerHTML = '<td class="text-blue-400 font-mono text-xs">' + (p.number||'') + '</td><td class="text-sm">' + (p.name||'') + '</td><td class="text-xs text-slate-400">' + (p.code||'') + '</td><td class="text-xs text-slate-500 max-w-[200px] truncate" title="' + (p.note||'').replace(/"/g,'&quot;') + '">' + (p.note||'') + '</td><td class="text-center text-xs">' + (p.quantity||'') + '</td><td class="text-xs text-slate-500">' + (p.range || ((p.from||'') + (p.to ? ' \u2192 '+p.to : ''))) + '</td>';
         tbody.appendChild(tr);
       });
+      if (data.vehicleInfo) ucShowVehicleInfo(data.vehicleInfo);
     }
 
-    async function ucSearchParts() {
-      const q = document.getElementById('txtUcPartSearch').value.trim();
-      if (!q) return;
-      if (!ucCurrentVehicleUrl) { showToast('Please select a vehicle first', 'warning'); return; }
+    async function ucVINSearch() {
+      const q = document.getElementById('txtUcVINSearch').value.trim();
+      if (!q) { showToast('Enter a search term', 'warning'); return; }
+      const baseUrl = ucGetBaseUrl();
+      if (!baseUrl) { showToast('No vehicle data available', 'warning'); return; }
+      let searchUrl = baseUrl.replace('/vehicle?', '/search?');
+      searchUrl = searchUrl.replace(/([?&])c=/, '$1s=' + encodeURIComponent(q) + '&c=');
       mcSetLoading('universal', true, 'Searching parts...');
       abortControllers.mcUniversal = new AbortController();
       try {
-        const res = await fetch(proxyUrl('/catalog/VINSearch?url=' + encodeURIComponent(ucCurrentVehicleUrl) + '&q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const res = await fetch(proxyUrl('/catalog/VINSearch?url=' + encodeURIComponent(searchUrl) + '&q=' + encodeURIComponent(q)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
         const data = await res.json();
         const results = Array.isArray(data) ? data : (data.results || []);
-        ucHistory.push({ type: 'catalogSearch', data: results });
-        ucRenderCatalogSearch(results);
-        ucUpdateNav();
+        document.getElementById('ucSearchHint').classList.add('hidden');
+        ucRenderVINSearchResults(results);
         if (!results.length) showToast('No parts found', 'warning');
       } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
       finally { mcSetLoading('universal', false); }
     }
 
-    function ucRenderCatalogSearch(results) {
-      ['ucViewCatalogSearch'].forEach(id => document.getElementById(id).classList.remove('hidden'));
-      ['ucViewSearch','ucViewGroups','ucViewParts'].forEach(id => document.getElementById(id).classList.add('hidden'));
-      const container = document.getElementById('ucCatalogSearchResults');
+    function ucRenderVINSearchResults(results) {
+      const container = document.getElementById('ucVINSearchResults');
       container.innerHTML = '';
       results.forEach(r => {
         const card = document.createElement('div');
         card.className = 'glass-card p-4 rounded-xl';
         let partsHtml = '';
         if (r.parts?.length) {
-          partsHtml = `<table class="results-table w-full mt-3"><thead><tr><th>Part No</th><th>Name</th><th>Code</th></tr></thead><tbody>${r.parts.map(p => `<tr class="hover:bg-white/5"><td class="font-mono text-blue-400">${p.number||''}</td><td>${p.name||''}</td><td class="text-xs text-slate-400">${p.code||''}</td></tr>`).join('')}</tbody></table>`;
+          partsHtml = '<table class="results-table w-full mt-3"><thead><tr><th><i class="ri-search-line text-xs"></i></th><th>Number</th><th>Name</th><th>Code</th></tr></thead><tbody>' + r.parts.map(p => '<tr class="hover:bg-white/5"><td class="text-blue-400 text-xs"><i class="ri-search-line"></i></td><td class="font-mono text-blue-400">' + (p.number||'') + '</td><td>' + (p.name||'') + '</td><td class="text-xs text-slate-400">' + (p.code||'') + '</td></tr>').join('') + '</tbody></table>';
         }
-        card.innerHTML = `<div class="flex flex-col sm:flex-row gap-3">${r.imageLink ? `<div class="sm:w-48 shrink-0"><img src="${r.imageLink}" class="w-full rounded-lg bg-black/20" loading="lazy" onerror="this.style.display='none'" /></div>` : ''}<div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-2 flex-wrap"><span class="text-sm font-semibold text-white">${r.label||'Diagram'}</span>${r.magnifierLink ? `<a href="${r.magnifierLink}" target="_blank" class="text-xs text-blue-400 hover:underline"><i class="ri-zoom-in-line"></i> Full</a>` : ''}</div>${partsHtml}</div></div>`;
+        card.innerHTML = '<div class="flex flex-col sm:flex-row gap-3">' + (r.imageLink ? '<div class="sm:w-48 shrink-0 cursor-pointer" onclick="ucLoadParts(\'' + (r.clickLink||'').replace(/'/g,"\\'") + '\')"><img src="' + r.imageLink + '" class="w-full rounded-lg bg-white/5" loading="lazy" onerror="this.style.display=\'none\'" /><div class="text-xs text-blue-400 text-center mt-1 hover:underline">' + (r.label||'') + '</div></div>' : '') + '<div class="flex-1 min-w-0"><div class="text-sm font-semibold text-white mb-2">' + (r.label||'Diagram') + '</div>' + partsHtml + '</div></div>';
         container.appendChild(card);
+      });
+    }
+
+    async function ucLoadGroupsTab() {
+      const baseUrl = ucGetBaseUrl();
+      if (!baseUrl) return;
+      const groupsUrl = baseUrl.replace('/vehicle?', '/groups?');
+      mcSetLoading('universal', true, 'Loading groups...');
+      abortControllers.mcUniversal = new AbortController();
+      try {
+        const res = await fetch(proxyUrl('/catalog/groups?url=' + encodeURIComponent(groupsUrl)), { headers: GET_HEADERS, signal: abortControllers.mcUniversal.signal });
+        const data = await res.json();
+        ucGroupsData = data;
+        ucRenderGroupsTree(data.groups || []);
+      } catch(e) { if (e.name !== 'AbortError') showToast('Error: ' + e.message, 'error'); }
+      finally { mcSetLoading('universal', false); }
+    }
+
+    function ucRenderGroupsTree(groups) {
+      const tree = document.getElementById('ucGroupsTree');
+      tree.innerHTML = '';
+      function renderGroup(items, container, depth) {
+        items.forEach(g => {
+          const hasChildren = g.children && g.children.length > 0;
+          const isClickable = !!g.url;
+          const row = document.createElement('div');
+          row.className = 'uc-group-row';
+          row.setAttribute('data-name', g.name.toLowerCase());
+          row.style.paddingLeft = (depth * 20 + 8) + 'px';
+
+          if (hasChildren && !isClickable) {
+            const header = document.createElement('div');
+            header.className = 'flex items-center gap-2 py-2 px-2 rounded-lg cursor-pointer hover:bg-white/5 select-none';
+            header.innerHTML = '<i class="ri-add-box-line text-blue-400 uc-collapse-icon"></i><span class="text-sm font-semibold text-slate-300">' + g.name + '</span>';
+            const childWrap = document.createElement('div');
+            childWrap.className = 'ml-2 border-l border-white/10'; childWrap.style.display = 'none';
+            header.onclick = () => {
+              const icon = header.querySelector('.uc-collapse-icon');
+              if (childWrap.style.display === 'none') { childWrap.style.display = ''; icon.className = 'ri-checkbox-indeterminate-line text-blue-400 uc-collapse-icon'; }
+              else { childWrap.style.display = 'none'; icon.className = 'ri-add-box-line text-blue-400 uc-collapse-icon'; }
+            };
+            row.appendChild(header); row.appendChild(childWrap); container.appendChild(row);
+            renderGroup(g.children, childWrap, depth + 1);
+          } else if (isClickable && hasChildren) {
+            const header = document.createElement('div');
+            header.className = 'flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-white/5';
+            header.innerHTML = '<i class="ri-add-box-line text-blue-400 uc-collapse-icon cursor-pointer"></i><i class="ri-settings-3-line text-green-400"></i><a class="text-sm text-blue-400 hover:underline cursor-pointer">' + g.name + '</a>';
+            header.querySelector('a').onclick = (e) => { e.stopPropagation(); ucLoadParts(g.url); };
+            const childWrap = document.createElement('div');
+            childWrap.className = 'ml-2 border-l border-white/10'; childWrap.style.display = 'none';
+            header.querySelector('.uc-collapse-icon').onclick = (e) => {
+              e.stopPropagation();
+              const icon = header.querySelector('.uc-collapse-icon');
+              if (childWrap.style.display === 'none') { childWrap.style.display = ''; icon.className = 'ri-checkbox-indeterminate-line text-blue-400 uc-collapse-icon cursor-pointer'; }
+              else { childWrap.style.display = 'none'; icon.className = 'ri-add-box-line text-blue-400 uc-collapse-icon cursor-pointer'; }
+            };
+            row.appendChild(header); row.appendChild(childWrap); container.appendChild(row);
+            renderGroup(g.children, childWrap, depth + 1);
+          } else if (isClickable) {
+            row.className += ' flex items-center gap-2 py-2 px-2 rounded-lg hover:bg-white/5 cursor-pointer';
+            row.innerHTML = '<i class="ri-settings-3-line text-green-400"></i><a class="text-sm text-blue-400 hover:underline">' + g.name + '</a>';
+            row.onclick = () => ucLoadParts(g.url);
+            container.appendChild(row);
+          } else {
+            row.className += ' flex items-center gap-2 py-2 px-2 rounded-lg opacity-70';
+            row.innerHTML = '<span class="text-sm font-semibold text-slate-400 uppercase text-xs tracking-wider">' + g.name + '</span>';
+            container.appendChild(row);
+          }
+        });
+      }
+      renderGroup(groups, tree, 0);
+    }
+
+    function ucFilterGroups() {
+      const q = document.getElementById('txtUcGroupFilter').value.toLowerCase();
+      document.querySelectorAll('.uc-group-row').forEach(row => {
+        const name = row.getAttribute('data-name') || '';
+        row.style.display = !q || name.includes(q) ? '' : 'none';
       });
     }
 
@@ -4858,13 +4993,14 @@
         txtHscodePart: fetchHsCode,
         txtCbmPart: fetchCbm,
         txtUniversalSearch: ucSearch,
-        txtUcPartSearch: ucSearchParts,
+        txtUcVINSearch: ucVINSearch,
       };
       Object.entries(enterMap).forEach(([id, fn]) => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') fn(); });
       });
     });
+
 
     // ============ LIST CLEANER ============
     const BRAND_EXTRACT_PATTERNS = {
