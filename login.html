@@ -1425,7 +1425,7 @@
     // ===== INSTALL APP (PWA) =====
     (function(){
       var DISMISS_KEY = 'pwaInstallDismissedAt';
-      var DISMISS_DAYS = 7;
+      var DISMISS_DAYS = 3;
       var dismissedAt = parseInt(localStorage.getItem(DISMISS_KEY) || '0', 10);
       var dismissedRecently = dismissedAt && (Date.now() - dismissedAt) < DISMISS_DAYS * 86400000;
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
