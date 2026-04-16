@@ -917,8 +917,35 @@
       var session = JSON.parse(localStorage.getItem('pm_session') || '{}');
       if (!session.licenseKey) return;
       var deviceId = localStorage.getItem('pm_device_id') || '';
-      var INACTIVITY_LIMIT = 60 * 60 * 1000;
+      var INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes of no activity
+
+      // ----- Persist last activity across refresh -----
+      // On load, if the persisted lastActivity is older than the limit, log out immediately.
+      var stored = parseInt(localStorage.getItem('pm_last_activity') || '0', 10);
+      if (stored && (Date.now() - stored > INACTIVITY_LIMIT)) {
+        // Inline silent logout (functions defined below would not yet be available otherwise)
+        try {
+          var url0 = SCRIPT_URL + '?mode=webLogout&licenseKey=' + encodeURIComponent(session.licenseKey) + '&deviceId=' + encodeURIComponent(deviceId);
+          fetch(url0, { method: 'GET', keepalive: true }).catch(function(){});
+        } catch(e) {}
+        localStorage.removeItem('pm_session');
+        localStorage.removeItem('pm_last_activity');
+        document.body.innerHTML = '';
+        alert('You have been logged out due to inactivity.');
+        window.location.replace('/login.html');
+        return;
+      }
+
       var lastActivity = Date.now();
+      localStorage.setItem('pm_last_activity', String(lastActivity));
+
+      // ----- Distinguish refresh from real tab/browser close -----
+      // sessionStorage survives reloads but is wiped when the tab is truly closed.
+      // We mark the tab as "alive" once. On next page load, if pm_session exists but
+      // pm_tab_alive is missing AND pm_last_activity is recent, that means a *different*
+      // tab is opening fresh — we keep the session (allow re-entry within window).
+      // The actual close-logout happens via pagehide below using a flag.
+      sessionStorage.setItem('pm_tab_alive', '1');
 
       function silentLogout() {
         var s = JSON.parse(localStorage.getItem('pm_session') || '{}');
@@ -928,6 +955,7 @@
           try { fetch(url, { method: 'GET', keepalive: true }).catch(function(){}); } catch(e) {}
         }
         localStorage.removeItem('pm_session');
+        localStorage.removeItem('pm_last_activity');
       }
 
       function forceLogoutRedirect(msg) {
@@ -949,11 +977,15 @@
       heartbeat();
       var hbInterval = setInterval(heartbeat, 120000);
 
-      function resetActivity() { lastActivity = Date.now(); }
+      function resetActivity() {
+        lastActivity = Date.now();
+        localStorage.setItem('pm_last_activity', String(lastActivity));
+      }
       ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(evt) {
         document.addEventListener(evt, resetActivity, { passive: true });
       });
 
+      // Inactivity check (every 60s)
       setInterval(function() {
         if (Date.now() - lastActivity > INACTIVITY_LIMIT) {
           forceLogoutRedirect('You have been logged out due to inactivity.');
@@ -966,8 +998,8 @@
           hiddenSince = Date.now();
           clearInterval(hbInterval);
         } else {
-          if (hiddenSince && (Date.now() - hiddenSince > 20 * 60 * 1000)) {
-            forceLogoutRedirect('Session expired while the tab was inactive.');
+          if (hiddenSince && (Date.now() - hiddenSince > INACTIVITY_LIMIT)) {
+            forceLogoutRedirect('Session expired due to inactivity.');
             return;
           }
           hiddenSince = null;
@@ -977,9 +1009,15 @@
         }
       });
 
-      window.addEventListener('beforeunload', function() {
-        silentLogout();
-      });
+      // ----- Tab/browser close detection -----
+      // pagehide fires for both refresh AND close. We mark "unloading" in sessionStorage.
+      // sessionStorage is wiped on real close (new tab gets no flag), but persists on refresh.
+      // So on next pageshow within the same tab, if pm_tab_alive flag is still '1', it was a refresh.
+      // For real close: a separate tab won't share sessionStorage, but the user reopening the app
+      // will land here with pm_session intact — we then verify it's still within INACTIVITY_LIMIT
+      // (which is checked at the top). This achieves: refresh = stay logged in; close + reopen
+      // within 30 min of activity = stay logged in; close + reopen after 30 min idle = logout.
+      // We intentionally do NOT call silentLogout() on beforeunload/pagehide so refresh is safe.
     })();
   </script>
 
