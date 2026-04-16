@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login — PartsMateTH</title>
   <meta name="description" content="Sign in to PartsMateTH Auto Parts Intelligence Platform">
+  <meta name="theme-color" content="#060912">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" type="image/png" href="/app-tabs-images/partsmateth logo.png">
+  <link rel="apple-touch-icon" href="/app-tabs-images/partsmateth logo.png">
+  <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22PartsMateTH%22%2C%22short_name%22%3A%22PartsMate%22%2C%22start_url%22%3A%22%2Flogin.html%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23060912%22%2C%22theme_color%22%3A%22%23060912%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22%2Fapp-tabs-images%2Fpartsmateth%20logo.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1414,6 +1420,75 @@
       card.addEventListener('mouseleave', () => {
         card.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
       });
+    });
+
+    // ===== INSTALL APP (PWA) =====
+    var deferredPrompt = null;
+    var installBtn = document.createElement('button');
+    installBtn.id = 'pwa-install-btn';
+    installBtn.innerHTML = '<i class="ri-download-2-line"></i> Install App';
+    installBtn.style.cssText = 'display:none;position:fixed;bottom:24px;right:24px;z-index:9999;padding:12px 24px;border:none;border-radius:12px;background:linear-gradient(135deg,#28DCB4,#1a9e82);color:#fff;font-family:Inter,sans-serif;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 4px 20px rgba(40,220,180,0.3);transition:all 0.3s ease;display:flex;align-items:center;gap:8px;';
+    installBtn.onmouseenter = function(){ this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 28px rgba(40,220,180,0.45)'; };
+    installBtn.onmouseleave = function(){ this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(40,220,180,0.3)'; };
+    document.body.appendChild(installBtn);
+
+    // Detect if already installed (standalone mode)
+    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    if (isStandalone) {
+      // Already installed, don't show button
+    } else {
+      // Android / Chrome: capture beforeinstallprompt
+      window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'flex';
+      });
+
+      // iOS Safari: show manual guide
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      var isSafari = /Safari/.test(navigator.userAgent) && !/Chrome|CriOS|FxiOS/.test(navigator.userAgent);
+      if (isIOS) {
+        installBtn.style.display = 'flex';
+        installBtn.innerHTML = '<i class="ri-add-box-line"></i> Add to Home Screen';
+      }
+
+      installBtn.addEventListener('click', function() {
+        if (deferredPrompt) {
+          // Android: trigger native install prompt
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(function(result) {
+            if (result.outcome === 'accepted') {
+              installBtn.style.display = 'none';
+            }
+            deferredPrompt = null;
+          });
+        } else if (isIOS) {
+          // iOS: show overlay guide
+          showIOSInstallGuide();
+        }
+      });
+    }
+
+    function showIOSInstallGuide() {
+      var overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);';
+      overlay.innerHTML = '<div style="background:#111827;border-radius:20px;padding:32px;max-width:340px;width:100%;text-align:center;border:1px solid rgba(40,220,180,0.2);">'
+        + '<div style="font-size:48px;margin-bottom:16px;">📲</div>'
+        + '<h3 style="font-family:Space Grotesk,sans-serif;font-size:20px;color:#fff;margin-bottom:12px;">Install PartsMateTH</h3>'
+        + '<p style="color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:20px;">'
+        + '1. Tap the <strong style="color:#28DCB4;"><i class="ri-share-forward-line"></i> Share</strong> button at the bottom of Safari<br><br>'
+        + '2. Scroll down and tap <strong style="color:#28DCB4;"><i class="ri-add-box-line"></i> Add to Home Screen</strong><br><br>'
+        + '3. Tap <strong style="color:#28DCB4;">Add</strong> to confirm</p>'
+        + '<button onclick="this.closest(\'div\').parentElement.remove()" style="padding:10px 28px;border:none;border-radius:10px;background:#28DCB4;color:#060912;font-weight:600;cursor:pointer;font-size:14px;">Got it!</button>'
+        + '</div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+    }
+
+    // Hide button after successful install
+    window.addEventListener('appinstalled', function() {
+      installBtn.style.display = 'none';
     });
   </script>
 </body>
