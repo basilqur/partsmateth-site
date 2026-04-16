@@ -6447,60 +6447,98 @@
 
   <script>
     // ===== INSTALL APP (PWA) =====
-    var deferredPrompt = null;
-    var installBtn = document.createElement('button');
-    installBtn.id = 'pwa-install-btn';
-    installBtn.innerHTML = '<i class="ri-download-2-line"></i> Install App';
-    installBtn.style.cssText = 'display:none;position:fixed;bottom:24px;right:24px;z-index:9999;padding:12px 24px;border:none;border-radius:12px;background:linear-gradient(135deg,#28DCB4,#1a9e82);color:#fff;font-family:Inter,sans-serif;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 4px 20px rgba(40,220,180,0.3);transition:all 0.3s ease;align-items:center;gap:8px;';
-    installBtn.onmouseenter = function(){ this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 28px rgba(40,220,180,0.45)'; };
-    installBtn.onmouseleave = function(){ this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(40,220,180,0.3)'; };
-    document.body.appendChild(installBtn);
+    (function(){
+      var DISMISS_KEY = 'pwaInstallDismissedAt';
+      var DISMISS_DAYS = 7;
+      var dismissedAt = parseInt(localStorage.getItem(DISMISS_KEY) || '0', 10);
+      var dismissedRecently = dismissedAt && (Date.now() - dismissedAt) < DISMISS_DAYS * 86400000;
+      var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      if (isStandalone || dismissedRecently) return;
 
-    var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      var isAndroid = /Android/i.test(navigator.userAgent);
+      var deferredPrompt = null;
 
-    if (!isStandalone) {
+      // Wrapper so we can position button + close X together, above iOS bottom nav
+      var wrap = document.createElement('div');
+      wrap.id = 'pwa-install-wrap';
+      // bottom offset: iOS needs extra room for Safari toolbar + safe-area; mobile bottom nav is ~70px
+      var bottomOffset = isIOS ? 'calc(90px + env(safe-area-inset-bottom, 0px))' : '90px';
+      wrap.style.cssText = 'display:none;position:fixed;right:16px;bottom:' + bottomOffset + ';z-index:9999;align-items:center;gap:6px;';
+
+      var installBtn = document.createElement('button');
+      installBtn.id = 'pwa-install-btn';
+      installBtn.innerHTML = '<i class="ri-download-2-line"></i> Install App';
+      installBtn.style.cssText = 'padding:10px 18px;border:none;border-radius:12px;background:linear-gradient(135deg,#28DCB4,#1a9e82);color:#fff;font-family:Inter,sans-serif;font-weight:600;font-size:13px;cursor:pointer;box-shadow:0 4px 20px rgba(40,220,180,0.35);display:flex;align-items:center;gap:6px;';
+
+      var closeBtn = document.createElement('button');
+      closeBtn.setAttribute('aria-label', 'Dismiss install prompt');
+      closeBtn.innerHTML = '<i class="ri-close-line"></i>';
+      closeBtn.style.cssText = 'width:28px;height:28px;border:none;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
+      closeBtn.addEventListener('click', function(){
+        localStorage.setItem(DISMISS_KEY, String(Date.now()));
+        wrap.remove();
+      });
+
+      wrap.appendChild(installBtn);
+      wrap.appendChild(closeBtn);
+      document.body.appendChild(wrap);
+
       window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
-        installBtn.style.display = 'flex';
+        wrap.style.display = 'flex';
       });
 
-      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       if (isIOS) {
-        installBtn.style.display = 'flex';
+        wrap.style.display = 'flex';
         installBtn.innerHTML = '<i class="ri-add-box-line"></i> Add to Home Screen';
+      } else if (isAndroid) {
+        // Show fallback after a short wait if beforeinstallprompt never fires (already dismissed by browser, FF, etc.)
+        setTimeout(function(){
+          if (!deferredPrompt && wrap.style.display === 'none') {
+            wrap.style.display = 'flex';
+          }
+        }, 2500);
       }
 
       installBtn.addEventListener('click', function() {
         if (deferredPrompt) {
           deferredPrompt.prompt();
           deferredPrompt.userChoice.then(function(result) {
-            if (result.outcome === 'accepted') installBtn.style.display = 'none';
+            if (result.outcome === 'accepted') wrap.remove();
             deferredPrompt = null;
           });
         } else if (isIOS) {
-          showIOSInstallGuide();
+          showInstallGuide('ios');
+        } else {
+          showInstallGuide('android');
         }
       });
-    }
 
-    function showIOSInstallGuide() {
-      var overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);';
-      overlay.innerHTML = '<div style="background:#111827;border-radius:20px;padding:32px;max-width:340px;width:100%;text-align:center;border:1px solid rgba(40,220,180,0.2);">'
-        + '<div style="font-size:48px;margin-bottom:16px;">📲</div>'
-        + '<h3 style="font-family:Space Grotesk,sans-serif;font-size:20px;color:#fff;margin-bottom:12px;">Install PartsMateTH</h3>'
-        + '<p style="color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:20px;">'
-        + '1. Tap the <strong style="color:#28DCB4;"><i class="ri-share-forward-line"></i> Share</strong> button at the bottom of Safari<br><br>'
-        + '2. Scroll down and tap <strong style="color:#28DCB4;"><i class="ri-add-box-line"></i> Add to Home Screen</strong><br><br>'
-        + '3. Tap <strong style="color:#28DCB4;">Add</strong> to confirm</p>'
-        + '<button onclick="this.closest(\'div\').parentElement.remove()" style="padding:10px 28px;border:none;border-radius:10px;background:#28DCB4;color:#060912;font-weight:600;cursor:pointer;font-size:14px;">Got it!</button>'
-        + '</div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
-    }
+      function showInstallGuide(platform) {
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px);';
+        var steps = platform === 'ios'
+          ? '1. Tap the <strong style="color:#28DCB4;"><i class="ri-share-forward-line"></i> Share</strong> button at the bottom of Safari<br><br>'
+            + '2. Scroll down and tap <strong style="color:#28DCB4;"><i class="ri-add-box-line"></i> Add to Home Screen</strong><br><br>'
+            + '3. Tap <strong style="color:#28DCB4;">Add</strong> to confirm'
+          : '1. Tap the <strong style="color:#28DCB4;">⋮ menu</strong> in the top-right of Chrome<br><br>'
+            + '2. Tap <strong style="color:#28DCB4;">Install app</strong> or <strong style="color:#28DCB4;">Add to Home screen</strong><br><br>'
+            + '3. Tap <strong style="color:#28DCB4;">Install</strong> to confirm';
+        overlay.innerHTML = '<div style="background:#111827;border-radius:20px;padding:32px;max-width:340px;width:100%;text-align:center;border:1px solid rgba(40,220,180,0.2);">'
+          + '<div style="font-size:48px;margin-bottom:16px;">📲</div>'
+          + '<h3 style="font-family:Space Grotesk,sans-serif;font-size:20px;color:#fff;margin-bottom:12px;">Install PartsMateTH</h3>'
+          + '<p style="color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:20px;">' + steps + '</p>'
+          + '<button id="pwa-guide-close" style="padding:10px 28px;border:none;border-radius:10px;background:#28DCB4;color:#060912;font-weight:600;cursor:pointer;font-size:14px;">Got it!</button>'
+          + '</div>';
+        document.body.appendChild(overlay);
+        overlay.querySelector('#pwa-guide-close').addEventListener('click', function(){ overlay.remove(); });
+        overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
+      }
 
-    window.addEventListener('appinstalled', function() { installBtn.style.display = 'none'; });
+      window.addEventListener('appinstalled', function() { wrap.remove(); });
+    })();
   </script>
 </body>
 </html>
