@@ -4,16 +4,12 @@
     { "src": "api/*.js", "use": "@vercel/node" },
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "*.json", "use": "@vercel/static" },
-    { "src": "*.xml", "use": "@vercel/static" },
-    { "src": "*.txt", "use": "@vercel/static" },
-    { "src": "*.ico", "use": "@vercel/static" },
-    { "src": "*.png", "use": "@vercel/static" },
     { "src": "app-tabs-images/**/*", "use": "@vercel/static" },
     { "src": "pwa-icons/**/*", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "/(.*)\\.(png|jpg|jpeg|gif|svg|webp|ico|json|xml|txt)$", "dest": "/$1.$2" },
+    { "src": "/(.*)\\.(png|jpg|jpeg|gif|svg|webp|ico|json)$", "dest": "/$1.$2" },
     { "src": "/country-options.html", "dest": "/country-options.html" },
     { "src": "/profile.html", "dest": "/profile.html" },
     { "src": "/seller.html", "dest": "/seller.html" },
