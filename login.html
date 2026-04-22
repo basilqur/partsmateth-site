@@ -1239,7 +1239,7 @@
       btn.disabled = true;
       btn.innerHTML = '<span class="loader-spin"></span> Verifying...';
       try {
-        const res = await fetch(`${APPS_SCRIPT_URL}?mode=verifyDeviceReset&licenseKey=${encodeURIComponent(key)}&code=${encodeURIComponent(code)}`);
+        const res = await fetch(`${APPS_SCRIPT_URL}?mode=verifyDeviceResetCode&licenseKey=${encodeURIComponent(key)}&code=${encodeURIComponent(code)}`);
         const data = await res.json();
         if (data.ok) {
           closeOtpModal();
