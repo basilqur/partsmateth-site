@@ -1,11 +1,11 @@
 {
   "name": "PartsMateTH",
   "short_name": "PartsMate",
-  "start_url": "/login.html",
+  "start_url": "/webapp.html",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#060912",
-  "theme_color": "#060912",
+  "background_color": "#0A0F1C",
+  "theme_color": "#0A0F1C",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
