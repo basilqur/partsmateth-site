@@ -855,10 +855,10 @@
             <p class="form-subtitle" style="margin-bottom:0;">Choose your plan and create your account</p>
           </div>
 
-          <div class="plan-toggle">
+          <div class="plan-toggle" id="planToggle">
             <div class="plan-slider" id="planSlider"></div>
             <button class="plan-btn active" data-plan="pro" onclick="switchPlan('pro')">Pro — $49.99 per/month</button>
-            <button class="plan-btn" data-plan="trial" onclick="switchPlan('trial')">7-Day Free Trial</button>
+            <button class="plan-btn" id="trialPlanButton" data-plan="trial" onclick="switchPlan('trial')">7-Day Free Trial</button>
           </div>
 
           <div class="field-group">
@@ -1000,6 +1000,7 @@
   <script>
     // ===== CONFIG =====
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5gmjnb2SKjn1ZAKB_GqXbAXXaclCxCZwCYkqo_zxj7OfOaD6yxyCGUkGmUoMzxjwk/exec';
+    const TRIAL_REGISTRATION_ENABLED = false;
 
     // ===== PREFILL FROM URL =====
     (function() {
@@ -1080,10 +1081,33 @@
 
     // ===== PLAN TOGGLE =====
     let selectedPlan = 'pro';
+    function applyTrialRegistrationState() {
+      const trialButton = document.getElementById('trialPlanButton');
+      const planToggle = document.getElementById('planToggle');
+      const planSlider = document.getElementById('planSlider');
+      const signupBtn = document.getElementById('btnSignup');
+      const signupBtnText = document.getElementById('signupBtnText');
+
+      if (TRIAL_REGISTRATION_ENABLED) return;
+
+      selectedPlan = 'pro';
+      if (trialButton) trialButton.remove();
+      if (planToggle) planToggle.style.display = 'none';
+      if (planSlider) planSlider.classList.remove('trial');
+      if (signupBtn) signupBtn.classList.remove('trial-btn');
+      if (signupBtnText) signupBtnText.textContent = 'Subscribe Now — $49.99/month';
+    }
+
     function switchPlan(plan) {
+      if (plan === 'trial' && !TRIAL_REGISTRATION_ENABLED) {
+        selectedPlan = 'pro';
+        return;
+      }
+
       selectedPlan = plan;
       document.querySelectorAll('.plan-btn').forEach(t => t.classList.remove('active'));
-      document.querySelector(`.plan-btn[data-plan="${plan}"]`).classList.add('active');
+      const activePlanButton = document.querySelector(`.plan-btn[data-plan="${plan}"]`);
+      if (activePlanButton) activePlanButton.classList.add('active');
 
       // Slide the indicator
       const slider = document.getElementById('planSlider');
@@ -1296,6 +1320,11 @@
             showToast(data.error || 'Something went wrong. Please try again.', 'error');
           }
         } else {
+          if (!TRIAL_REGISTRATION_ENABLED) {
+            showToast('Trial registration is currently unavailable.', 'error');
+            return;
+          }
+
           // Trial → saveToSheet API
           const res = await fetch('/api/saveToSheet', {
             method: 'POST',
@@ -1350,6 +1379,7 @@
 
     // ===== INIT =====
     document.addEventListener('DOMContentLoaded', () => {
+      applyTrialRegistrationState();
       loadCountries('signupCountryCode', 'signupIsoLabel', 'signupPhonePrefix');
 
       const savedKey = localStorage.getItem('pm_remember_key');
@@ -1372,7 +1402,7 @@
 
       const params = new URLSearchParams(window.location.search);
       if (params.get('signup') === 'true') togglePanel();
-      if (params.get('plan') === 'trial') { togglePanel(); switchPlan('trial'); }
+      if (params.get('plan') === 'trial' && TRIAL_REGISTRATION_ENABLED) { togglePanel(); switchPlan('trial'); }
       if (params.get('email')) {
         document.getElementById('signupEmail').value = params.get('email');
         togglePanel();
