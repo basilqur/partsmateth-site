@@ -2155,9 +2155,12 @@
     .wa-body { background: #ECE5DD; padding: 20px 16px; min-height: 140px; background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 40%); }
     .wa-msg { background: #fff; padding: 10px 12px; border-radius: 0 12px 12px 12px; font-size: 14px; color: #303030; max-width: 85%; box-shadow: 0 1px 1px rgba(0,0,0,0.08); margin-bottom: 8px; line-height: 1.4; }
     .wa-msg-time { font-size: 10px; color: #999; text-align: right; margin-top: 4px; }
-    .wa-cta { display: flex; align-items: center; justify-content: center; gap: 8px; background: #25D366; color: #fff; padding: 14px; font-weight: 600; font-size: 14px; text-decoration: none; transition: background 0.2s; }
-    .wa-cta:hover { background: #1da851; }
-    .wa-cta svg { width: 18px; height: 18px; fill: #fff; }
+    .wa-input-row { display: flex; align-items: center; gap: 8px; background: #fff; padding: 10px 12px; border-top: 1px solid #e5e7eb; }
+    .wa-input { flex: 1; border: none; outline: none; background: #f3f4f6; border-radius: 999px; padding: 10px 14px; font-size: 14px; color: #303030; font-family: inherit; }
+    .wa-input::placeholder { color: #9ca3af; }
+    .wa-send { width: 40px; height: 40px; border-radius: 50%; background: #25D366; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.2s, transform 0.15s; }
+    .wa-send:hover { background: #1da851; transform: scale(1.05); }
+    .wa-send svg { width: 18px; height: 18px; fill: #fff; }
     @media (max-width: 480px) { .wa-panel { width: calc(100vw - 32px); right: -8px; } }
   </style>
   <div class="wa-widget">
@@ -2178,10 +2181,12 @@
         <div class="wa-msg">Hi there 👋<div class="wa-msg-time">Now</div></div>
         <div class="wa-msg">How can we help you?<div class="wa-msg-time">Now</div></div>
       </div>
-      <a class="wa-cta" href="https://wa.me/66966688444" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
-        Start Chat
-      </a>
+      <form class="wa-input-row" id="waForm">
+        <input type="text" class="wa-input" id="waInput" placeholder="Enter your message..." autocomplete="off">
+        <button type="submit" class="wa-send" aria-label="Send">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </form>
     </div>
     <button class="wa-bubble" id="waBubble" aria-label="Open WhatsApp chat">
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
@@ -2192,8 +2197,17 @@
       var bubble = document.getElementById('waBubble');
       var panel = document.getElementById('waPanel');
       var close = document.getElementById('waClose');
+      var form = document.getElementById('waForm');
+      var input = document.getElementById('waInput');
       bubble.addEventListener('click', function(){ panel.classList.toggle('open'); });
       close.addEventListener('click', function(){ panel.classList.remove('open'); });
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var msg = (input.value || '').trim() || 'Hello, I want to know more';
+        var url = 'https://api.whatsapp.com/send/?phone=%2B66966688444&text=' + encodeURIComponent(msg) + '&type=phone_number&app_absent=0';
+        window.open(url, '_blank', 'noopener');
+        input.value = '';
+      });
     })();
   </script>
 </body>
