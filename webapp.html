@@ -1045,6 +1045,9 @@
         <button class="sidebar-nav-item" data-tab="modelchecker" onclick="switchTab('modelchecker')">
           <i class="ri-car-line"></i> <span data-i18n="nav.modelChecker">Model Checker</span>
         </button>
+        <button class="sidebar-nav-item" data-tab="searchparts" onclick="switchTab('searchparts')">
+          <i class="ri-search-line"></i> <span data-i18n="nav.searchParts">Search Parts</span>
+        </button>
 
         <div class="sidebar-section-label" data-i18n="nav.tools">Tools</div>
         <button class="sidebar-nav-item" data-tab="diagram" onclick="switchTab('diagram')">
@@ -1232,6 +1235,11 @@
               <div class="icon-wrap"><i class="ri-car-line text-orange-400"></i></div>
               <div class="label" data-i18n="card.modelChecker">Model Checker</div>
               <div class="desc hidden sm:block" data-i18n="cardDesc.modelChecker">Check compatibility</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('searchparts')">
+              <div class="icon-wrap"><i class="ri-search-line text-fuchsia-400"></i></div>
+              <div class="label" data-i18n="card.searchParts">Search Parts</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.searchParts">Search by name or model</div>
             </button>
             <button class="feature-card" onclick="switchTab('diagram')">
               <div class="icon-wrap"><i class="ri-image-line text-pink-400"></i></div>
@@ -1575,6 +1583,58 @@
                   <table class="results-table" id="tblAlts">
                     <thead id="altsHead"><tr></tr></thead>
                     <tbody id="altsBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== SEARCH PARTS TAB ===================== -->
+        <div id="tab-searchparts" class="tab-panel">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-xl bg-fuchsia-500/10 flex items-center justify-center">
+              <i class="ri-search-line text-fuchsia-400 text-lg"></i>
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-bold text-white" data-i18n="tab.searchParts.title">Search Parts</h2>
+              <p class="text-xs text-slate-500" data-i18n="tab.searchParts.subtitle">Search parts by name, description, model or part number</p>
+            </div>
+          </div>
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="lg:col-span-1 space-y-3">
+              <div class="glass-card p-4 space-y-3">
+                <div>
+                  <label class="section-label" data-i18n="label.searchQuery">Search Query</label>
+                  <input id="txtSpQuery" class="input-field" placeholder="e.g. shock absorber, brake pad..." onkeydown="if(event.key==='Enter'){runSearchParts();}">
+                </div>
+                <div>
+                  <label class="section-label" data-i18n="label.modelFilter">Model Filter (optional)</label>
+                  <input id="txtSpModel" class="input-field" placeholder="e.g. hilux, fortuner..." onkeydown="if(event.key==='Enter'){runSearchParts();}">
+                </div>
+                <button onclick="runSearchParts()" class="btn-primary w-full px-4 py-2.5 text-sm">
+                  <span class="flex items-center justify-center gap-1.5"><i class="ri-search-2-line"></i> <span data-i18n="btn.search">Search</span></span>
+                </button>
+                <div id="spLoader" class="loader"><div class="spinner"></div><span data-i18n="loader.searching">Searching parts...</span></div>
+                <div id="spStats" class="text-xs text-slate-500"></div>
+                <input id="txtSpFilter" class="input-field text-sm hidden" placeholder="🔍 Filter results..." oninput="filterSearchParts()">
+              </div>
+            </div>
+            <div class="lg:col-span-2">
+              <div class="glass-card p-1 overflow-hidden">
+                <div class="table-wrap overflow-x-auto max-h-[600px] overflow-y-auto">
+                  <table class="results-table" id="tblSearchParts">
+                    <thead>
+                      <tr>
+                        <th data-i18n="th.partNumber">Part Number</th>
+                        <th data-i18n="th.name">Name</th>
+                        <th data-i18n="th.model">Model</th>
+                        <th data-i18n="th.description">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody id="searchPartsBody">
+                      <tr><td colspan="4" class="text-center text-slate-500 py-6 text-sm">Enter a query and press Search.</td></tr>
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -2021,6 +2081,9 @@
       <button class="drawer-item" data-tab="modelchecker" onclick="switchTabFromDrawer('modelchecker')">
         <i class="ri-car-line text-orange-400"></i><span data-i18n="mob.model">Model</span>
       </button>
+      <button class="drawer-item" data-tab="searchparts" onclick="switchTabFromDrawer('searchparts')">
+        <i class="ri-search-line text-fuchsia-400"></i><span data-i18n="mob.search">Search</span>
+      </button>
       <button class="drawer-item" data-tab="diagram" onclick="switchTabFromDrawer('diagram')">
         <i class="ri-image-line text-pink-400"></i><span data-i18n="mob.diagram">Diagram</span>
       </button>
@@ -2151,6 +2214,79 @@
     let altResultsData = {};
 
     function proxyUrl(path) { return API + encodeURIComponent(path); }
+
+    // ============ SEARCH PARTS ============
+    let _spAllResults = [];
+    let _spAbort = null;
+    async function runSearchParts() {
+      const q = (document.getElementById('txtSpQuery').value || '').trim();
+      const model = (document.getElementById('txtSpModel').value || '').trim();
+      const body = document.getElementById('searchPartsBody');
+      const loader = document.getElementById('spLoader');
+      const stats = document.getElementById('spStats');
+      const filterBox = document.getElementById('txtSpFilter');
+      if (q.length < 2) {
+        body.innerHTML = '<tr><td colspan="4" class="text-center text-amber-400 py-6 text-sm">Please enter at least 2 characters.</td></tr>';
+        stats.textContent = '';
+        filterBox.classList.add('hidden');
+        return;
+      }
+      if (_spAbort) { try { _spAbort.abort(); } catch(e){} }
+      _spAbort = new AbortController();
+      loader.classList.add('active');
+      stats.textContent = '';
+      body.innerHTML = '';
+      try {
+        let path = '/searchParts?q=' + encodeURIComponent(q);
+        if (model) path += '&model=' + encodeURIComponent(model);
+        const res = await fetch(proxyUrl(path), { headers: GET_HEADERS, signal: _spAbort.signal });
+        const data = await res.json();
+        const results = Array.isArray(data.results) ? data.results : [];
+        _spAllResults = results;
+        if (!results.length) {
+          body.innerHTML = '<tr><td colspan="4" class="text-center text-slate-500 py-6 text-sm">No results found.</td></tr>';
+          stats.textContent = '0 results';
+          filterBox.classList.add('hidden');
+        } else {
+          renderSearchParts(results);
+          stats.textContent = (data.count || results.length) + ' results';
+          filterBox.classList.remove('hidden');
+          filterBox.value = '';
+        }
+      } catch (e) {
+        if (e.name === 'AbortError') return;
+        body.innerHTML = '<tr><td colspan="4" class="text-center text-red-400 py-6 text-sm">Error: ' + (e.message || 'Request failed') + '</td></tr>';
+        stats.textContent = '';
+      } finally {
+        loader.classList.remove('active');
+      }
+    }
+
+    function renderSearchParts(rows) {
+      const body = document.getElementById('searchPartsBody');
+      const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      body.innerHTML = rows.map(r => `
+        <tr>
+          <td class="font-mono text-blue-300 whitespace-nowrap">${esc(r.partNumber)}</td>
+          <td class="font-medium text-white">${esc(r.name)}</td>
+          <td class="text-slate-300 text-xs" style="max-width:240px;">${esc(r.model)}</td>
+          <td class="text-slate-400 text-xs" style="max-width:420px; white-space:pre-wrap;">${esc(r.description)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterSearchParts() {
+      const term = (document.getElementById('txtSpFilter').value || '').toLowerCase().trim();
+      if (!term) { renderSearchParts(_spAllResults); return; }
+      const filtered = _spAllResults.filter(r =>
+        (r.partNumber||'').toLowerCase().includes(term) ||
+        (r.name||'').toLowerCase().includes(term) ||
+        (r.model||'').toLowerCase().includes(term) ||
+        (r.description||'').toLowerCase().includes(term)
+      );
+      renderSearchParts(filtered);
+      document.getElementById('spStats').textContent = filtered.length + ' / ' + _spAllResults.length + ' results';
+    }
 
     // ============ INTERNATIONALIZATION ============
     const RTL_LANGS = ['ar', 'ur', 'ps'];
