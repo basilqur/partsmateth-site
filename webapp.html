@@ -1751,7 +1751,7 @@
                 <p class="text-sm text-slate-400" data-i18n="mc.universalDesc">Cross-check compatibility across multiple car brands using part numbers or vehicle information.</p>
               </div>
               <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4">
-                <button onclick="showMcView('partscatalog')" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
+                <button onclick="showMcView('partscatalog'); setTimeout(function(){document.querySelectorAll('.wYJ9Xjp7uGc-').forEach(function(el){el.remove();});}, 5000);" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
                   <span class="flex items-center justify-center gap-2"><i class="ri-book-open-line"></i> <span data-i18n="mc.btnPartsCatalog">Parts Catalog (OEM Browser)</span></span>
                 </button>
                 <p class="text-sm text-slate-400" data-i18n="mc.partsCatalogDesc">Browse full OEM electronic catalogs by brand, model, VIN or part number — powered by Parts-Catalogs.</p>
