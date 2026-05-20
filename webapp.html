@@ -1951,12 +1951,12 @@
               </div>
               <div>
                 <h2 class="font-display text-lg font-bold text-white" data-i18n="mc.btnPartsCatalog">Parts Catalog (OEM Browser)</h2>
-                <p class="text-xs text-slate-500">Powered by Parts-Catalogs.com — browse 100+ brands, VIN & part lookup</p>
+                <p class="text-xs text-slate-500">Browse 100+ brands · VIN & part lookup</p>
               </div>
             </div>
             <div class="glass-card p-3 sm:p-5">
-              <!-- Parts-Catalogs embed (white background to keep the widget legible) -->
-              <div class="rounded-xl overflow-hidden bg-white p-2 sm:p-4 min-h-[640px]">
+              <!-- Parts-Catalogs embed wrapper -->
+              <div id="parts-catalog-wrap" class="rounded-xl overflow-hidden bg-white p-2 sm:p-4 min-h-[640px]">
                 <div id="parts-catalog"
                      data-key="TWS-29BFC5D6-7A6C-452C-B469-4226CE9D82AE"
                      data-search-url="?pc_article={code}&pc_brand={brand}"></div>
@@ -4598,7 +4598,40 @@
       s.src = 'https://gui.parts-catalogs.com/v3/parts-catalogs.js';
       s.async = true;
       document.body.appendChild(s);
+      // Hide third-party attribution ("Provided by" / PartsCatalogs logo)
+      const wrap = document.getElementById('parts-catalog-wrap');
+      if (!wrap) return;
+      const hideAttribution = () => {
+        // Case 1: widget injects DOM directly — find and hide
+        wrap.querySelectorAll('a[href*="parts-catalogs"], img[src*="parts-catalogs"], img[alt*="PartsCatalog" i]').forEach(el => {
+          let n = el; for (let i = 0; i < 4 && n && n !== wrap; i++) { n = n.parentElement; }
+          (n && n !== wrap ? n : el).style.display = 'none';
+        });
+        wrap.querySelectorAll('*').forEach(el => {
+          if (el.children.length === 0) {
+            const t = (el.textContent || '').trim().toLowerCase();
+            if (t === 'provided by' || t === 'powered by') {
+              let n = el; for (let i = 0; i < 3 && n && n !== wrap; i++) { n = n.parentElement; }
+              (n && n !== wrap ? n : el).style.display = 'none';
+            }
+          }
+        });
+        // Case 2: widget renders inside cross-origin iframe — mask bottom strip
+        const iframe = wrap.querySelector('iframe');
+        if (iframe && !wrap.querySelector('.pc-attr-mask')) {
+          wrap.style.position = 'relative';
+          const mask = document.createElement('div');
+          mask.className = 'pc-attr-mask';
+          mask.style.cssText = 'position:absolute;left:0;right:0;bottom:0;height:56px;background:#fff;pointer-events:none;z-index:5;';
+          wrap.appendChild(mask);
+        }
+      };
+      const obs = new MutationObserver(hideAttribution);
+      obs.observe(wrap, { childList: true, subtree: true });
+      setTimeout(hideAttribution, 1500);
+      setTimeout(hideAttribution, 4000);
     }
+
 
     function updateMcPartNoView() {
       const current = mcPartNoHistory[mcPartNoHistory.length - 1];
