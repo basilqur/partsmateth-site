@@ -1726,6 +1726,23 @@
               </div>
             </div>
             <div class="space-y-4 max-w-3xl mx-auto">
+              <!-- Featured: Parts Catalog -->
+              <div class="relative rounded-2xl p-[1.5px] bg-gradient-to-r from-brand-blue via-brand-teal to-brand-cyan shadow-[0_10px_40px_-10px_rgba(20,184,166,0.5)]">
+                <div class="rounded-2xl bg-brand-card/95 p-6 sm:p-7 flex flex-col sm:flex-row items-center gap-5">
+                  <div class="flex-1 text-center sm:text-left">
+                    <div class="flex items-center justify-center sm:justify-start gap-2 mb-2">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-brand-blue to-brand-teal text-white">Featured</span>
+                      <span class="text-[10px] font-semibold uppercase tracking-wider text-brand-teal">New</span>
+                    </div>
+                    <h3 class="font-display text-xl sm:text-2xl font-bold text-white mb-1.5" data-i18n="mc.btnPartsCatalog">NEW Universal Parts Catalog</h3>
+                    <p class="text-sm text-slate-300" data-i18n="mc.partsCatalogDesc">Browse full OEM electronic catalogs by brand, model, VIN or part number — powered by Parts-Catalogs.</p>
+                  </div>
+                  <button onclick="showMcView('partscatalog'); setTimeout(function(){document.querySelectorAll('.wYJ9Xjp7uGc-').forEach(function(el){el.remove();});}, 5000);" class="btn-primary px-6 py-4 text-base font-semibold shrink-0 w-full sm:w-auto shadow-lg shadow-brand-blue/30 hover:scale-[1.02] transition-transform">
+                    <span class="flex items-center justify-center gap-2"><i class="ri-book-open-line text-lg"></i> <span>Open Catalog</span> <i class="ri-arrow-right-line"></i></span>
+                  </button>
+                </div>
+              </div>
+
               <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4">
                 <button onclick="showMcView('partno')" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
                   <span class="flex items-center justify-center gap-2"><i class="ri-key-line"></i> <span data-i18n="mc.btnPartNo">Check by Part Number</span> <i class="ri-settings-line"></i></span>
@@ -1749,12 +1766,6 @@
                   <span class="flex items-center justify-center gap-2"><i class="ri-global-line"></i> <span data-i18n="mc.btnUniversal">Universal Checker for All Brands</span></span>
                 </button>
                 <p class="text-sm text-slate-400" data-i18n="mc.universalDesc">Cross-check compatibility across multiple car brands using part numbers or vehicle information.</p>
-              </div>
-              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4">
-                <button onclick="showMcView('partscatalog'); setTimeout(function(){document.querySelectorAll('.wYJ9Xjp7uGc-').forEach(function(el){el.remove();});}, 3500);" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
-                  <span class="flex items-center justify-center gap-2"><i class="ri-book-open-line"></i> <span data-i18n="mc.btnPartsCatalog">Parts Catalog (OEM Browser)</span></span>
-                </button>
-                <p class="text-sm text-slate-400" data-i18n="mc.partsCatalogDesc">Browse full OEM electronic catalogs by brand, model, VIN or part number — powered by Parts-Catalogs.</p>
               </div>
             </div>
             <div class="mt-5 glass-card p-4 text-center max-w-3xl mx-auto">
@@ -1950,18 +1961,69 @@
                 <i class="ri-book-open-line text-emerald-400 text-lg"></i>
               </div>
               <div>
-                <h2 class="font-display text-lg font-bold text-white" data-i18n="mc.btnPartsCatalog">Parts Catalog (OEM Browser)</h2>
+                <h2 class="font-display text-lg font-bold text-white" data-i18n="mc.btnPartsCatalog">NEW Universal Parts Catalog</h2>
                 <p class="text-xs text-slate-500">Browse 100+ brands · VIN & part lookup</p>
               </div>
             </div>
             <div class="glass-card p-3 sm:p-5">
               <!-- Parts-Catalogs embed wrapper -->
-              <div id="parts-catalog-wrap" class="rounded-xl overflow-hidden bg-white p-2 sm:p-4 min-h-[640px]">
+              <div id="parts-catalog-wrap" class="rounded-xl overflow-hidden p-2 sm:p-4 min-h-[640px]" style="background:rgba(15,22,41,0.4);">
                 <div id="parts-catalog"
                      data-key="TWS-29BFC5D6-7A6C-452C-B469-4226CE9D82AE"
                      data-search-url="?pc_article={code}&pc_brand={brand}"></div>
               </div>
-              <style>#parts-catalog .wYJ9Xjp7uGc-{display:none !important;}</style>
+              <style>
+                #parts-catalog .wYJ9Xjp7uGc-{display:none !important;}
+                /* Theme overrides for embedded parts catalog */
+                #parts-catalog, #parts-catalog * {
+                  color: #e2e8f0 !important;
+                  border-color: rgba(255,255,255,0.1) !important;
+                }
+                #parts-catalog h1, #parts-catalog h2, #parts-catalog h3,
+                #parts-catalog h1 *, #parts-catalog h2 *, #parts-catalog h3 * {
+                  color: #ffffff !important;
+                }
+                #parts-catalog p, #parts-catalog p *, #parts-catalog span, #parts-catalog label {
+                  color: #cbd5e1 !important;
+                }
+                #parts-catalog #pc-app, #parts-catalog #pc-app * {
+                  background-color: transparent !important;
+                  background-image: none !important;
+                }
+                #parts-catalog section {
+                  background: rgba(15,22,41,0.7) !important;
+                  border: 1px solid rgba(255,255,255,0.08) !important;
+                  border-radius: 0.75rem !important;
+                  padding: 1rem !important;
+                }
+                #parts-catalog a[href*="#/groups"] {
+                  background: rgba(59,130,246,0.08) !important;
+                  border: 1px solid rgba(59,130,246,0.25) !important;
+                  border-radius: 0.625rem !important;
+                  padding: 0.75rem !important;
+                  display: inline-block !important;
+                }
+                #parts-catalog input,
+                #parts-catalog select,
+                #parts-catalog textarea {
+                  background: rgba(15,22,41,0.9) !important;
+                  color: #ffffff !important;
+                  border: 1px solid rgba(255,255,255,0.15) !important;
+                  border-radius: 0.5rem !important;
+                  padding: 0.5rem 0.75rem !important;
+                }
+                #parts-catalog input::placeholder { color: #94a3b8 !important; }
+                #parts-catalog button {
+                  background: linear-gradient(135deg, #3B82F6, #14B8A6) !important;
+                  color: #fff !important;
+                  border-radius: 0.5rem !important;
+                  border: none !important;
+                }
+                #parts-catalog button svg,
+                #parts-catalog button svg * { fill: #fff !important; color: #fff !important; }
+                #parts-catalog a { color: #60a5fa !important; }
+                #parts-catalog [class*="jzWS7Gyz"] { color: #14B8A6 !important; }
+              </style>
             </div>
           </div>
         </div>
