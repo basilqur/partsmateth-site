@@ -1961,7 +1961,7 @@
                      data-key="TWS-29BFC5D6-7A6C-452C-B469-4226CE9D82AE"
                      data-search-url="?pc_article={code}&pc_brand={brand}"></div>
               </div>
-              <p class="text-[11px] text-slate-500 mt-3 text-center">If the catalog does not load, allow scripts from <span class="text-slate-300">gui.parts-catalogs.com</span> and refresh.</p>
+              <style>#parts-catalog .wYJ9Xjp7uGc-{display:none !important;}</style>
             </div>
           </div>
         </div>
@@ -4599,18 +4599,9 @@
       s.async = true;
       document.body.appendChild(s);
       // Hide third-party attribution — only target a small bottom strip, never climb parents
-      const wrap = document.getElementById('parts-catalog-wrap');
-      if (!wrap) return;
-      const addMask = () => {
-        if (wrap.querySelector('.pc-attr-mask')) return;
-        wrap.style.position = 'relative';
-        const mask = document.createElement('div');
-        mask.className = 'pc-attr-mask';
-        mask.style.cssText = 'position:absolute;left:0;right:0;bottom:0;height:48px;background:#fff;pointer-events:none;z-index:5;';
-        wrap.appendChild(mask);
-      };
-      setTimeout(addMask, 1500);
+      // Attribution hidden via CSS on .wYJ9Xjp7uGc-
     }
+
 
 
 
