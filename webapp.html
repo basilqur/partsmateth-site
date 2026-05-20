@@ -1750,6 +1750,12 @@
                 </button>
                 <p class="text-sm text-slate-400" data-i18n="mc.universalDesc">Cross-check compatibility across multiple car brands using part numbers or vehicle information.</p>
               </div>
+              <div class="glass-card p-5 flex flex-col sm:flex-row items-start gap-4">
+                <button onclick="showMcView('partscatalog')" class="btn-primary px-5 py-3.5 text-sm sm:min-w-[260px] shrink-0">
+                  <span class="flex items-center justify-center gap-2"><i class="ri-book-open-line"></i> <span data-i18n="mc.btnPartsCatalog">Parts Catalog (OEM Browser)</span></span>
+                </button>
+                <p class="text-sm text-slate-400" data-i18n="mc.partsCatalogDesc">Browse full OEM electronic catalogs by brand, model, VIN or part number — powered by Parts-Catalogs.</p>
+              </div>
             </div>
             <div class="mt-5 glass-card p-4 text-center max-w-3xl mx-auto">
               <p class="text-xs text-red-400/80 italic" data-i18n="note.modelChecker">Note: Compatibility and model applicability results are based on recorded Toyota fitment data and available production records. Variations may occur due to regional configurations, trim levels, engine types, or mid-production updates. Always verify using the vehicle's VIN, official Toyota EPC data, or model-specific documentation before ordering or installation to ensure complete accuracy.</p>
@@ -1933,6 +1939,29 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Parts Catalog (Parts-Catalogs.com OEM browser) View -->
+          <div id="mcPartsCatalog" class="hidden">
+            <div class="flex items-center gap-3 mb-5">
+              <button onclick="showMcView('home')" class="btn-ghost p-2 rounded-lg hover:bg-white/5"><i class="ri-arrow-left-line text-lg"></i></button>
+              <div class="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                <i class="ri-book-open-line text-emerald-400 text-lg"></i>
+              </div>
+              <div>
+                <h2 class="font-display text-lg font-bold text-white" data-i18n="mc.btnPartsCatalog">Parts Catalog (OEM Browser)</h2>
+                <p class="text-xs text-slate-500">Powered by Parts-Catalogs.com — browse 100+ brands, VIN & part lookup</p>
+              </div>
+            </div>
+            <div class="glass-card p-3 sm:p-5">
+              <!-- Parts-Catalogs embed (white background to keep the widget legible) -->
+              <div class="rounded-xl overflow-hidden bg-white p-2 sm:p-4 min-h-[640px]">
+                <div id="parts-catalog"
+                     data-key="TWS-29BFC5D6-7A6C-452C-B469-4226CE9D82AE"
+                     data-search-url="?pc_article={code}&pc_brand={brand}"></div>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-3 text-center">If the catalog does not load, allow scripts from <span class="text-slate-300">gui.parts-catalogs.com</span> and refresh.</p>
             </div>
           </div>
         </div>
@@ -4549,13 +4578,26 @@
     }
 
     function showMcView(view) {
-      ['mcHome','mcPartNo','mcVin','mcUniversal'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
-      const map = { home:'mcHome', partno:'mcPartNo', vin:'mcVin', universal:'mcUniversal' };
+      ['mcHome','mcPartNo','mcVin','mcUniversal','mcPartsCatalog'].forEach(id => { const el = document.getElementById(id); if (el) el.classList.add('hidden'); });
+      const map = { home:'mcHome', partno:'mcPartNo', vin:'mcVin', universal:'mcUniversal', partscatalog:'mcPartsCatalog' };
       const el = document.getElementById(map[view]);
       if (el) el.classList.remove('hidden');
       if (view === 'partno') { mcPartNoHistory = ['xref']; updateMcPartNoView(); }
       if (view === 'vin') { mcVinHistory = ['info']; currentVinModelUrl = ''; updateMcVinView(); }
       if (view === 'universal') { ucHistory = []; ucClearAll(); }
+      if (view === 'partscatalog') { loadPartsCatalogWidget(); }
+    }
+
+    // Lazy-load the Parts-Catalogs widget script only when the user opens that view
+    let _partsCatalogLoaded = false;
+    function loadPartsCatalogWidget() {
+      if (_partsCatalogLoaded) return;
+      _partsCatalogLoaded = true;
+      const s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.src = 'https://gui.parts-catalogs.com/v3/parts-catalogs.js';
+      s.async = true;
+      document.body.appendChild(s);
     }
 
     function updateMcPartNoView() {
