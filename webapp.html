@@ -4598,39 +4598,20 @@
       s.src = 'https://gui.parts-catalogs.com/v3/parts-catalogs.js';
       s.async = true;
       document.body.appendChild(s);
-      // Hide third-party attribution ("Provided by" / PartsCatalogs logo)
+      // Hide third-party attribution — only target a small bottom strip, never climb parents
       const wrap = document.getElementById('parts-catalog-wrap');
       if (!wrap) return;
-      const hideAttribution = () => {
-        // Case 1: widget injects DOM directly — find and hide
-        wrap.querySelectorAll('a[href*="parts-catalogs"], img[src*="parts-catalogs"], img[alt*="PartsCatalog" i]').forEach(el => {
-          let n = el; for (let i = 0; i < 4 && n && n !== wrap; i++) { n = n.parentElement; }
-          (n && n !== wrap ? n : el).style.display = 'none';
-        });
-        wrap.querySelectorAll('*').forEach(el => {
-          if (el.children.length === 0) {
-            const t = (el.textContent || '').trim().toLowerCase();
-            if (t === 'provided by' || t === 'powered by') {
-              let n = el; for (let i = 0; i < 3 && n && n !== wrap; i++) { n = n.parentElement; }
-              (n && n !== wrap ? n : el).style.display = 'none';
-            }
-          }
-        });
-        // Case 2: widget renders inside cross-origin iframe — mask bottom strip
-        const iframe = wrap.querySelector('iframe');
-        if (iframe && !wrap.querySelector('.pc-attr-mask')) {
-          wrap.style.position = 'relative';
-          const mask = document.createElement('div');
-          mask.className = 'pc-attr-mask';
-          mask.style.cssText = 'position:absolute;left:0;right:0;bottom:0;height:56px;background:#fff;pointer-events:none;z-index:5;';
-          wrap.appendChild(mask);
-        }
+      const addMask = () => {
+        if (wrap.querySelector('.pc-attr-mask')) return;
+        wrap.style.position = 'relative';
+        const mask = document.createElement('div');
+        mask.className = 'pc-attr-mask';
+        mask.style.cssText = 'position:absolute;left:0;right:0;bottom:0;height:48px;background:#fff;pointer-events:none;z-index:5;';
+        wrap.appendChild(mask);
       };
-      const obs = new MutationObserver(hideAttribution);
-      obs.observe(wrap, { childList: true, subtree: true });
-      setTimeout(hideAttribution, 1500);
-      setTimeout(hideAttribution, 4000);
+      setTimeout(addMask, 1500);
     }
+
 
 
     function updateMcPartNoView() {
