@@ -1754,8 +1754,8 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
                     <h3 class="font-display text-xl sm:text-2xl font-bold text-white mb-1.5" data-i18n="mc.btnPartsCatalog">NEW Universal Parts Catalog</h3>
                     <p class="text-sm text-slate-300" data-i18n="mc.partsCatalogDesc">Browse full OEM electronic catalogs by brand, model, VIN or part number — powered by Parts-Catalogs.</p>
                   </div>
-                  <button onclick="showMcView('partscatalog'); setTimeout(function(){document.querySelectorAll('.wYJ9Xjp7uGc-').forEach(function(el){el.remove();});}, 5000);" class="btn-primary px-6 py-4 text-base font-semibold shrink-0 w-full sm:w-auto shadow-lg shadow-brand-blue/30 hover:scale-[1.02] transition-transform">
-                    <span class="flex items-center justify-center gap-2"><i class="ri-book-open-line text-lg"></i> <span>Open Catalog</span> <i class="ri-arrow-right-line"></i></span>
+                  <button onclick="showMcView('partscatalog');const obs = new MutationObserver((m, o) => {const els = document.querySelectorAll('.wYJ9Xjp7uGc-'); if (els.length) {els.forEach(e => e.remove()); o.disconnect();}}); obs.observe(document.body, { childList: true, subtree: true }); setTimeout(() => obs.disconnect(), 45000);" class="btn-primary px-6 py-4 text-base font-semibold shrink-0 w-full sm:w-auto shadow-lg shadow-brand-blue/30 hover:scale-[1.02] transition-transform">
+                  <span class="flex items-center justify-center gap-2"><i class="ri-book-open-line text-lg"></i><span>Open Catalog</span><i class="ri-arrow-right-line"></i></span>
                   </button>
                 </div>
               </div>
