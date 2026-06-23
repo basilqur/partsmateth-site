@@ -32,6 +32,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LRCT5H3MP7"></script>
   <script>
@@ -479,6 +480,8 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       transition: all .25s ease; cursor: pointer;
     }
     .wapp-nav span { font-size: 10px; }
+    .wapp-nav i { font-size: 13px; width: 15px; text-align: center; flex-shrink: 0; }
+    .wapp-tabpill i { font-size: 12px; }
     .wapp-nav:hover { background: rgba(255,255,255,.05); color: #cbd5e1; }
     .wapp-nav.active {
       background: linear-gradient(90deg, rgba(59,130,246,.18), rgba(66,194,186,.10));
@@ -515,7 +518,31 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       padding:1px 4px; border-radius:999px;
       background:#42C2BA; color:#04221f;
     }
-  
+
+    /* ===== Webapp-accurate trailer internals ===== */
+    .wapp-screen { overflow-y: auto; overflow-x: hidden; }
+    .wapp-screen::-webkit-scrollbar { width: 5px; }
+    .wapp-screen::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 999px; }
+    .wt-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .wt-ico { width:34px; height:34px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .wt-title { font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#fff; line-height:1.1; }
+    .wt-sub { font-size:9.5px; color:#64748b; margin-top:1px; }
+    .wt-card { background:#0F1629; border:1px solid rgba(255,255,255,.07); border-radius:14px; }
+    .wt-label { font-size:8.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#64748b; display:block; margin-bottom:5px; }
+    .wt-input { width:100%; background:#0A0F1C; border:1px solid rgba(255,255,255,.09); border-radius:9px; padding:8px 10px; font-size:10px; color:#cbd5e1; }
+    .wt-btn { display:inline-flex; align-items:center; justify-content:center; gap:5px; border-radius:9px; padding:8px 12px; font-size:10px; font-weight:600; color:#fff; background:linear-gradient(135deg,#3B82F6,#42C2BA); box-shadow:0 8px 18px -10px rgba(59,130,246,.7); }
+    .wt-ghost { display:inline-flex; align-items:center; justify-content:center; gap:5px; border-radius:9px; padding:7px 10px; font-size:9.5px; font-weight:600; color:#94a3b8; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+    .wt-table { width:100%; border-collapse:collapse; font-size:9px; }
+    .wt-table th { text-align:left; padding:7px 9px; font-size:8px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#64748b; background:rgba(255,255,255,.03); border-bottom:1px solid rgba(255,255,255,.07); }
+    .wt-table td { padding:7px 9px; color:#cbd5e1; border-bottom:1px solid rgba(255,255,255,.05); }
+    .wt-table tr:last-child td { border-bottom:none; }
+    .wt-mono { font-family:'Space Grotesk',monospace; color:#fff; }
+    .wt-radio { display:flex; align-items:center; justify-content:center; padding:6px 8px; border-radius:8px; font-size:9px; color:#94a3b8; background:#0A0F1C; border:1px solid rgba(255,255,255,.09); }
+    .wt-radio.on { color:#5eead4; border-color:rgba(66,194,186,.5); background:rgba(66,194,186,.08); }
+    .wt-fcard { position:relative; display:flex; flex-direction:column; gap:4px; padding:10px; border-radius:12px; background:#0A0F1C; border:1px solid rgba(255,255,255,.06); }
+    .wt-fcard .ico { width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; }
+    .wt-fcard .nm { font-size:9px; font-weight:600; color:#e2e8f0; }
+    .wt-pill { font-size:7.5px; font-weight:700; padding:2px 6px; border-radius:999px; }
   </style>
 </head>
 
@@ -765,16 +792,22 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
                       </div>
                     </div>
                     <div class="px-2.5 py-3 flex-1 space-y-0.5 overflow-y-auto">
-                      <div class="text-gray-500 text-[8px] font-semibold uppercase tracking-wider px-2 mb-1.5">Main</div>
-                      <button type="button" class="wapp-nav active" data-screen="home"><span>🏠</span> Home</button>
-                      <button type="button" class="wapp-nav" data-screen="searchparts"><span>🔎</span> Search Parts</button>
-                      <button type="button" class="wapp-nav" data-screen="prices"><span>💰</span> Prices</button>
-                      <button type="button" class="wapp-nav" data-screen="names"><span>🏷️</span> Names</button>
-                      <div class="text-gray-500 text-[8px] font-semibold uppercase tracking-wider px-2 mt-2 mb-1.5">New Tools</div>
-                      <button type="button" class="wapp-nav" data-screen="diagram"><span>🖼️</span> Diagram Checker</button>
-                      <button type="button" class="wapp-nav" data-screen="dimensions"><span>📐</span> Dimensions</button>
-                      <button type="button" class="wapp-nav" data-screen="hscode"><span>🔖</span> HS Code</button>
-                      <button type="button" class="wapp-nav" data-screen="cbm"><span>📦</span> CBM</button>
+                      <button type="button" class="wapp-nav active" data-screen="home"><i class="ri-home-5-line"></i> Home</button>
+                      <button type="button" class="wapp-nav" data-screen="prices"><i class="ri-money-dollar-circle-line"></i> Prices</button>
+                      <button type="button" class="wapp-nav" data-screen="names"><i class="ri-price-tag-3-line"></i> Names</button>
+                      <button type="button" class="wapp-nav" data-screen="country"><i class="ri-global-line"></i> Countries</button>
+                      <button type="button" class="wapp-nav" data-screen="weight"><i class="ri-scales-3-line"></i> Weights</button>
+                      <button type="button" class="wapp-nav" data-screen="alternates"><i class="ri-refresh-line"></i> Alternates</button>
+                      <button type="button" class="wapp-nav" data-screen="listcleaner"><i class="ri-file-list-3-line"></i> List Cleaner</button>
+                      <button type="button" class="wapp-nav" data-screen="modelchecker"><i class="ri-car-line"></i> Model Checker</button>
+                      <button type="button" class="wapp-nav" data-screen="searchparts"><i class="ri-search-line"></i> Search Parts</button>
+                      <div class="text-gray-500 text-[8px] font-semibold uppercase tracking-wider px-2 mt-2 mb-1.5">Tools</div>
+                      <button type="button" class="wapp-nav" data-screen="diagram"><i class="ri-image-line"></i> Diagram Generator</button>
+                      <button type="button" class="wapp-nav" data-screen="dimensions"><i class="ri-ruler-line"></i> Dimensions Checker</button>
+                      <button type="button" class="wapp-nav" data-screen="hscode"><i class="ri-barcode-box-line"></i> HS Code Checker</button>
+                      <button type="button" class="wapp-nav" data-screen="cbm"><i class="ri-box-3-line"></i> CBM Calculator</button>
+                      <div class="text-gray-500 text-[8px] font-semibold uppercase tracking-wider px-2 mt-2 mb-1.5">More</div>
+                      <button type="button" class="wapp-nav" data-screen="details"><i class="ri-search-eye-line"></i> Part Details</button>
                     </div>
                     <div class="px-3 py-2.5 border-t border-white/[0.06] flex items-center gap-2">
                       <div class="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
@@ -791,79 +824,207 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
                         <div id="wappSubtitle" class="text-gray-500 text-[9px]">Welcome back to PartsMateTH</div>
                       </div>
                       <div class="hidden sm:flex items-center gap-2">
-                        <div class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-500 text-[9px]">⌘K Search</div>
-                        <div class="px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-500 text-[9px]">🌐 EN</div>
+                        <div class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-400 text-[9px]"><i class="ri-translate-2"></i> English</div>
+                        <div class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-500 text-[9px]">⌘K Quick Search</div>
                       </div>
                     </div>
                     <div id="wappScreens" class="flex-1 relative overflow-hidden">
 
                       <!-- HOME -->
                       <div class="wapp-screen active" data-screen="home">
-                        <div class="grid grid-cols-3 md:grid-cols-4 gap-2 h-full content-start">
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-blue-500/15 flex items-center justify-center mb-1 text-[9px]">🔎</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Search Parts</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-green-500/15 flex items-center justify-center mb-1 text-[9px]">💰</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Prices</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-purple-500/15 flex items-center justify-center mb-1 text-[9px]">🏷️</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Names</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-cyan-500/15 flex items-center justify-center mb-1 text-[9px]">🌍</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Country</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-teal-500/15 flex items-center justify-center mb-1 text-[9px]">🖼️</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Diagram</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-blue-500/15 flex items-center justify-center mb-1 text-[9px]">📐</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Dimensions</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-orange-500/15 flex items-center justify-center mb-1 text-[9px]">🔖</div><div class="text-white text-[8px] md:text-[9px] font-semibold">HS Code</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-pink-500/15 flex items-center justify-center mb-1 text-[9px]">📦</div><div class="text-white text-[8px] md:text-[9px] font-semibold">CBM</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-yellow-500/15 flex items-center justify-center mb-1 text-[9px]">⚖️</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Weights</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-rose-500/15 flex items-center justify-center mb-1 text-[9px]">🔄</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Alternates</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-emerald-500/15 flex items-center justify-center mb-1 text-[9px]">🧹</div><div class="text-white text-[8px] md:text-[9px] font-semibold">List Cleaner</div></div>
-                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-indigo-500/15 flex items-center justify-center mb-1 text-[9px]">🚗</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Model</div></div>
+                        <div class="flex gap-2 mb-3">
+                          <div class="flex-1 flex items-center gap-2 wt-input"><i class="ri-search-line text-blue-400"></i><span class="text-gray-500">Search part numbers, names, or brands...</span></div>
+                          <button class="wt-btn">Search</button>
                         </div>
-                      </div>
-
-                      <!-- SEARCH PARTS -->
-                      <div class="wapp-screen" data-screen="searchparts">
-                        <div class="flex items-center gap-2 mb-2">
-                          <div class="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-blue-500/30 text-[9px] md:text-[10px]">
-                            <span>🔎</span><span class="text-gray-300">air filter fortuner</span><span class="ml-auto w-2 h-3 bg-blue-400/70 animate-pulse"></span>
-                          </div>
-                          <div class="px-3 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-teal-500 text-white text-[9px] md:text-[10px] font-semibold">Search</div>
+                        <div class="grid grid-cols-4 gap-2">
+                          <button class="wt-fcard"><div class="ico bg-blue-500/10"><i class="ri-money-dollar-circle-line text-blue-400"></i></div><div class="nm">Prices</div></button>
+                          <button class="wt-fcard"><div class="ico bg-teal-500/10"><i class="ri-price-tag-3-line text-teal-400"></i></div><div class="nm">Names</div></button>
+                          <button class="wt-fcard"><div class="ico bg-cyan-500/10"><i class="ri-global-line text-cyan-400"></i></div><div class="nm">Country</div></button>
+                          <button class="wt-fcard"><div class="ico bg-violet-500/10"><i class="ri-search-eye-line text-violet-400"></i></div><div class="nm">Details</div></button>
+                          <button class="wt-fcard"><div class="ico bg-amber-500/10"><i class="ri-scales-3-line text-amber-400"></i></div><div class="nm">Weight</div></button>
+                          <button class="wt-fcard"><div class="ico bg-rose-500/10"><i class="ri-refresh-line text-rose-400"></i></div><div class="nm">Alternates</div></button>
+                          <button class="wt-fcard"><div class="ico bg-emerald-500/10"><i class="ri-file-list-3-line text-emerald-400"></i></div><div class="nm">List Cleaner</div></button>
+                          <button class="wt-fcard"><div class="ico bg-orange-500/10"><i class="ri-car-line text-orange-400"></i></div><div class="nm">Model Checker</div></button>
+                          <button class="wt-fcard"><div class="ico bg-fuchsia-500/10"><i class="ri-search-line text-fuchsia-400"></i></div><div class="nm">Search Parts</div></button>
+                          <button class="wt-fcard"><span class="wapp-newdot">NEW</span><div class="ico bg-pink-500/10"><i class="ri-image-line text-pink-400"></i></div><div class="nm">Diagram</div></button>
+                          <button class="wt-fcard"><span class="wapp-newdot">NEW</span><div class="ico bg-indigo-500/10"><i class="ri-ruler-line text-indigo-400"></i></div><div class="nm">Dimensions</div></button>
+                          <button class="wt-fcard"><span class="wapp-newdot">NEW</span><div class="ico bg-lime-500/10"><i class="ri-barcode-box-line text-lime-400"></i></div><div class="nm">HS Code</div></button>
+                          <button class="wt-fcard"><span class="wapp-newdot">NEW</span><div class="ico bg-sky-500/10"><i class="ri-box-3-line text-sky-400"></i></div><div class="nm">CBM</div></button>
                         </div>
-                        <div class="text-gray-500 text-[8px] mb-1.5">Matching part numbers for "air filter" · Fortuner</div>
-                        <div class="space-y-1">
-                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-0L040</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
-                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-0L050</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
-                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-30040</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
-                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-30070</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
+                        <div class="grid grid-cols-2 gap-2 mt-3">
+                          <div class="wt-card p-2.5"><div class="flex items-center gap-1.5 mb-1.5"><i class="ri-lightbulb-line text-emerald-400 text-[11px]"></i><span class="text-white text-[9px] font-semibold">Suggestion</span></div><div class="wt-input text-gray-600">Share your suggestion...</div></div>
+                          <div class="wt-card p-2.5"><div class="flex items-center gap-1.5 mb-1.5"><i class="ri-error-warning-line text-amber-400 text-[11px]"></i><span class="text-white text-[9px] font-semibold">Complaint</span></div><div class="wt-input text-gray-600">Report an issue...</div></div>
                         </div>
                       </div>
 
                       <!-- PRICES -->
                       <div class="wapp-screen" data-screen="prices">
-                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>💰</span><span class="text-white font-mono">90919-01253</span><span class="ml-auto text-gray-500">Ignition Coil</span></div>
-                        <div class="grid grid-cols-3 gap-2">
-                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2.5 text-center"><div class="text-gray-500 text-[8px] mb-1">Internet</div><div class="text-white text-[11px] font-bold">฿ 1,250</div></div>
-                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2.5 text-center"><div class="text-gray-500 text-[8px] mb-1">Al-Futtaim</div><div class="text-white text-[11px] font-bold">฿ 1,480</div></div>
-                          <div class="rounded-lg bg-[#131B2E] border border-teal-500/30 p-2.5 text-center"><div class="text-teal-400 text-[8px] mb-1">Thai OEM</div><div class="text-white text-[11px] font-bold">฿ 1,180</div></div>
+                        <div class="wt-head"><div class="wt-ico bg-blue-500/10"><i class="ri-money-dollar-circle-line text-blue-400"></i></div><div><div class="wt-title">Prices Checker</div><div class="wt-sub">Check estimated internet, Dubai genuine futtaim &amp; OFP prices</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Part Numbers</span><div class="wt-input h-16 leading-relaxed text-gray-400">90919-01253<br>17801-0L040<br>53801-0K010</div></div>
+                            <div class="flex items-center justify-between"><span class="wt-label" style="margin:0">Currency</span><div class="flex gap-1"><span class="wt-radio on">AED</span><span class="wt-radio">USD</span></div></div>
+                            <button class="wt-btn w-full"><i class="ri-search-line"></i> Check Prices</button>
+                          </div>
+                          <div class="wt-card overflow-hidden col-span-2">
+                            <table class="wt-table"><thead><tr><th>Part No.</th><th>Internet</th><th>Dubai (Futtaim)</th><th>OFP</th><th>Match</th></tr></thead>
+                            <tbody>
+                              <tr><td class="wt-mono">90919-01253</td><td>฿1,250</td><td>฿1,480</td><td class="text-teal-400">฿1,180</td><td class="text-teal-400">✓</td></tr>
+                              <tr><td class="wt-mono">17801-0L040</td><td>฿420</td><td>฿510</td><td class="text-teal-400">฿390</td><td class="text-teal-400">✓</td></tr>
+                              <tr><td class="wt-mono">53801-0K010</td><td>฿3,900</td><td>฿4,250</td><td class="text-teal-400">฿3,650</td><td class="text-teal-400">✓</td></tr>
+                              <tr><td class="wt-mono">04465-0K240</td><td>฿890</td><td>฿1,020</td><td class="text-teal-400">฿840</td><td class="text-teal-400">✓</td></tr>
+                            </tbody></table>
+                          </div>
                         </div>
-                        <div class="mt-2 px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-[8px]">↓ Best value: Thai OEM · Export to Excel available</div>
                       </div>
 
                       <!-- NAMES -->
                       <div class="wapp-screen" data-screen="names">
-                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>🏷️</span><span class="text-white font-mono">53801-0K010</span></div>
-                        <div class="space-y-1">
-                          <div class="px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><div class="text-gray-500 text-[8px]">Toyota Thailand</div><div class="text-white text-[9px]">Fender Sub-Assy, Front RH</div></div>
-                          <div class="px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><div class="text-gray-500 text-[8px]">Al-Futtaim Dubai</div><div class="text-white text-[9px]">Front Fender Right</div></div>
-                          <div class="px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><div class="text-gray-500 text-[8px]">USA Toyota</div><div class="text-white text-[9px]">Fender Sub-Assembly, Front Right Hand</div></div>
+                        <div class="wt-head"><div class="wt-ico bg-teal-500/10"><i class="ri-price-tag-3-line text-teal-400"></i></div><div><div class="wt-title">Name Checker</div><div class="wt-sub">Look up part names from different sources</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Part Numbers</span><div class="wt-input h-12 text-gray-400">53801-0K010</div></div>
+                            <div><span class="wt-label">Source</span><div class="grid grid-cols-2 gap-1.5"><span class="wt-radio on">Universal</span><span class="wt-radio">Toyota TH</span><span class="wt-radio">Al Futtaim</span><span class="wt-radio">USA</span></div></div>
+                            <button class="wt-btn w-full"><i class="ri-search-line"></i> Check Names</button>
+                          </div>
+                          <div class="wt-card overflow-hidden col-span-2">
+                            <table class="wt-table"><thead><tr><th>Source</th><th>Part Name</th></tr></thead>
+                            <tbody>
+                              <tr><td class="text-gray-500">Toyota Thailand</td><td>Fender Sub-Assy, Front RH</td></tr>
+                              <tr><td class="text-gray-500">Al-Futtaim Dubai</td><td>Front Fender Right</td></tr>
+                              <tr><td class="text-gray-500">USA Toyota</td><td>Fender Sub-Assembly, Front Right Hand</td></tr>
+                              <tr><td class="text-gray-500">Universal</td><td>Front Right Fender</td></tr>
+                            </tbody></table>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- COUNTRY -->
+                      <div class="wapp-screen" data-screen="country">
+                        <div class="wt-head"><div class="wt-ico bg-cyan-500/10"><i class="ri-global-line text-cyan-400"></i></div><div><div class="wt-title">Country / Origin</div><div class="wt-sub">Find where parts are manufactured</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Part Numbers</span><div class="wt-input h-16 leading-relaxed text-gray-400">48510-80581<br>90915-YZZD4<br>17801-0L040</div></div>
+                            <button class="wt-btn w-full"><i class="ri-search-line"></i> Check Origins</button>
+                          </div>
+                          <div class="wt-card overflow-hidden col-span-2">
+                            <table class="wt-table"><thead><tr><th>Part Number</th><th>Part Name</th><th>Origin</th></tr></thead>
+                            <tbody>
+                              <tr><td class="wt-mono">48510-80581</td><td>Shock Absorber</td><td>🇯🇵 Japan</td></tr>
+                              <tr><td class="wt-mono">90915-YZZD4</td><td>Oil Filter</td><td>🇹🇭 Thailand</td></tr>
+                              <tr><td class="wt-mono">17801-0L040</td><td>Air Filter</td><td>🇹🇭 Thailand</td></tr>
+                              <tr><td class="wt-mono">04465-0K240</td><td>Brake Pad Set</td><td>🇮🇩 Indonesia</td></tr>
+                            </tbody></table>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- WEIGHT -->
+                      <div class="wapp-screen" data-screen="weight">
+                        <div class="wt-head"><div class="wt-ico bg-amber-500/10"><i class="ri-scales-3-line text-amber-400"></i></div><div><div class="wt-title">Weight Checker</div><div class="wt-sub">Look up part weights and brands</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Part Numbers</span><div class="wt-input h-16 leading-relaxed text-gray-400">53801-0K010<br>48510-80581<br>04465-0K240</div></div>
+                            <button class="wt-btn w-full"><i class="ri-search-line"></i> Check Weights</button>
+                          </div>
+                          <div class="wt-card overflow-hidden col-span-2">
+                            <table class="wt-table"><thead><tr><th>Part Number</th><th>Part Name</th><th>Weight</th><th>Brand</th></tr></thead>
+                            <tbody>
+                              <tr><td class="wt-mono">53801-0K010</td><td>Fender</td><td>3.20 kg</td><td>Toyota</td></tr>
+                              <tr><td class="wt-mono">48510-80581</td><td>Shock Absorber</td><td>2.85 kg</td><td>KYB</td></tr>
+                              <tr><td class="wt-mono">04465-0K240</td><td>Brake Pad Set</td><td>1.10 kg</td><td>Advics</td></tr>
+                            </tbody></table>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- ALTERNATES -->
+                      <div class="wapp-screen" data-screen="alternates">
+                        <div class="wt-head"><div class="wt-ico bg-rose-500/10"><i class="ri-refresh-line text-rose-400"></i></div><div><div class="wt-title">Alternates Check</div><div class="wt-sub">Find alternate part numbers across brands</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Part Numbers</span><div class="wt-input h-12 text-gray-400">90915-YZZD4</div></div>
+                            <div class="grid grid-cols-2 gap-1.5"><button class="wt-btn"><i class="ri-flashlight-line"></i> Quick</button><button class="wt-btn"><i class="ri-search-2-line"></i> Deep</button></div>
+                            <div class="wt-input text-gray-600 text-[9px]">All Brands ▾</div>
+                          </div>
+                          <div class="wt-card overflow-hidden col-span-2">
+                            <table class="wt-table"><thead><tr><th>Brand</th><th>Alternate</th><th>Name</th></tr></thead>
+                            <tbody>
+                              <tr><td>Toyota</td><td class="wt-mono">90915-YZZD4</td><td>Oil Filter</td></tr>
+                              <tr><td>Denso</td><td class="wt-mono">150-2004</td><td>Oil Filter</td></tr>
+                              <tr><td>Bosch</td><td class="wt-mono">0986AF0066</td><td>Oil Filter</td></tr>
+                              <tr><td>Mann</td><td class="wt-mono">W 68/3</td><td>Oil Filter</td></tr>
+                            </tbody></table>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- LIST CLEANER -->
+                      <div class="wapp-screen" data-screen="listcleaner">
+                        <div class="wt-head"><div class="wt-ico bg-emerald-500/10"><i class="ri-file-list-3-line text-emerald-400"></i></div><div><div class="wt-title">List Cleaner</div><div class="wt-sub">Process text and images to extract part information</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Enter Part Numbers</span><div class="wt-input h-12 text-gray-600">Paste image, part numbers, or text...</div></div>
+                            <div class="grid grid-cols-2 gap-1.5"><button class="wt-btn"><i class="ri-camera-line"></i> Scan</button><button class="wt-btn"><i class="ri-upload-2-line"></i> Upload</button></div>
+                            <div class="grid grid-cols-2 gap-1.5"><button class="wt-ghost"><i class="ri-eraser-line"></i> Clean List</button><button class="wt-ghost"><i class="ri-file-text-line"></i> Read Text</button></div>
+                          </div>
+                          <div class="wt-card p-2.5 col-span-2">
+                            <span class="wt-label">Result</span>
+                            <div class="wt-input h-28 font-mono leading-relaxed text-emerald-300/90">90915-YZZD4<br>48510-80581<br>53801-0K010<br>04465-0K240<br>17801-0L040</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- MODEL CHECKER -->
+                      <div class="wapp-screen" data-screen="modelchecker">
+                        <div class="wt-head"><div class="wt-ico bg-orange-500/10"><i class="ri-car-line text-orange-400"></i></div><div><div class="wt-title">Model Checker</div><div class="wt-sub">Check vehicle compatibility &amp; browse catalogs</div></div></div>
+                        <div class="rounded-xl p-[1.5px] bg-gradient-to-r from-blue-500 via-teal-500 to-cyan-500 mb-2.5">
+                          <div class="rounded-xl bg-[#0F1629] p-3 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-teal-500/15 flex items-center justify-center text-lg"><i class="ri-book-open-line text-teal-400"></i></div>
+                            <div class="flex-1"><div class="text-white text-[11px] font-bold">Parts Catalog</div><div class="text-gray-500 text-[9px]">Browse full OEM catalogs by model &amp; year</div></div>
+                            <button class="wt-btn">Open</button>
+                          </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                          <div class="wt-card p-2.5"><div class="mb-1"><i class="ri-roadster-line text-orange-400 text-sm"></i></div><div class="text-white text-[9px] font-semibold">Fitment Check</div><div class="text-gray-500 text-[8px]">Verify part fits a model</div></div>
+                          <div class="wt-card p-2.5"><div class="mb-1"><i class="ri-barcode-line text-cyan-400 text-sm"></i></div><div class="text-white text-[9px] font-semibold">VIN Lookup</div><div class="text-gray-500 text-[8px]">Decode by chassis number</div></div>
+                          <div class="wt-card p-2.5"><div class="mb-1"><i class="ri-calendar-line text-teal-400 text-sm"></i></div><div class="text-white text-[9px] font-semibold">Year &amp; Trim</div><div class="text-gray-500 text-[8px]">Compatible model years</div></div>
+                        </div>
+                      </div>
+
+                      <!-- SEARCH PARTS -->
+                      <div class="wapp-screen" data-screen="searchparts">
+                        <div class="wt-head"><div class="wt-ico bg-fuchsia-500/10"><i class="ri-search-line text-fuchsia-400"></i></div><div><div class="wt-title">Search Parts</div><div class="wt-sub">Search parts by name, description, model or part number</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Search Query</span><div class="wt-input text-gray-400">air filter</div></div>
+                            <div><span class="wt-label">Model Filter</span><div class="wt-input text-gray-400">fortuner</div></div>
+                            <button class="wt-btn w-full"><i class="ri-search-2-line"></i> Search</button>
+                          </div>
+                          <div class="wt-card overflow-hidden col-span-2">
+                            <table class="wt-table"><thead><tr><th>Part Number</th><th>Name</th><th>Model</th></tr></thead>
+                            <tbody>
+                              <tr><td class="wt-mono">17801-0L040</td><td>Air Filter Element</td><td>Fortuner</td></tr>
+                              <tr><td class="wt-mono">17801-0L050</td><td>Air Filter Element</td><td>Fortuner</td></tr>
+                              <tr><td class="wt-mono">17801-30040</td><td>Air Filter Element</td><td>Fortuner</td></tr>
+                              <tr><td class="wt-mono">17801-30070</td><td>Air Filter Element</td><td>Fortuner</td></tr>
+                            </tbody></table>
+                          </div>
                         </div>
                       </div>
 
                       <!-- DIAGRAM -->
                       <div class="wapp-screen" data-screen="diagram">
-                        <div class="flex gap-2 h-full">
+                        <div class="wt-head"><div class="wt-ico bg-pink-500/10"><i class="ri-image-line text-pink-400"></i></div><div><div class="wt-title">Diagram Generator</div><div class="wt-sub">Generate part diagrams from part numbers</div></div></div>
+                        <div class="wt-card p-2 mb-2.5 flex gap-2"><div class="flex-1 wt-input text-gray-400">48510-80581</div><button class="wt-btn"><i class="ri-search-line"></i> Generate</button></div>
+                        <div class="flex gap-2" style="height:130px">
                           <div class="w-1/3 space-y-1">
-                            <div class="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[8px] md:text-[9px]"><span>🔎</span><span class="text-gray-300 font-mono">48510-80581</span></div>
                             <div class="px-2 py-1 rounded bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[8px]">Front Suspension</div>
-                            <div class="px-2 py-1 rounded bg-[#131B2E] text-gray-500 text-[8px]">Rear Absorber</div>
-                            <div class="px-2 py-1 rounded bg-[#131B2E] text-gray-500 text-[8px]">Stabilizer Bar</div>
+                            <div class="px-2 py-1 rounded bg-[#0A0F1C] text-gray-500 text-[8px]">Rear Absorber</div>
+                            <div class="px-2 py-1 rounded bg-[#0A0F1C] text-gray-500 text-[8px]">Stabilizer Bar</div>
                           </div>
-                          <div class="flex-1 rounded-lg bg-[#131B2E] border border-white/[0.06] flex items-center justify-center relative overflow-hidden">
-                            <svg class="w-2/3 h-2/3 text-blue-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path stroke-linecap="round" stroke-width="1.5" d="M3 12h3l2-5h6l3 5h4M9 17h6"/></svg>
+                          <div class="flex-1 wt-card flex items-center justify-center relative overflow-hidden">
+                            <svg class="w-1/2 h-1/2 text-blue-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path stroke-linecap="round" stroke-width="1.5" d="M3 12h3l2-5h6l3 5h4M9 17h6"/></svg>
                             <span class="absolute bottom-2 right-2 text-gray-600 text-[8px]">Auto-generated diagram</span>
                           </div>
                         </div>
@@ -871,36 +1032,61 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
 
                       <!-- DIMENSIONS -->
                       <div class="wapp-screen" data-screen="dimensions">
-                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>📐</span><span class="text-white font-mono">52119-0K907</span><span class="ml-auto text-gray-500">Front Bumper</span></div>
+                        <div class="wt-head"><div class="wt-ico bg-indigo-500/10"><i class="ri-ruler-line text-indigo-400"></i></div><div><div class="wt-title">Dimensions Checker</div><div class="wt-sub">Check parcel dimensions for any part</div></div></div>
+                        <div class="wt-card p-2 mb-2.5 flex gap-2"><div class="flex-1 wt-input text-gray-400">52119-0K907</div><button class="wt-btn"><i class="ri-search-line"></i> Check</button></div>
                         <div class="grid grid-cols-4 gap-2 mb-2">
-                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2 text-center"><div class="text-gray-500 text-[8px]">Length</div><div class="text-white text-[11px] font-bold">168 <span class="text-[7px]">cm</span></div></div>
-                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2 text-center"><div class="text-gray-500 text-[8px]">Width</div><div class="text-white text-[11px] font-bold">52 <span class="text-[7px]">cm</span></div></div>
-                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2 text-center"><div class="text-gray-500 text-[8px]">Height</div><div class="text-white text-[11px] font-bold">48 <span class="text-[7px]">cm</span></div></div>
-                          <div class="rounded-lg bg-teal-500/10 border border-teal-500/20 p-2 text-center"><div class="text-teal-400 text-[8px]">Box</div><div class="text-white text-[11px] font-bold">L</div></div>
+                          <div class="wt-card p-2.5 text-center"><div class="text-gray-500 text-[8px]">Length</div><div class="text-white text-sm font-bold">168<span class="text-[7px]"> cm</span></div></div>
+                          <div class="wt-card p-2.5 text-center"><div class="text-gray-500 text-[8px]">Width</div><div class="text-white text-sm font-bold">52<span class="text-[7px]"> cm</span></div></div>
+                          <div class="wt-card p-2.5 text-center"><div class="text-gray-500 text-[8px]">Height</div><div class="text-white text-sm font-bold">48<span class="text-[7px]"> cm</span></div></div>
+                          <div class="rounded-xl bg-teal-500/10 border border-teal-500/20 p-2.5 text-center"><div class="text-teal-400 text-[8px]">Box</div><div class="text-white text-sm font-bold">L</div></div>
                         </div>
                         <div class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[8px]">📦 Accurate carton size — plan shipping without buying a sample</div>
                       </div>
 
                       <!-- HS CODE -->
                       <div class="wapp-screen" data-screen="hscode">
-                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>🔖</span><span class="text-white font-mono">90915-YZZD4</span><span class="ml-auto text-gray-500">Oil Filter</span></div>
-                        <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-3 text-center mb-2">
+                        <div class="wt-head"><div class="wt-ico bg-lime-500/10"><i class="ri-barcode-box-line text-lime-400"></i></div><div><div class="wt-title">HS Code Checker</div><div class="wt-sub">Look up Harmonized System codes for parts</div></div></div>
+                        <div class="wt-card p-2 mb-2.5 flex gap-2"><div class="flex-1 wt-input text-gray-400">90915-YZZD4</div><button class="wt-btn"><i class="ri-search-line"></i> Check</button></div>
+                        <div class="wt-card p-3 text-center mb-2">
                           <div class="text-gray-500 text-[8px] mb-1">HS Code</div>
-                          <div class="text-white text-lg md:text-xl font-bold tracking-widest font-mono">8421.23.00</div>
+                          <div class="text-white text-xl font-bold tracking-widest wt-mono">8421.23.00</div>
                           <div class="text-gray-500 text-[8px] mt-1">Oil / fuel filters for internal combustion engines</div>
                         </div>
-                        <div class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-[8px]">✓ Verified for customs & export documentation</div>
+                        <div class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-[8px]">✓ Verified for customs &amp; export documentation</div>
                       </div>
 
                       <!-- CBM -->
                       <div class="wapp-screen" data-screen="cbm">
-                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>📦</span><span class="text-white font-mono">53801-0K010</span><span class="ml-auto text-gray-500">Qty 50</span></div>
+                        <div class="wt-head"><div class="wt-ico bg-sky-500/10"><i class="ri-box-3-line text-sky-400"></i></div><div><div class="wt-title">CBM Calculator</div><div class="wt-sub">Calculate cubic meters, volumetric &amp; actual weight</div></div></div>
+                        <div class="wt-card p-2 mb-2.5 flex gap-2"><div class="flex-1 wt-input text-gray-400">53801-0K010 · Qty 50</div><button class="wt-btn"><i class="ri-search-line"></i> Calculate</button></div>
                         <div class="grid grid-cols-2 gap-2">
-                          <div class="rounded-lg bg-[#131B2E] border border-teal-500/30 p-3 text-center"><div class="text-teal-400 text-[8px] mb-1">Total Volume</div><div class="text-white text-base md:text-lg font-bold">2.184 <span class="text-[8px]">CBM</span></div></div>
-                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-3 text-center"><div class="text-gray-500 text-[8px] mb-1">Total Weight</div><div class="text-white text-base md:text-lg font-bold">63.5 <span class="text-[8px]">kg</span></div></div>
+                          <div class="rounded-xl bg-teal-500/10 border border-teal-500/20 p-3 text-center"><div class="text-teal-400 text-[8px] mb-1">Total Volume</div><div class="text-white text-base font-bold">2.184 <span class="text-[8px]">CBM</span></div></div>
+                          <div class="wt-card p-3 text-center"><div class="text-gray-500 text-[8px] mb-1">Total Weight</div><div class="text-white text-base font-bold">63.5 <span class="text-[8px]">kg</span></div></div>
                         </div>
                         <div class="mt-2 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[8px]">🚢 Container planning made instant — volume &amp; weight per shipment</div>
                       </div>
+
+                      <!-- PART DETAILS -->
+                      <div class="wapp-screen" data-screen="details">
+                        <div class="wt-head"><div class="wt-ico bg-violet-500/10"><i class="ri-search-eye-line text-violet-400"></i></div><div><div class="wt-title">Part Details</div><div class="wt-sub">Get comprehensive part information</div></div></div>
+                        <div class="grid grid-cols-3 gap-2.5">
+                          <div class="wt-card p-2.5 space-y-2 col-span-1">
+                            <div><span class="wt-label">Part Number(s)</span><div class="wt-input h-12 text-gray-400">90915-YZZD4</div></div>
+                            <label class="flex items-center gap-1.5 text-gray-400 text-[9px]"><span class="w-3 h-3 rounded border border-white/20"></span> Check Multiple Parts</label>
+                            <button class="wt-btn w-full"><i class="ri-search-line"></i> Get Details</button>
+                          </div>
+                          <div class="wt-card p-2.5 col-span-2 space-y-1.5">
+                            <div class="flex justify-between"><span class="text-gray-500 text-[9px]">Name</span><span class="text-white text-[9px]">Oil Filter</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500 text-[9px]">Brand</span><span class="text-white text-[9px]">Toyota Genuine</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500 text-[9px]">Origin</span><span class="text-white text-[9px]">🇹🇭 Thailand</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500 text-[9px]">Weight</span><span class="text-white text-[9px]">0.32 kg</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500 text-[9px]">HS Code</span><span class="text-white text-[9px] wt-mono">8421.23.00</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500 text-[9px]">OFP Price</span><span class="text-teal-400 text-[9px]">฿ 180</span></div>
+                            <div class="flex justify-between"><span class="text-gray-500 text-[9px]">Alternates</span><span class="text-white text-[9px]">4 found</span></div>
+                          </div>
+                        </div>
+                      </div>
+
 
                     </div>
                   </div>
@@ -913,12 +1099,20 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         <!-- Interactive control bar -->
         <div class="max-w-4xl mx-auto mt-8">
           <div class="flex flex-wrap items-center justify-center gap-2 mb-4">
-            <button type="button" class="wapp-tabpill active" data-screen="home">🏠 Home</button>
-            <button type="button" class="wapp-tabpill" data-screen="searchparts">🔎 Search Parts</button>
-            <button type="button" class="wapp-tabpill" data-screen="diagram">🖼️ Diagram <span class="text-teal-300">NEW</span></button>
-            <button type="button" class="wapp-tabpill" data-screen="dimensions">📐 Dimensions <span class="text-teal-300">NEW</span></button>
-            <button type="button" class="wapp-tabpill" data-screen="hscode">🔖 HS Code <span class="text-teal-300">NEW</span></button>
-            <button type="button" class="wapp-tabpill" data-screen="cbm">📦 CBM <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill active" data-screen="home"><i class="ri-home-5-line"></i> Home</button>
+            <button type="button" class="wapp-tabpill" data-screen="prices"><i class="ri-money-dollar-circle-line"></i> Prices</button>
+            <button type="button" class="wapp-tabpill" data-screen="names"><i class="ri-price-tag-3-line"></i> Names</button>
+            <button type="button" class="wapp-tabpill" data-screen="country"><i class="ri-global-line"></i> Countries</button>
+            <button type="button" class="wapp-tabpill" data-screen="weight"><i class="ri-scales-3-line"></i> Weights</button>
+            <button type="button" class="wapp-tabpill" data-screen="alternates"><i class="ri-refresh-line"></i> Alternates</button>
+            <button type="button" class="wapp-tabpill" data-screen="listcleaner"><i class="ri-file-list-3-line"></i> List Cleaner</button>
+            <button type="button" class="wapp-tabpill" data-screen="modelchecker"><i class="ri-car-line"></i> Model Checker</button>
+            <button type="button" class="wapp-tabpill" data-screen="searchparts"><i class="ri-search-line"></i> Search Parts</button>
+            <button type="button" class="wapp-tabpill" data-screen="diagram"><i class="ri-image-line"></i> Diagram <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill" data-screen="dimensions"><i class="ri-ruler-line"></i> Dimensions <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill" data-screen="hscode"><i class="ri-barcode-box-line"></i> HS Code <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill" data-screen="cbm"><i class="ri-box-3-line"></i> CBM <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill" data-screen="details"><i class="ri-search-eye-line"></i> Part Details</button>
           </div>
           <div class="flex items-center justify-center gap-4">
             <button id="wappToggle" type="button" class="px-5 py-2.5 rounded-full glass text-white font-medium hover:bg-white/10 transition-all duration-300 text-sm">⏸️ Pause Trailer</button>
@@ -2558,18 +2752,24 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       const dotsWrap = document.getElementById('wappDots');
 
       const meta = {
-        home:        { title: 'Home',               sub: 'Welcome back to PartsMateTH' },
-        searchparts: { title: 'Search Parts',       sub: 'Find part numbers by name + model' },
-        prices:      { title: 'Prices',             sub: 'Compare market price sources' },
-        names:       { title: 'Names',              sub: 'Verified part naming' },
-        diagram:     { title: 'Diagram Checker',    sub: 'Auto-generated part diagrams' },
-        dimensions:  { title: 'Dimensions Checker', sub: 'Exact box size for shipping' },
-        hscode:      { title: 'HS Code Checker',    sub: 'Customs codes per part' },
-        cbm:         { title: 'CBM Checker',        sub: 'Volume & weight per shipment' },
+        home:         { title: 'Home',                sub: 'Welcome back to PartsMateTH' },
+        prices:       { title: 'Prices Checker',      sub: 'Check estimated internet, Dubai genuine futtaim & OFP prices' },
+        names:        { title: 'Name Checker',        sub: 'Look up part names from different sources' },
+        country:      { title: 'Country / Origin',    sub: 'Find where parts are manufactured' },
+        weight:       { title: 'Weight Checker',      sub: 'Look up part weights and brands' },
+        alternates:   { title: 'Alternates Check',    sub: 'Find alternate part numbers across brands' },
+        listcleaner:  { title: 'List Cleaner',        sub: 'Process text and images to extract part information' },
+        modelchecker: { title: 'Model Checker',       sub: 'Check vehicle compatibility & browse catalogs' },
+        searchparts:  { title: 'Search Parts',        sub: 'Search parts by name, description, model or part number' },
+        diagram:      { title: 'Diagram Generator',   sub: 'Generate part diagrams from part numbers' },
+        dimensions:   { title: 'Dimensions Checker',  sub: 'Check parcel dimensions for any part' },
+        hscode:       { title: 'HS Code Checker',     sub: 'Look up Harmonized System codes for parts' },
+        cbm:          { title: 'CBM Calculator',      sub: 'Calculate cubic meters, volumetric & actual weight' },
+        details:      { title: 'Part Details',        sub: 'Get comprehensive part information' },
       };
 
-      // Trailer order highlights the new tools
-      const order = ['home', 'searchparts', 'diagram', 'dimensions', 'hscode', 'cbm', 'prices', 'names'];
+      // Full webapp tab order
+      const order = ['home', 'prices', 'names', 'country', 'weight', 'alternates', 'listcleaner', 'modelchecker', 'searchparts', 'diagram', 'dimensions', 'hscode', 'cbm', 'details'];
       let idx = 0;
       let auto = true;
       let timer = null;
@@ -2588,8 +2788,16 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
 
       function show(key) {
         idx = Math.max(0, order.indexOf(key));
-        screens.forEach(function (s) { s.classList.toggle('active', s.dataset.screen === key); });
-        navs.forEach(function (n) { n.classList.toggle('active', n.dataset.screen === key); });
+        screens.forEach(function (s) {
+          var on = s.dataset.screen === key;
+          s.classList.toggle('active', on);
+          if (on) s.scrollTop = 0;
+        });
+        navs.forEach(function (n) {
+          var on = n.dataset.screen === key;
+          n.classList.toggle('active', on);
+          if (on && n.scrollIntoView) n.scrollIntoView({ block: 'nearest' });
+        });
         pills.forEach(function (p) { p.classList.toggle('active', p.dataset.screen === key); });
         dots.forEach(function (d, i) { d.style.background = i === idx ? '#42C2BA' : 'rgba(255,255,255,.2)'; });
         if (meta[key]) {
@@ -2599,7 +2807,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       }
 
       function next() { show(order[(idx + 1) % order.length]); }
-      function startAuto() { timer = setInterval(next, 3200); }
+      function startAuto() { timer = setInterval(next, 3600); }
       function stopAuto() { clearInterval(timer); }
       function resetAuto() { if (auto) { stopAuto(); startAuto(); } }
 
