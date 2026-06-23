@@ -469,6 +469,52 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         linear-gradient(90deg, rgba(66,194,186,0.03) 1px, transparent 1px);
       background-size: 40px 40px;
     }
+
+    /* ===== Interactive web app preview (live trailer) ===== */
+    .wapp-nav {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; text-align: left;
+      padding: 6px 10px; border-radius: 8px;
+      color: #6b7280; font-size: 10px; line-height: 1.2;
+      transition: all .25s ease; cursor: pointer;
+    }
+    .wapp-nav span { font-size: 10px; }
+    .wapp-nav:hover { background: rgba(255,255,255,.05); color: #cbd5e1; }
+    .wapp-nav.active {
+      background: linear-gradient(90deg, rgba(59,130,246,.18), rgba(66,194,186,.10));
+      color: #60a5fa; border: 1px solid rgba(59,130,246,.25);
+    }
+    .wapp-screen {
+      position: absolute; inset: 12px;
+      opacity: 0; transform: translateY(10px) scale(.99);
+      pointer-events: none;
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .wapp-screen.active {
+      opacity: 1; transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    @media (min-width: 768px){ .wapp-screen { inset: 20px; } }
+    .wapp-tabpill {
+      padding: 7px 14px; border-radius: 999px;
+      font-size: 12px; font-weight: 600; color:#9ca3af;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+      transition: all .25s ease; cursor: pointer;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .wapp-tabpill:hover { color:#e5e7eb; border-color: rgba(66,194,186,.4); }
+    .wapp-tabpill.active {
+      color:#fff; border-color: transparent;
+      background: linear-gradient(135deg,#3B82F6,#42C2BA);
+      box-shadow: 0 8px 20px -8px rgba(59,130,246,.6);
+    }
+    .wapp-newdot {
+      position:absolute; top:5px; right:5px;
+      font-size:6px; font-weight:700; letter-spacing:.04em;
+      padding:1px 4px; border-radius:999px;
+      background:#42C2BA; color:#04221f;
+    }
   
   </style>
 </head>
@@ -678,7 +724,12 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           Everything you love about PartsMateTH — now accessible from <strong class="text-white">any browser, on any device</strong>. 
           No downloads. No installations. Pure intelligence at your fingertips.
         </p>
+        <div class="inline-flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-sm font-medium animate-pulse">
+          <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+          Live interactive demo — click any tool below to explore
+        </div>
       </div>
+
 
       <!-- Preview showcase -->
       <div class="perspective-container max-w-6xl mx-auto mb-20 reveal">
@@ -699,12 +750,11 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
                   </div>
                 </div>
               </div>
-              <!-- App UI mock matching webapp.html sidebar layout -->
+              <!-- Interactive app preview (live trailer) -->
               <div class="relative aspect-[16/9] bg-[#0A0F1C]">
                 <div class="absolute inset-0 flex">
-                  <!-- Sidebar mock -->
-                  <div class="w-48 bg-[#0D1224] border-r border-white/[0.06] flex-col hidden md:flex">
-                    <!-- Logo -->
+                  <!-- Sidebar -->
+                  <div class="w-44 lg:w-52 bg-[#0D1224] border-r border-white/[0.06] flex-col hidden md:flex">
                     <div class="px-4 py-3 border-b border-white/[0.06] flex items-center gap-2">
                       <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
                         <span class="text-[10px] font-bold text-white">P</span>
@@ -714,39 +764,18 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
                         <div class="text-gray-600 text-[8px]">Web Platform</div>
                       </div>
                     </div>
-                    <!-- Nav items -->
-                    <div class="px-2.5 py-3 flex-1 space-y-0.5 overflow-hidden">
+                    <div class="px-2.5 py-3 flex-1 space-y-0.5 overflow-y-auto">
                       <div class="text-gray-500 text-[8px] font-semibold uppercase tracking-wider px-2 mb-1.5">Main</div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-500/15 to-teal-500/10 text-blue-400 text-[10px] font-medium border border-blue-500/20">
-                        <span class="text-[10px]">🏠</span> Home
-                      </div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px] hover:bg-white/5">
-                        <span class="text-[10px]">🔍</span> Part Search
-                      </div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px]">
-                        <span class="text-[10px]">💰</span> Prices
-                      </div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px]">
-                        <span class="text-[10px]">🏷️</span> Names
-                      </div>
-                      <div class="text-gray-500 text-[8px] font-semibold uppercase tracking-wider px-2 mt-2 mb-1.5">Tools</div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px]">
-                        <span class="text-[10px]">🌍</span> Countries
-                      </div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px]">
-                        <span class="text-[10px]">⚖️</span> Weights
-                      </div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px]">
-                        <span class="text-[10px]">🔄</span> Alternates
-                      </div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px]">
-                        <span class="text-[10px]">🧹</span> List Cleaner
-                      </div>
-                      <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-gray-500 text-[10px]">
-                        <span class="text-[10px]">🚗</span> Model Checker
-                      </div>
+                      <button type="button" class="wapp-nav active" data-screen="home"><span>🏠</span> Home</button>
+                      <button type="button" class="wapp-nav" data-screen="searchparts"><span>🔎</span> Search Parts</button>
+                      <button type="button" class="wapp-nav" data-screen="prices"><span>💰</span> Prices</button>
+                      <button type="button" class="wapp-nav" data-screen="names"><span>🏷️</span> Names</button>
+                      <div class="text-gray-500 text-[8px] font-semibold uppercase tracking-wider px-2 mt-2 mb-1.5">New Tools</div>
+                      <button type="button" class="wapp-nav" data-screen="diagram"><span>🖼️</span> Diagram Checker</button>
+                      <button type="button" class="wapp-nav" data-screen="dimensions"><span>📐</span> Dimensions</button>
+                      <button type="button" class="wapp-nav" data-screen="hscode"><span>🔖</span> HS Code</button>
+                      <button type="button" class="wapp-nav" data-screen="cbm"><span>📦</span> CBM</button>
                     </div>
-                    <!-- User -->
                     <div class="px-3 py-2.5 border-t border-white/[0.06] flex items-center gap-2">
                       <div class="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
                         <span class="text-[8px] font-bold text-white">U</span>
@@ -755,80 +784,124 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
                     </div>
                   </div>
                   <!-- Main content area -->
-                  <div class="flex-1 flex flex-col">
-                    <!-- Top bar -->
+                  <div class="flex-1 flex flex-col min-w-0">
                     <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/[0.06] bg-[#0A0F1C]/80">
                       <div>
-                        <div class="text-white text-xs md:text-sm font-semibold">Home</div>
-                        <div class="text-gray-500 text-[9px]">Welcome back to PartsMateTH</div>
+                        <div id="wappTitle" class="text-white text-xs md:text-sm font-semibold">Home</div>
+                        <div id="wappSubtitle" class="text-gray-500 text-[9px]">Welcome back to PartsMateTH</div>
                       </div>
                       <div class="hidden sm:flex items-center gap-2">
                         <div class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-500 text-[9px]">⌘K Search</div>
-                        <div class="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                          <span class="text-[10px]">🔔</span>
-                        </div>
+                        <div class="px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-500 text-[9px]">🌐 EN</div>
                       </div>
                     </div>
-                    <!-- Feature cards grid -->
-                    <div class="flex-1 p-3 md:p-5 overflow-hidden">
-                      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-blue-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">🔍</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">Part Search</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Search global database</div>
-                        </div>
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-teal-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-teal-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">💰</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">Prices</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Market price lookup</div>
-                        </div>
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-purple-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-purple-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">🏷️</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">Names</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Verify part names</div>
-                        </div>
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-orange-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-orange-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">🌍</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">Countries</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Origin lookup</div>
-                        </div>
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-cyan-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-cyan-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">🧹</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">List Cleaner</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Clean part lists</div>
-                        </div>
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-pink-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-pink-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">🚗</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">Model Checker</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Check fitment</div>
-                        </div>
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-green-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-green-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">🔄</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">Alternates</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Find alternatives</div>
-                        </div>
-                        <div class="rounded-xl bg-[#131B2E] border border-white/[0.06] p-2.5 md:p-3 hover:border-yellow-500/30 transition-colors">
-                          <div class="w-6 h-6 rounded-lg bg-yellow-500/15 flex items-center justify-center mb-1.5">
-                            <span class="text-[10px]">⚖️</span>
-                          </div>
-                          <div class="text-white text-[9px] md:text-[10px] font-semibold">Weights</div>
-                          <div class="text-gray-600 text-[7px] md:text-[8px]">Weight lookup</div>
+                    <div id="wappScreens" class="flex-1 relative overflow-hidden">
+
+                      <!-- HOME -->
+                      <div class="wapp-screen active" data-screen="home">
+                        <div class="grid grid-cols-3 md:grid-cols-4 gap-2 h-full content-start">
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-blue-500/15 flex items-center justify-center mb-1 text-[9px]">🔎</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Search Parts</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-green-500/15 flex items-center justify-center mb-1 text-[9px]">💰</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Prices</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-purple-500/15 flex items-center justify-center mb-1 text-[9px]">🏷️</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Names</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-cyan-500/15 flex items-center justify-center mb-1 text-[9px]">🌍</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Country</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-teal-500/15 flex items-center justify-center mb-1 text-[9px]">🖼️</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Diagram</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-blue-500/15 flex items-center justify-center mb-1 text-[9px]">📐</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Dimensions</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-orange-500/15 flex items-center justify-center mb-1 text-[9px]">🔖</div><div class="text-white text-[8px] md:text-[9px] font-semibold">HS Code</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-teal-500/30 p-2"><span class="wapp-newdot">NEW</span><div class="w-5 h-5 rounded-md bg-pink-500/15 flex items-center justify-center mb-1 text-[9px]">📦</div><div class="text-white text-[8px] md:text-[9px] font-semibold">CBM</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-yellow-500/15 flex items-center justify-center mb-1 text-[9px]">⚖️</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Weights</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-rose-500/15 flex items-center justify-center mb-1 text-[9px]">🔄</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Alternates</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-emerald-500/15 flex items-center justify-center mb-1 text-[9px]">🧹</div><div class="text-white text-[8px] md:text-[9px] font-semibold">List Cleaner</div></div>
+                          <div class="relative rounded-xl bg-[#131B2E] border border-white/[0.06] p-2"><div class="w-5 h-5 rounded-md bg-indigo-500/15 flex items-center justify-center mb-1 text-[9px]">🚗</div><div class="text-white text-[8px] md:text-[9px] font-semibold">Model</div></div>
                         </div>
                       </div>
+
+                      <!-- SEARCH PARTS -->
+                      <div class="wapp-screen" data-screen="searchparts">
+                        <div class="flex items-center gap-2 mb-2">
+                          <div class="flex-1 flex items-center gap-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-blue-500/30 text-[9px] md:text-[10px]">
+                            <span>🔎</span><span class="text-gray-300">air filter fortuner</span><span class="ml-auto w-2 h-3 bg-blue-400/70 animate-pulse"></span>
+                          </div>
+                          <div class="px-3 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-teal-500 text-white text-[9px] md:text-[10px] font-semibold">Search</div>
+                        </div>
+                        <div class="text-gray-500 text-[8px] mb-1.5">Matching part numbers for "air filter" · Fortuner</div>
+                        <div class="space-y-1">
+                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-0L040</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
+                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-0L050</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
+                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-30040</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
+                          <div class="flex items-center justify-between px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><span class="text-white text-[9px] font-mono">17801-30070</span><span class="text-gray-500 text-[8px]">Air Filter Element</span><span class="text-teal-400 text-[8px]">✓ Match</span></div>
+                        </div>
+                      </div>
+
+                      <!-- PRICES -->
+                      <div class="wapp-screen" data-screen="prices">
+                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>💰</span><span class="text-white font-mono">90919-01253</span><span class="ml-auto text-gray-500">Ignition Coil</span></div>
+                        <div class="grid grid-cols-3 gap-2">
+                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2.5 text-center"><div class="text-gray-500 text-[8px] mb-1">Internet</div><div class="text-white text-[11px] font-bold">฿ 1,250</div></div>
+                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2.5 text-center"><div class="text-gray-500 text-[8px] mb-1">Al-Futtaim</div><div class="text-white text-[11px] font-bold">฿ 1,480</div></div>
+                          <div class="rounded-lg bg-[#131B2E] border border-teal-500/30 p-2.5 text-center"><div class="text-teal-400 text-[8px] mb-1">Thai OEM</div><div class="text-white text-[11px] font-bold">฿ 1,180</div></div>
+                        </div>
+                        <div class="mt-2 px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-[8px]">↓ Best value: Thai OEM · Export to Excel available</div>
+                      </div>
+
+                      <!-- NAMES -->
+                      <div class="wapp-screen" data-screen="names">
+                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>🏷️</span><span class="text-white font-mono">53801-0K010</span></div>
+                        <div class="space-y-1">
+                          <div class="px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><div class="text-gray-500 text-[8px]">Toyota Thailand</div><div class="text-white text-[9px]">Fender Sub-Assy, Front RH</div></div>
+                          <div class="px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><div class="text-gray-500 text-[8px]">Al-Futtaim Dubai</div><div class="text-white text-[9px]">Front Fender Right</div></div>
+                          <div class="px-3 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06]"><div class="text-gray-500 text-[8px]">USA Toyota</div><div class="text-white text-[9px]">Fender Sub-Assembly, Front Right Hand</div></div>
+                        </div>
+                      </div>
+
+                      <!-- DIAGRAM -->
+                      <div class="wapp-screen" data-screen="diagram">
+                        <div class="flex gap-2 h-full">
+                          <div class="w-1/3 space-y-1">
+                            <div class="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[8px] md:text-[9px]"><span>🔎</span><span class="text-gray-300 font-mono">48510-80581</span></div>
+                            <div class="px-2 py-1 rounded bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[8px]">Front Suspension</div>
+                            <div class="px-2 py-1 rounded bg-[#131B2E] text-gray-500 text-[8px]">Rear Absorber</div>
+                            <div class="px-2 py-1 rounded bg-[#131B2E] text-gray-500 text-[8px]">Stabilizer Bar</div>
+                          </div>
+                          <div class="flex-1 rounded-lg bg-[#131B2E] border border-white/[0.06] flex items-center justify-center relative overflow-hidden">
+                            <svg class="w-2/3 h-2/3 text-blue-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/><path stroke-linecap="round" stroke-width="1.5" d="M3 12h3l2-5h6l3 5h4M9 17h6"/></svg>
+                            <span class="absolute bottom-2 right-2 text-gray-600 text-[8px]">Auto-generated diagram</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- DIMENSIONS -->
+                      <div class="wapp-screen" data-screen="dimensions">
+                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>📐</span><span class="text-white font-mono">52119-0K907</span><span class="ml-auto text-gray-500">Front Bumper</span></div>
+                        <div class="grid grid-cols-4 gap-2 mb-2">
+                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2 text-center"><div class="text-gray-500 text-[8px]">Length</div><div class="text-white text-[11px] font-bold">168 <span class="text-[7px]">cm</span></div></div>
+                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2 text-center"><div class="text-gray-500 text-[8px]">Width</div><div class="text-white text-[11px] font-bold">52 <span class="text-[7px]">cm</span></div></div>
+                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-2 text-center"><div class="text-gray-500 text-[8px]">Height</div><div class="text-white text-[11px] font-bold">48 <span class="text-[7px]">cm</span></div></div>
+                          <div class="rounded-lg bg-teal-500/10 border border-teal-500/20 p-2 text-center"><div class="text-teal-400 text-[8px]">Box</div><div class="text-white text-[11px] font-bold">L</div></div>
+                        </div>
+                        <div class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[8px]">📦 Accurate carton size — plan shipping without buying a sample</div>
+                      </div>
+
+                      <!-- HS CODE -->
+                      <div class="wapp-screen" data-screen="hscode">
+                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>🔖</span><span class="text-white font-mono">90915-YZZD4</span><span class="ml-auto text-gray-500">Oil Filter</span></div>
+                        <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-3 text-center mb-2">
+                          <div class="text-gray-500 text-[8px] mb-1">HS Code</div>
+                          <div class="text-white text-lg md:text-xl font-bold tracking-widest font-mono">8421.23.00</div>
+                          <div class="text-gray-500 text-[8px] mt-1">Oil / fuel filters for internal combustion engines</div>
+                        </div>
+                        <div class="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-[8px]">✓ Verified for customs & export documentation</div>
+                      </div>
+
+                      <!-- CBM -->
+                      <div class="wapp-screen" data-screen="cbm">
+                        <div class="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-[#131B2E] border border-white/[0.06] text-[9px] md:text-[10px]"><span>📦</span><span class="text-white font-mono">53801-0K010</span><span class="ml-auto text-gray-500">Qty 50</span></div>
+                        <div class="grid grid-cols-2 gap-2">
+                          <div class="rounded-lg bg-[#131B2E] border border-teal-500/30 p-3 text-center"><div class="text-teal-400 text-[8px] mb-1">Total Volume</div><div class="text-white text-base md:text-lg font-bold">2.184 <span class="text-[8px]">CBM</span></div></div>
+                          <div class="rounded-lg bg-[#131B2E] border border-white/[0.06] p-3 text-center"><div class="text-gray-500 text-[8px] mb-1">Total Weight</div><div class="text-white text-base md:text-lg font-bold">63.5 <span class="text-[8px]">kg</span></div></div>
+                        </div>
+                        <div class="mt-2 px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[8px]">🚢 Container planning made instant — volume &amp; weight per shipment</div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -836,9 +909,26 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
             </div>
           </div>
         </div>
+
+        <!-- Interactive control bar -->
+        <div class="max-w-4xl mx-auto mt-8">
+          <div class="flex flex-wrap items-center justify-center gap-2 mb-4">
+            <button type="button" class="wapp-tabpill active" data-screen="home">🏠 Home</button>
+            <button type="button" class="wapp-tabpill" data-screen="searchparts">🔎 Search Parts</button>
+            <button type="button" class="wapp-tabpill" data-screen="diagram">🖼️ Diagram <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill" data-screen="dimensions">📐 Dimensions <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill" data-screen="hscode">🔖 HS Code <span class="text-teal-300">NEW</span></button>
+            <button type="button" class="wapp-tabpill" data-screen="cbm">📦 CBM <span class="text-teal-300">NEW</span></button>
+          </div>
+          <div class="flex items-center justify-center gap-4">
+            <button id="wappToggle" type="button" class="px-5 py-2.5 rounded-full glass text-white font-medium hover:bg-white/10 transition-all duration-300 text-sm">⏸️ Pause Trailer</button>
+            <div class="flex gap-1.5" id="wappDots"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Features grid -->
+
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16 reveal">
         <div class="webapp-stat-card">
           <div class="text-3xl md:text-4xl font-bold gradient-text mb-2">100%</div>
@@ -896,6 +986,31 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
             <span class="text-gray-300 text-sm font-medium">Alternates Finder</span>
           </div>
           <div class="webapp-feature-pill px-4 py-2.5 rounded-xl flex items-center gap-2">
+            <span class="text-lg">🔎</span>
+            <span class="text-gray-300 text-sm font-medium">Search Parts</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[9px] font-bold">NEW</span>
+          </div>
+          <div class="webapp-feature-pill px-4 py-2.5 rounded-xl flex items-center gap-2">
+            <span class="text-lg">🖼️</span>
+            <span class="text-gray-300 text-sm font-medium">Diagram Checker</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[9px] font-bold">NEW</span>
+          </div>
+          <div class="webapp-feature-pill px-4 py-2.5 rounded-xl flex items-center gap-2">
+            <span class="text-lg">📐</span>
+            <span class="text-gray-300 text-sm font-medium">Dimensions Checker</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[9px] font-bold">NEW</span>
+          </div>
+          <div class="webapp-feature-pill px-4 py-2.5 rounded-xl flex items-center gap-2">
+            <span class="text-lg">🔖</span>
+            <span class="text-gray-300 text-sm font-medium">HS Code Checker</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[9px] font-bold">NEW</span>
+          </div>
+          <div class="webapp-feature-pill px-4 py-2.5 rounded-xl flex items-center gap-2">
+            <span class="text-lg">📦</span>
+            <span class="text-gray-300 text-sm font-medium">CBM Checker</span>
+            <span class="px-1.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[9px] font-bold">NEW</span>
+          </div>
+          <div class="webapp-feature-pill px-4 py-2.5 rounded-xl flex items-center gap-2">
             <span class="text-lg">🚗</span>
             <span class="text-gray-300 text-sm font-medium">Model Fitment</span>
           </div>
@@ -944,6 +1059,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
             </div>
           </div>
           <ul class="space-y-3 relative z-10">
+            <li class="flex items-center gap-2 text-gray-300 text-sm"><svg class="w-4 h-4 text-teal-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>15 powerful tools, including 5 new exclusives</li>
             <li class="flex items-center gap-2 text-gray-300 text-sm"><svg class="w-4 h-4 text-teal-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Access from any device & browser</li>
             <li class="flex items-center gap-2 text-gray-300 text-sm"><svg class="w-4 h-4 text-teal-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>No download or installation required</li>
             <li class="flex items-center gap-2 text-gray-300 text-sm"><svg class="w-4 h-4 text-teal-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Always on the latest version</li>
@@ -1158,7 +1274,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           Powerful Features
         </span>
         <h2 class="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-          10 Powerful Tabs, <span class="gradient-text">One Platform</span>
+          15 Powerful Tabs, <span class="gradient-text">One Platform</span>
         </h2>
         <p class="text-gray-400 max-w-2xl mx-auto text-lg">
           Every tool you need to dominate the autoparts business, built into one seamless experience.
@@ -1490,6 +1606,145 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           </div>
         </div>
 
+        <!-- New Web App Features Banner -->
+        <div class="text-center pt-4 reveal">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-sm font-bold">
+            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+            NEW IN THE WEB APP
+          </span>
+          <h3 class="font-display text-2xl md:text-3xl font-bold text-white mt-4">5 Powerful New Tools, <span class="gradient-text">Just Added</span></h3>
+          <p class="text-gray-400 max-w-2xl mx-auto mt-2">Fresh capabilities built for sourcing, shipping and customs — now live in the PartsMateTH web app.</p>
+        </div>
+
+        <!-- Row 7: New Web App Features -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Search Parts -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-sky-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🔎</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider">Reverse Search</span>
+                  <span class="px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-bold">NEW</span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Search Parts</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Search for a part number by entering a part name and model. Type something like "air filter for Fortuner" and instantly get a list of every matching part number — so you locate the right part without guessing.
+            </p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">Search by name + model</span></div>
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">All matching part numbers</span></div>
+            </div>
+          </div>
+
+          <!-- Diagram Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🖼️</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold text-teal-400 uppercase tracking-wider">Visual Lookup</span>
+                  <span class="px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-bold">NEW</span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Diagram Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Search for any part number and instantly generate the diagram for that specific part. Works across all models and brands, so you can confirm exactly what you're looking at before you buy or sell.
+            </p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">Instant diagram generation</span></div>
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">All models & brands</span></div>
+            </div>
+          </div>
+
+          <!-- Dimensions Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-500/20 to-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">📐</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Shipping Prep</span>
+                  <span class="px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-bold">NEW</span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Dimensions Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Search a part and get the exact, accurate box size for that specific part. Plan your shipping precisely instead of the old way — buying a sample just to measure it.
+            </p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">Accurate carton dimensions</span></div>
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">No physical sample needed</span></div>
+            </div>
+          </div>
+
+          <!-- HS Code Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">🔖</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold text-orange-400 uppercase tracking-wider">Customs</span>
+                  <span class="px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-bold">NEW</span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">HS Code Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              Search any part number and get its exact HS codes. Speed up customs documentation, duty calculations and compliant exporting without manual lookups.
+            </p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">Exact HS codes per part</span></div>
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">Customs-ready documentation</span></div>
+            </div>
+          </div>
+
+          <!-- CBM Checker -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group">
+            <div class="flex items-center gap-4 mb-5">
+              <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">📦</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold text-pink-400 uppercase tracking-wider">Freight Volume</span>
+                  <span class="px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-bold">NEW</span>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">CBM Checker</h3>
+              </div>
+            </div>
+            <p class="text-gray-400 leading-relaxed mb-5">
+              See the total CBM volume and weight a part will take up. Plan container space and shipping costs with confidence before you commit to an order.
+            </p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">Total CBM volume</span></div>
+              <div class="flex items-center gap-2 text-sm"><svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-gray-300">Weight per shipment</span></div>
+            </div>
+          </div>
+
+          <!-- Closing prompt card -->
+          <div class="feature-card gradient-border p-6 md:p-8 rounded-2xl reveal group flex flex-col justify-center items-center text-center bg-gradient-to-br from-blue-500/5 to-teal-500/5">
+            <div class="text-3xl mb-3">🚀</div>
+            <h3 class="font-display text-xl font-bold text-white mb-2">More on the way</h3>
+            <p class="text-gray-400 text-sm mb-4">We ship new tools regularly. Try them all in the web app.</p>
+            <a href="/login.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+              Launch Web App
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+          </div>
+        </div>
+
         <!-- Row 6: Stock Pro - Experimental Banner -->
         <div class="feature-card relative p-8 md:p-10 rounded-2xl reveal group overflow-hidden border-2 border-dashed border-white/20 bg-gradient-to-br from-brand-card/50 to-brand-dark/50">
           <div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(59,130,246,0.03)_50%,transparent_75%)] bg-[size:20px_20px]"></div>
@@ -1815,6 +2070,25 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
                         class="input-glow w-full px-4 py-3 rounded-xl bg-brand-muted border border-white/10 text-white placeholder-gray-500 focus:outline-none transition-all duration-300 resize-none" 
                         placeholder="Tell us how we can help..."></textarea>
             </div>
+
+            <!-- Honeypot: hidden from humans, bots tend to fill it -->
+            <div aria-hidden="true" style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+              <label>Company (leave this field empty)</label>
+              <input type="text" name="company" id="hp_company" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- Human verification challenge -->
+            <div>
+              <label class="block text-gray-300 text-sm font-medium mb-2">Human verification</label>
+              <div class="flex items-center gap-3">
+                <span id="captchaQ" class="px-4 py-3 rounded-xl bg-brand-muted border border-white/10 text-white font-semibold whitespace-nowrap select-none">…</span>
+                <input id="captchaA" type="text" inputmode="numeric" required
+                       class="input-glow w-32 px-4 py-3 rounded-xl bg-brand-muted border border-white/10 text-white placeholder-gray-500 focus:outline-none transition-all duration-300"
+                       placeholder="Answer" autocomplete="off">
+                <button type="button" id="captchaReload" class="px-3 py-3 rounded-xl bg-brand-muted border border-white/10 text-gray-400 hover:text-white transition-colors" title="New question">↻</button>
+              </div>
+              <p class="text-gray-500 text-xs mt-2">Solve the quick math to confirm you're human. Helps us block spam bots.</p>
+            </div>
             
             <button id="submitBtn" type="submit" class="btn-glow w-full py-4 rounded-xl text-white font-semibold text-lg flex items-center justify-center gap-2">
               <span id="btnText">Send Message</span>
@@ -1928,10 +2202,51 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       const formResponse = document.getElementById("formResponse");
       
       if (!form) return;
-      
+
+      // ===== Spam-bot protection (honeypot + timing + math challenge) =====
+      const formLoadedAt = Date.now();
+      const captchaQ = document.getElementById("captchaQ");
+      const captchaA = document.getElementById("captchaA");
+      const captchaReload = document.getElementById("captchaReload");
+      let captchaAnswer = 0;
+      function newCaptcha() {
+        const a = Math.floor(Math.random() * 8) + 2;
+        const b = Math.floor(Math.random() * 8) + 1;
+        captchaAnswer = a + b;
+        if (captchaQ) captchaQ.textContent = `${a} + ${b} = ?`;
+        if (captchaA) captchaA.value = "";
+      }
+      newCaptcha();
+      if (captchaReload) captchaReload.addEventListener("click", newCaptcha);
+
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
+
+        // 1) Honeypot — only bots fill this hidden field
+        const hp = document.getElementById("hp_company");
+        if (hp && hp.value.trim() !== "") {
+          formResponse.textContent = "✅ Message sent successfully! We'll get back to you soon.";
+          formResponse.className = "text-center font-medium text-green-400";
+          form.reset();
+          return; // silently drop
+        }
+
+        // 2) Timing trap — humans take more than a couple seconds
+        if (Date.now() - formLoadedAt < 3000) {
+          formResponse.textContent = "⚠️ Please take a moment to fill the form, then try again.";
+          formResponse.className = "text-center font-medium text-yellow-400";
+          return;
+        }
+
+        // 3) Human math challenge
+        if (parseInt((captchaA && captchaA.value || "").trim(), 10) !== captchaAnswer) {
+          formResponse.textContent = "❌ Incorrect verification answer. Please try the math question again.";
+          formResponse.className = "text-center font-medium text-red-400";
+          newCaptcha();
+          if (captchaA) captchaA.focus();
+          return;
+        }
+
         btnText.textContent = "Sending...";
         btnSpinner.classList.remove("hidden");
         submitBtn.disabled = true;
@@ -1957,6 +2272,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           formResponse.textContent = "✅ Message sent successfully! We'll get back to you soon.";
           formResponse.className = "text-center font-medium text-green-400";
           form.reset();
+          newCaptcha();
           document.getElementById("contactPhonePrefix").textContent = "+--";
           document.getElementById("contactIsoLabel").textContent = "--";
         })
@@ -2038,20 +2354,22 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     const reveals = document.querySelectorAll('.reveal');
     reveals.forEach(el => {
       gsap.fromTo(el, 
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          duration: 1,
-          ease: "power3.out",
+          duration: 0.5,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: el,
-            start: "top 85%",
+            start: "top 92%",
             toggleActions: "play none none none"
           }
         }
       );
     });
+    // Snap-in anything already scrolled past on load (no slow late fade)
+    ScrollTrigger.refresh();
   </script>
 
   <script>
@@ -2226,7 +2544,82 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       });
     })();
   </script>
-  <!-- ============================================================ -->
+
+  <script>
+    // Interactive Web App preview (live trailer)
+    document.addEventListener('DOMContentLoaded', function () {
+      const screens = Array.from(document.querySelectorAll('.wapp-screen'));
+      if (!screens.length) return;
+      const navs = Array.from(document.querySelectorAll('.wapp-nav'));
+      const pills = Array.from(document.querySelectorAll('.wapp-tabpill'));
+      const titleEl = document.getElementById('wappTitle');
+      const subEl = document.getElementById('wappSubtitle');
+      const toggleBtn = document.getElementById('wappToggle');
+      const dotsWrap = document.getElementById('wappDots');
+
+      const meta = {
+        home:        { title: 'Home',               sub: 'Welcome back to PartsMateTH' },
+        searchparts: { title: 'Search Parts',       sub: 'Find part numbers by name + model' },
+        prices:      { title: 'Prices',             sub: 'Compare market price sources' },
+        names:       { title: 'Names',              sub: 'Verified part naming' },
+        diagram:     { title: 'Diagram Checker',    sub: 'Auto-generated part diagrams' },
+        dimensions:  { title: 'Dimensions Checker', sub: 'Exact box size for shipping' },
+        hscode:      { title: 'HS Code Checker',    sub: 'Customs codes per part' },
+        cbm:         { title: 'CBM Checker',        sub: 'Volume & weight per shipment' },
+      };
+
+      // Trailer order highlights the new tools
+      const order = ['home', 'searchparts', 'diagram', 'dimensions', 'hscode', 'cbm', 'prices', 'names'];
+      let idx = 0;
+      let auto = true;
+      let timer = null;
+
+      // Build progress dots
+      const dots = order.map(function (key, i) {
+        const d = document.createElement('button');
+        d.type = 'button';
+        d.className = 'w-2 h-2 rounded-full transition-all duration-300';
+        d.style.background = i === 0 ? '#42C2BA' : 'rgba(255,255,255,.2)';
+        d.setAttribute('aria-label', meta[key] ? meta[key].title : key);
+        d.addEventListener('click', function () { show(key); resetAuto(); });
+        if (dotsWrap) dotsWrap.appendChild(d);
+        return d;
+      });
+
+      function show(key) {
+        idx = Math.max(0, order.indexOf(key));
+        screens.forEach(function (s) { s.classList.toggle('active', s.dataset.screen === key); });
+        navs.forEach(function (n) { n.classList.toggle('active', n.dataset.screen === key); });
+        pills.forEach(function (p) { p.classList.toggle('active', p.dataset.screen === key); });
+        dots.forEach(function (d, i) { d.style.background = i === idx ? '#42C2BA' : 'rgba(255,255,255,.2)'; });
+        if (meta[key]) {
+          if (titleEl) titleEl.textContent = meta[key].title;
+          if (subEl) subEl.textContent = meta[key].sub;
+        }
+      }
+
+      function next() { show(order[(idx + 1) % order.length]); }
+      function startAuto() { timer = setInterval(next, 3200); }
+      function stopAuto() { clearInterval(timer); }
+      function resetAuto() { if (auto) { stopAuto(); startAuto(); } }
+
+      navs.concat(pills).forEach(function (btn) {
+        btn.addEventListener('click', function () { show(btn.dataset.screen); resetAuto(); });
+      });
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+          auto = !auto;
+          if (auto) { startAuto(); toggleBtn.textContent = '⏸️ Pause Trailer'; }
+          else { stopAuto(); toggleBtn.textContent = '▶️ Play Trailer'; }
+        });
+      }
+
+      show('home');
+      startAuto();
+    });
+  </script>
+
   <!-- SECTION VISIBILITY CONTROLS                                  -->
   <!-- Set any value to false to HIDE that section, true to SHOW.   -->
   <!-- Changing these does not affect any other feature.            -->
