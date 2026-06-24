@@ -570,7 +570,14 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           <a href="#contact" class="nav-link text-gray-300 font-medium">Contact</a>
           <a href="/plans.html" class="nav-link text-gray-300 font-medium">Plans</a>
           <a href="/profile.html" class="nav-link text-gray-300 font-medium">Profile</a>
+          <div class="relative" id="langWrap">
+            <button id="langBtn" type="button" class="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-gray-200 text-sm font-medium hover:bg-white/10 transition-all">
+              <i class="ri-global-line"></i><span id="langCurrent">EN</span><i class="ri-arrow-down-s-line text-xs"></i>
+            </button>
+            <div id="langMenu" class="hidden absolute right-0 mt-2 w-44 rounded-xl glass border border-white/10 shadow-2xl py-2 z-50 max-h-80 overflow-y-auto"></div>
+          </div>
           <a href="/login.html" class="btn-glow px-5 py-2.5 rounded-full text-white font-semibold text-sm">Login / Sign Up</a>
+
           <!-- <a href="/download.html" class="btn-glow px-5 py-2.5 rounded-full text-white font-semibold text-sm">Download App</a> -->
           <!-- <a href="/login.html" class="nav-link text-gray-300 font-medium">Login / Sign Up</a> -->
         </nav>
@@ -595,6 +602,10 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         <a href="/plans.html" class="block text-gray-300 hover:text-white font-medium py-2">Plans</a>
         <a href="/profile.html" class="block text-gray-300 hover:text-white font-medium py-2">Profile</a>
         <a href="/login.html" class="block text-gray-300 hover:text-white font-medium py-2">Login / Signup</a>
+        <div class="pt-2 border-t border-white/10">
+          <div class="text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2">Language</div>
+          <div id="langMenuMobile" class="grid grid-cols-2 gap-2"></div>
+        </div>
       </div>
     </div>
   </header>
@@ -2854,5 +2865,246 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       });
     })();
   </script>
+
+  <!-- ===================== HOMEPAGE I18N ===================== -->
+  <script>
+  (function () {
+    var LANGS = [
+      { code: "en", label: "English",  short: "EN" },
+      { code: "fr", label: "Français", short: "FR" },
+      { code: "ar", label: "العربية",  short: "AR" },
+      { code: "hi", label: "हिन्दी",    short: "HI" },
+      { code: "ur", label: "اردو",     short: "UR" },
+      { code: "ru", label: "Русский",  short: "RU" },
+      { code: "ps", label: "پښتو",     short: "PS" },
+      { code: "ko", label: "한국어",    short: "KO" },
+      { code: "tr", label: "Türkçe",   short: "TR" },
+      { code: "zh", label: "中文",      short: "ZH" }
+    ];
+    var RTL = ["ar", "ur", "ps"];
+    var L = ["fr","ar","hi","ur","ru","ps","ko","tr","zh"];
+    function row(vals){ var o={}; for(var i=0;i<L.length;i++){ o[L[i]]=vals[i]; } return o; }
+
+    var T = {
+      "Home": row(["Accueil","الرئيسية","होम","ہوم","Главная","کور","홈","Ana Sayfa","首页"]),
+      "Features": row(["Fonctionnalités","الميزات","विशेषताएँ","خصوصیات","Возможности","ځانګړتیاوې","기능","Özellikler","功能"]),
+      "About": row(["À propos","حول","परिचय","متعارف","О нас","زموږ په اړه","소개","Hakkında","关于"]),
+      "Contact": row(["Contact","اتصل","संपर्क","رابطہ","Контакты","اړیکه","문의","İletişim","联系"]),
+      "Plans": row(["Forfaits","الباقات","योजनाएँ","پلانز","Тарифы","پلانونه","요금제","Planlar","套餐"]),
+      "Profile": row(["Profil","الملف الشخصي","प्रोफ़ाइल","پروفائل","Профиль","پروفایل","프로필","Profil","个人资料"]),
+      "Login / Sign Up": row(["Connexion / Inscription","تسجيل الدخول / اشتراك","लॉगिन / साइन अप","لاگ ان / سائن اپ","Вход / Регистрация","ننوتل / نوم لیکنه","로그인 / 가입","Giriş / Kayıt","登录 / 注册"]),
+      "Login / Signup": row(["Connexion / Inscription","تسجيل الدخول / اشتراك","लॉगिन / साइन अप","لاگ ان / سائن اپ","Вход / Регистрация","ننوتل / نوم لیکنه","로그인 / 가입","Giriş / Kayıt","登录 / 注册"]),
+      "Web App": row(["Application Web","تطبيق الويب","वेब ऐप","ویب ایپ","Веб-приложение","ویب اپلیکیشن","웹 앱","Web Uygulaması","网页应用"]),
+      "Download App": row(["Télécharger l'app","تحميل التطبيق","ऐप डाउनलोड","ایپ ڈاؤن لوڈ","Скачать приложение","اپلیکیشن ډاونلوډ","앱 다운로드","Uygulamayı İndir","下载应用"]),
+      "Download": row(["Télécharger","تحميل","डाउनलोड","ڈاؤن لوڈ","Скачать","ډاونلوډ","다운로드","İndir","下载"]),
+
+      "The #1 Autoparts Intelligence Platform": row(["La plateforme d'intelligence n°1 pour les pièces auto","منصة ذكاء قطع غيار السيارات رقم 1","नंबर 1 ऑटोपार्ट्स इंटेलिजेंस प्लेटफ़ॉर्म","نمبر 1 آٹو پارٹس انٹیلیجنس پلیٹ فارم","Платформа №1 для интеллектуального поиска автозапчастей","د موټر پرزو د استخباراتو نمبر ۱ پلیټفارم","1위 자동차 부품 인텔리전스 플랫폼","1 Numaralı Oto Parça Zekâ Platformu","排名第一的汽车配件智能平台"]),
+      "Intelligent Autoparts": row(["Pièces auto intelligentes","قطع غيار ذكية","बुद्धिमान ऑटोपार्ट्स","ذہین آٹوپارٹس","Интеллектуальные автозапчасти","هوښیار موټر پرزې","지능형 자동차 부품","Akıllı Oto Parçaları","智能汽车配件"]),
+      "Platform": row(["Plateforme","منصة","प्लेटफ़ॉर्म","پلیٹ فارم","Платформа","پلیټفارم","플랫폼","Platform","平台"]),
+      "– Smart": row(["– Intelligent","– ذكي","– स्मार्ट","– اسمارٹ","– Умный","– هوښیار","– 스마트","– Akıllı","– 智能"]),
+      "Automotive Parts": row(["Pièces automobiles","قطع غيار السيارات","ऑटोमोटिव पार्ट्स","آٹوموٹیو پارٹس","Автозапчасти","موټر پرزې","자동차 부품","Otomotiv Parçaları","汽车配件"]),
+      "Database & Search": row(["Base de données et recherche","قاعدة بيانات وبحث","डेटाबेस और खोज","ڈیٹابیس اور تلاش","База данных и поиск","ډیټابیس او لټون","데이터베이스 및 검색","Veritabanı ve Arama","数据库与搜索"]),
+      "Work": row(["Travaillez","اعمل","काम करें","کام کریں","Работайте","کار وکړئ","작업하기","Çalışın","工作"]),
+      "10x Faster": row(["10x plus vite","أسرع 10 مرات","10 गुना तेज़","10 گنا تیز","В 10 раз быстрее","۱۰ ځله ګړندی","10배 빠르게","10x Daha Hızlı","速度提升10倍"]),
+      "with Automation": row(["avec l'automatisation","مع الأتمتة","ऑटोमेशन के साथ","آٹومیشن کے ساتھ","с автоматизацией","د اتومات سره","자동화로","Otomasyonla","借助自动化"]),
+      "PartsMateTH is a next-generation auto parts intelligence platform built to simplify how professionals search automotive parts, verify data, analyze market pricing, and manage global supply chain operations.": row([
+        "PartsMateTH est une plateforme d'intelligence de pièces auto de nouvelle génération conçue pour simplifier la recherche de pièces, la vérification des données, l'analyse des prix du marché et la gestion de la chaîne d'approvisionnement mondiale.",
+        "PartsMateTH هي منصة ذكاء قطع غيار سيارات من الجيل التالي مصممة لتبسيط كيفية بحث المحترفين عن قطع الغيار والتحقق من البيانات وتحليل أسعار السوق وإدارة عمليات سلسلة التوريد العالمية.",
+        "PartsMateTH एक अगली पीढ़ी का ऑटो पार्ट्स इंटेलिजेंस प्लेटफ़ॉर्म है जो पेशेवरों के लिए पार्ट्स खोजना, डेटा सत्यापित करना, बाज़ार मूल्य विश्लेषण और वैश्विक आपूर्ति श्रृंखला प्रबंधन को सरल बनाता है।",
+        "PartsMateTH ایک نئی نسل کا آٹو پارٹس انٹیلیجنس پلیٹ فارم ہے جو ماہرین کے لیے پارٹس تلاش کرنا، ڈیٹا کی تصدیق، مارکیٹ قیمتوں کا تجزیہ اور عالمی سپلائی چین کے انتظام کو آسان بناتا ہے۔",
+        "PartsMateTH — это интеллектуальная платформа автозапчастей нового поколения, упрощающая поиск деталей, проверку данных, анализ рыночных цен и управление глобальными цепочками поставок.",
+        "PartsMateTH د راتلونکي نسل د موټر پرزو استخباراتي پلیټفارم دی چې مسلکي کسانو ته د پرزو لټون، د معلوماتو تایید، د بازار د بیو شننه او د نړیوال عرضه زنځیر اداره اسانه کوي.",
+        "PartsMateTH는 전문가가 부품을 검색하고 데이터를 확인하며 시장 가격을 분석하고 글로벌 공급망 운영을 관리하는 방식을 간소화하는 차세대 자동차 부품 인텔리전스 플랫폼입니다.",
+        "PartsMateTH, profesyonellerin parça aramasını, veri doğrulamasını, pazar fiyatı analizini ve küresel tedarik zinciri operasyonlarını yönetmesini basitleştiren yeni nesil bir oto parça zekâ platformudur.",
+        "PartsMateTH 是新一代汽车配件智能平台，旨在简化专业人员搜索配件、核验数据、分析市场价格以及管理全球供应链运营的方式。"]),
+      "Designed for dealers, garages, exporters, and distributors, the platform combines automation with a powerful automotive parts database to eliminate manual work, reduce costly errors, and accelerate decision-making.": row([
+        "Conçue pour les concessionnaires, garages, exportateurs et distributeurs, la plateforme associe l'automatisation à une puissante base de données de pièces auto pour éliminer le travail manuel, réduire les erreurs coûteuses et accélérer la prise de décision.",
+        "مصممة للوكلاء والورش والمصدّرين والموزعين، تجمع المنصة بين الأتمتة وقاعدة بيانات قوية لقطع غيار السيارات للقضاء على العمل اليدوي وتقليل الأخطاء المكلفة وتسريع اتخاذ القرار.",
+        "डीलरों, गैरेज, निर्यातकों और वितरकों के लिए डिज़ाइन किया गया, यह प्लेटफ़ॉर्म ऑटोमेशन को एक शक्तिशाली ऑटो पार्ट्स डेटाबेस के साथ जोड़ता है ताकि मैन्युअल काम समाप्त हो, महंगी गलतियाँ कम हों और निर्णय तेज़ हों।",
+        "ڈیلرز، گیراجز، برآمد کنندگان اور تقسیم کاروں کے لیے ڈیزائن کیا گیا، یہ پلیٹ فارم آٹومیشن کو ایک طاقتور آٹو پارٹس ڈیٹابیس کے ساتھ جوڑتا ہے تاکہ دستی کام ختم ہو، مہنگی غلطیاں کم ہوں اور فیصلے تیز ہوں۔",
+        "Платформа создана для дилеров, мастерских, экспортёров и дистрибьюторов и объединяет автоматизацию с мощной базой автозапчастей, устраняя ручной труд, снижая дорогостоящие ошибки и ускоряя принятие решений.",
+        "د ډیلرانو، ګراجونو، صادروونکو او وېشونکو لپاره ډیزاین شوی، دا پلیټفارم اتومات د موټر پرزو له پیاوړي ډیټابیس سره یوځای کوي ترڅو لاسي کار له منځه یوسي، ګران تېروتنې کمې کړي او پریکړې چټکې کړي.",
+        "딜러, 정비소, 수출업체, 유통업체를 위해 설계된 이 플랫폼은 자동화와 강력한 자동차 부품 데이터베이스를 결합하여 수작업을 없애고 값비싼 오류를 줄이며 의사 결정을 가속화합니다.",
+        "Bayiler, servisler, ihracatçılar ve distribütörler için tasarlanan platform, otomasyonu güçlü bir oto parça veritabanıyla birleştirerek manuel işi ortadan kaldırır, maliyetli hataları azaltır ve karar almayı hızlandırır.",
+        "该平台专为经销商、修理厂、出口商和分销商设计，将自动化与强大的汽车配件数据库相结合，消除人工操作、减少昂贵错误并加快决策。"]),
+      "Get Started": row(["Commencer","ابدأ الآن","शुरू करें","شروع کریں","Начать","پیل وکړئ","시작하기","Başlayın","开始使用"]),
+      "Explore Features": row(["Explorer les fonctionnalités","استكشف الميزات","विशेषताएँ देखें","خصوصیات دیکھیں","Изучить возможности","ځانګړتیاوې وپلټئ","기능 살펴보기","Özellikleri Keşfet","探索功能"]),
+      "Explore PartsMateTH Tabs": row(["Explorer les onglets PartsMateTH","استكشف علامات تبويب PartsMateTH","PartsMateTH टैब्स देखें","PartsMateTH ٹیبز دیکھیں","Изучите вкладки PartsMateTH","د PartsMateTH ټبونه وپلټئ","PartsMateTH 탭 살펴보기","PartsMateTH Sekmelerini Keşfet","探索 PartsMateTH 标签"]),
+      "Select a tab to preview": row(["Sélectionnez un onglet pour aperçu","اختر علامة تبويب للمعاينة","पूर्वावलोकन के लिए टैब चुनें","پیش نظارہ کے لیے ٹیب منتخب کریں","Выберите вкладку для просмотра","د کتنې لپاره ټب وټاکئ","미리 볼 탭 선택","Önizleme için sekme seçin","选择标签以预览"]),
+      "⏸️ Pause Auto": row(["⏸️ Pause auto","⏸️ إيقاف تلقائي","⏸️ ऑटो रोकें","⏸️ آٹو روکیں","⏸️ Пауза","⏸️ اتومات ودروئ","⏸️ 자동 일시정지","⏸️ Otomatiği Duraklat","⏸️ 暂停自动"]),
+
+      "Prices": row(["Prix","الأسعار","कीमतें","قیمتیں","Цены","بیې","가격","Fiyatlar","价格"]),
+      "Names": row(["Noms","الأسماء","नाम","نام","Названия","نومونه","이름","İsimler","名称"]),
+      "Country": row(["Pays","البلد","देश","ملک","Страна","هېواد","국가","Ülke","国家"]),
+      "Countries": row(["Pays","البلدان","देश","ممالک","Страны","هېوادونه","국가","Ülkeler","国家"]),
+      "Details": row(["Détails","التفاصيل","विवरण","تفصیلات","Детали","جزئیات","세부정보","Detaylar","详情"]),
+      "Cleaner": row(["Nettoyeur","المنظف","क्लीनर","کلینر","Очистка","پاکوونکی","클리너","Temizleyici","清理器"]),
+      "Weights": row(["Poids","الأوزان","वज़न","وزن","Вес","وزنونه","무게","Ağırlıklar","重量"]),
+      "Weight": row(["Poids","الوزن","वज़न","وزن","Вес","وزن","무게","Ağırlık","重量"]),
+      "Alternates": row(["Alternatives","البدائل","विकल्प","متبادل","Аналоги","بدیلونه","대체품","Alternatifler","替代件"]),
+      "Model": row(["Modèle","الطراز","मॉडल","ماڈل","Модель","ماډل","모델","Model","车型"]),
+      "Stock": row(["Stock","المخزون","स्टॉक","اسٹاک","Склад","ذخیره","재고","Stok","库存"]),
+
+      "NEW LAUNCH": row(["NOUVEAU","إطلاق جديد","नया लॉन्च","نیا لانچ","НОВИНКА","نوی پیل","신규 출시","YENİ","全新发布"]),
+      "The Future of Auto Parts Management — Now on the Web": row(["L'avenir de la gestion des pièces auto — désormais sur le web","مستقبل إدارة قطع غيار السيارات — الآن على الويب","ऑटो पार्ट्स प्रबंधन का भविष्य — अब वेब पर","آٹو پارٹس مینجمنٹ کا مستقبل — اب ویب پر","Будущее управления автозапчастями — теперь в интернете","د موټر پرزو مدیریت راتلونکی — اوس په وېب کې","자동차 부품 관리의 미래 — 이제 웹에서","Oto Parça Yönetiminin Geleceği — Artık Web'de","汽车配件管理的未来 — 现已登陆网页"]),
+      "Web Application": row(["Application Web","تطبيق الويب","वेब एप्लिकेशन","ویب ایپلیکیشن","Веб-приложение","ویب اپلیکیشن","웹 애플리케이션","Web Uygulaması","网页应用"]),
+      "Live interactive demo — click any tool below to explore": row(["Démo interactive en direct — cliquez sur un outil ci-dessous","عرض تفاعلي مباشر — انقر على أي أداة أدناه","लाइव इंटरैक्टिव डेमो — नीचे किसी भी टूल पर क्लिक करें","لائیو انٹرایکٹو ڈیمو — نیچے کسی بھی ٹول پر کلک کریں","Живое интерактивное демо — нажмите на любой инструмент ниже","ژوندی متقابل ډیمو — لاندې پر هره وسیله کلیک وکړئ","실시간 대화형 데모 — 아래 도구를 클릭하세요","Canlı etkileşimli demo — aşağıdaki araçlardan birine tıklayın","实时互动演示 — 点击下方任意工具体验"]),
+
+      "Browser-Based": row(["Basé sur navigateur","يعمل عبر المتصفح","ब्राउज़र-आधारित","براؤزر پر مبنی","В браузере","پر براوزر ولاړ","브라우저 기반","Tarayıcı Tabanlı","基于浏览器"]),
+      "No downloads needed": row(["Aucun téléchargement requis","لا حاجة للتحميل","कोई डाउनलोड नहीं","کوئی ڈاؤن لوڈ نہیں","Без загрузок","هیڅ ډاونلوډ ته اړتیا نشته","다운로드 불필요","İndirme gerekmez","无需下载"]),
+      "Real-Time Sync": row(["Synchro en temps réel","مزامنة فورية","रीयल-टाइम सिंक","ریئل ٹائم سنک","Синхронизация в реальном времени","ریښتیني وخت همغږي","실시간 동기화","Gerçek Zamanlı Eşitleme","实时同步"]),
+      "Data always up to date": row(["Données toujours à jour","بيانات محدثة دائماً","डेटा हमेशा अपडेट","ڈیٹا ہمیشہ تازہ","Данные всегда актуальны","معلومات تل تازه","항상 최신 데이터","Veriler her zaman güncel","数据始终最新"]),
+      "Enterprise Security": row(["Sécurité d'entreprise","أمان مؤسسي","एंटरप्राइज़ सुरक्षा","انٹرپرائز سیکیورٹی","Корпоративная безопасность","د سوداګرۍ امنیت","엔터프라이즈 보안","Kurumsal Güvenlik","企业级安全"]),
+      "Encrypted & protected": row(["Chiffré et protégé","مشفّر ومحمي","एन्क्रिप्टेड और सुरक्षित","خفیہ اور محفوظ","Шифрование и защита","کوډ شوی او خوندي","암호화 및 보호","Şifreli ve korumalı","加密且受保护"]),
+      "Always Available": row(["Toujours disponible","متاح دائماً","हमेशा उपलब्ध","ہمیشہ دستیاب","Всегда доступно","تل شتون","항상 사용 가능","Her zaman erişilebilir","始终可用"]),
+      "Access from anywhere": row(["Accès depuis partout","الوصول من أي مكان","कहीं से भी एक्सेस","کہیں سے بھی رسائی","Доступ откуда угодно","له هر ځای رسرسی","어디서나 접속","Her yerden erişim","随时随地访问"]),
+
+      "All the Power.": row(["Toute la puissance.","كل القوة.","पूरी ताकत.","تمام طاقت.","Вся мощь.","ټول ځواک.","모든 기능.","Tüm Güç.","全部强大功能。"]),
+      "Zero Installation.": row(["Zéro installation.","بدون تثبيت.","कोई इंस्टॉलेशन नहीं.","کوئی انسٹالیشن نہیں.","Без установки.","هیڅ نصب نه.","설치 불필요.","Sıfır Kurulum.","无需安装。"]),
+
+      "Smart Part Search": row(["Recherche intelligente de pièces","بحث ذكي عن القطع","स्मार्ट पार्ट खोज","اسمارٹ پارٹ تلاش","Умный поиск деталей","هوښیار د پرزو لټون","스마트 부품 검색","Akıllı Parça Arama","智能配件搜索"]),
+      "Price Intelligence": row(["Intelligence des prix","ذكاء الأسعار","मूल्य इंटेलिजेंस","قیمت انٹیلیجنس","Анализ цен","د بیو استخبارات","가격 인텔리전스","Fiyat Zekâsı","价格智能"]),
+      "Name Verification": row(["Vérification des noms","التحقق من الأسماء","नाम सत्यापन","نام کی تصدیق","Проверка названий","د نومونو تایید","이름 확인","İsim Doğrulama","名称核验"]),
+      "Origin Checker": row(["Vérificateur d'origine","مدقق المنشأ","मूल जांचकर्ता","اصل چیکر","Проверка происхождения","د اصل کتونکی","원산지 확인","Menşe Denetleyici","产地核查"]),
+      "Weight Lookup": row(["Recherche de poids","البحث عن الوزن","वज़न खोज","وزن تلاش","Поиск веса","د وزن لټون","무게 조회","Ağırlık Sorgulama","重量查询"]),
+      "Alternates Finder": row(["Recherche d'alternatives","باحث البدائل","विकल्प खोजक","متبادل تلاش","Поиск аналогов","د بدیلونو موندونکی","대체품 찾기","Alternatif Bulucu","替代件查找"]),
+      "Search Parts": row(["Rechercher des pièces","البحث عن القطع","पार्ट्स खोजें","پارٹس تلاش کریں","Поиск деталей","پرزې ولټوئ","부품 검색","Parça Ara","搜索配件"]),
+      "Diagram Checker": row(["Vérificateur de schémas","مدقق المخططات","डायग्राम चेकर","ڈایاگرام چیکر","Проверка схем","د ډیاګرام کتونکی","다이어그램 확인","Şema Denetleyici","图解查看器"]),
+      "Dimensions Checker": row(["Vérificateur de dimensions","مدقق الأبعاد","आयाम चेकर","ابعاد چیکر","Проверка размеров","د اندازو کتونکی","치수 확인","Boyut Denetleyici","尺寸查看器"]),
+      "Model Fitment": row(["Compatibilité modèle","توافق الطراز","मॉडल फिटमेंट","ماڈل فٹمنٹ","Совместимость с моделью","د ماډل سمون","모델 적합성","Model Uyumu","车型适配"]),
+      "Excel Import/Export": row(["Import/Export Excel","استيراد/تصدير Excel","एक्सेल आयात/निर्यात","ایکسل امپورٹ/ایکسپورٹ","Импорт/экспорт Excel","Excel واردول/صادرول","엑셀 가져오기/내보내기","Excel İçe/Dışa Aktarma","Excel 导入/导出"]),
+      "Mobile Responsive": row(["Compatible mobile","متجاوب مع الجوال","मोबाइल रिस्पॉन्सिव","موبائل ریسپانسیو","Адаптивно для мобильных","موبایل ته غبرګون","모바일 반응형","Mobil Uyumlu","移动端自适应"]),
+      "Team Collaboration": row(["Collaboration d'équipe","تعاون الفريق","टीम सहयोग","ٹیم تعاون","Командная работа","ډله ایز همکاري","팀 협업","Ekip İşbirliği","团队协作"]),
+      "Desktop App": row(["Application bureau","تطبيق سطح المكتب","डेस्कटॉप ऐप","ڈیسک ٹاپ ایپ","Десктоп-приложение","د ډیسکټاپ اپ","데스크톱 앱","Masaüstü Uygulaması","桌面应用"]),
+      "ORIGINAL": row(["ORIGINAL","الأصلي","मूल","اصل","ОРИГИНАЛ","اصلي","오리지널","ORİJİNAL","原版"]),
+      "Launch Web App": row(["Lancer l'application web","تشغيل تطبيق الويب","वेब ऐप लॉन्च करें","ویب ایپ لانچ کریں","Запустить веб-приложение","ویب اپ پیل کړئ","웹 앱 실행","Web Uygulamasını Başlat","启动网页应用"]),
+      "Free to try • No credit card required": row(["Essai gratuit • Aucune carte requise","تجربة مجانية • بدون بطاقة ائتمان","मुफ़्त आज़माएँ • कोई कार्ड नहीं","مفت آزمائیں • کریڈٹ کارڈ نہیں","Бесплатно • Без карты","وړیا هڅه • کریډیټ کارت ته اړتیا نشته","무료 체험 • 카드 불필요","Ücretsiz dene • Kart gerekmez","免费试用 • 无需信用卡"]),
+
+      "Powerful Features": row(["Fonctionnalités puissantes","ميزات قوية","शक्तिशाली विशेषताएँ","طاقتور خصوصیات","Мощные возможности","پیاوړي ځانګړتیاوې","강력한 기능","Güçlü Özellikler","强大功能"]),
+      "One Platform": row(["Une seule plateforme","منصة واحدة","एक प्लेटफ़ॉर्म","ایک پلیٹ فارم","Одна платформа","یو پلیټفارم","하나의 플랫폼","Tek Platform","一个平台"]),
+      "Central Hub": row(["Centre central","المركز الرئيسي","केंद्रीय हब","مرکزی حب","Центральный узел","مرکزي مرکز","중앙 허브","Merkezi Merkez","中央枢纽"]),
+      "Home Dashboard": row(["Tableau de bord","لوحة التحكم الرئيسية","होम डैशबोर्ड","ہوم ڈیش بورڈ","Главная панель","کور ډشبورډ","홈 대시보드","Ana Panel","主控制台"]),
+      "Smart Price Checker": row(["Vérificateur de prix intelligent","مدقق الأسعار الذكي","स्मार्ट प्राइस चेकर","اسمارٹ پرائس چیکر","Умная проверка цен","هوښیار د بیې کتونکی","스마트 가격 확인기","Akıllı Fiyat Denetleyici","智能价格查询"]),
+      "Name Checker": row(["Vérificateur de noms","مدقق الأسماء","नाम चेकर","نام چیکر","Проверка названий","د نوم کتونکی","이름 확인기","İsim Denetleyici","名称查询"]),
+      "Country Checker": row(["Vérificateur de pays","مدقق البلد","देश चेकर","ملک چیکر","Проверка страны","د هېواد کتونکی","국가 확인기","Ülke Denetleyici","国家查询"]),
+      "Part Details": row(["Détails de la pièce","تفاصيل القطعة","पार्ट विवरण","پارٹ تفصیلات","Детали детали","د پرزې جزئیات","부품 세부정보","Parça Detayları","配件详情"]),
+      "List Cleaner": row(["Nettoyeur de listes","منظف القوائم","लिस्ट क्लीनर","لسٹ کلینر","Очистка списков","د لیست پاکوونکی","목록 클리너","Liste Temizleyici","列表清理器"]),
+      "Weight Checker": row(["Vérificateur de poids","مدقق الوزن","वज़न चेकर","وزن چیکر","Проверка веса","د وزن کتونکی","무게 확인기","Ağırlık Denetleyici","重量查询"]),
+      "Alternates Check": row(["Vérification des alternatives","فحص البدائل","विकल्प जांच","متبادل جانچ","Проверка аналогов","د بدیلونو کتنه","대체품 확인","Alternatif Kontrolü","替代件查询"]),
+      "Model Checker": row(["Vérificateur de modèle","مدقق الطراز","मॉडल चेकर","ماڈل چیکر","Проверка модели","د ماډل کتونکی","모델 확인기","Model Denetleyici","车型查询"]),
+      "HS Code Checker": row(["Vérificateur de code SH","مدقق رمز HS","HS कोड चेकर","ایچ ایس کوڈ چیکر","Проверка кода ТН ВЭД","د HS کوډ کتونکی","HS 코드 확인기","GTIP Kodu Denetleyici","HS 编码查询"]),
+      "CBM Checker": row(["Calculateur CBM","مدقق CBM","CBM चेकर","سی بی ایم چیکر","Калькулятор CBM","د CBM کتونکی","CBM 확인기","CBM Denetleyici","CBM 查询"]),
+      "Stock Pro": row(["Stock Pro","Stock Pro","Stock Pro","اسٹاک پرو","Stock Pro","Stock Pro","Stock Pro","Stock Pro","库存 Pro"]),
+
+      "Search": row(["Rechercher","بحث","खोज","تلاش","Поиск","لټون","검색","Ara","搜索"]),
+      "Check": row(["Vérifier","تحقق","जांचें","چیک کریں","Проверить","وګورئ","확인","Kontrol Et","查询"]),
+      "Generate": row(["Générer","إنشاء","बनाएँ","بنائیں","Создать","جوړول","생성","Oluştur","生成"]),
+      "Calculate": row(["Calculer","احسب","गणना करें","حساب لگائیں","Рассчитать","محاسبه","계산","Hesapla","计算"]),
+      "Open": row(["Ouvrir","فتح","खोलें","کھولیں","Открыть","پرانیستل","열기","Aç","打开"]),
+      "Upload": row(["Téléverser","رفع","अपलोड","اپ لوڈ","Загрузить","پورته کول","업로드","Yükle","上传"]),
+      "Scan": row(["Scanner","مسح","स्कैन","اسکین","Сканировать","سکین","스캔","Tara","扫描"]),
+
+      "All Policies": row(["Toutes les politiques","جميع السياسات","सभी नीतियाँ","تمام پالیسیاں","Все политики","ټولې تګلارې","모든 정책","Tüm Politikalar","所有政策"]),
+      "FAQs": row(["FAQ","الأسئلة الشائعة","सामान्य प्रश्न","عمومی سوالات","Вопросы и ответы","پوښتنې","자주 묻는 질문","SSS","常见问题"])
+    };
+
+    var origMap = new WeakMap();
+
+    function collect() {
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      var arr = [], n;
+      while ((n = w.nextNode())) {
+        var p = n.parentNode;
+        if (!p) continue;
+        var nm = p.nodeName;
+        if (nm === "SCRIPT" || nm === "STYLE" || nm === "NOSCRIPT") continue;
+        if (p.closest && p.closest("#langMenu, #langMenuMobile, #langBtn")) continue;
+        if (n.nodeValue && n.nodeValue.trim().length > 1) arr.push(n);
+      }
+      return arr;
+    }
+
+    function apply(lang) {
+      var nodes = collect();
+      nodes.forEach(function (n) {
+        if (!origMap.has(n)) origMap.set(n, n.nodeValue);
+        var orig = origMap.get(n);
+        if (lang === "en") { n.nodeValue = orig; return; }
+        var key = orig.trim();
+        var entry = T[key];
+        if (entry && entry[lang]) {
+          n.nodeValue = orig.replace(key, entry[lang]);
+        } else {
+          n.nodeValue = orig;
+        }
+      });
+      document.documentElement.lang = lang;
+      document.documentElement.dir = RTL.indexOf(lang) >= 0 ? "rtl" : "ltr";
+      var cur = LANGS.filter(function (x) { return x.code === lang; })[0] || LANGS[0];
+      var lc = document.getElementById("langCurrent");
+      if (lc) lc.textContent = cur.short;
+      try { localStorage.setItem("pm_home_lang", lang); } catch (e) {}
+      markActive(lang);
+    }
+
+    function markActive(lang) {
+      document.querySelectorAll("[data-lang-opt]").forEach(function (b) {
+        if (b.getAttribute("data-lang-opt") === lang) b.classList.add("lang-active");
+        else b.classList.remove("lang-active");
+      });
+    }
+
+    function buildMenus() {
+      var desk = document.getElementById("langMenu");
+      var mob = document.getElementById("langMenuMobile");
+      LANGS.forEach(function (l) {
+        if (desk) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.setAttribute("data-lang-opt", l.code);
+          b.className = "w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 transition-colors flex items-center justify-between";
+          b.innerHTML = "<span>" + l.label + "</span><span class='text-gray-500 text-xs'>" + l.short + "</span>";
+          b.addEventListener("click", function () { apply(l.code); document.getElementById("langMenu").classList.add("hidden"); });
+          desk.appendChild(b);
+        }
+        if (mob) {
+          var m = document.createElement("button");
+          m.type = "button";
+          m.setAttribute("data-lang-opt", l.code);
+          m.className = "px-3 py-2 rounded-lg text-sm text-gray-200 bg-white/5 hover:bg-white/10 transition-colors text-center";
+          m.textContent = l.label;
+          m.addEventListener("click", function () { apply(l.code); });
+          mob.appendChild(m);
+        }
+      });
+      var btn = document.getElementById("langBtn");
+      if (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          document.getElementById("langMenu").classList.toggle("hidden");
+        });
+        document.addEventListener("click", function () {
+          var m = document.getElementById("langMenu");
+          if (m) m.classList.add("hidden");
+        });
+      }
+    }
+
+    function init() {
+      buildMenus();
+      var saved = "en";
+      try { saved = localStorage.getItem("pm_home_lang") || "en"; } catch (e) {}
+      apply(saved);
+    }
+
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+    else init();
+  })();
+  </script>
+
+  <style>
+    .lang-active { background: rgba(20,184,166,0.15) !important; color: #5eead4 !important; }
+    html[dir="rtl"] .sm\:flex-row { flex-direction: row-reverse; }
+  </style>
 </body>
 </html>
