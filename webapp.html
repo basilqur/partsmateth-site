@@ -1140,22 +1140,25 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       <!-- Navigation -->
       <nav class="sidebar-nav">
         <button class="sidebar-nav-item active" data-tab="home" onclick="switchTab('home')">
-          <i class="ri-search-line"></i> <span data-i18n="nav.searchParts">Search Parts</span>
+          <i class="ri-search-line"></i> <span data-i18n="nav.searchParts">Home</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="weight" onclick="switchTab('weight')">
+          <i class="ri-scales-3-line"></i> <span data-i18n="nav.weights">Weights Checker</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="alternates" onclick="switchTab('alternates')">
+          <i class="ri-refresh-line"></i> <span data-i18n="nav.alternates">Alternates Checker</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="names" onclick="switchTab('names')">
+          <i class="ri-price-tag-3-line"></i> <span data-i18n="nav.names">Names Checker</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="country" onclick="switchTab('country')">
+          <i class="ri-global-line"></i> <span data-i18n="nav.countries">Origins Checker</span>
         </button>
         <button class="sidebar-nav-item" data-tab="prices" onclick="switchTab('prices')">
           <i class="ri-money-dollar-circle-line"></i> <span data-i18n="nav.prices">Prices</span>
         </button>
-        <button class="sidebar-nav-item" data-tab="names" onclick="switchTab('names')">
-          <i class="ri-price-tag-3-line"></i> <span data-i18n="nav.names">Names</span>
-        </button>
-        <button class="sidebar-nav-item" data-tab="country" onclick="switchTab('country')">
-          <i class="ri-global-line"></i> <span data-i18n="nav.countries">Countries</span>
-        </button>
-        <button class="sidebar-nav-item" data-tab="weight" onclick="switchTab('weight')">
-          <i class="ri-scales-3-line"></i> <span data-i18n="nav.weights">Weights</span>
-        </button>
-        <button class="sidebar-nav-item" data-tab="alternates" onclick="switchTab('alternates')">
-          <i class="ri-refresh-line"></i> <span data-i18n="nav.alternates">Alternates</span>
+        <button class="sidebar-nav-item" data-tab="details" onclick="switchTab('details')">
+          <i class="ri-search-eye-line"></i> <span data-i18n="nav.partDetails">Part Details</span>
         </button>
         <button class="sidebar-nav-item" data-tab="listcleaner" onclick="switchTab('listcleaner')">
           <i class="ri-file-list-3-line"></i> <span data-i18n="nav.listCleaner">List Cleaner</span>
@@ -1166,8 +1169,6 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         <button class="sidebar-nav-item" data-tab="searchparts" onclick="switchTab('searchparts')">
           <i class="ri-search-line"></i> <span data-i18n="nav.searchParts">Search Parts</span>
         </button>
-
-        <div class="sidebar-section-label" data-i18n="nav.tools">Tools</div>
         <button class="sidebar-nav-item" data-tab="diagram" onclick="switchTab('diagram')">
           <i class="ri-image-line"></i> <span data-i18n="nav.diagramGenerator">Diagram Generator</span>
         </button>
@@ -1179,11 +1180,6 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         </button>
         <button class="sidebar-nav-item" data-tab="cbm" onclick="switchTab('cbm')">
           <i class="ri-box-3-line"></i> <span data-i18n="nav.cbmCalculator">CBM Calculator</span>
-        </button>
-
-        <div class="sidebar-section-label" data-i18n="nav.more">More</div>
-        <button class="sidebar-nav-item" data-tab="details" onclick="switchTab('details')">
-          <i class="ri-search-eye-line"></i> <span data-i18n="nav.partDetails">Part Details</span>
         </button>
       </nav>
 
@@ -1314,10 +1310,15 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
 
           <!-- Feature Grid -->
           <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 mb-10">
-            <button class="feature-card" onclick="switchTab('prices')">
-              <div class="icon-wrap"><i class="ri-money-dollar-circle-line text-blue-400"></i></div>
-              <div class="label" data-i18n="card.prices">Prices</div>
-              <div class="desc hidden sm:block" data-i18n="cardDesc.prices">Check part pricing</div>
+            <button class="feature-card" onclick="switchTab('weight')">
+              <div class="icon-wrap"><i class="ri-scales-3-line text-amber-400"></i></div>
+              <div class="label" data-i18n="card.weight">Weight</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.weight">Check part weight</div>
+            </button>
+            <button class="feature-card" onclick="switchTab('alternates')">
+              <div class="icon-wrap"><i class="ri-refresh-line text-rose-400"></i></div>
+              <div class="label" data-i18n="card.alternates">Alternates</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.alternates">Find replacements</div>
             </button>
             <button class="feature-card" onclick="switchTab('names')">
               <div class="icon-wrap"><i class="ri-price-tag-3-line text-teal-400"></i></div>
@@ -1329,20 +1330,15 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
               <div class="label" data-i18n="card.country">Country</div>
               <div class="desc hidden sm:block" data-i18n="cardDesc.country">Find origin country</div>
             </button>
+            <button class="feature-card" onclick="switchTab('prices')">
+              <div class="icon-wrap"><i class="ri-money-dollar-circle-line text-blue-400"></i></div>
+              <div class="label" data-i18n="card.prices">Prices</div>
+              <div class="desc hidden sm:block" data-i18n="cardDesc.prices">Check part pricing</div>
+            </button>
             <button class="feature-card" onclick="switchTab('details')">
               <div class="icon-wrap"><i class="ri-search-eye-line text-violet-400"></i></div>
               <div class="label" data-i18n="card.details">Details</div>
               <div class="desc hidden sm:block" data-i18n="cardDesc.details">Full part info</div>
-            </button>
-            <button class="feature-card" onclick="switchTab('weight')">
-              <div class="icon-wrap"><i class="ri-scales-3-line text-amber-400"></i></div>
-              <div class="label" data-i18n="card.weight">Weight</div>
-              <div class="desc hidden sm:block" data-i18n="cardDesc.weight">Check part weight</div>
-            </button>
-            <button class="feature-card" onclick="switchTab('alternates')">
-              <div class="icon-wrap"><i class="ri-refresh-line text-rose-400"></i></div>
-              <div class="label" data-i18n="card.alternates">Alternates</div>
-              <div class="desc hidden sm:block" data-i18n="cardDesc.alternates">Find replacements</div>
             </button>
             <button class="feature-card" onclick="switchTab('listcleaner')">
               <div class="icon-wrap"><i class="ri-file-list-3-line text-emerald-400"></i></div>
