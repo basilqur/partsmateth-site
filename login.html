@@ -799,10 +799,19 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         <a href="/profile.html" class="magnetic-wrap">Profile</a>
         <a href="/seller.html" class="magnetic-wrap">Seller Portal</a>
         <a href="/index.html#contact" class="magnetic-wrap">Contact</a>
+        <div style="position:relative;">
+          <button id="langBtn" type="button" aria-label="Language" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#e2e8f0;padding:8px 12px;border-radius:9999px;cursor:pointer;font-size:14px;font-weight:600;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span id="langCurrent">EN</span>
+            <svg width="13" height="13" style="color:rgba(255,255,255,0.6);" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div id="langMenu" style="display:none;position:absolute;right:0;margin-top:8px;width:180px;max-height:320px;overflow-y:auto;background:rgba(12,18,32,0.97);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.45);padding:6px;z-index:500;"></div>
+        </div>
       </nav>
       <button class="header-hamburger magnetic-wrap" onclick="openMobileNav()">
         <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
+
     </div>
   </header>
 
@@ -816,7 +825,12 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     <a href="/profile.html" onclick="closeMobileNav()">Profile</a>
     <a href="/seller.html" onclick="closeMobileNav()">Seller Portal</a>
     <a href="/index.html#contact" onclick="closeMobileNav()">Contact</a>
+    <div style="margin-top:28px;width:100%;max-width:300px;">
+      <p style="color:rgba(255,255,255,0.4);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;text-align:center;">Language</p>
+      <div id="langMenuMobile" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+    </div>
   </div>
+
 
   <!-- Mobile Tabs -->
   <div class="mobile-tabs" id="mobileTabs">
@@ -1479,7 +1493,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     // ===== INSTALL APP (PWA) =====
     (function(){
       var DISMISS_KEY = 'pwaInstallDismissedAt';
-      var DISMISS_DAYS = 3;
+      var DISMISS_DAYS = 2;
       var dismissedAt = parseInt(localStorage.getItem(DISMISS_KEY) || '0', 10);
       var dismissedRecently = dismissedAt && (Date.now() - dismissedAt) < DISMISS_DAYS * 86400000;
       var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -1499,6 +1513,11 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       installBtn.innerHTML = '<i class="ri-download-2-line"></i> Install App';
       installBtn.style.cssText = 'padding:10px 18px;border:none;border-radius:12px;background:linear-gradient(135deg,#28DCB4,#1a9e82);color:#fff;font-family:Inter,sans-serif;font-weight:600;font-size:13px;cursor:pointer;box-shadow:0 4px 20px rgba(40,220,180,0.35);display:flex;align-items:center;gap:6px;';
 
+      var minBtn = document.createElement('button');
+      minBtn.setAttribute('aria-label', 'Minimize install prompt');
+      minBtn.innerHTML = '<i class="ri-subtract-line"></i>';
+      minBtn.style.cssText = 'width:28px;height:28px;border:none;border-radius:50%;background:rgba(0,0,0,0.6);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
+
       var closeBtn = document.createElement('button');
       closeBtn.setAttribute('aria-label', 'Dismiss install prompt');
       closeBtn.innerHTML = '<i class="ri-close-line"></i>';
@@ -1506,34 +1525,80 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       closeBtn.addEventListener('click', function(){
         localStorage.setItem(DISMISS_KEY, String(Date.now()));
         wrap.remove();
+        tab.remove();
       });
 
       wrap.appendChild(installBtn);
+      wrap.appendChild(minBtn);
       wrap.appendChild(closeBtn);
       document.body.appendChild(wrap);
+
+      // Minimized draggable tab (left edge, mirrors WhatsApp logic)
+      var tab = document.createElement('button');
+      tab.setAttribute('aria-label', 'Show install app prompt');
+      tab.style.cssText = 'position:fixed;left:0;z-index:9998;width:42px;height:56px;border-radius:0 12px 12px 0;background:linear-gradient(135deg,#28DCB4,#1a9e82);box-shadow:4px 4px 16px rgba(40,220,180,0.4);display:none;flex-direction:column;align-items:center;justify-content:center;cursor:grab;border:none;padding:0;touch-action:none;user-select:none;-webkit-user-select:none;color:#fff;';
+      tab.innerHTML = '<span style="width:24px;height:3px;border-radius:2px;background:rgba(255,255,255,0.55);margin-bottom:4px;pointer-events:none;"></span><i class="ri-download-2-line" style="font-size:20px;pointer-events:none;"></i><span style="width:24px;height:3px;border-radius:2px;background:rgba(255,255,255,0.55);margin-top:4px;pointer-events:none;"></span>';
+      document.body.appendChild(tab);
+
+      var wrapVisible = false;
+      function showWrap(){ wrapVisible = true; if (localStorage.getItem('pm_pwa_min') !== '1') wrap.style.display = 'flex'; }
+
+      function minimizePwa(){
+        wrap.style.display = 'none';
+        tab.style.display = 'flex';
+        try { localStorage.setItem('pm_pwa_min', '1'); } catch(e){}
+      }
+      function restorePwa(){
+        tab.style.display = 'none';
+        if (wrapVisible) wrap.style.display = 'flex';
+        try { localStorage.setItem('pm_pwa_min', '0'); } catch(e){}
+      }
+      minBtn.addEventListener('click', function(e){ e.stopPropagation(); minimizePwa(); });
+
+      var P_TAB_H = 56, P_MIN_DIST = 6;
+      var pDragging = false, pStartY = 0, pStartBottom = 0, pCurrentBottom = 150, pMoved = false;
+      function pClamp(b){ var max = Math.max(window.innerHeight - P_TAB_H - 12, 12); return Math.min(Math.max(b, 12), max); }
+      function pSetBottom(b){ pCurrentBottom = pClamp(b); tab.style.bottom = pCurrentBottom + 'px'; }
+      function pGetY(e){ if (e.clientY != null) return e.clientY; if (e.touches && e.touches.length) return e.touches[0].clientY; if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY; return 0; }
+      function pStart(e){ pDragging = true; pMoved = false; pStartY = pGetY(e); pStartBottom = pCurrentBottom; tab.style.transition = 'none'; e.preventDefault(); }
+      function pMove(e){ if (!pDragging) return; var dy = pStartY - pGetY(e); if (Math.abs(dy) > P_MIN_DIST) pMoved = true; pSetBottom(pStartBottom + dy); e.preventDefault(); }
+      function pEnd(){ if (!pDragging) return; pDragging = false; tab.style.transition = ''; if (!pMoved) restorePwa(); else { try { localStorage.setItem('pm_pwa_pos', String(pCurrentBottom)); } catch(e){} } }
+      tab.addEventListener('mousedown', pStart);
+      tab.addEventListener('touchstart', pStart, { passive: false });
+      window.addEventListener('mousemove', pMove);
+      window.addEventListener('touchmove', pMove, { passive: false });
+      window.addEventListener('mouseup', pEnd);
+      window.addEventListener('touchend', pEnd);
+      window.addEventListener('resize', function(){ pSetBottom(pCurrentBottom); });
+      try { var sp = localStorage.getItem('pm_pwa_pos'); if (sp) pCurrentBottom = parseFloat(sp) || 150; } catch(e){}
+      pSetBottom(pCurrentBottom);
+
 
       window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredPrompt = e;
-        wrap.style.display = 'flex';
+        showWrap();
       });
 
       if (isIOS) {
-        wrap.style.display = 'flex';
+        showWrap();
         installBtn.innerHTML = '<i class="ri-add-box-line"></i> Add to Home Screen';
       } else if (isAndroid) {
         setTimeout(function(){
-          if (!deferredPrompt && wrap.style.display === 'none') {
-            wrap.style.display = 'flex';
+          if (!deferredPrompt && !wrapVisible) {
+            showWrap();
           }
         }, 2500);
       }
+
+      try { if (localStorage.getItem('pm_pwa_min') === '1') { wrapVisible = true; tab.style.display = 'flex'; } } catch(e){}
+
 
       installBtn.addEventListener('click', function() {
         if (deferredPrompt) {
           deferredPrompt.prompt();
           deferredPrompt.userChoice.then(function(result) {
-            if (result.outcome === 'accepted') wrap.remove();
+            if (result.outcome === 'accepted') { wrap.remove(); tab.remove(); }
             deferredPrompt = null;
           });
         } else if (isIOS) {
@@ -1564,10 +1629,10 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
       }
 
-      window.addEventListener('appinstalled', function() { wrap.remove(); });
+      window.addEventListener('appinstalled', function() { { wrap.remove(); tab.remove(); } });
     })();
   </script>
-    <!-- WhatsApp Floating Widget -->
+  <!-- WhatsApp Floating Widget -->
   <style>
     .wa-widget { position: fixed; bottom: 24px; right: 24px; z-index: 9999; font-family: 'Inter', sans-serif; }
     .wa-bubble { width: 60px; height: 60px; border-radius: 50%; background: #25D366; box-shadow: 0 8px 24px rgba(37,211,102,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; border: none; position: relative; }
@@ -1595,7 +1660,17 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     .wa-send:hover { background: #1da851; transform: scale(1.05); }
     .wa-send svg { width: 18px; height: 18px; fill: #fff; }
     @media (max-width: 480px) { .wa-panel { width: calc(100vw - 32px); right: -8px; } }
+    .wa-min { position: absolute; top: -8px; left: -8px; width: 22px; height: 22px; border-radius: 50%; background: #1f2937; color: #fff; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: transform 0.15s; }
+    .wa-min:hover { transform: scale(1.12); }
+    .wa-min svg { width: 12px; height: 12px; stroke: #fff; }
+    .wa-widget.wa-hidden { display: none; }
+    .wa-tab { position: fixed; right: 0; z-index: 9999; width: 42px; height: 56px; border-radius: 12px 0 0 12px; background: #25D366; box-shadow: -4px 4px 16px rgba(37,211,102,0.4); display: none; flex-direction: column; align-items: center; justify-content: center; cursor: grab; border: none; padding: 0; touch-action: none; user-select: none; -webkit-user-select: none; gap: 5px; }
+    .wa-tab.show { display: flex; }
+    .wa-tab:active { cursor: grabbing; }
+    .wa-tab svg { width: 24px; height: 24px; fill: #fff; pointer-events: none; flex-shrink: 0; }
+    .wa-drag-hint { width: 18px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.55); flex-shrink: 0; pointer-events: none; }
   </style>
+
   <div class="wa-widget">
     <div class="wa-panel" id="waPanel">
       <div class="wa-header">
@@ -1621,10 +1696,18 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         </button>
       </form>
     </div>
+    <button class="wa-min" id="waMin" aria-label="Minimize WhatsApp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
     <button class="wa-bubble" id="waBubble" aria-label="Open WhatsApp chat">
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
     </button>
   </div>
+  <button class="wa-tab" id="waTab" aria-label="Show WhatsApp chat">
+    <span class="wa-drag-hint"></span>
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+    <span class="wa-drag-hint"></span>
+  </button>
   <script>
     (function(){
       var bubble = document.getElementById('waBubble');
@@ -1632,8 +1715,87 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       var close = document.getElementById('waClose');
       var form = document.getElementById('waForm');
       var input = document.getElementById('waInput');
+      var widget = document.querySelector('.wa-widget');
+      var min = document.getElementById('waMin');
+      var tab = document.getElementById('waTab');
       bubble.addEventListener('click', function(){ panel.classList.toggle('open'); });
       close.addEventListener('click', function(){ panel.classList.remove('open'); });
+      function minimize(){
+        panel.classList.remove('open');
+        widget.classList.add('wa-hidden');
+        tab.classList.add('show');
+        try { localStorage.setItem('pm_wa_min', '1'); } catch(e){}
+      }
+      function restore(){
+        widget.classList.remove('wa-hidden');
+        tab.classList.remove('show');
+        try { localStorage.setItem('pm_wa_min', '0'); } catch(e){}
+      }
+      min.addEventListener('click', function(e){ e.stopPropagation(); minimize(); });
+
+      // Draggable minimized tab along the right edge
+      var TAB_H = 56;
+      var MIN_DIST = 6;
+      var dragging = false, startY = 0, startBottom = 0, currentBottom = 90, moved = false;
+
+      function clampBottom(b){
+        var max = Math.max(window.innerHeight - TAB_H - 12, 12);
+        return Math.min(Math.max(b, 12), max);
+      }
+      function setTabBottom(b){
+        currentBottom = clampBottom(b);
+        tab.style.bottom = currentBottom + 'px';
+      }
+      function loadPos(){
+        try {
+          var saved = localStorage.getItem('pm_wa_pos');
+          if (saved) currentBottom = parseFloat(saved) || 90;
+        } catch(e){}
+      }
+      function savePos(){
+        try { localStorage.setItem('pm_wa_pos', String(currentBottom)); } catch(e){}
+      }
+      function getClientY(e){
+        if (e.clientY != null) return e.clientY;
+        if (e.touches && e.touches.length) return e.touches[0].clientY;
+        if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY;
+        return 0;
+      }
+      function onStart(e){
+        dragging = true;
+        moved = false;
+        startY = getClientY(e);
+        startBottom = currentBottom;
+        tab.style.transition = 'none';
+        e.preventDefault();
+      }
+      function onMove(e){
+        if (!dragging) return;
+        var y = getClientY(e);
+        var dy = startY - y;
+        if (Math.abs(dy) > MIN_DIST) moved = true;
+        setTabBottom(startBottom + dy);
+        e.preventDefault();
+      }
+      function onEnd(e){
+        if (!dragging) return;
+        dragging = false;
+        tab.style.transition = '';
+        if (!moved) restore();
+        else savePos();
+      }
+      tab.addEventListener('mousedown', onStart);
+      tab.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchend', onEnd);
+      window.addEventListener('resize', function(){ setTabBottom(currentBottom); });
+
+      loadPos();
+      setTabBottom(currentBottom);
+      try { if (localStorage.getItem('pm_wa_min') === '1') minimize(); } catch(e){}
+      
       form.addEventListener('submit', function(e){
         e.preventDefault();
         var msg = (input.value || '').trim() || 'Hello, I want to know more';
@@ -1643,5 +1805,206 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       });
     })();
   </script>
+
+  <!-- ===================== LOGIN I18N ===================== -->
+  <script>
+  (function () {
+    var LANGS = [
+      { code: "en", label: "English",  short: "EN" },
+      { code: "fr", label: "Français", short: "FR" },
+      { code: "ar", label: "العربية",  short: "AR" },
+      { code: "hi", label: "हिन्दी",    short: "HI" },
+      { code: "ur", label: "اردو",     short: "UR" },
+      { code: "ru", label: "Русский",  short: "RU" },
+      { code: "ps", label: "پښتو",     short: "PS" },
+      { code: "ko", label: "한국어",    short: "KO" },
+      { code: "tr", label: "Türkçe",   short: "TR" },
+      { code: "zh", label: "中文",      short: "ZH" }
+    ];
+    var RTL = ["ar", "ur", "ps"];
+    var L = ["fr","ar","hi","ur","ru","ps","ko","tr","zh"];
+    function row(vals){ var o={}; for(var i=0;i<L.length;i++){ o[L[i]]=vals[i]; } return o; }
+
+    var T = {
+      "PartsMateTH": row(["PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH"]),
+      "Home": row(["Accueil", "الرئيسية", "होम", "ہوم", "Главная", "کور", "홈", "Ana Sayfa", "首页"]),
+      "Plans": row(["Forfaits", "الباقات", "योजनाएँ", "پلانز", "Тарифы", "پلانونه", "요금제", "Planlar", "套餐"]),
+      "Profile": row(["Profil", "الملف الشخصي", "प्रोफ़ाइल", "پروفائل", "Профиль", "پروفایل", "프로필", "Profil", "个人资料"]),
+      "Seller Portal": row(["Portail Vendeur", "بوابة البائع", "सेलर पोर्टल", "سیلر پورٹل", "Портал продавца", "د پلورونکي پورتال", "판매자 포털", "Satıcı Portalı", "卖家门户"]),
+      "Contact": row(["Contact", "اتصل", "संपर्क", "رابطہ", "Контакты", "اړیکه", "문의", "İletişim", "联系"]),
+      "Sign In": row(["Se connecter", "تسجيل الدخول", "साइन इन", "سائن ان", "Войти", "ننوتل", "로그인", "Giriş Yap", "登录"]),
+      "Sign Up": row(["S'inscrire", "إنشاء حساب", "साइन अप", "سائن اپ", "Регистрация", "ثبت نام", "가입하기", "Kayıt Ol", "注册"]),
+      "Welcome Back": row(["Bon retour", "مرحباً بعودتك", "वापसी पर स्वागत है", "واپسی پر خوش آمدید", "С возвращением", "بیرته ښه راغلاست", "다시 오신 것을 환영합니다", "Tekrar Hoş Geldiniz", "欢迎回来"]),
+      "Enter your license key to access the platform": row(["Saisissez votre clé de licence pour accéder à la plateforme", "أدخل مفتاح الترخيص للوصول إلى المنصة", "प्लेटफ़ॉर्म तक पहुँचने के लिए अपनी लाइसेंस कुंजी दर्ज करें", "پلیٹ فارم تک رسائی کے لیے اپنی لائسنس کلید درج کریں", "Введите лицензионный ключ для доступа к платформе", "پلیټفارم ته د لاسرسي لپاره خپل د جواز کلیمه دننه کړئ", "플랫폼에 접속하려면 라이선스 키를 입력하세요", "Platforma erişmek için lisans anahtarınızı girin", "输入您的许可密钥以访问平台"]),
+      "License Key": row(["Clé de licence", "مفتاح الترخيص", "लाइसेंस कुंजी", "لائسنس کلید", "Лицензионный ключ", "د جواز کلیمه", "라이선스 키", "Lisans Anahtarı", "许可密钥"]),
+      "Remember me & keep me logged in": row(["Se souvenir de moi et rester connecté", "تذكرني وأبقني مسجلاً للدخول", "मुझे याद रखें और लॉग इन रखें", "مجھے یاد رکھیں اور لاگ ان رکھیں", "Запомнить меня и не выходить", "ما په یاد ولرئ او ننوتلی پاتې شم", "로그인 상태 유지", "Beni hatırla ve oturumumu açık tut", "记住我并保持登录"]),
+      "Lost or forgot your license key?": row(["Clé de licence perdue ou oubliée ?", "هل فقدت أو نسيت مفتاح الترخيص؟", "अपनी लाइसेंस कुंजी खो गई या भूल गए?", "اپنی لائسنس کلید کھو دی یا بھول گئے؟", "Потеряли или забыли лицензионный ключ?", "خپل د جواز کلیمه مو ورکه کړه یا هیره شوه؟", "라이선스 키를 분실했거나 잊으셨나요?", "Lisans anahtarınızı mı kaybettiniz veya unuttunuz?", "丢失或忘记了许可密钥？"]),
+      "Get Started": row(["Commencer", "ابدأ الآن", "शुरू करें", "شروع کریں", "Начать", "پیل وکړئ", "시작하기", "Başlayın", "开始使用"]),
+      "Choose your plan and create your account": row(["Choisissez votre forfait et créez votre compte", "اختر باقتك وأنشئ حسابك", "अपनी योजना चुनें और अपना खाता बनाएं", "اپنا پلان منتخب کریں اور اپنا اکاؤنٹ بنائیں", "Выберите тариф и создайте аккаунт", "خپل پلان وټاکئ او خپل حساب جوړ کړئ", "요금제를 선택하고 계정을 만드세요", "Planınızı seçin ve hesabınızı oluşturun", "选择您的套餐并创建账户"]),
+      "Pro — $49.99 per/month": row(["Pro — 49,99 $/mois", "Pro — 49.99 دولارًا/شهر", "Pro — $49.99 प्रति/माह", "Pro — $49.99 فی/ماہ", "Pro — 49,99 $/мес", "Pro — $49.99 په میاشت کې", "Pro — 월 $49.99", "Pro — Aylık 49,99 $", "Pro — 每月 $49.99"]),
+      "Full Name": row(["Nom complet", "الاسم الكامل", "पूरा नाम", "پورا نام", "Полное имя", "بشپړ نوم", "성명", "Ad Soyad", "全名"]),
+      "Email Address": row(["Adresse e-mail", "عنوان البريد الإلكتروني", "ईमेल पता", "ای میل ایڈریس", "Адрес электронной почты", "بریښنالیک پته", "이메일 주소", "E-posta Adresi", "电子邮件地址"]),
+      "Phone Number": row(["Numéro de téléphone", "رقم الهاتف", "फ़ोन नंबर", "فون نمبر", "Номер телефона", "د تلیفون شمیره", "전화번호", "Telefon Numarası", "电话号码"]),
+      "--": row(["--", "--", "--", "--", "--", "--", "--", "--", "--"]),
+      "+--": row(["+--", "+--", "+--", "+--", "+--", "+--", "+--", "+--", "+--"]),
+      "Invite Code": row(["Code d'invitation", "رمز الدعوة", "आमंत्रण कोड", "دعوتی کوڈ", "Код приглашения", "د بلنې کوډ", "초대 코드", "Davet Kodu", "邀请码"]),
+      "Get Invite Code": row(["Obtenir un code d'invitation", "احصل على رمز دعوة", "आमंत्रण कोड प्राप्त करें", "دعوتی کوڈ حاصل کریں", "Получить код приглашения", "د بلنې کوډ ترلاسه کړئ", "초대 코드 받기", "Davet Kodu Al", "获取邀请码"]),
+      "Subscribe Now — $49.99/month": row(["S'abonner — 49,99 $/mois", "اشترك الآن — 49.99 دولارًا/شهر", "अभी सब्सक्राइब करें — $49.99/माह", "ابھی سبسکرائب کریں — $49.99/ماہ", "Подписаться — 49,99 $/мес", "اوس ګډون وکړئ — $49.99/میاشت", "지금 구독 — 월 $49.99", "Şimdi Abone Ol — Aylık 49,99 $", "立即订阅 — 每月 $49.99"]),
+      "By signing up, you agree to our Terms of Service.": row(["En vous inscrivant, vous acceptez nos Conditions d'utilisation.", "بالتسجيل، فإنك توافق على شروط الخدمة الخاصة بنا.", "साइन अप करके, आप हमारी सेवा की शर्तों से सहमत होते हैं।", "سائن اپ کر کے، آپ ہماری سروس کی شرائط سے اتفاق کرتے ہیں۔", "Регистрируясь, вы соглашаетесь с нашими Условиями обслуживания.", "د ثبت نام کولو سره، تاسو زموږ د خدماتو شرایطو سره موافق یاست.", "가입하면 서비스 약관에 동의하는 것입니다.", "Kayıt olarak Hizmet Şartlarımızı kabul etmiş olursunuz.", "注册即表示您同意我们的服务条款。"]),
+      "New Here?": row(["Nouveau ici ?", "جديد هنا؟", "यहाँ नए हैं?", "یہاں نئے ہیں؟", "Впервые здесь?", "دلته نوي یاست؟", "처음이신가요?", "Yeni misiniz?", "初次来访？"]),
+      "Get your license key and unlock the full auto parts intelligence suite": row(["Obtenez votre clé de licence et débloquez la suite complète d'intelligence pour pièces auto", "احصل على مفتاح الترخيص الخاص بك وافتح مجموعة ذكاء قطع غيار السيارات الكاملة", "अपनी लाइसेंस कुंजी प्राप्त करें और संपूर्ण ऑटो पार्ट्स इंटेलिजेंस सूट अनलॉक करें", "اپنی لائسنس کلید حاصل کریں اور مکمل آٹو پارٹس انٹیلیجنس سویٹ کو ان لاک کریں", "Получите лицензионный ключ и откройте полный набор интеллектуальных инструментов для автозапчастей", "خپل د جواز کلیمه ترلاسه کړئ او د موټرو پرزو بشپړ استخباراتي سویټ خلاص کړئ", "라이선스 키를 받고 전체 자동차 부품 인텔리전스 제품군을 잠금 해제하세요", "Lisans anahtarınızı alın ve eksiksiz oto parça zeka paketinin kilidini açın", "获取您的许可密钥，解锁完整的汽车配件智能套件"]),
+      "Smart Search": row(["Recherche intelligente", "بحث ذكي", "स्मार्ट खोज", "سمارٹ سرچ", "Умный поиск", "هوښیار لټون", "스마트 검색", "Akıllı Arama", "智能搜索"]),
+      "Analytics": row(["Analytique", "التحليلات", "एनालिटिक्स", "تجزیات", "Аналитика", "شننه", "분석", "Analitik", "数据分析"]),
+      "Multi-Market": row(["Multi-marché", "أسواق متعددة", "मल्टी-मार्केट", "ملٹی مارکیٹ", "Несколько рынков", "څو بازاره", "멀티마켓", "Çoklu Pazar", "多市场"]),
+      "One Of Us?": row(["L'un des nôtres ?", "واحد منا؟", "हमारे साथ हैं?", "ہم میں سے ایک؟", "Уже с нами?", "زموږ یو له؟", "이미 회원이신가요?", "Bizden Biri misiniz?", "已是会员？"]),
+      "Already have a license key?": row(["Vous avez déjà une clé de licence ?", "هل لديك مفتاح ترخيص بالفعل؟", "पहले से लाइसेंस कुंजी है?", "پہلے سے لائسنس کلید ہے؟", "Уже есть лицензионный ключ?", "دمخه د جواز کلیمه لرئ؟", "이미 라이선스 키가 있으신가요?", "Zaten bir lisans anahtarınız var mı?", "已有许可密钥？"]),
+      "Sign in and get back to work!": row(["Connectez-vous et reprenez le travail !", "سجّل الدخول وعد إلى العمل!", "साइन इन करें और काम पर वापस लौटें!", "سائن ان کریں اور کام پر واپس جائیں!", "Войдите и вернитесь к работе!", "ننوتل وکړئ او بیرته کار ته راشئ!", "로그인하고 다시 작업하세요!", "Giriş yapın ve işinize geri dönün!", "登录并继续工作！"]),
+      "Secure": row(["Sécurisé", "آمن", "सुरक्षित", "محفوظ", "Безопасно", "خوندي", "안전", "Güvenli", "安全"]),
+      "Fast": row(["Rapide", "سريع", "तेज़", "تیز", "Быстро", "چټک", "빠름", "Hızlı", "快速"]),
+      "24/7 Support": row(["Assistance 24/7", "دعم على مدار الساعة", "24/7 समर्थन", "24/7 سپورٹ", "Поддержка 24/7", "24/7 ملاتړ", "24/7 지원", "7/24 Destek", "全天候支持"]),
+      "Another Device Active": row(["Un autre appareil est actif", "جهاز آخر نشط", "अन्य डिवाइस सक्रिय", "ایک اور ڈیوائس فعال ہے", "Активно другое устройство", "بل وسیله فعاله ده", "다른 기기 활성화됨", "Başka Bir Cihaz Aktif", "另一台设备处于活动状态"]),
+      "This license is currently in use on another device. If you proceed, the other session will be logged out.": row(["Cette licence est actuellement utilisée sur un autre appareil. Si vous continuez, l'autre session sera déconnectée.", "هذا الترخيص قيد الاستخدام حاليًا على جهاز آخر. إذا تابعت، سيتم تسجيل خروج الجلسة الأخرى.", "यह लाइसेंस वर्तमान में दूसरे डिवाइस पर उपयोग में है। यदि आप जारी रखते हैं, तो दूसरा सत्र लॉग आउट हो जाएगा।", "یہ لائسنس فی الحال کسی اور ڈیوائس پر استعمال میں ہے۔ اگر آپ آگے بڑھتے ہیں، تو دوسرا سیشن لاگ آؤٹ ہو جائے گا۔", "Эта лицензия сейчас используется на другом устройстве. Если вы продолжите, другой сеанс будет завершён.", "دا جواز اوس مهال په بل وسیله کې کارول کیږي. که تاسو دوام ورکړئ، بله ناسته به ووځي.", "이 라이선스는 현재 다른 기기에서 사용 중입니다. 계속하면 다른 세션이 로그아웃됩니다.", "Bu lisans şu anda başka bir cihazda kullanılıyor. Devam ederseniz diğer oturum kapatılacaktır.", "此许可证目前正在另一台设备上使用。如果继续，另一会话将被注销。"]),
+      "Cancel": row(["Annuler", "إلغاء", "रद्द करें", "منسوخ کریں", "Отмена", "لغوه کول", "취소", "İptal", "取消"]),
+      "Log Out Other & Continue": row(["Déconnecter l'autre et continuer", "تسجيل خروج الآخر والمتابعة", "अन्य को लॉग आउट करें और जारी रखें", "دوسرے کو لاگ آؤٹ کریں اور جاری رکھیں", "Выйти из другого и продолжить", "بل ووځئ او دوام ورکړئ", "다른 기기 로그아웃 후 계속", "Diğerini Kapat ve Devam Et", "注销其他设备并继续"]),
+      "Device Limit Reached": row(["Limite d'appareils atteinte", "تم الوصول إلى حد الأجهزة", "डिवाइस सीमा पूरी हुई", "ڈیوائس کی حد پوری ہو گئی", "Достигнут лимит устройств", "د وسیلو حد ته ورسید", "기기 한도 도달", "Cihaz Limitine Ulaşıldı", "已达设备上限"]),
+      "This license key has already been used on": row(["Cette clé de licence a déjà été utilisée sur", "تم استخدام مفتاح الترخيص هذا بالفعل على", "इस लाइसेंस कुंजी का पहले ही उपयोग किया जा चुका है", "یہ لائسنس کلید پہلے ہی استعمال ہو چکی ہے", "Этот лицензионный ключ уже использован на", "دا د جواز کلیمه دمخه پر کارول شوې", "이 라이선스 키는 이미 사용되었습니다", "Bu lisans anahtarı zaten kullanıldı:", "此许可密钥已被使用于"]),
+      "3 different devices": row(["3 appareils différents", "3 أجهزة مختلفة", "3 अलग-अलग डिवाइस", "3 مختلف ڈیوائسز", "3 разных устройствах", "۳ بیلابیل وسایل", "3개의 다른 기기", "3 farklı cihaz", "3 台不同的设备"]),
+      ". No more devices can be registered.": row([". Aucun autre appareil ne peut être enregistré.", ". لا يمكن تسجيل المزيد من الأجهزة.", "। अब कोई और डिवाइस पंजीकृत नहीं किया जा सकता।", "۔ مزید کوئی ڈیوائس رجسٹر نہیں کی جا سکتی۔", ". Больше устройств зарегистрировать нельзя.", ". نور وسایل نشي ثبتیدلی.", ". 더 이상 기기를 등록할 수 없습니다.", ". Başka cihaz kaydedilemez.", "。无法再注册更多设备。"]),
+      "Reset My Devices (One-Time)": row(["Réinitialiser mes appareils (une seule fois)", "إعادة تعيين أجهزتي (لمرة واحدة)", "मेरे डिवाइस रीसेट करें (एक बार)", "میرے ڈیوائسز ری سیٹ کریں (ایک بار)", "Сбросить мои устройства (один раз)", "زما وسایل بیا تنظیم کړئ (یو ځل)", "내 기기 초기화 (1회)", "Cihazlarımı Sıfırla (Tek Seferlik)", "重置我的设备（一次性）"]),
+      "Close": row(["Fermer", "إغلاق", "बंद करें", "بند کریں", "Закрыть", "بند کړئ", "닫기", "Kapat", "关闭"]),
+      "Enter Verification Code": row(["Saisir le code de vérification", "أدخل رمز التحقق", "सत्यापन कोड दर्ज करें", "تصدیقی کوڈ درج کریں", "Введите код подтверждения", "د تایید کوډ دننه کړئ", "인증 코드 입력", "Doğrulama Kodunu Girin", "输入验证码"]),
+      "We've sent a 6-digit code to your email. Enter it below to reset your devices.": row(["Nous avons envoyé un code à 6 chiffres à votre e-mail. Saisissez-le ci-dessous pour réinitialiser vos appareils.", "لقد أرسلنا رمزًا مكونًا من 6 أرقام إلى بريدك الإلكتروني. أدخله أدناه لإعادة تعيين أجهزتك.", "हमने आपके ईमेल पर 6 अंकों का कोड भेजा है। अपने डिवाइस रीसेट करने के लिए इसे नीचे दर्ज करें।", "ہم نے آپ کے ای میل پر 6 ہندسوں کا کوڈ بھیجا ہے۔ اپنے ڈیوائسز ری سیٹ کرنے کے لیے اسے نیچے درج کریں۔", "Мы отправили 6-значный код на вашу почту. Введите его ниже, чтобы сбросить устройства.", "موږ ستاسو بریښنالیک ته ۶ رقمي کوډ لیږلی. د خپلو وسایلو بیا تنظیمولو لپاره یې لاندې دننه کړئ.", "6자리 코드를 이메일로 보냈습니다. 기기를 초기화하려면 아래에 입력하세요.", "E-postanıza 6 haneli bir kod gönderdik. Cihazlarınızı sıfırlamak için aşağıya girin.", "我们已向您的邮箱发送6位验证码。在下方输入以重置您的设备。"]),
+      "Verify & Reset": row(["Vérifier et réinitialiser", "التحقق وإعادة التعيين", "सत्यापित करें और रीसेट करें", "تصدیق کریں اور ری سیٹ کریں", "Подтвердить и сбросить", "تایید او بیا تنظیم", "확인 및 초기화", "Doğrula ve Sıfırla", "验证并重置"]),
+      "Install App": row(["Installer l'application", "تثبيت التطبيق", "ऐप इंस्टॉल करें", "ایپ انسٹال کریں", "Установить приложение", "اپلیکیشن نصب کړئ", "앱 설치", "Uygulamayı Yükle", "安装应用"]),
+      "Online": row(["En ligne", "متصل", "ऑनलाइन", "آن لائن", "В сети", "آنلاین", "온라인", "Çevrimiçi", "在线"]),
+      "Hi there 👋": row(["Bonjour 👋", "مرحباً 👋", "नमस्ते 👋", "ہیلو وہاں 👋", "Привет 👋", "سلام 👋", "안녕하세요 👋", "Merhaba 👋", "您好 👋"]),
+      "Now": row(["Maintenant", "الآن", "अभी", "ابھی", "Сейчас", "اوس", "지금", "Şimdi", "现在"]),
+      "How can we help you?": row(["Comment pouvons-nous vous aider ?", "كيف يمكننا مساعدتك؟", "हम आपकी कैसे मदद कर सकते हैं?", "ہم آپ کی کیسے مدد کر سکتے ہیں؟", "Чем мы можем вам помочь?", "څنګه مرسته کولی شو؟", "무엇을 도와드릴까요?", "Size nasıl yardımcı olabiliriz?", "我们能为您提供什么帮助？"]),
+      "PartsMateTH Logo": row(["Logo PartsMateTH", "شعار PartsMateTH", "PartsMateTH लोगो", "PartsMateTH لوگو", "Логотип PartsMateTH", "د PartsMateTH لوگو", "PartsMateTH 로고", "PartsMateTH Logosu", "PartsMateTH 标志"]),
+      "XXXX-XXXX-XXXX-XXXX": row(["XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX", "XXXX-XXXX-XXXX-XXXX"]),
+      "John Doe": row(["Jean Dupont", "محمد أحمد", "राहुल शर्मा", "علی خان", "Иван Иванов", "احمد خان", "홍길동", "Ahmet Yılmaz", "张三"]),
+      "john@example.com": row(["john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com"]),
+      "555 123 4567": row(["555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567"]),
+      "Enter invite code": row(["Entrez le code d'invitation", "أدخل رمز الدعوة", "आमंत्रण कोड दर्ज करें", "دعوتی کوڈ درج کریں", "Введите код приглашения", "د بلنې کوډ دننه کړئ", "초대 코드 입력", "Davet kodunu girin", "输入邀请码"]),
+      "000000": row(["000000", "000000", "000000", "000000", "000000", "000000", "000000", "000000", "000000"]),
+      "Dismiss install prompt": row(["Ignorer l'invite d'installation", "تجاهل مطالبة التثبيت", "इंस्टॉल संकेत खारिज करें", "انسٹال پرامپٹ کو مسترد کریں", "Закрыть предложение установки", "د نصب چمتو رد کړئ", "설치 안내 닫기", "Yükleme istemini kapat", "关闭安装提示"]),
+      "Enter your message...": row(["Entrez votre message...", "أدخل رسالتك...", "अपना संदेश दर्ज करें...", "اپنا پیغام درج کریں...", "Введите ваше сообщение...", "خپل پیغام دننه کړئ...", "메시지를 입력하세요...", "Mesajınızı girin...", "输入您的消息..."]),
+      "Send": row(["Envoyer", "إرسال", "भेजें", "بھیجیں", "Отправить", "ولېږئ", "보내기", "Gönder", "发送"]),
+      "Open WhatsApp chat": row(["Ouvrir le chat WhatsApp", "افتح محادثة WhatsApp", "WhatsApp चैट खोलें", "WhatsApp چیٹ کھولیں", "Открыть чат WhatsApp", "د WhatsApp چټ پرانیزئ", "WhatsApp 채팅 열기", "WhatsApp sohbetini aç", "打开 WhatsApp 聊天"]),
+      "Language": row(["Langue", "اللغة", "भाषा", "زبان", "Язык", "ژبه", "언어", "Dil", "语言"])
+    };
+
+    var origMap = new WeakMap();
+    var attrMap = new WeakMap();
+    var ATTRS = ["placeholder", "aria-label", "title", "alt"];
+
+    function collect() {
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      var arr = [], n;
+      while ((n = w.nextNode())) {
+        var p = n.parentNode;
+        if (!p) continue;
+        var nm = p.nodeName;
+        if (nm === "SCRIPT" || nm === "STYLE" || nm === "NOSCRIPT") continue;
+        if (p.closest && p.closest("#langMenu, #langMenuMobile, #langBtn")) continue;
+        if (n.nodeValue && n.nodeValue.trim().length > 1) arr.push(n);
+      }
+      return arr;
+    }
+
+    function translateStr(orig, lang) {
+      if (lang === "en") return orig;
+      var key = orig.trim();
+      var entry = T[key];
+      if (entry && entry[lang]) return orig.replace(key, entry[lang]);
+      return orig;
+    }
+
+    function apply(lang) {
+      try {
+        collect().forEach(function (n) {
+          try {
+            if (!origMap.has(n)) origMap.set(n, n.nodeValue);
+            n.nodeValue = translateStr(origMap.get(n), lang);
+          } catch (e) {}
+        });
+        document.querySelectorAll("[placeholder],[aria-label],[title],[alt]").forEach(function (el) {
+          if (el.closest && el.closest("#langMenu, #langMenuMobile, #langBtn")) return;
+          var store = attrMap.get(el);
+          if (!store) { store = {}; attrMap.set(el, store); }
+          ATTRS.forEach(function (a) {
+            if (!el.hasAttribute(a)) return;
+            if (!(a in store)) store[a] = el.getAttribute(a);
+            try { el.setAttribute(a, translateStr(store[a], lang)); } catch (e) {}
+          });
+        });
+      } catch (e) {}
+      document.documentElement.lang = lang;
+      document.documentElement.dir = RTL.indexOf(lang) >= 0 ? "rtl" : "ltr";
+      var cur = LANGS.filter(function (x) { return x.code === lang; })[0] || LANGS[0];
+      var lc = document.getElementById("langCurrent");
+      if (lc) lc.textContent = cur.short;
+      try { localStorage.setItem("pm_home_lang", lang); } catch (e) {}
+      markActive(lang);
+    }
+
+    function markActive(lang) {
+      document.querySelectorAll("[data-lang-opt]").forEach(function (b) {
+        if (b.getAttribute("data-lang-opt") === lang) { b.style.background = "rgba(20,184,166,0.18)"; b.style.color = "#5eead4"; }
+        else { b.style.background = ""; b.style.color = "#e2e8f0"; }
+      });
+    }
+
+    function buildMenus() {
+      var desk = document.getElementById("langMenu");
+      var mob = document.getElementById("langMenuMobile");
+      LANGS.forEach(function (l) {
+        if (desk) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.setAttribute("data-lang-opt", l.code);
+          b.style.cssText = "width:100%;text-align:left;padding:9px 14px;font-size:14px;color:#e2e8f0;background:none;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;";
+          b.onmouseenter = function(){ if(b.style.color!=="rgb(94, 234, 212)") b.style.background="rgba(255,255,255,0.08)"; };
+          b.onmouseleave = function(){ if(b.style.color!=="rgb(94, 234, 212)") b.style.background=""; };
+          b.innerHTML = "<span>" + l.label + "</span><span style='color:#64748b;font-size:12px;'>" + l.short + "</span>";
+          b.addEventListener("click", function () { apply(l.code); desk.style.display = "none"; });
+          desk.appendChild(b);
+        }
+        if (mob) {
+          var m = document.createElement("button");
+          m.type = "button";
+          m.setAttribute("data-lang-opt", l.code);
+          m.style.cssText = "padding:10px 12px;border-radius:10px;font-size:14px;color:#e2e8f0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);cursor:pointer;text-align:center;";
+          m.textContent = l.label;
+          m.addEventListener("click", function () { apply(l.code); if (typeof closeMobileNav === "function") closeMobileNav(); });
+          mob.appendChild(m);
+        }
+      });
+      var btn = document.getElementById("langBtn");
+      if (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var m = document.getElementById("langMenu");
+          if (m) m.style.display = (m.style.display === "none" || !m.style.display) ? "block" : "none";
+        });
+        document.addEventListener("click", function () {
+          var m = document.getElementById("langMenu");
+          if (m) m.style.display = "none";
+        });
+      }
+    }
+
+    function init() {
+      buildMenus();
+      var saved = "en";
+      try { saved = localStorage.getItem("pm_home_lang") || "en"; } catch (e) {}
+      apply(saved);
+    }
+
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+    else init();
+  })();
+  </script>
+
 </body>
 </html>

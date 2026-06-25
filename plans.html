@@ -192,6 +192,32 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(139, 92, 246, 0.1);
     }
 
+    .features-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.25rem;
+    }
+
+    .features-grid .feature-card {
+      flex: 0 0 calc(33.333% - 1rem);
+      min-width: 280px;
+      max-width: 100%;
+    }
+
+    @media (max-width: 1023px) {
+      .features-grid .feature-card {
+        flex: 0 0 calc(50% - 0.625rem);
+      }
+    }
+
+    @media (max-width: 639px) {
+      .features-grid .feature-card {
+        flex: 0 0 100%;
+      }
+    }
+
+
     .stat-card {
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
       border: 1px solid rgba(139, 92, 246, 0.25);
@@ -373,6 +399,16 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           <a href="/profile.html" class="text-white/70 hover:text-white transition-colors">Profile</a>
           <a href="/seller.html" class="text-white/70 hover:text-white transition-colors">Seller Portal</a>
           <a href="/index.html#contact" class="text-white/70 hover:text-white transition-colors">Contact Us</a>
+          <a href="/login.html" class="btn-glow px-5 py-2.5 rounded-full text-white font-semibold text-sm">Login / Sign Up</a>
+          <div class="relative">
+            <button id="langBtn" type="button" aria-label="Language" class="flex items-center gap-2 pl-3 pr-2.5 py-2 rounded-full bg-white/5 border border-white/10 text-white/90 hover:bg-white/10 hover:border-white/20 transition-all">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span id="langCurrent" class="text-sm font-semibold tracking-wide">EN</span>
+              <svg class="w-3.5 h-3.5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div id="langMenu" class="hidden absolute right-0 mt-2 w-44 max-h-80 overflow-y-auto rounded-xl glass border border-white/10 shadow-2xl py-1 z-50"></div>
+          </div>
+          
         </nav>
         
         <button class="md:hidden text-white p-2" id="menuToggle">
@@ -380,6 +416,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
+
       </div>
     </div>
   </header>
@@ -396,7 +433,12 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     <a href="/profile.html">Profile</a>
     <a href="/seller.html">Seller Portal</a>
     <a href="/index.html#contact">Contact Us</a>
+    <div class="mt-8 w-full max-w-xs">
+      <p class="text-white/40 text-xs uppercase tracking-widest mb-3 text-center">Language</p>
+      <div id="langMenuMobile" class="grid grid-cols-2 gap-2"></div>
+    </div>
   </div>
+
 
   <!-- Hero Section -->
   <section class="pt-32 pb-12 px-6">
@@ -477,62 +519,17 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       <h2 class="text-3xl font-bold font-display text-center mb-4 fade-up">Everything <span class="gradient-text">Included</span></h2>
       <p class="text-white/50 text-center mb-12 max-w-xl mx-auto fade-up">All the tools you need, packed into one powerful subscription.</p>
 
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <!-- Feature 1 -->
-        <div class="feature-card fade-up">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3 class="font-bold font-display text-lg mb-2">Prices Checker</h3>
-          <p class="text-white/50 text-sm">Instantly check and compare prices across suppliers for any part number.</p>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="feature-card fade-up">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-          </div>
-          <h3 class="font-bold font-display text-lg mb-2">Names Generator</h3>
-          <p class="text-white/50 text-sm">Auto-generate accurate part names from numbers in seconds.</p>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="feature-card fade-up">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          </div>
-          <h3 class="font-bold font-display text-lg mb-2">Country Checker</h3>
-          <p class="text-white/50 text-sm">Identify the country of origin for any auto part instantly.</p>
-        </div>
-
-        <!-- Feature 4 -->
-        <div class="feature-card fade-up">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-          </div>
-          <h3 class="font-bold font-display text-lg mb-2">Part Details Checker</h3>
-          <p class="text-white/50 text-sm">Get comprehensive details and specifications for every part.</p>
-        </div>
-
-        <!-- Feature 5 -->
-        <div class="feature-card fade-up">
-          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center mb-4">
-            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-          </div>
-          <h3 class="font-bold font-display text-lg mb-2">List Cleaner</h3>
-          <p class="text-white/50 text-sm">Clean and validate your part number lists automatically.</p>
-        </div>
-
-        <!-- Feature 6 -->
+      <div class="features-grid">
+        <!-- Feature 1: Weights Checker -->
         <div class="feature-card fade-up">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center mb-4">
             <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
           </div>
-          <h3 class="font-bold font-display text-lg mb-2">Weight Checker</h3>
+          <h3 class="font-bold font-display text-lg mb-2">Weights Checker</h3>
           <p class="text-white/50 text-sm">Check weights across 400+ brands for accurate shipping estimates.</p>
         </div>
 
-        <!-- Feature 7 -->
+        <!-- Feature 2: Alternates Checker -->
         <div class="feature-card fade-up">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center mb-4">
             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
@@ -541,7 +538,52 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           <p class="text-white/50 text-sm">Find alternative and interchangeable part numbers quickly.</p>
         </div>
 
-        <!-- Feature 8 -->
+        <!-- Feature 3: Names Checker -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Names Checker</h3>
+          <p class="text-white/50 text-sm">Auto-generate accurate part names from numbers in seconds.</p>
+        </div>
+
+        <!-- Feature 4: Origins Checker -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Origins Checker</h3>
+          <p class="text-white/50 text-sm">Identify the country of origin for any auto part instantly.</p>
+        </div>
+
+        <!-- Feature 5: Prices Checker -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Prices Checker</h3>
+          <p class="text-white/50 text-sm">Instantly check and compare prices across suppliers for any part number.</p>
+        </div>
+
+        <!-- Feature 6: Part Details -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Part Details</h3>
+          <p class="text-white/50 text-sm">Get comprehensive details and specifications for every part.</p>
+        </div>
+
+        <!-- Feature 7: List Cleaner -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">List Cleaner</h3>
+          <p class="text-white/50 text-sm">Clean and validate your part number lists automatically.</p>
+        </div>
+
+        <!-- Feature 8: Model Checker -->
         <div class="feature-card fade-up">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center mb-4">
             <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
@@ -550,7 +592,52 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           <p class="text-white/50 text-sm">Identify compatible vehicle models for any part number.</p>
         </div>
 
-        <!-- Feature 9 -->
+        <!-- Feature 9: Search Part No. from Part Name -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Search Part No. from Part Name</h3>
+          <p class="text-white/50 text-sm">Search a part number by entering the part name or model — e.g. "air filter for Hilux" — and get a list of all matching part numbers.</p>
+        </div>
+
+        <!-- Feature 10: Diagram Generator -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500/20 to-blue-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h16M9 4v16"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Diagram Generator</h3>
+          <p class="text-white/50 text-sm">Search a part number and instantly generate diagrams for that specific part — works for all models and brands.</p>
+        </div>
+
+        <!-- Feature 11: Dimensions Checker -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l4-4m0 0l4 4M7 3v18m14-4l-4 4m0 0l-4-4m4 4V3"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">Dimensions Checker</h3>
+          <p class="text-white/50 text-sm">Search a part size and get the exact accurate box size for that specific part, so you can plan shipping without buying a sample to measure.</p>
+        </div>
+
+        <!-- Feature 12: HS Code Checker -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">HS Code Checker</h3>
+          <p class="text-white/50 text-sm">Search a part number and get the exact HS codes for that part for hassle-free customs and import paperwork.</p>
+        </div>
+
+        <!-- Feature 13: CBM Calculator -->
+        <div class="feature-card fade-up">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-teal-500/20 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          </div>
+          <h3 class="font-bold font-display text-lg mb-2">CBM Calculator</h3>
+          <p class="text-white/50 text-sm">See the total CBM volume and weight that part would cover for accurate shipping calculations.</p>
+        </div>
+
+        <!-- Feature 14: VIP Priority Support -->
         <div class="feature-card fade-up">
           <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 flex items-center justify-center mb-4">
             <span class="text-lg">🚀</span>
@@ -889,7 +976,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     });
   </script>
 
-    <!-- WhatsApp Floating Widget -->
+  <!-- WhatsApp Floating Widget -->
   <style>
     .wa-widget { position: fixed; bottom: 24px; right: 24px; z-index: 9999; font-family: 'Inter', sans-serif; }
     .wa-bubble { width: 60px; height: 60px; border-radius: 50%; background: #25D366; box-shadow: 0 8px 24px rgba(37,211,102,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; border: none; position: relative; }
@@ -917,7 +1004,17 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     .wa-send:hover { background: #1da851; transform: scale(1.05); }
     .wa-send svg { width: 18px; height: 18px; fill: #fff; }
     @media (max-width: 480px) { .wa-panel { width: calc(100vw - 32px); right: -8px; } }
+    .wa-min { position: absolute; top: -8px; left: -8px; width: 22px; height: 22px; border-radius: 50%; background: #1f2937; color: #fff; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: transform 0.15s; }
+    .wa-min:hover { transform: scale(1.12); }
+    .wa-min svg { width: 12px; height: 12px; stroke: #fff; }
+    .wa-widget.wa-hidden { display: none; }
+    .wa-tab { position: fixed; right: 0; z-index: 9999; width: 42px; height: 56px; border-radius: 12px 0 0 12px; background: #25D366; box-shadow: -4px 4px 16px rgba(37,211,102,0.4); display: none; flex-direction: column; align-items: center; justify-content: center; cursor: grab; border: none; padding: 0; touch-action: none; user-select: none; -webkit-user-select: none; gap: 5px; }
+    .wa-tab.show { display: flex; }
+    .wa-tab:active { cursor: grabbing; }
+    .wa-tab svg { width: 24px; height: 24px; fill: #fff; pointer-events: none; flex-shrink: 0; }
+    .wa-drag-hint { width: 18px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.55); flex-shrink: 0; pointer-events: none; }
   </style>
+
   <div class="wa-widget">
     <div class="wa-panel" id="waPanel">
       <div class="wa-header">
@@ -943,10 +1040,18 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         </button>
       </form>
     </div>
+    <button class="wa-min" id="waMin" aria-label="Minimize WhatsApp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
     <button class="wa-bubble" id="waBubble" aria-label="Open WhatsApp chat">
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
     </button>
   </div>
+  <button class="wa-tab" id="waTab" aria-label="Show WhatsApp chat">
+    <span class="wa-drag-hint"></span>
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+    <span class="wa-drag-hint"></span>
+  </button>
   <script>
     (function(){
       var bubble = document.getElementById('waBubble');
@@ -954,8 +1059,87 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       var close = document.getElementById('waClose');
       var form = document.getElementById('waForm');
       var input = document.getElementById('waInput');
+      var widget = document.querySelector('.wa-widget');
+      var min = document.getElementById('waMin');
+      var tab = document.getElementById('waTab');
       bubble.addEventListener('click', function(){ panel.classList.toggle('open'); });
       close.addEventListener('click', function(){ panel.classList.remove('open'); });
+      function minimize(){
+        panel.classList.remove('open');
+        widget.classList.add('wa-hidden');
+        tab.classList.add('show');
+        try { localStorage.setItem('pm_wa_min', '1'); } catch(e){}
+      }
+      function restore(){
+        widget.classList.remove('wa-hidden');
+        tab.classList.remove('show');
+        try { localStorage.setItem('pm_wa_min', '0'); } catch(e){}
+      }
+      min.addEventListener('click', function(e){ e.stopPropagation(); minimize(); });
+
+      // Draggable minimized tab along the right edge
+      var TAB_H = 56;
+      var MIN_DIST = 6;
+      var dragging = false, startY = 0, startBottom = 0, currentBottom = 90, moved = false;
+
+      function clampBottom(b){
+        var max = Math.max(window.innerHeight - TAB_H - 12, 12);
+        return Math.min(Math.max(b, 12), max);
+      }
+      function setTabBottom(b){
+        currentBottom = clampBottom(b);
+        tab.style.bottom = currentBottom + 'px';
+      }
+      function loadPos(){
+        try {
+          var saved = localStorage.getItem('pm_wa_pos');
+          if (saved) currentBottom = parseFloat(saved) || 90;
+        } catch(e){}
+      }
+      function savePos(){
+        try { localStorage.setItem('pm_wa_pos', String(currentBottom)); } catch(e){}
+      }
+      function getClientY(e){
+        if (e.clientY != null) return e.clientY;
+        if (e.touches && e.touches.length) return e.touches[0].clientY;
+        if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY;
+        return 0;
+      }
+      function onStart(e){
+        dragging = true;
+        moved = false;
+        startY = getClientY(e);
+        startBottom = currentBottom;
+        tab.style.transition = 'none';
+        e.preventDefault();
+      }
+      function onMove(e){
+        if (!dragging) return;
+        var y = getClientY(e);
+        var dy = startY - y;
+        if (Math.abs(dy) > MIN_DIST) moved = true;
+        setTabBottom(startBottom + dy);
+        e.preventDefault();
+      }
+      function onEnd(e){
+        if (!dragging) return;
+        dragging = false;
+        tab.style.transition = '';
+        if (!moved) restore();
+        else savePos();
+      }
+      tab.addEventListener('mousedown', onStart);
+      tab.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchend', onEnd);
+      window.addEventListener('resize', function(){ setTabBottom(currentBottom); });
+
+      loadPos();
+      setTabBottom(currentBottom);
+      try { if (localStorage.getItem('pm_wa_min') === '1') minimize(); } catch(e){}
+      
       form.addEventListener('submit', function(e){
         e.preventDefault();
         var msg = (input.value || '').trim() || 'Hello, I want to know more';
@@ -965,5 +1149,244 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       });
     })();
   </script>
+
+  <!-- ===================== PLANS I18N ===================== -->
+  <script>
+  (function () {
+    var LANGS = [
+      { code: "en", label: "English",  short: "EN" },
+      { code: "fr", label: "Français", short: "FR" },
+      { code: "ar", label: "العربية",  short: "AR" },
+      { code: "hi", label: "हिन्दी",    short: "HI" },
+      { code: "ur", label: "اردو",     short: "UR" },
+      { code: "ru", label: "Русский",  short: "RU" },
+      { code: "ps", label: "پښتو",     short: "PS" },
+      { code: "ko", label: "한국어",    short: "KO" },
+      { code: "tr", label: "Türkçe",   short: "TR" },
+      { code: "zh", label: "中文",      short: "ZH" }
+    ];
+    var RTL = ["ar", "ur", "ps"];
+    var L = ["fr","ar","hi","ur","ru","ps","ko","tr","zh"];
+    function row(vals){ var o={}; for(var i=0;i<L.length;i++){ o[L[i]]=vals[i]; } return o; }
+
+    var T = {
+      "Language": row(["Langue", "اللغة", "भाषा", "زبان", "Язык", "ژبه", "언어", "Dil", "语言"]),
+      "PartsMateTH": row(["PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH", "PartsMateTH"]),
+      "Home": row(["Accueil", "الرئيسية", "होम", "ہوم", "Главная", "کور", "홈", "Ana Sayfa", "首页"]),
+      "Plans": row(["Forfaits", "الباقات", "योजनाएँ", "پلانز", "Тарифы", "پلانونه", "요금제", "Planlar", "套餐"]),
+      "Profile": row(["Profil", "الملف الشخصي", "प्रोफ़ाइल", "پروفائل", "Профиль", "پروفایل", "프로필", "Profil", "个人资料"]),
+      "Seller Portal": row(["Portail Vendeur", "بوابة البائع", "सेलर पोर्टल", "سیلر پورٹل", "Портал продавца", "د پلورونکي پورتال", "판매자 포털", "Satıcı Portalı", "卖家门户"]),
+      "Contact Us": row(["Nous contacter", "اتصل بنا", "संपर्क करें", "ہم سے رابطہ کریں", "Связаться с нами", "موږ سره اړیکه", "문의하기", "Bize Ulaşın", "联系我们"]),
+      "⚡ Full Power. One Service.": row(["⚡ Pleine puissance. Un seul service.", "⚡ قوة كاملة. خدمة واحدة.", "⚡ पूरी ताकत। एक सेवा।", "⚡ مکمل طاقت۔ ایک سروس۔", "⚡ Полная мощность. Один сервис.", "⚡ بشپړ ځواک. یوه خدمت.", "⚡ 완전한 성능. 하나의 서비스.", "⚡ Tam Güç. Tek Hizmet.", "⚡ 全部功能。一项服务。"]),
+      "The Complete": row(["Complète", "الكاملة", "कम्प्लीट", "کمپلیٹ", "Полный", "بشپړ", "완벽한", "Eksiksiz", "完整的"]),
+      "Auto Parts": row(["Pièces Auto", "قطع غيار السيارات", "ऑटो पार्ट्स", "آٹو پارٹس", "Автозапчасти", "د موټر پرزې", "자동차 부품", "Oto Parça", "汽车配件"]),
+      "Intelligence Suite": row(["Suite d'Intelligence", "مجموعة الذكاء", "इंटेलिजेंस सूट", "انٹیلیجنس سویٹ", "Интеллектуальный пакет", "استخباراتي سویټ", "인텔리전스 제품군", "Zeka Paketi", "智能套件"]),
+      "Everything you need to dominate the auto parts market — all tools, maximum speed, zero limitations.": row(["Tout ce dont vous avez besoin pour dominer le marché des pièces auto — tous les outils, une vitesse maximale, aucune limite.", "كل ما تحتاجه للسيطرة على سوق قطع غيار السيارات — جميع الأدوات، أقصى سرعة، بلا قيود.", "ऑटो पार्ट्स बाजार पर हावी होने के लिए आपको जो कुछ चाहिए — सभी टूल्स, अधिकतम गति, कोई सीमा नहीं।", "آٹو پارٹس مارکیٹ پر غلبہ پانے کے لیے آپ کو جو کچھ درکار ہے — تمام ٹولز، زیادہ سے زیادہ رفتار، کوئی حد نہیں۔", "Всё, что нужно для доминирования на рынке автозапчастей — все инструменты, максимальная скорость, никаких ограничений.", "هرڅه چې تاسو ته د موټرو پرزو په بازار کې د واکمنۍ لپاره اړتیا لرئ — ټول وسایل، اعظمي سرعت، هیڅ محدودیت نشته.", "자동차 부품 시장을 장악하는 데 필요한 모든 것 — 모든 도구, 최대 속도, 무제한.", "Oto parça pazarına hükmetmek için ihtiyacınız olan her şey — tüm araçlar, maksimum hız, sıfır kısıtlama.", "主导汽车配件市场所需的一切——所有工具、极速、零限制。"]),
+      "All-In-One": row(["Tout-en-un", "الكل في واحد", "ऑल-इन-वन", "آل ان ون", "Всё в одном", "ټول په یوه کې", "올인원", "Hepsi Bir Arada", "一体化"]),
+      "PartsMateTH Pro": row(["PartsMateTH Pro", "PartsMateTH Pro", "PartsMateTH Pro", "PartsMateTH Pro", "PartsMateTH Pro", "PartsMateTH Pro", "PartsMateTH Pro", "PartsMateTH Pro", "PartsMateTH Pro"]),
+      "Maximum power & speed for auto parts professionals": row(["Puissance et vitesse maximales pour les professionnels des pièces auto", "أقصى قوة وسرعة لمحترفي قطع غيار السيارات", "ऑटो पार्ट्स पेशेवरों के लिए अधिकतम शक्ति और गति", "آٹو پارٹس پیشہ ور افراد کے لیے زیادہ سے زیادہ طاقت اور رفتار", "Максимальная мощность и скорость для профессионалов автозапчастей", "د موټرو پرزو مسلکيانو لپاره اعظمي ځواک او سرعت", "자동차 부품 전문가를 위한 최대 성능과 속도", "Oto parça profesyonelleri için maksimum güç ve hız", "为汽车配件专业人士提供极致动力与速度"]),
+      "$49.99": row(["$49.99", "$49.99", "$49.99", "$49.99", "$49.99", "$49.99", "$49.99", "$49.99", "$49.99"]),
+      "/month": row(["/mois", "/شهر", "/माह", "/ماہ", "/мес", "/میاشت", "/월", "/ay", "/月"]),
+      "74.99 USD": row(["74.99 USD", "74.99 USD", "74.99 USD", "74.99 USD", "74.99 USD", "74.99 USD", "74.99 USD", "74.99 USD", "74.99 USD"]),
+      "Buy Now": row(["Acheter", "اشتر الآن", "अभी खरीदें", "ابھی خریدیں", "Купить", "اوس واخلئ", "지금 구매", "Şimdi Satın Al", "立即购买"]),
+      "50": row(["50", "50", "50", "50", "50", "50", "50", "50", "50"]),
+      "Parts per Request": row(["Pièces par requête", "قطعة لكل طلب", "प्रति अनुरोध पार्ट्स", "فی درخواست پارٹس", "Деталей за запрос", "فی غوښتنه پرزې", "요청당 부품", "İstek Başına Parça", "每次请求配件数"]),
+      "300": row(["300", "300", "300", "300", "300", "300", "300", "300", "300"]),
+      "Daily Checks": row(["Vérifications quotidiennes", "فحوصات يومية", "दैनिक जाँच", "روزانہ چیکس", "Проверок в день", "ورځني چکونه", "일일 확인", "Günlük Kontrol", "每日查询"]),
+      "~1.5s": row(["~1.5s", "~1.5s", "~1.5s", "~1.5s", "~1.5s", "~1.5s", "~1.5s", "~1.5s", "~1.5s"]),
+      "Response Speed": row(["Vitesse de réponse", "سرعة الاستجابة", "प्रतिक्रिया गति", "رسپانس اسپیڈ", "Скорость отклика", "د ځواب سرعت", "응답 속도", "Yanıt Hızı", "响应速度"]),
+      "400+": row(["400+", "400+", "400+", "400+", "400+", "400+", "400+", "400+", "400+"]),
+      "Brands Covered": row(["Marques couvertes", "العلامات التجارية المغطاة", "कवर किए गए ब्रांड", "کور کیے گئے برانڈز", "Охвачено брендов", "پوښل شوي برانډونه", "지원 브랜드", "Kapsanan Marka", "覆盖品牌"]),
+      "Everything": row(["Tout", "كل شيء", "सब कुछ", "سب کچھ", "Всё", "هرڅه", "모든 것", "Her Şey", "一切"]),
+      "Included": row(["Inclus", "مشمول", "शामिल", "شامل", "Включено", "شامل", "포함됨", "Dahil", "包含"]),
+      "All the tools you need, packed into one powerful subscription.": row(["Tous les outils dont vous avez besoin, réunis dans un seul abonnement puissant.", "جميع الأدوات التي تحتاجها، مجمعة في اشتراك واحد قوي.", "आपकी ज़रूरत के सभी टूल्स, एक शक्तिशाली सब्सक्रिप्शन में।", "آپ کی ضرورت کے تمام ٹولز، ایک طاقتور سبسکرپشن میں۔", "Все необходимые инструменты в одной мощной подписке.", "ټول هغه وسایل چې تاسو ورته اړتیا لرئ، په یوه ځواکمن ګډون کې.", "필요한 모든 도구를 하나의 강력한 구독에 담았습니다.", "İhtiyacınız olan tüm araçlar, tek bir güçlü abonelikte.", "您所需的所有工具，集成于一个强大的订阅中。"]),
+      "Weights Checker": row(["Vérificateur de poids", "مدقق الأوزان", "वज़न चेकर", "ویٹس چیکر", "Проверка веса", "د وزن کتونکی", "무게 확인기", "Ağırlık Denetleyici", "重量查询"]),
+      "Check weights across 400+ brands for accurate shipping estimates.": row(["Vérifiez les poids sur plus de 400 marques pour des estimations d'expédition précises.", "تحقق من الأوزان عبر أكثر من 400 علامة تجارية للحصول على تقديرات شحن دقيقة.", "सटीक शिपिंग अनुमान के लिए 400+ ब्रांड के वज़न जांचें।", "درست شپنگ تخمینوں کے لیے 400+ برانڈز کے وزن چیک کریں۔", "Проверяйте вес по более чем 400 брендам для точной оценки доставки.", "د دقیقو لیږد اټکلونو لپاره د ۴۰۰+ برانډونو وزنونه وګورئ.", "정확한 배송 견적을 위해 400개 이상의 브랜드 무게를 확인하세요.", "Doğru kargo tahminleri için 400+ markada ağırlıkları kontrol edin.", "查询400多个品牌的重量，获得准确的运费估算。"]),
+      "Alternates Checker": row(["Vérificateur d'alternatives", "مدقق البدائل", "विकल्प चेकर", "الٹرنیٹس چیکر", "Проверка аналогов", "د بدیلونو کتونکی", "대체품 확인기", "Alternatif Denetleyici", "替代件查询"]),
+      "Find alternative and interchangeable part numbers quickly.": row(["Trouvez rapidement des numéros de pièces alternatifs et interchangeables.", "اعثر بسرعة على أرقام القطع البديلة والقابلة للتبديل.", "वैकल्पिक और इंटरचेंजेबल पार्ट नंबर तुरंत खोजें।", "متبادل اور تبادلے کے قابل پارٹ نمبر تیزی سے تلاش کریں۔", "Быстро находите альтернативные и взаимозаменяемые номера деталей.", "په چټکۍ سره بدیل او د تبادلې وړ د پرزو شمیرې ومومئ.", "대체 가능하고 호환되는 부품 번호를 빠르게 찾으세요.", "Alternatif ve birbirinin yerine kullanılabilir parça numaralarını hızlıca bulun.", "快速查找替代和可互换的零件号。"]),
+      "Names Checker": row(["Vérificateur de noms", "مدقق الأسماء", "नाम चेकर", "نیمز چیکر", "Проверка названий", "د نومونو کتونکی", "이름 확인기", "İsim Denetleyici", "名称查询"]),
+      "Auto-generate accurate part names from numbers in seconds.": row(["Générez automatiquement des noms de pièces précis à partir de numéros en quelques secondes.", "أنشئ تلقائيًا أسماء قطع دقيقة من الأرقام في ثوانٍ.", "नंबरों से सटीक पार्ट नाम सेकंडों में स्वतः उत्पन्न करें।", "نمبروں سے درست پارٹ نام سیکنڈوں میں خودکار طور پر بنائیں۔", "Автоматически создавайте точные названия деталей из номеров за секунды.", "په ثانیو کې له شمیرو څخه دقیق د پرزو نومونه په اتومات ډول جوړ کړئ.", "번호에서 정확한 부품 이름을 몇 초 만에 자동 생성하세요.", "Numaralardan doğru parça adlarını saniyeler içinde otomatik oluşturun.", "几秒内根据零件号自动生成准确的零件名称。"]),
+      "Origins Checker": row(["Vérificateur d'origine", "مدقق المنشأ", "मूल चेकर", "اوریجنز چیکر", "Проверка происхождения", "د اصلیت کتونکی", "원산지 확인기", "Menşe Denetleyici", "原产地查询"]),
+      "Identify the country of origin for any auto part instantly.": row(["Identifiez instantanément le pays d'origine de n'importe quelle pièce auto.", "حدد بلد المنشأ لأي قطعة سيارة على الفور.", "किसी भी ऑटो पार्ट के मूल देश की तुरंत पहचान करें।", "کسی بھی آٹو پارٹ کے ملک کی اصل فوری شناخت کریں۔", "Мгновенно определяйте страну происхождения любой автозапчасти.", "د هرې موټر پرزې د اصلي هیواد سمدلاسه وپیژنئ.", "모든 자동차 부품의 원산지를 즉시 확인하세요.", "Herhangi bir oto parçasının menşe ülkesini anında belirleyin.", "即时识别任何汽车配件的原产国。"]),
+      "Prices Checker": row(["Vérificateur de prix", "مدقق الأسعار", "मूल्य परीक्षक", "قیمتیں چیکر", "Проверка цен", "د نرخونو چیکر", "가격 확인", "Fiyat Kontrolü", "价格查询器"]),
+      "Instantly check and compare prices across suppliers for any part number.": row(["Vérifiez et comparez instantanément les prix entre fournisseurs pour n'importe quel numéro de pièce.", "تحقق وقارن الأسعار على الفور بين الموردين لأي رقم قطعة.", "किसी भी पार्ट नंबर के लिए आपूर्तिकर्ताओं के बीच कीमतें तुरंत जांचें और तुलना करें।", "کسی بھی پارٹ نمبر کے لیے سپلائرز کے درمیان قیمتیں فوری چیک اور موازنہ کریں۔", "Мгновенно проверяйте и сравнивайте цены поставщиков для любого номера детали.", "د هرې پرزې شمیرې لپاره د عرضه کونکو ترمنځ نرخونه سمدلاسه وګورئ او پرتله کړئ.", "모든 부품 번호에 대해 공급업체 간 가격을 즉시 확인하고 비교하세요.", "Herhangi bir parça numarası için tedarikçiler arasında fiyatları anında kontrol edin ve karşılaştırın.", "针对任何零件号，即时查询并比较各供应商的价格。"]),
+      "Part Details": row(["Détails de la pièce", "تفاصيل القطعة", "पार्ट विवरण", "پارٹ تفصیلات", "Детали детали", "د پرزې جزئیات", "부품 세부정보", "Parça Detayları", "配件详情"]),
+      "Get comprehensive details and specifications for every part.": row(["Obtenez des détails et des spécifications complets pour chaque pièce.", "احصل على تفاصيل ومواصفات شاملة لكل قطعة.", "हर पार्ट के लिए व्यापक विवरण और विनिर्देश प्राप्त करें।", "ہر پارٹ کے لیے جامع تفصیلات اور خصوصیات حاصل کریں۔", "Получайте подробные сведения и характеристики для каждой детали.", "د هرې پرزې لپاره بشپړ جزئیات او مشخصات ترلاسه کړئ.", "모든 부품에 대한 종합적인 세부정보와 사양을 확인하세요.", "Her parça için kapsamlı ayrıntılar ve teknik özellikler alın.", "获取每个配件的完整详情和规格。"]),
+      "List Cleaner": row(["Nettoyeur de listes", "منظف القوائم", "लिस्ट क्लीनर", "لسٹ کلینر", "Очистка списков", "د لیست پاکوونکی", "목록 클리너", "Liste Temizleyici", "列表清理器"]),
+      "Clean and validate your part number lists automatically.": row(["Nettoyez et validez automatiquement vos listes de numéros de pièces.", "نظّف وتحقق من قوائم أرقام القطع الخاصة بك تلقائيًا.", "अपनी पार्ट नंबर सूचियों को स्वचालित रूप से साफ़ और सत्यापित करें।", "اپنی پارٹ نمبر فہرستوں کو خودکار طور پر صاف اور تصدیق کریں۔", "Автоматически очищайте и проверяйте списки номеров деталей.", "خپل د پرزو شمیرو لیستونه په اتومات ډول پاک او تایید کړئ.", "부품 번호 목록을 자동으로 정리하고 검증하세요.", "Parça numarası listelerinizi otomatik olarak temizleyin ve doğrulayın.", "自动清理并验证您的零件号列表。"]),
+      "Model Checker": row(["Vérificateur de modèle", "مدقق الطراز", "मॉडल चेकर", "ماڈل چیکر", "Проверка модели", "د ماډل کتونکی", "모델 확인기", "Model Denetleyici", "车型查询"]),
+      "Identify compatible vehicle models for any part number.": row(["Identifiez les modèles de véhicules compatibles pour n'importe quel numéro de pièce.", "حدد طرازات المركبات المتوافقة لأي رقم قطعة.", "किसी भी पार्ट नंबर के लिए संगत वाहन मॉडल की पहचान करें।", "کسی بھی پارٹ نمبر کے لیے ہم آہنگ گاڑی کے ماڈلز کی شناخت کریں۔", "Определяйте совместимые модели автомобилей для любого номера детали.", "د هرې پرزې شمیرې لپاره د موافقو موټرو ماډلونه وپیژنئ.", "모든 부품 번호에 대해 호환되는 차량 모델을 확인하세요.", "Herhangi bir parça numarası için uyumlu araç modellerini belirleyin.", "识别任何零件号兼容的车型。"]),
+      "Search Part No. from Part Name": row(["Rechercher le n° de pièce par nom de pièce", "البحث عن رقم القطعة من اسم القطعة", "पार्ट नाम से पार्ट नंबर खोजें", "پارٹ نام سے پارٹ نمبر تلاش کریں", "Поиск номера детали по названию", "د پرزې نوم څخه د پرزې شمیره ولټوئ", "부품명으로 부품 번호 검색", "Parça Adından Parça No. Ara", "通过零件名称搜索零件号"]),
+      "Search a part number by entering the part name or model — e.g. \"air filter for Hilux\" — and get a list of all matching part numbers.": row(["Recherchez un numéro de pièce en saisissant le nom de la pièce ou le modèle — par ex. « filtre à air pour Hilux » — et obtenez la liste de tous les numéros correspondants.", "ابحث عن رقم قطعة بإدخال اسم القطعة أو الطراز — مثل \"فلتر هواء لهايلكس\" — واحصل على قائمة بجميع أرقام القطع المطابقة.", "पार्ट नाम या मॉडल दर्ज करके पार्ट नंबर खोजें — जैसे \"Hilux के लिए एयर फ़िल्टर\" — और सभी मिलते-जुलते पार्ट नंबरों की सूची प्राप्त करें।", "پارٹ نام یا ماڈل درج کر کے پارٹ نمبر تلاش کریں — مثلاً \"Hilux کے لیے ایئر فلٹر\" — اور تمام مماثل پارٹ نمبروں کی فہرست حاصل کریں۔", "Ищите номер детали, вводя название или модель — например «воздушный фильтр для Hilux» — и получайте список всех подходящих номеров.", "د پرزې نوم یا ماډل په داخلولو سره د پرزې شمیره ولټوئ — لکه \"د هایلوکس لپاره د هوا فلټر\" — او د ټولو سمون لرونکو شمیرو لیست ترلاسه کړئ.", "부품명이나 모델을 입력하여 부품 번호를 검색하세요 — 예: \"Hilux용 에어 필터\" — 일치하는 모든 부품 번호 목록을 받아보세요.", "Parça adını veya modelini girerek bir parça numarası arayın — örn. \"Hilux için hava filtresi\" — ve eşleşen tüm parça numaralarının listesini alın.", "通过输入零件名称或车型搜索零件号——例如\"适用于Hilux的空气滤清器\"——并获取所有匹配零件号的列表。"]),
+      "Diagram Generator": row(["Générateur de diagrammes", "مولد الرسوم البيانية", "डायग्राम जनरेटर", "ڈایاگرام جنریٹر", "Генератор схем", "د ډیاګرام جنراتور", "도면 생성기", "Diyagram Oluşturucu", "图表生成器"]),
+      "Search a part number and instantly generate diagrams for that specific part — works for all models and brands.": row(["Recherchez un numéro de pièce et générez instantanément des diagrammes pour cette pièce spécifique — fonctionne pour tous les modèles et marques.", "ابحث عن رقم قطعة وأنشئ على الفور رسومًا بيانية لتلك القطعة المحددة — يعمل مع جميع الطرازات والعلامات التجارية.", "एक पार्ट नंबर खोजें और उस विशिष्ट पार्ट के लिए तुरंत डायग्राम बनाएं — सभी मॉडल और ब्रांड के लिए काम करता है।", "ایک پارٹ نمبر تلاش کریں اور اس مخصوص پارٹ کے لیے فوری ڈایاگرام بنائیں — تمام ماڈلز اور برانڈز کے لیے کام کرتا ہے۔", "Ищите номер детали и мгновенно создавайте схемы для этой конкретной детали — работает для всех моделей и брендов.", "د پرزې شمیره ولټوئ او د هغه ځانګړې پرزې لپاره سمدلاسه ډیاګرامونه جوړ کړئ — د ټولو ماډلونو او برانډونو لپاره کار کوي.", "부품 번호를 검색하면 해당 부품에 대한 도면을 즉시 생성합니다 — 모든 모델과 브랜드에서 작동합니다.", "Bir parça numarası arayın ve o belirli parça için anında diyagramlar oluşturun — tüm modeller ve markalar için çalışır.", "搜索零件号，即时生成该特定零件的图表——适用于所有车型和品牌。"]),
+      "Dimensions Checker": row(["Vérificateur de dimensions", "مدقق الأبعاد", "आयाम चेकर", "ابعاد چیکر", "Проверка размеров", "د اندازو کتونکی", "치수 확인", "Boyut Denetleyici", "尺寸查看器"]),
+      "Search a part size and get the exact accurate box size for that specific part, so you can plan shipping without buying a sample to measure.": row(["Recherchez la taille d'une pièce et obtenez la taille de boîte exacte pour cette pièce spécifique, afin de planifier l'expédition sans acheter d'échantillon à mesurer.", "ابحث عن حجم القطعة واحصل على حجم الصندوق الدقيق لتلك القطعة المحددة، حتى تتمكن من تخطيط الشحن دون شراء عينة للقياس.", "एक पार्ट का आकार खोजें और उस विशिष्ट पार्ट के लिए सटीक बॉक्स आकार प्राप्त करें, ताकि आप मापने के लिए नमूना खरीदे बिना शिपिंग की योजना बना सकें।", "ایک پارٹ کا سائز تلاش کریں اور اس مخصوص پارٹ کے لیے درست باکس سائز حاصل کریں، تاکہ آپ ماپنے کے لیے نمونہ خریدے بغیر شپنگ کی منصوبہ بندی کر سکیں۔", "Ищите размер детали и получайте точный размер коробки для этой конкретной детали, чтобы планировать доставку без покупки образца для измерения.", "د پرزې اندازه ولټوئ او د هغه ځانګړې پرزې لپاره دقیق د بکس اندازه ترلاسه کړئ، ترڅو تاسو د اندازه کولو لپاره د نمونې پیرود پرته د لیږد پلان جوړ کړئ.", "부품 크기를 검색하면 해당 부품의 정확한 박스 크기를 얻을 수 있어, 측정용 샘플을 구매하지 않고도 배송을 계획할 수 있습니다.", "Bir parça boyutu arayın ve o belirli parça için tam doğru kutu boyutunu alın; böylece ölçmek için numune satın almadan kargoyu planlayabilirsiniz.", "搜索零件尺寸，获取该特定零件的精确箱体尺寸，让您无需购买样品测量即可规划运输。"]),
+      "HS Code Checker": row(["Vérificateur de code SH", "مدقق رمز HS", "HS कोड चेकर", "ایچ ایس کوڈ چیکر", "Проверка кода ТН ВЭД", "د HS کوډ کتونکی", "HS 코드 확인기", "GTIP Kodu Denetleyici", "HS 编码查询"]),
+      "Search a part number and get the exact HS codes for that part for hassle-free customs and import paperwork.": row(["Recherchez un numéro de pièce et obtenez les codes SH exacts pour cette pièce, pour des formalités douanières et d'importation sans tracas.", "ابحث عن رقم قطعة واحصل على رموز HS الدقيقة لتلك القطعة لإنجاز معاملات الجمارك والاستيراد دون عناء.", "एक पार्ट नंबर खोजें और उस पार्ट के लिए सटीक HS कोड प्राप्त करें ताकि कस्टम और आयात की कागजी कार्रवाई परेशानी मुक्त हो।", "ایک پارٹ نمبر تلاش کریں اور اس پارٹ کے لیے درست HS کوڈز حاصل کریں تاکہ کسٹم اور درآمد کی کاغذی کارروائی بغیر پریشانی کے ہو۔", "Ищите номер детали и получайте точные коды ТН ВЭД для этой детали для беспроблемного таможенного и импортного оформления.", "د پرزې شمیره ولټوئ او د هغې پرزې لپاره دقیق HS کوډونه ترلاسه کړئ ترڅو د ګمرک او وارداتو کاغذي کارونه بې له ستونزې وي.", "부품 번호를 검색하여 해당 부품의 정확한 HS 코드를 얻어 번거로움 없는 통관 및 수입 서류 작업을 하세요.", "Bir parça numarası arayın ve sorunsuz gümrük ve ithalat işlemleri için o parçanın tam HS kodlarını alın.", "搜索零件号，获取该零件的准确HS编码，让海关和进口手续轻松无忧。"]),
+      "CBM Calculator": row(["Calculateur CBM", "حاسبة CBM", "CBM कैलकुलेटर", "CBM کیلکولیٹر", "Калькулятор CBM", "د CBM محاسبه کوونکی", "CBM 계산기", "CBM Hesaplayıcı", "CBM 计算器"]),
+      "See the total CBM volume and weight that part would cover for accurate shipping calculations.": row(["Consultez le volume CBM total et le poids que cette pièce occuperait pour des calculs d'expédition précis.", "اطّلع على إجمالي حجم CBM والوزن الذي ستشغله القطعة لحسابات شحن دقيقة.", "सटीक शिपिंग गणना के लिए देखें कि वह पार्ट कुल कितना CBM वॉल्यूम और वज़न लेगा।", "درست شپنگ حساب کے لیے دیکھیں کہ وہ پارٹ کل کتنا CBM حجم اور وزن لے گا۔", "Узнайте общий объём CBM и вес детали для точного расчёта доставки.", "د دقیقو لیږد محاسبو لپاره وګورئ چې هغه پرزه به ټول څومره CBM حجم او وزن ونیسي.", "정확한 배송 계산을 위해 해당 부품이 차지하는 총 CBM 부피와 무게를 확인하세요.", "Doğru kargo hesaplamaları için o parçanın kaplayacağı toplam CBM hacmini ve ağırlığını görün.", "查看该零件占用的总CBM体积和重量，实现精准的运输计算。"]),
+      "🚀": row(["🚀", "🚀", "🚀", "🚀", "🚀", "🚀", "🚀", "🚀", "🚀"]),
+      "VIP Priority Support": row(["Support prioritaire VIP", "دعم VIP ذو الأولوية", "VIP प्राथमिकता समर्थन", "VIP ترجیحی سپورٹ", "VIP-приоритетная поддержка", "د VIP لومړیتوب ملاتړ", "VIP 우선 지원", "VIP Öncelikli Destek", "VIP 优先支持"]),
+      "Get fast, priority assistance whenever you need help.": row(["Bénéficiez d'une assistance rapide et prioritaire chaque fois que vous avez besoin d'aide.", "احصل على مساعدة سريعة وذات أولوية كلما احتجت إلى المساعدة.", "जब भी आपको मदद की आवश्यकता हो, तेज़ और प्राथमिकता वाली सहायता प्राप्त करें।", "جب بھی آپ کو مدد کی ضرورت ہو، تیز اور ترجیحی مدد حاصل کریں۔", "Получайте быструю приоритетную помощь, когда она вам нужна.", "کله چې تاسو ته مرستې ته اړتیا وي، چټکه او لومړیتوب لرونکې مرسته ترلاسه کړئ.", "도움이 필요할 때마다 빠른 우선 지원을 받으세요.", "Yardıma ihtiyaç duyduğunuzda hızlı, öncelikli destek alın.", "需要帮助时随时获得快速、优先的支持。"]),
+      "Ready to Get Started?": row(["Prêt à commencer ?", "هل أنت مستعد للبدء؟", "शुरू करने के लिए तैयार हैं?", "شروع کرنے کے لیے تیار ہیں؟", "Готовы начать?", "د پیل لپاره چمتو یاست؟", "시작할 준비가 되셨나요?", "Başlamaya hazır mısınız?", "准备好开始了吗？"]),
+      "$49.99 per/month — All features included. Cancel anytime.": row(["49,99 $/mois — Toutes les fonctionnalités incluses. Annulez à tout moment.", "49.99 دولارًا/شهر — جميع الميزات مشمولة. يمكنك الإلغاء في أي وقت.", "$49.99 प्रति/माह — सभी सुविधाएँ शामिल। कभी भी रद्द करें।", "$49.99 فی/ماہ — تمام خصوصیات شامل۔ کبھی بھی منسوخ کریں۔", "49,99 $/мес — все функции включены. Отмена в любое время.", "$49.99 په میاشت کې — ټول ځانګړتیاوې شاملې دي. هر وخت لغوه کړئ.", "월 $49.99 — 모든 기능 포함. 언제든지 취소 가능.", "Aylık 49,99 $ — Tüm özellikler dahil. İstediğiniz zaman iptal edin.", "每月 $49.99 — 包含所有功能。随时取消。"]),
+      "No hidden fees. Full access from day one.": row(["Aucuns frais cachés. Accès complet dès le premier jour.", "لا رسوم خفية. وصول كامل من اليوم الأول.", "कोई छिपा शुल्क नहीं। पहले दिन से पूरी पहुँच।", "کوئی پوشیدہ فیس نہیں۔ پہلے دن سے مکمل رسائی۔", "Никаких скрытых платежей. Полный доступ с первого дня.", "هیڅ پټ فیس نشته. د لومړۍ ورځې څخه بشپړ لاسرسی.", "숨겨진 비용 없음. 첫날부터 전체 액세스.", "Gizli ücret yok. İlk günden tam erişim.", "无隐藏费用。从第一天起即可完全访问。"]),
+      "© 2026 PartsMateTH. All rights reserved.": row(["© 2026 PartsMateTH. Tous droits réservés.", "© 2026 PartsMateTH. جميع الحقوق محفوظة.", "© 2026 PartsMateTH। सर्वाधिकार सुरक्षित।", "© 2026 PartsMateTH۔ تمام حقوق محفوظ ہیں۔", "© 2026 PartsMateTH. Все права защищены.", "© 2026 PartsMateTH. ټول حقوق خوندي دي.", "© 2026 PartsMateTH. 모든 권리 보유.", "© 2026 PartsMateTH. Tüm hakları saklıdır.", "© 2026 PartsMateTH。保留所有权利。"]),
+      "FAQs": row(["FAQ", "الأسئلة الشائعة", "सामान्य प्रश्न", "عمومی سوالات", "Вопросы и ответы", "پوښتنې", "자주 묻는 질문", "SSS", "常见问题"]),
+      "Buy PartsMateTH Pro": row(["Acheter PartsMateTH Pro", "اشترِ PartsMateTH Pro", "PartsMateTH Pro खरीदें", "PartsMateTH Pro خریدیں", "Купить PartsMateTH Pro", "PartsMateTH Pro واخلئ", "PartsMateTH Pro 구매", "PartsMateTH Pro Satın Al", "购买 PartsMateTH Pro"]),
+      "Your Name": row(["Votre nom", "اسمك", "आपका नाम", "آپ کا نام", "Ваше имя", "ستاسو نوم", "이름", "Adınız", "您的姓名"]),
+      "Email Address": row(["Adresse e-mail", "عنوان البريد الإلكتروني", "ईमेल पता", "ای میل ایڈریس", "Адрес электронной почты", "بریښنالیک پته", "이메일 주소", "E-posta Adresi", "电子邮件地址"]),
+      "Phone Number": row(["Numéro de téléphone", "رقم الهاتف", "फ़ोन नंबर", "فون نمبر", "Номер телефона", "د تلیفون شمیره", "전화번호", "Telefon Numarası", "电话号码"]),
+      "--": row(["--", "--", "--", "--", "--", "--", "--", "--", "--"]),
+      "+--": row(["+--", "+--", "+--", "+--", "+--", "+--", "+--", "+--", "+--"]),
+      "Invite Code": row(["Code d'invitation", "رمز الدعوة", "आमंत्रण कोड", "دعوتی کوڈ", "Код приглашения", "د بلنې کوډ", "초대 코드", "Davet Kodu", "邀请码"]),
+      "Get Invite Code": row(["Obtenir un code d'invitation", "احصل على رمز دعوة", "आमंत्रण कोड प्राप्त करें", "دعوتی کوڈ حاصل کریں", "Получить код приглашения", "د بلنې کوډ ترلاسه کړئ", "초대 코드 받기", "Davet Kodu Al", "获取邀请码"]),
+      "Subscribe Now — 49.99 USD/mo": row(["S'abonner — 49,99 USD/mois", "اشترك الآن — 49.99 دولارًا/شهر", "अभी सब्सक्राइब करें — 49.99 USD/माह", "ابھی سبسکرائب کریں — 49.99 USD/ماہ", "Подписаться — 49,99 USD/мес", "اوس ګډون وکړئ — 49.99 USD/میاشت", "지금 구독 — 49.99 USD/월", "Şimdi Abone Ol — 49,99 USD/ay", "立即订阅 — 49.99 USD/月"]),
+      "By subscribing, you agree to our Terms of Service and Privacy Policy.": row(["En vous abonnant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité.", "بالاشتراك، فإنك توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.", "सब्सक्राइब करके, आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत होते हैं।", "سبسکرائب کر کے، آپ ہماری سروس کی شرائط اور رازداری کی پالیسی سے اتفاق کرتے ہیں۔", "Подписываясь, вы соглашаетесь с нашими Условиями обслуживания и Политикой конфиденциальности.", "د ګډون کولو سره، تاسو زموږ د خدماتو شرایطو او د محرمیت تګلارې سره موافق یاست.", "구독하면 서비스 약관 및 개인정보 처리방침에 동의하는 것입니다.", "Abone olarak Hizmet Şartlarımızı ve Gizlilik Politikamızı kabul etmiş olursunuz.", "订阅即表示您同意我们的服务条款和隐私政策。"]),
+      "Start Free Trial": row(["Commencer l'essai gratuit", "ابدأ التجربة المجانية", "निःशुल्क परीक्षण शुरू करें", "مفت ٹرائل شروع کریں", "Начать бесплатный период", "وړیا آزموینه پیل کړئ", "무료 체험 시작", "Ücretsiz Denemeyi Başlat", "开始免费试用"]),
+      "Start 7-Day Free Trial": row(["Commencer l'essai gratuit de 7 jours", "ابدأ تجربة مجانية لمدة 7 أيام", "7-दिन का निःशुल्क परीक्षण शुरू करें", "7 دن کا مفت ٹرائل شروع کریں", "Начать 7-дневный бесплатный период", "د ۷ ورځو وړیا آزموینه پیل کړئ", "7일 무료 체험 시작", "7 Günlük Ücretsiz Denemeyi Başlat", "开始7天免费试用"]),
+      "No credit card required. Full access for 7 days.": row(["Aucune carte de crédit requise. Accès complet pendant 7 jours.", "لا حاجة لبطاقة ائتمان. وصول كامل لمدة 7 أيام.", "किसी क्रेडिट कार्ड की आवश्यकता नहीं। 7 दिनों के लिए पूरी पहुँच।", "کسی کریڈٹ کارڈ کی ضرورت نہیں۔ 7 دن کے لیے مکمل رسائی۔", "Кредитная карта не требуется. Полный доступ на 7 дней.", "د کریډیټ کارت ته اړتیا نشته. د ۷ ورځو لپاره بشپړ لاسرسی.", "신용카드가 필요 없습니다. 7일간 전체 액세스.", "Kredi kartı gerekmez. 7 gün boyunca tam erişim.", "无需信用卡。7天完全访问。"]),
+      "Online": row(["En ligne", "متصل", "ऑनलाइन", "آن لائن", "В сети", "آنلاین", "온라인", "Çevrimiçi", "在线"]),
+      "Hi there 👋": row(["Bonjour 👋", "مرحباً 👋", "नमस्ते 👋", "ہیلو وہاں 👋", "Привет 👋", "سلام 👋", "안녕하세요 👋", "Merhaba 👋", "您好 👋"]),
+      "Now": row(["Maintenant", "الآن", "अभी", "ابھی", "Сейчас", "اوس", "지금", "Şimdi", "现在"]),
+      "How can we help you?": row(["Comment pouvons-nous vous aider ?", "كيف يمكننا مساعدتك؟", "हम आपकी कैसे मदद कर सकते हैं?", "ہم آپ کی کیسے مدد کر سکتے ہیں؟", "Чем мы можем вам помочь?", "څنګه مرسته کولی شو؟", "무엇을 도와드릴까요?", "Size nasıl yardımcı olabiliriz?", "我们能为您提供什么帮助？"]),
+      "PartsMateTH Logo": row(["Logo PartsMateTH", "شعار PartsMateTH", "PartsMateTH लोगो", "PartsMateTH لوگو", "Логотип PartsMateTH", "د PartsMateTH لوگو", "PartsMateTH 로고", "PartsMateTH Logosu", "PartsMateTH 标志"]),
+      "John Doe": row(["Jean Dupont", "محمد أحمد", "राहुल शर्मा", "علی خان", "Иван Иванов", "احمد خان", "홍길동", "Ahmet Yılmaz", "张三"]),
+      "john@example.com": row(["john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com", "john@example.com"]),
+      "555 123 4567": row(["555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567", "555 123 4567"]),
+      "Enter your invite code": row(["Entrez votre code d'invitation", "أدخل رمز الدعوة", "अपना आमंत्रण कोड दर्ज करें", "اپنا دعوتی کوڈ درج کریں", "Введите код приглашения", "خپل د بلنې کوډ دننه کړئ", "초대 코드를 입력하세요", "Davet kodunuzu girin", "输入您的邀请码"]),
+      "Close": row(["Fermer", "إغلاق", "बंद करें", "بند کریں", "Закрыть", "بند کړئ", "닫기", "Kapat", "关闭"]),
+      "Enter your message...": row(["Entrez votre message...", "أدخل رسالتك...", "अपना संदेश दर्ज करें...", "اپنا پیغام درج کریں...", "Введите ваше сообщение...", "خپل پیغام دننه کړئ...", "메시지를 입력하세요...", "Mesajınızı girin...", "输入您的消息..."]),
+      "Send": row(["Envoyer", "إرسال", "भेजें", "بھیجیں", "Отправить", "ولېږئ", "보내기", "Gönder", "发送"]),
+      "Open WhatsApp chat": row(["Ouvrir le chat WhatsApp", "افتح محادثة WhatsApp", "WhatsApp चैट खोलें", "WhatsApp چیٹ کھولیں", "Открыть чат WhatsApp", "د WhatsApp چټ پرانیزئ", "WhatsApp 채팅 열기", "WhatsApp sohbetini aç", "打开 WhatsApp 聊天"]),
+      "Minimize WhatsApp": row(["Réduire WhatsApp", "تصغير WhatsApp", "WhatsApp छोटा करें", "WhatsApp کم کریں", "Свернуть WhatsApp", "WhatsApp کوچنۍ کړئ", "WhatsApp 최소화", "WhatsApp simge durumuna küçült", "最小化 WhatsApp"]),
+      "Show WhatsApp chat": row(["Afficher le chat WhatsApp", "إظهار محادثة WhatsApp", "WhatsApp चैट दिखाएँ", "WhatsApp چیٹ دکھائیں", "Показать чат WhatsApp", "د WhatsApp چټ ښکاره کړئ", "WhatsApp 채팅 표시", "WhatsApp sohbetini göster", "显示 WhatsApp 聊天"]),
+      "WhatsApp": row(["WhatsApp", "واتساب", "व्हाट्सएप", "واٹس ایپ", "WhatsApp", "واټس اپ", "왓츠앱", "WhatsApp", "WhatsApp"])
+    };
+
+    var origMap = new WeakMap();
+    var attrMap = new WeakMap();
+    var ATTRS = ["placeholder", "aria-label", "title", "alt"];
+
+    function collect() {
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      var arr = [], n;
+      while ((n = w.nextNode())) {
+        var p = n.parentNode;
+        if (!p) continue;
+        var nm = p.nodeName;
+        if (nm === "SCRIPT" || nm === "STYLE" || nm === "NOSCRIPT") continue;
+        if (p.closest && p.closest("#langMenu, #langMenuMobile, #langBtn")) continue;
+        if (n.nodeValue && n.nodeValue.trim().length > 1) arr.push(n);
+      }
+      return arr;
+    }
+
+    function translateStr(orig, lang) {
+      if (lang === "en") return orig;
+      var key = orig.trim();
+      var entry = T[key];
+      if (entry && entry[lang]) return orig.replace(key, entry[lang]);
+      return orig;
+    }
+
+    function apply(lang) {
+      try {
+        collect().forEach(function (n) {
+          try {
+            if (!origMap.has(n)) origMap.set(n, n.nodeValue);
+            n.nodeValue = translateStr(origMap.get(n), lang);
+          } catch (e) {}
+        });
+        document.querySelectorAll("[placeholder],[aria-label],[title],[alt]").forEach(function (el) {
+          if (el.closest && el.closest("#langMenu, #langMenuMobile, #langBtn")) return;
+          var store = attrMap.get(el);
+          if (!store) { store = {}; attrMap.set(el, store); }
+          ATTRS.forEach(function (a) {
+            if (!el.hasAttribute(a)) return;
+            if (!(a in store)) store[a] = el.getAttribute(a);
+            try { el.setAttribute(a, translateStr(store[a], lang)); } catch (e) {}
+          });
+        });
+      } catch (e) {}
+      document.documentElement.lang = lang;
+      document.documentElement.dir = RTL.indexOf(lang) >= 0 ? "rtl" : "ltr";
+      var cur = LANGS.filter(function (x) { return x.code === lang; })[0] || LANGS[0];
+      var lc = document.getElementById("langCurrent");
+      if (lc) lc.textContent = cur.short;
+      try { localStorage.setItem("pm_home_lang", lang); } catch (e) {}
+      markActive(lang);
+      try {
+        if (window.ScrollTrigger && window.ScrollTrigger.refresh) {
+          requestAnimationFrame(function () { window.ScrollTrigger.refresh(); });
+        }
+      } catch (e) {}
+    }
+
+    function markActive(lang) {
+      document.querySelectorAll("[data-lang-opt]").forEach(function (b) {
+        if (b.getAttribute("data-lang-opt") === lang) b.classList.add("lang-active");
+        else b.classList.remove("lang-active");
+      });
+    }
+
+    function closePlansMobile() {
+      var m = document.getElementById("mobileMenu");
+      if (m) m.classList.remove("active");
+    }
+
+    function buildMenus() {
+      var desk = document.getElementById("langMenu");
+      var mob = document.getElementById("langMenuMobile");
+      LANGS.forEach(function (l) {
+        if (desk) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.setAttribute("data-lang-opt", l.code);
+          b.className = "w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/10 transition-colors flex items-center justify-between";
+          b.innerHTML = "<span>" + l.label + "</span><span class='text-gray-500 text-xs'>" + l.short + "</span>";
+          b.addEventListener("click", function () { apply(l.code); document.getElementById("langMenu").classList.add("hidden"); });
+          desk.appendChild(b);
+        }
+        if (mob) {
+          var m = document.createElement("button");
+          m.type = "button";
+          m.setAttribute("data-lang-opt", l.code);
+          m.className = "px-3 py-2 rounded-lg text-sm text-gray-200 bg-white/5 hover:bg-white/10 transition-colors text-center";
+          m.textContent = l.label;
+          m.addEventListener("click", function () { apply(l.code); closePlansMobile(); });
+          mob.appendChild(m);
+        }
+      });
+      var btn = document.getElementById("langBtn");
+      if (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          document.getElementById("langMenu").classList.toggle("hidden");
+        });
+        document.addEventListener("click", function () {
+          var m = document.getElementById("langMenu");
+          if (m) m.classList.add("hidden");
+        });
+      }
+    }
+
+    function init() {
+      buildMenus();
+      var saved = "en";
+      try { saved = localStorage.getItem("pm_home_lang") || "en"; } catch (e) {}
+      apply(saved);
+    }
+
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+    else init();
+  })();
+  </script>
+  <style>
+    .lang-active { background: rgba(20,184,166,0.15) !important; color: #5eead4 !important; }
+    html[dir="rtl"] .sm\:flex-row { flex-direction: row-reverse; }
+  </style>
+
 </body>
 </html>
