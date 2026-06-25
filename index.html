@@ -2450,6 +2450,25 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
       newCaptcha();
       if (captchaReload) captchaReload.addEventListener("click", newCaptcha);
 
+      // Proof-of-work solver — verified server-side so direct bot POSTs (which
+      // never run this) get rejected. Returns { ts, nonce }.
+      async function sha256Hex(str) {
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+      async function solveProofOfWork(prefix, ts) {
+        let nonce = 0;
+        // Bounded loop so it can never hang the UI.
+        while (nonce < 5_000_000) {
+          const hex = await sha256Hex(`${ts}.${nonce}`);
+          if (hex.startsWith(prefix)) return { ts, nonce: String(nonce) };
+          nonce++;
+        }
+        return { ts, nonce: "0" };
+      }
+
+
+
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -2478,23 +2497,33 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           return;
         }
 
-        btnText.textContent = "Sending...";
+        btnText.textContent = "Verifying...";
         btnSpinner.classList.remove("hidden");
         submitBtn.disabled = true;
         submitBtn.classList.add("opacity-60", "cursor-not-allowed");
-        
+
         const name = form.name.value;
         const email = form.email.value;
         const message = form.message.value;
         const phone = document.getElementById("contactPhonePrefix").textContent + document.getElementById("contactPhone").value;
         const ccSel = document.getElementById("contactCountryCode");
         const country = getSelectedCountryName(ccSel);
-        
+        const company = (hp && hp.value) || "";
+
+        // Proof-of-work: find a nonce so sha256(`${ts}.${nonce}`) starts with "0000".
+        // Cheap for a real browser, costly for bots doing this at scale.
+        let pow = null;
+        try {
+          pow = await solveProofOfWork("000", formLoadedAt);
+        } catch (_) {}
+
+        btnText.textContent = "Sending...";
+
         fetch("/api/saveSupport", {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           keepalive: true,
-          body: JSON.stringify({ name, email, phone, country, message }),
+          body: JSON.stringify({ name, email, phone, country, message, company, pow }),
         })
         .then(async (res) => {
           const data = await res.json();
@@ -2731,9 +2760,12 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     .wa-min:hover { transform: scale(1.12); }
     .wa-min svg { width: 12px; height: 12px; stroke: #fff; }
     .wa-widget.wa-hidden { display: none; }
-    .wa-tab { position: fixed; bottom: 90px; right: 0; z-index: 9999; width: 34px; height: 44px; border-radius: 12px 0 0 12px; background: #25D366; box-shadow: -4px 4px 16px rgba(37,211,102,0.4); display: none; align-items: center; justify-content: center; cursor: pointer; border: none; }
+    .wa-tab { position: fixed; right: 0; z-index: 9999; width: 42px; height: 56px; border-radius: 12px 0 0 12px; background: #25D366; box-shadow: -4px 4px 16px rgba(37,211,102,0.4); display: none; flex-direction: column; align-items: center; justify-content: center; cursor: grab; border: none; padding: 0; touch-action: none; user-select: none; -webkit-user-select: none; }
     .wa-tab.show { display: flex; }
-    .wa-tab svg { width: 20px; height: 20px; fill: #fff; }
+    .wa-tab:active { cursor: grabbing; }
+    .wa-tab svg { width: 22px; height: 22px; fill: #fff; pointer-events: none; }
+    .wa-tab .wa-drag-hint { width: 18px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.55); margin-bottom: 4px; pointer-events: none; }
+    .wa-tab .wa-drag-hint + .wa-drag-hint { margin-bottom: 0; margin-top: 3px; }
   </style>
 
   <div class="wa-widget">
@@ -2769,7 +2801,9 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     </button>
   </div>
   <button class="wa-tab" id="waTab" aria-label="Show WhatsApp chat">
+    <span class="wa-drag-hint"></span>
     <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+    <span class="wa-drag-hint"></span>
   </button>
   <script>
     (function(){
@@ -2795,8 +2829,70 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
         try { localStorage.setItem('pm_wa_min', '0'); } catch(e){}
       }
       min.addEventListener('click', function(e){ e.stopPropagation(); minimize(); });
-      tab.addEventListener('click', restore);
+
+      // Draggable minimized tab along the right edge
+      var TAB_H = 56;
+      var MIN_DIST = 6;
+      var dragging = false, startY = 0, startBottom = 0, currentBottom = 90, moved = false;
+
+      function clampBottom(b){
+        var max = Math.max(window.innerHeight - TAB_H - 12, 12);
+        return Math.min(Math.max(b, 12), max);
+      }
+      function setTabBottom(b){
+        currentBottom = clampBottom(b);
+        tab.style.bottom = currentBottom + 'px';
+      }
+      function loadPos(){
+        try {
+          var saved = localStorage.getItem('pm_wa_pos');
+          if (saved) currentBottom = parseFloat(saved) || 90;
+        } catch(e){}
+      }
+      function savePos(){
+        try { localStorage.setItem('pm_wa_pos', String(currentBottom)); } catch(e){}
+      }
+      function getClientY(e){
+        if (e.clientY != null) return e.clientY;
+        if (e.touches && e.touches.length) return e.touches[0].clientY;
+        if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY;
+        return 0;
+      }
+      function onStart(e){
+        dragging = true;
+        moved = false;
+        startY = getClientY(e);
+        startBottom = currentBottom;
+        tab.style.transition = 'none';
+        e.preventDefault();
+      }
+      function onMove(e){
+        if (!dragging) return;
+        var y = getClientY(e);
+        var dy = startY - y;
+        if (Math.abs(dy) > MIN_DIST) moved = true;
+        setTabBottom(startBottom + dy);
+        e.preventDefault();
+      }
+      function onEnd(e){
+        if (!dragging) return;
+        dragging = false;
+        tab.style.transition = '';
+        if (!moved) restore();
+        else savePos();
+      }
+      tab.addEventListener('mousedown', onStart);
+      tab.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchend', onEnd);
+      window.addEventListener('resize', function(){ setTabBottom(currentBottom); });
+
+      loadPos();
+      setTabBottom(currentBottom);
       try { if (localStorage.getItem('pm_wa_min') === '1') minimize(); } catch(e){}
+      
       form.addEventListener('submit', function(e){
         e.preventDefault();
         var msg = (input.value || '').trim() || 'Hello, I want to know more';
