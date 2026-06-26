@@ -805,7 +805,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
             <span id="langCurrent">EN</span>
             <svg width="13" height="13" style="color:rgba(255,255,255,0.6);" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
           </button>
-          <div id="langMenu" style="display:none;position:absolute;right:0;margin-top:8px;width:180px;max-height:320px;overflow-y:auto;background:rgba(12,18,32,0.97);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.45);padding:6px;z-index:500;"></div>
+          <div id="langMenu" style="display:none;position:absolute;right:0;margin-top:8px;width:200px;max-height:340px;overflow-y:auto;background:#0c1220;border:1px solid rgba(255,255,255,0.12);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.55);padding:6px;z-index:500;"></div>
         </div>
       </nav>
       <button class="header-hamburger magnetic-wrap" onclick="openMobileNav()">
@@ -1950,8 +1950,15 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
 
     function markActive(lang) {
       document.querySelectorAll("[data-lang-opt]").forEach(function (b) {
-        if (b.getAttribute("data-lang-opt") === lang) { b.style.background = "rgba(20,184,166,0.18)"; b.style.color = "#5eead4"; }
-        else { b.style.background = ""; b.style.color = "#e2e8f0"; }
+        if (b.getAttribute("data-lang-opt") === lang) {
+          b.setAttribute("data-active", "1");
+          b.style.background = "rgba(20,184,166,0.18)";
+          b.style.color = "#5eead4";
+        } else {
+          b.setAttribute("data-active", "0");
+          b.style.background = "transparent";
+          b.style.color = "#f1f5f9";
+        }
       });
     }
 
@@ -1963,10 +1970,10 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
           var b = document.createElement("button");
           b.type = "button";
           b.setAttribute("data-lang-opt", l.code);
-          b.style.cssText = "width:100%;text-align:left;padding:9px 14px;font-size:14px;color:#e2e8f0;background:none;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;";
-          b.onmouseenter = function(){ if(b.style.color!=="rgb(94, 234, 212)") b.style.background="rgba(255,255,255,0.08)"; };
-          b.onmouseleave = function(){ if(b.style.color!=="rgb(94, 234, 212)") b.style.background=""; };
-          b.innerHTML = "<span>" + l.label + "</span><span style='color:#64748b;font-size:12px;'>" + l.short + "</span>";
+          b.style.cssText = "width:100%;text-align:left;padding:10px 14px;margin-bottom:2px;font-size:14px;color:#f1f5f9;background:transparent;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.15s ease,color 0.15s ease;";
+          b.onmouseenter = function(){ if(b.getAttribute("data-active")!=="1") b.style.background="rgba(255,255,255,0.07)"; };
+          b.onmouseleave = function(){ if(b.getAttribute("data-active")!=="1") b.style.background="transparent"; };
+          b.innerHTML = "<span>" + l.label + "</span><span style='color:#94a3b8;font-size:12px;font-weight:600;'>" + l.short + "</span>";
           b.addEventListener("click", function () { apply(l.code); desk.style.display = "none"; });
           desk.appendChild(b);
         }
