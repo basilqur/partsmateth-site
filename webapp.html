@@ -5662,8 +5662,7 @@ src="https://www.facebook.com/tr?id=1986489545592378&ev=PageView&noscript=1"
     }
 
     async function ocrFromBase64(base64) {
-      const apiKey = 'AIzaSyD9hv5dTxWfJhQa8eJ10jSJsyOyeDCxx4g';
-      const url = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
+      const url = '/api/vision';
       const body = { requests: [{ image: { content: base64 }, features: [{ type: 'TEXT_DETECTION' }] }] };
       const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       const data = await res.json();
