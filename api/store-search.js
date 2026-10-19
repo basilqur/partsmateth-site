@@ -13,7 +13,8 @@
 // Usage from the web app:
 //   /api/store-search?code=0415231090            -> { brands: [...] }
 //   /api/store-search?code=0415231090&brand=TOYOTA -> { total, offers: [...] } (cheapest first)
-//   add &analogs=1 to also get { alternativesTotal, alternatives: [...] } (interchangeable part numbers)
+//   add &analogs=1 to also get every interchangeable part number:
+//     { alternativesTotal, alternatives: [{ code, brand, description, offerCount, cheapest, fastest }] }
 //   add &debug=1 to also get the list of field NAMES the store returned (no values),
 //   which we use once to confirm the real response format.
 
@@ -38,7 +39,9 @@ const NUMERIC_FIELDS = [
   'availability', 'availabilityRate', 'packing', 'deliveryDaysMid', 'deliveryDaysMax',
   'price', 'weight', 'volume', 'deliveryRate',
 ];
-const MAX_OFFERS = 60;
+// Safety caps only; real searches return well below these, so customers see every option.
+const MAX_OFFERS = 400;          // offers for the searched part number
+const MAX_ALT_PARTS = 400;       // interchangeable part numbers (each grouped into one entry)
 const PUBLIC_BRAND_FIELDS = ['brand', 'code', 'description'];
 
 const cleanCode = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 40);
@@ -171,11 +174,28 @@ export default async function handler(req, res) {
     // Offers for the exact part number searched vs. interchangeable part numbers
     // (only present when analogs=1).
     const offers = all.filter((o) => cleanCode(o.code) === code);
-    const alternatives = all.filter((o) => cleanCode(o.code) !== code);
     const body = { code, brand, total: offers.length, offers: offers.slice(0, MAX_OFFERS) };
     if (useAnalogs) {
-      body.alternativesTotal = alternatives.length;
-      body.alternatives = alternatives.slice(0, MAX_OFFERS);
+      // One entry per interchangeable part number (code + brand) with its cheapest and its
+      // fastest offer, so every alternative is listed no matter how many offers each has.
+      const groups = new Map();
+      for (const o of all) {
+        if (cleanCode(o.code) === code) continue;
+        const key = cleanCode(o.code) + '|' + String(o.brand || '').toUpperCase();
+        let g = groups.get(key);
+        if (!g) {
+          g = { code: cleanCode(o.code), brand: o.brand || '', description: o.description || '', offerCount: 0, cheapest: o, fastest: o };
+          groups.set(key, g);
+        }
+        g.offerCount++;
+        if (!g.description && o.description) g.description = o.description;
+        const d = (x) => x.deliveryDaysMax ?? x.deliveryDaysMid ?? 999;
+        if (d(o) < d(g.fastest) || (d(o) === d(g.fastest) && o.price < g.fastest.price)) g.fastest = o;
+      }
+      const list = [...groups.values()];
+      body.alternativesTotal = list.length;
+      body.alternativeOffersTotal = list.reduce((n, g) => n + g.offerCount, 0);
+      body.alternatives = list.slice(0, MAX_ALT_PARTS);
     }
     if (debug) body.fieldsReturned = fieldNames(raw);
     res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');

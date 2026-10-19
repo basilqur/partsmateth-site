@@ -193,6 +193,16 @@
           </div>
           <span id="altCount" class="text-xs text-slate-500 shrink-0"></span>
         </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div id="altFilters" class="flex gap-2 overflow-x-auto" role="tablist" aria-label="Filter alternatives"></div>
+          <label class="flex items-center gap-2 text-xs text-slate-400">Sort
+            <select id="altSort" class="cur">
+              <option value="rec">Recommended</option>
+              <option value="price">Lowest price</option>
+              <option value="days">Fastest delivery</option>
+            </select>
+          </label>
+        </div>
         <div id="alts" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
         <div class="text-center mt-4"><button id="moreAlts" class="btn-ghost px-4 py-2 text-sm" hidden>Show more alternatives</button></div>
       </div>
@@ -233,12 +243,12 @@
   const CURRENCY_KEY = 'pmCurrency';
   const CURRENCIES = ['USD','AED','SAR','QAR','KWD','BHD','OMR','THB','EUR','GBP','JPY','INR','PKR','AUD','SGD','MYR','EGP','NGN','KES','ZAR','BRL','CLP','PEN','COP'];
   const GENUINE = new Set(['TOYOTA','LEXUS','TOYOTA LEXUS','DAIHATSU','HINO','SCION','NISSAN','INFINITI','NISSAN INFINITI','HONDA','ACURA','MITSUBISHI','MAZDA','SUBARU','SUZUKI','ISUZU','HYUNDAI','KIA','HYUNDAI KIA','HYUNDAI/KIA','MOBIS','GENERAL MOTORS','GM','CHEVROLET','FORD','MOTORCRAFT','VAG','VW','VOLKSWAGEN','AUDI','SKODA','BMW','MINI','MERCEDES','MERCEDES-BENZ','MERCEDES BENZ','PORSCHE','VOLVO','RENAULT','PEUGEOT','CITROEN','PEUGEOT CITROEN','PSA','FIAT','LAND ROVER','JAGUAR','CHRYSLER','MOPAR','JEEP','DODGE','SSANGYONG','OPEL','TESLA','PROTON','PERODUA','GREAT WALL','HAVAL','CHERY','GEELY','BYD','MG','FUSO','MITSUBISHI FUSO','UD TRUCKS']);
-  const MAX_ALTS_VISIBLE = 8;
+  const MAX_ALTS_VISIBLE = 12;
 
   // ---------------------------------------------------------------- state
   const S = {
     code: '', brands: [], brand: '', offers: [], total: 0, alternatives: [], altTotal: 0,
-    currency: 'USD', rates: { USD: 1 }, sort: 'price', showAll: false, altsVisible: MAX_ALTS_VISIBLE,
+    currency: 'USD', rates: { USD: 1 }, sort: 'price', showAll: false, altsVisible: MAX_ALTS_VISIBLE, altFilter: 'all', altSort: 'rec',
     reqId: 0,
   };
 
@@ -322,7 +332,7 @@
     const code = clean(raw);
     if (code.length < 3) { toast('Please enter a part number', 'ri-information-line text-amber-300'); $('q').focus(); return; }
     const id = ++S.reqId;
-    Object.assign(S, { code, brands: [], brand: '', offers: [], total: 0, alternatives: [], altTotal: 0, showAll: false, altsVisible: MAX_ALTS_VISIBLE, sort: 'price' });
+    Object.assign(S, { code, brands: [], brand: '', offers: [], total: 0, alternatives: [], altTotal: 0, showAll: false, altsVisible: MAX_ALTS_VISIBLE, altFilter: 'all', altSort: 'rec', sort: 'price' });
     $('q').value = raw.trim(); $('clearQ').hidden = false;
     if (push) history.pushState({ q: code }, '', '?q=' + encodeURIComponent(code));
     document.title = code + ' — PartsMate Store';
@@ -352,7 +362,7 @@
 
   async function selectBrand(brand) {
     const id = ++S.reqId;
-    S.brand = brand; S.showAll = false; S.altsVisible = MAX_ALTS_VISIBLE;
+    S.brand = brand; S.showAll = false; S.altsVisible = MAX_ALTS_VISIBLE; S.altFilter = 'all';
     renderBrands();
     renderPartLoading();
     $('allOffersWrap').hidden = true; $('altWrap').hidden = true;
@@ -504,7 +514,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">${cards}</div>`;
 
     $('allOffersWrap').hidden = S.offers.length <= 1;
-    $('toggleAllLabel').textContent = S.showAll ? 'Hide all offers' : `See all ${S.offers.length}${S.total > S.offers.length ? '+' : ''} offers`;
+    $('toggleAllLabel').textContent = S.showAll ? 'Hide all offers' : `See all ${S.total} offers`;
     $('toggleAllIcon').className = S.showAll ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line';
   }
 
@@ -532,47 +542,63 @@
       </table>`;
   }
 
+  // Each alternative from the API is one part number: { code, brand, description, offerCount, cheapest, fastest }
   function renderAlts() {
-    if (!S.alternatives.length) { $('altWrap').hidden = true; return; }
-    // One card per alternative part number: cheapest offer + fastest delivery
-    const groups = new Map();
-    for (const o of S.alternatives) {
-      const k = clean(o.code) + '|' + (o.brand || '');
-      const g = groups.get(k) || { code: clean(o.code), brand: o.brand || '', description: o.description || '', offers: [] };
-      g.offers.push(o); groups.set(k, g);
-    }
-    const list = [...groups.values()].map((g) => {
-      g.offers.sort((a, b) => a.price - b.price || days(a) - days(b));
-      g.best = g.offers[0];
-      g.fastest = Math.min(...g.offers.map(days));
-      return g;
-    }).sort((a, b) => (brandRank(a.brand) >= 20) - (brandRank(b.brand) >= 20) || a.best.price - b.best.price);
-
+    const all = S.alternatives.filter((g) => g && g.cheapest);
+    if (!all.length) { $('altWrap').hidden = true; return; }
     $('altWrap').hidden = false;
-    $('altCount').textContent = list.length + ' part number' + (list.length === 1 ? '' : 's');
+
+    const nGen = all.filter((g) => isGenuine(g.brand)).length;
+    const filters = [['all', 'All', all.length], ['genuine', 'Genuine', nGen], ['after', 'Aftermarket', all.length - nGen]];
+    $('altFilters').innerHTML = filters.map(([k, label, n]) =>
+      `<button role="tab" aria-selected="${S.altFilter === k}" class="chip px-3 py-1.5 text-xs ${S.altFilter === k ? 'active' : ''}" data-altfilter="${k}" ${n ? '' : 'disabled style="opacity:.4"'}>${label} <span class="text-slate-500">${n}</span></button>`).join('');
+    $('altSort').value = S.altSort;
+
+    const list = all
+      .filter((g) => S.altFilter === 'all' || (S.altFilter === 'genuine') === isGenuine(g.brand))
+      .sort((a, b) => {
+        if (S.altSort === 'price') return a.cheapest.price - b.cheapest.price;
+        if (S.altSort === 'days') return days(a.fastest) - days(b.fastest) || a.fastest.price - b.fastest.price;
+        // Recommended: Toyota family first, then other genuine, then aftermarket; cheapest first within each
+        return brandRank(a.brand) - brandRank(b.brand) || a.cheapest.price - b.cheapest.price;
+      });
+
+    const parts = all.length, offers = all.reduce((n, g) => n + (g.offerCount || 1), 0);
+    $('altCount').textContent = `${parts} part number${parts === 1 ? '' : 's'} · ${offers} offers`;
     $('alts').innerHTML = list.slice(0, S.altsVisible).map((g) => {
       const gen = isGenuine(g.brand);
+      const c = g.cheapest, f = g.fastest;
+      const fasterOption = f && f.offerId !== c.offerId && days(f) < days(c);
       return `
-      <div class="glass-card hoverable p-4 flex items-center gap-4 fade-in">
-        <div class="min-w-0 flex-1">
-          <div class="flex flex-wrap items-center gap-2">
-            <span class="font-mono text-sm text-white">${esc(g.code)}</span>
-            <span class="badge ${gen ? 'tag-genuine' : 'tag-after'}">${gen ? '<i class="ri-verified-badge-fill"></i>' : ''}${esc(g.brand || 'Other')}</span>
+      <div class="glass-card hoverable p-4 fade-in">
+        <div class="flex items-start gap-4">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-mono text-sm text-white">${esc(g.code)}</span>
+              <span class="badge ${gen ? 'tag-genuine' : 'tag-after'}">${gen ? '<i class="ri-verified-badge-fill"></i>' : ''}${esc(g.brand || 'Other')}</span>
+            </div>
+            <div class="text-xs text-slate-400 mt-1 truncate">${esc(g.description || 'Interchangeable part')}</div>
+            <div class="text-xs text-slate-500 mt-1">${g.offerCount || 1} offer${g.offerCount === 1 ? '' : 's'} · cheapest ready in ${esc(delivery(c))} · ${esc(stock(c))}${step(c) > 1 ? ` · <span class="text-amber-300">sold in packs of ${step(c)}</span>` : ''}</div>
           </div>
-          <div class="text-xs text-slate-400 mt-1 truncate">${esc(g.description || 'Interchangeable part')}</div>
-          <div class="text-xs text-slate-500 mt-1">${g.offers.length} offer${g.offers.length === 1 ? '' : 's'} · ready in ${esc(delivery(g.best))}</div>
-        </div>
-        <div class="text-right shrink-0">
-          <div class="text-[0.65rem] text-slate-500">from</div>
-          <div class="font-display font-bold text-white">${money(g.best.price)}</div>
-          <div class="flex gap-1.5 mt-2 justify-end">
-            <button class="btn-ghost h-8 px-2.5 text-xs" data-view="${esc(g.code)}">View</button>
-            <button class="btn-primary h-8 px-2.5 text-xs" data-add="${esc(g.best.offerId)}" data-alt="1" aria-label="Add cheapest to cart"><i class="ri-add-line"></i></button>
+          <div class="text-right shrink-0">
+            <div class="text-[0.65rem] text-slate-500">from</div>
+            <div class="font-display font-bold text-white">${money(c.price)}</div>
+            <div class="flex gap-1.5 mt-2 justify-end">
+              <button class="btn-ghost h-8 px-2.5 text-xs" data-view="${esc(g.code)}" title="See all offers for this part number">All offers</button>
+              <button class="btn-primary h-8 px-2.5 text-xs" data-add="${esc(c.offerId)}" aria-label="Add cheapest to cart"><i class="ri-add-line"></i></button>
+            </div>
           </div>
         </div>
+        ${fasterOption ? `
+        <div class="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-3 text-xs">
+          <span class="text-slate-400"><i class="ri-flashlight-line text-cyan-300"></i> Faster: ready in <span class="text-white">${esc(delivery(f))}</span> for <span class="text-white font-semibold">${money(f.price)}</span></span>
+          <button class="btn-ghost h-7 px-2.5" data-add="${esc(f.offerId)}" aria-label="Add faster option to cart"><i class="ri-add-line"></i> Add</button>
+        </div>` : ''}
       </div>`;
     }).join('');
-    $('moreAlts').hidden = list.length <= S.altsVisible;
+    const more = list.length - S.altsVisible;
+    $('moreAlts').hidden = more <= 0;
+    $('moreAlts').textContent = more <= MAX_ALTS_VISIBLE ? `Show ${more} more` : `Show ${MAX_ALTS_VISIBLE} more (${more} remaining)`;
   }
 
   // ---------------------------------------------------------------- cart
@@ -581,7 +607,13 @@
   function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch {} renderCart(); }
 
   function findOffer(id) {
-    return S.offers.find((o) => o.offerId === id) || S.alternatives.find((o) => o.offerId === id);
+    const o = S.offers.find((x) => x.offerId === id);
+    if (o) return o;
+    for (const g of S.alternatives) {
+      if (g.cheapest && g.cheapest.offerId === id) return g.cheapest;
+      if (g.fastest && g.fastest.offerId === id) return g.fastest;
+    }
+    return null;
   }
   function addToCart(id, qty) {
     const o = findOffer(id);
@@ -651,12 +683,15 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') openCart(false); });
   $('toggleAll').addEventListener('click', () => { S.showAll = !S.showAll; renderPart(); renderAllOffers(); });
   $('moreAlts').addEventListener('click', () => { S.altsVisible += MAX_ALTS_VISIBLE; renderAlts(); });
+  $('altSort').addEventListener('change', () => { S.altSort = $('altSort').value; S.altsVisible = MAX_ALTS_VISIBLE; renderAlts(); });
   $('checkoutBtn').addEventListener('click', () => toast('Checkout is being set up and opens very soon.', 'ri-time-line text-cyan-300'));
 
   document.addEventListener('click', (e) => {
     const t = e.target;
     const brandBtn = t.closest('[data-brand]');
     if (brandBtn && brandBtn.dataset.brand !== S.brand) return selectBrand(brandBtn.dataset.brand);
+    const af = t.closest('[data-altfilter]');
+    if (af && !af.disabled) { S.altFilter = af.dataset.altfilter; S.altsVisible = MAX_ALTS_VISIBLE; return renderAlts(); }
     const sortBtn = t.closest('[data-sort]');
     if (sortBtn) { S.sort = sortBtn.dataset.sort; return renderAllOffers(); }
     const qtyBtn = t.closest('[data-qty]');
