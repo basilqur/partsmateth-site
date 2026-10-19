@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css" rel="stylesheet">
   <script>
     tailwind.config = { theme: { extend: {
       fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] },
@@ -105,6 +106,17 @@
 
     select.cur { background:rgba(255,255,255,.04); border:1px solid var(--line-2); color:var(--text); border-radius:.65rem; padding:.45rem .6rem; outline:none; font-size:.85rem; }
     select.cur option { background:#0B1020; }
+    /* currency picker */
+    .flag { display:inline-block; width:1.4em; height:1.05em; border-radius:3px; background-size:cover; background-position:center; box-shadow:0 0 0 1px rgba(255,255,255,.12); flex-shrink:0; }
+    .flag-generic { display:inline-flex; align-items:center; justify-content:center; width:1.4em; height:1.05em; color:var(--text-dim); flex-shrink:0; }
+    .cur-panel { position:absolute; right:0; top:calc(100% + 10px); width:340px; z-index:70; background:linear-gradient(180deg, rgba(15,21,38,.98), rgba(9,13,26,.98)); border:1px solid var(--line-2); border-radius:1rem; box-shadow:0 30px 80px -20px rgba(0,0,0,.8); backdrop-filter:blur(20px); overflow:hidden; }
+    @media (max-width: 640px) { .cur-panel { position:fixed; left:12px; right:12px; top:72px; width:auto; } }
+    .cur-search { background:rgba(255,255,255,.04); border:1px solid var(--line-2); border-radius:.7rem; color:var(--text); width:100%; padding:.6rem .8rem .6rem 2.2rem; outline:none; font-size:.875rem; }
+    .cur-search:focus { border-color:rgba(66,194,186,.55); box-shadow:0 0 0 3px rgba(66,194,186,.12); }
+    .cur-row { width:100%; display:flex; align-items:center; gap:.75rem; padding:.55rem 1rem; text-align:left; transition:background .15s; }
+    .cur-row:hover, .cur-row.kb { background:rgba(66,194,186,.08); }
+    .cur-row.sel { background:rgba(66,194,186,.12); }
+    .cur-group { padding:.6rem 1rem .3rem; font-size:.65rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--text-mute); }
     .fade-in { animation:fadeIn .35s ease both; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:none } }
     [hidden] { display:none !important; }
@@ -189,8 +201,21 @@
         </nav>
 
         <div class="flex items-center gap-2">
-          <label class="sr-only" for="currency">Currency</label>
-          <select id="currency" class="cur" title="Currency"></select>
+          <div class="relative" id="curWrap">
+            <button id="curBtn" type="button" class="h-10 px-3 flex items-center gap-2 rounded-full glass text-gray-200 text-sm font-medium hover:bg-white/10 transition-all" aria-haspopup="dialog" aria-expanded="false" title="Change currency">
+              <span id="curFlag" class="flag-generic"><i class="ri-money-dollar-circle-line"></i></span><span id="curCode">USD</span><i class="ri-arrow-down-s-line text-xs text-slate-400"></i>
+            </button>
+            <div id="curPanel" class="cur-panel" role="dialog" aria-label="Choose currency" hidden>
+              <div class="p-3 border-b border-white/5">
+                <div class="relative">
+                  <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                  <input id="curSearch" type="text" class="cur-search" placeholder="Search currency or country" autocomplete="off" spellcheck="false" aria-label="Search currency or country">
+                </div>
+              </div>
+              <div id="curList" class="max-h-[60vh] sm:max-h-80 overflow-y-auto pb-2" role="listbox" aria-label="Currencies"></div>
+              <div id="curNote" class="px-4 py-2.5 text-[0.68rem] text-slate-500 border-t border-white/5 flex items-center gap-1.5"><i class="ri-refresh-line"></i><span>Live rates from PartsMateTH · prices converted from USD</span></div>
+            </div>
+          </div>
           <button id="cartBtn" class="relative h-10 px-3 flex items-center gap-2 text-sm rounded-full glass text-gray-200 hover:bg-white/10 transition-all" aria-label="Open cart">
             <i class="ri-shopping-cart-2-line text-lg"></i>
             <span class="hidden sm:inline font-medium">Cart</span>
@@ -392,6 +417,7 @@
     <div id="cartItems" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
     <div id="cartFoot" class="border-t border-white/5 p-5 space-y-3">
       <div class="flex justify-between text-sm"><span class="text-slate-400">Subtotal</span><span id="cartSubtotal" class="font-display font-bold text-white text-lg"></span></div>
+      <p id="cartFx" class="text-[0.7rem] text-teal-300/80 leading-relaxed" hidden></p>
       <p class="text-[0.7rem] text-slate-500 leading-relaxed">Shipping is calculated at checkout. Prices and availability are confirmed again when you place your order.</p>
       <button id="checkoutBtn" class="btn-primary w-full py-3.5 text-base"><span class="inline-flex items-center gap-2">Proceed to checkout <i class="ri-arrow-right-line"></i></span></button>
     </div>
@@ -407,7 +433,14 @@
   const API = '/api/store-search';
   const CART_KEY = 'pmCart';           // shared with webapp.html (same site)
   const CURRENCY_KEY = 'pmCurrency';
-  const CURRENCIES = ['USD','AED','SAR','QAR','KWD','BHD','OMR','THB','EUR','GBP','JPY','INR','PKR','AUD','SGD','MYR','EGP','NGN','KES','ZAR','BRL','CLP','PEN','COP'];
+  // Same "Popular" group as the Price Checker in webapp.html, with USD and AED first
+  const POPULAR = ['USD','AED','EUR','GBP','SAR','QAR','KWD','BHD','OMR','INR','PKR','THB','JPY','CNY','TRY','RUB','CAD','AUD','SGD','MYR','EGP','CHF'];
+  // Currency -> country (ISO 3166 alpha-2) for the flag. Regional currencies use a representative flag.
+  const CUR_FLAG = {AED:'ae',AFN:'af',ALL:'al',AMD:'am',ANG:'cw',AOA:'ao',ARS:'ar',AUD:'au',AWG:'aw',AZN:'az',BAM:'ba',BBD:'bb',BDT:'bd',BGN:'bg',BHD:'bh',BIF:'bi',BMD:'bm',BND:'bn',BOB:'bo',BRL:'br',BSD:'bs',BTN:'bt',BWP:'bw',BYN:'by',BZD:'bz',CAD:'ca',CDF:'cd',CHF:'ch',CLP:'cl',CNY:'cn',COP:'co',CRC:'cr',CUP:'cu',CVE:'cv',CZK:'cz',DJF:'dj',DKK:'dk',DOP:'do',DZD:'dz',EGP:'eg',ERN:'er',ETB:'et',EUR:'eu',FJD:'fj',FKP:'fk',FOK:'fo',GBP:'gb',GEL:'ge',GGP:'gg',GHS:'gh',GIP:'gi',GMD:'gm',GNF:'gn',GTQ:'gt',GYD:'gy',HKD:'hk',HNL:'hn',HRK:'hr',HTG:'ht',HUF:'hu',IDR:'id',ILS:'il',IMP:'im',INR:'in',IQD:'iq',IRR:'ir',ISK:'is',JEP:'je',JMD:'jm',JOD:'jo',JPY:'jp',KES:'ke',KGS:'kg',KHR:'kh',KID:'ki',KMF:'km',KRW:'kr',KWD:'kw',KYD:'ky',KZT:'kz',LAK:'la',LBP:'lb',LKR:'lk',LRD:'lr',LSL:'ls',LYD:'ly',MAD:'ma',MDL:'md',MGA:'mg',MKD:'mk',MMK:'mm',MNT:'mn',MOP:'mo',MRU:'mr',MUR:'mu',MVR:'mv',MWK:'mw',MXN:'mx',MYR:'my',MZN:'mz',NAD:'na',NGN:'ng',NIO:'ni',NOK:'no',NPR:'np',NZD:'nz',OMR:'om',PAB:'pa',PEN:'pe',PGK:'pg',PHP:'ph',PKR:'pk',PLN:'pl',PYG:'py',QAR:'qa',RON:'ro',RSD:'rs',RUB:'ru',RWF:'rw',SAR:'sa',SBD:'sb',SCR:'sc',SDG:'sd',SEK:'se',SGD:'sg',SHP:'sh',SLE:'sl',SLL:'sl',SOS:'so',SRD:'sr',SSP:'ss',STN:'st',SYP:'sy',SZL:'sz',THB:'th',TJS:'tj',TMT:'tm',TND:'tn',TOP:'to',TRY:'tr',TTD:'tt',TVD:'tv',TWD:'tw',TZS:'tz',UAH:'ua',UGX:'ug',USD:'us',UYU:'uy',UZS:'uz',VES:'ve',VND:'vn',VUV:'vu',WST:'ws',XAF:'cm',XCD:'ag',XOF:'sn',XPF:'pf',YER:'ye',ZAR:'za',ZMW:'zm',ZWL:'zw',ZWG:'zw'};
+  const REGION_LABEL = { EUR:'Eurozone', XAF:'Central Africa', XOF:'West Africa', XCD:'Eastern Caribbean', XPF:'French Pacific', ANG:'Curaçao & Sint Maarten', XDR:'IMF' };
+  const EURO_COUNTRIES = ['at','be','hr','cy','ee','fi','fr','de','gr','ie','it','lv','lt','lu','mt','nl','pt','sk','si','es'];
+  // Time zone -> country, for picking a sensible currency on the first visit
+  const TZ_COUNTRY = {'Asia/Dubai':'ae','Asia/Riyadh':'sa','Asia/Qatar':'qa','Asia/Kuwait':'kw','Asia/Bahrain':'bh','Asia/Muscat':'om','Asia/Bangkok':'th','Asia/Tokyo':'jp','Asia/Singapore':'sg','Asia/Kuala_Lumpur':'my','Asia/Manila':'ph','Asia/Jakarta':'id','Asia/Karachi':'pk','Asia/Kolkata':'in','Asia/Calcutta':'in','Asia/Dhaka':'bd','Asia/Colombo':'lk','Asia/Kathmandu':'np','Asia/Shanghai':'cn','Asia/Hong_Kong':'hk','Asia/Seoul':'kr','Asia/Taipei':'tw','Asia/Ho_Chi_Minh':'vn','Asia/Yangon':'mm','Asia/Phnom_Penh':'kh','Asia/Baghdad':'iq','Asia/Amman':'jo','Asia/Beirut':'lb','Asia/Aden':'ye','Asia/Tehran':'ir','Asia/Kabul':'af','Asia/Tashkent':'uz','Asia/Almaty':'kz','Europe/Istanbul':'tr','Europe/London':'gb','Europe/Moscow':'ru','Africa/Cairo':'eg','Africa/Lagos':'ng','Africa/Accra':'gh','Africa/Nairobi':'ke','Africa/Dar_es_Salaam':'tz','Africa/Kampala':'ug','Africa/Johannesburg':'za','Africa/Casablanca':'ma','Africa/Algiers':'dz','Africa/Tunis':'tn','Africa/Tripoli':'ly','Africa/Khartoum':'sd','Africa/Addis_Ababa':'et','Africa/Luanda':'ao','Africa/Maputo':'mz','Africa/Lusaka':'zm','Africa/Harare':'zw','Africa/Kinshasa':'cd','Africa/Douala':'cm','Africa/Dakar':'sn','Africa/Abidjan':'ci','America/Sao_Paulo':'br','America/Santiago':'cl','America/Lima':'pe','America/Bogota':'co','America/Argentina/Buenos_Aires':'ar','America/Buenos_Aires':'ar','America/Caracas':'ve','America/Guayaquil':'ec','America/La_Paz':'bo','America/Asuncion':'py','America/Montevideo':'uy','America/Mexico_City':'mx','America/Toronto':'ca','America/Vancouver':'ca','Pacific/Auckland':'nz'};
   const GENUINE = new Set(['TOYOTA','LEXUS','TOYOTA LEXUS','DAIHATSU','HINO','SCION','NISSAN','INFINITI','NISSAN INFINITI','HONDA','ACURA','MITSUBISHI','MAZDA','SUBARU','SUZUKI','ISUZU','HYUNDAI','KIA','HYUNDAI KIA','HYUNDAI/KIA','MOBIS','GENERAL MOTORS','GM','CHEVROLET','FORD','MOTORCRAFT','VAG','VW','VOLKSWAGEN','AUDI','SKODA','BMW','MINI','MERCEDES','MERCEDES-BENZ','MERCEDES BENZ','PORSCHE','VOLVO','RENAULT','PEUGEOT','CITROEN','PEUGEOT CITROEN','PSA','FIAT','LAND ROVER','JAGUAR','CHRYSLER','MOPAR','JEEP','DODGE','SSANGYONG','OPEL','TESLA','PROTON','PERODUA','GREAT WALL','HAVAL','CHERY','GEELY','BYD','MG','FUSO','MITSUBISHI FUSO','UD TRUCKS']);
   const MAX_ALTS_VISIBLE = 12;
 
@@ -431,9 +464,10 @@
     const rate = S.rates[cur] || (cur === 'USD' ? 1 : null);
     if (rate == null) return money(usd, 'USD');
     const v = usd * rate;
-    const big = ['JPY','KES','NGN','CLP','COP','PKR','INR','THB'].includes(cur) && v >= 100;
     try {
-      return new Intl.NumberFormat('en', { style: 'currency', currency: cur, minimumFractionDigits: big ? 0 : 2, maximumFractionDigits: big ? 0 : 2 }).format(v);
+      const opts = { style: 'currency', currency: cur };
+      if (v >= 10000) { opts.minimumFractionDigits = 0; opts.maximumFractionDigits = 0; } // keep big numbers readable
+      return new Intl.NumberFormat('en', opts).format(v);
     } catch { return cur + ' ' + v.toFixed(2); }
   }
   function delivery(o) {
@@ -471,25 +505,109 @@
     return data;
   }
 
-  // ---------------------------------------------------------------- currency
+  // ---------------------------------------------------------------- currency (rates from our backend, like the Price Checker)
+  let curNames, regionNames;
+  try { curNames = new Intl.DisplayNames(['en'], { type: 'currency' }); } catch {}
+  try { regionNames = new Intl.DisplayNames(['en'], { type: 'region' }); } catch {}
+  const curName = (c) => { try { return curNames ? curNames.of(c) : c; } catch { return c; } };
+  function curRegion(c) {
+    if (REGION_LABEL[c]) return REGION_LABEL[c];
+    const iso = CUR_FLAG[c];
+    try { return iso && regionNames ? regionNames.of(iso.toUpperCase()) : ''; } catch { return ''; }
+  }
+  function flagHTML(c) {
+    const iso = CUR_FLAG[c];
+    return iso ? `<span class="flag fi fi-${iso}" aria-hidden="true"></span>` : `<span class="flag-generic" aria-hidden="true"><i class="ri-global-line"></i></span>`;
+  }
+  function guessCurrency() {
+    const countries = [];
+    try { const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; if (TZ_COUNTRY[tz]) countries.push(TZ_COUNTRY[tz]); } catch {}
+    for (const l of (navigator.languages || [navigator.language || ''])) { const m = /-([A-Za-z]{2})$/.exec(l || ''); if (m) countries.push(m[1].toLowerCase()); }
+    for (const cc of countries) {
+      if (EURO_COUNTRIES.includes(cc)) return 'EUR';
+      const cur = Object.keys(CUR_FLAG).find((k) => CUR_FLAG[k] === cc && !['XAF','XOF','XCD','XPF','SLL','ZWL','HRK'].includes(k));
+      if (cur) return cur;
+    }
+    return 'USD';
+  }
+  function availableCurrencies() { return Object.keys(S.rates).filter((c) => /^[A-Z]{3}$/.test(c)); }
+
+  function setCurrency(c, remember = true) {
+    if (!S.rates[c]) c = 'USD';
+    S.currency = c;
+    if (remember) { try { localStorage.setItem(CURRENCY_KEY, c); } catch {} }
+    $('curFlag').outerHTML = `<span id="curFlag">${flagHTML(c)}</span>`;
+    $('curCode').textContent = c;
+    $('curBtn').title = `${curName(c)}${curRegion(c) ? ' · ' + curRegion(c) : ''}`;
+    renderAll();
+  }
+
+  let curKb = -1;
+  function renderCurList() {
+    const q = $('curSearch').value.trim().toLowerCase();
+    const all = availableCurrencies();
+    const match = (c) => !q || c.toLowerCase().includes(q) || curName(c).toLowerCase().includes(q) || curRegion(c).toLowerCase().includes(q);
+    const pop = POPULAR.filter((c) => all.includes(c) && match(c));
+    const rest = all.filter((c) => !POPULAR.includes(c) && match(c)).sort();
+    const row = (c) => {
+      const rate = S.rates[c];
+      const rateTxt = c === 'USD' ? 'Base' : (rate >= 100 ? rate.toFixed(0) : rate >= 1 ? rate.toFixed(2) : rate.toFixed(4));
+      return `<button type="button" role="option" aria-selected="${c === S.currency}" class="cur-row ${c === S.currency ? 'sel' : ''}" data-cur="${c}">
+        ${flagHTML(c)}
+        <span class="min-w-0 flex-1">
+          <span class="flex items-baseline gap-2"><span class="text-white font-semibold text-sm">${c}</span><span class="text-xs text-slate-400 truncate">${esc(curName(c))}</span></span>
+          <span class="block text-[0.7rem] text-slate-500 truncate">${esc(curRegion(c))}</span>
+        </span>
+        <span class="text-[0.7rem] text-slate-500 tabular-nums">${c === 'USD' ? 'Base' : '1 USD = ' + rateTxt}</span>
+        ${c === S.currency ? '<i class="ri-check-line text-teal-300"></i>' : ''}
+      </button>`;
+    };
+    let html = '';
+    if (pop.length) html += `<div class="cur-group">Popular</div>` + pop.map(row).join('');
+    if (rest.length) html += `<div class="cur-group">All currencies</div>` + rest.map(row).join('');
+    if (!html) html = `<div class="px-4 py-8 text-center text-sm text-slate-500">No currency found for “${esc(q)}”</div>`;
+    $('curList').innerHTML = html;
+    curKb = -1;
+  }
+  function openCurPanel(on) {
+    $('curPanel').hidden = !on;
+    $('curBtn').setAttribute('aria-expanded', String(on));
+    if (on) {
+      $('curSearch').value = ''; renderCurList();
+      const sel = $('curList').querySelector('.sel'); if (sel) sel.scrollIntoView({ block: 'center' });
+      setTimeout(() => $('curSearch').focus(), 30);
+    }
+  }
+
   function initCurrency() {
-    let saved = 'USD';
-    try { saved = localStorage.getItem(CURRENCY_KEY) || 'USD'; } catch {}
-    S.currency = CURRENCIES.includes(saved) ? saved : 'USD';
-    const sel = $('currency');
-    sel.innerHTML = CURRENCIES.map((c) => `<option value="${c}">${c}</option>`).join('');
-    sel.value = S.currency;
-    sel.addEventListener('change', () => {
-      S.currency = sel.value;
-      try { localStorage.setItem(CURRENCY_KEY, S.currency); } catch {}
-      renderAll();
+    let saved = null;
+    try { saved = localStorage.getItem(CURRENCY_KEY); } catch {}
+    const wanted = saved || guessCurrency();
+    setCurrency('USD', false);
+    $('curBtn').addEventListener('click', (e) => { e.stopPropagation(); openCurPanel($('curPanel').hidden); });
+    $('curSearch').addEventListener('input', renderCurList);
+    $('curSearch').addEventListener('keydown', (e) => {
+      const rows = [...$('curList').querySelectorAll('[data-cur]')];
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault(); if (!rows.length) return;
+        curKb = (curKb + (e.key === 'ArrowDown' ? 1 : -1) + rows.length) % rows.length;
+        rows.forEach((r, i) => r.classList.toggle('kb', i === curKb)); rows[curKb].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        e.preventDefault(); const r = rows[curKb >= 0 ? curKb : 0]; if (r) { setCurrency(r.dataset.cur); openCurPanel(false); }
+      } else if (e.key === 'Escape') { openCurPanel(false); $('curBtn').focus(); }
     });
-    // Live exchange rates (USD based) from the existing PartsMate backend
+    $('curList').addEventListener('click', (e) => { const r = e.target.closest('[data-cur]'); if (r) { setCurrency(r.dataset.cur); openCurPanel(false); } });
+    document.addEventListener('click', (e) => { if (!$('curPanel').hidden && !e.target.closest('#curWrap')) openCurPanel(false); });
+
+    // Live exchange rates (USD based) from the PartsMate backend, the same source as the Price Checker
     getJSON('/api/proxy?path=' + encodeURIComponent('/exchange-rates')).then((d) => {
-      if (d && d.conversion_rates) { S.rates = { ...d.conversion_rates, USD: 1 }; renderAll(); }
+      if (!d || !d.conversion_rates) throw new Error('no rates');
+      S.rates = { ...d.conversion_rates, USD: 1 };
+      setCurrency(S.rates[wanted] ? wanted : 'USD', !!saved);
+      if (!$('curPanel').hidden) renderCurList();
     }).catch(() => {
-      if (S.currency !== 'USD') toast('Live exchange rates unavailable, showing USD', 'ri-information-line text-amber-300');
-      S.currency = 'USD'; $('currency').value = 'USD';
+      if (wanted !== 'USD') toast('Live exchange rates unavailable, showing USD', 'ri-information-line text-amber-300');
+      $('curNote').innerHTML = '<i class="ri-error-warning-line"></i><span>Live rates unavailable · showing USD</span>';
     });
   }
 
@@ -830,7 +948,11 @@
           <div class="font-display font-bold text-white">${money(l.priceUSD * l.qty)}</div>
         </div>
       </div>`).join('');
-    $('cartSubtotal').textContent = money(cart.reduce((s, l) => s + l.priceUSD * l.qty, 0));
+    const subUSD = cart.reduce((s, l) => s + l.priceUSD * l.qty, 0);
+    $('cartSubtotal').textContent = money(subUSD);
+    const fx = $('cartFx');
+    fx.hidden = S.currency === 'USD';
+    if (S.currency !== 'USD') fx.innerHTML = `<i class="ri-exchange-line"></i> ${money(subUSD, 'USD')} converted to ${esc(S.currency)} at today's rate.`;
   }
 
   function openCart(on) {
@@ -848,7 +970,7 @@
   $('cartBtn').addEventListener('click', () => openCart(true));
   $('closeCart').addEventListener('click', () => openCart(false));
   $('scrim').addEventListener('click', () => openCart(false));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') openCart(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { openCart(false); if (!$('curPanel').hidden) openCurPanel(false); } });
   $('toggleAll').addEventListener('click', () => { S.showAll = !S.showAll; renderPart(); renderAllOffers(); });
   $('moreAlts').addEventListener('click', () => { S.altsVisible += MAX_ALTS_VISIBLE; renderAlts(); });
   $('altSort').addEventListener('change', () => { S.altSort = $('altSort').value; S.altsVisible = MAX_ALTS_VISIBLE; renderAlts(); });
