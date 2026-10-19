@@ -20,7 +20,7 @@
 
 const BASE = (process.env.TRADESOFT_API_BASE || 'https://shop.partsmateth.com').replace(/\/+$/, '');
 const TOKEN = process.env.TRADESOFT_API_TOKEN;
-const TIMEOUT_MS = 25000;
+const TIMEOUT_MS = 20000;
 
 // Offer fields that are safe to show to customers.
 // Deliberately excluded: supplierPrice (our cost), supplierID, supplierName, providersPricesID,
@@ -77,6 +77,20 @@ function fieldNames(items) {
   const names = new Set();
   for (const it of items.slice(0, 20)) if (it && typeof it === 'object') Object.keys(it).forEach((k) => names.add(k));
   return [...names].sort();
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Tradesoft sometimes answers with a one-off error ("Unexpected error, data not saved").
+// Try once more after a short pause before giving up (not after a timeout, to stay fast).
+async function callSearchRetry(params) {
+  try {
+    return await callSearch(params);
+  } catch (err) {
+    if (err.status === 504) throw err;
+    await sleep(600);
+    return callSearch(params);
+  }
 }
 
 async function callSearch(params) {
@@ -158,15 +172,30 @@ export default async function handler(req, res) {
   try {
     if (!brand) {
       // Step 1: which brands have this part number
-      const raw = toArray(await callSearch({ code, useWebSuppliers: 1 }));
+      const raw = toArray(await callSearchRetry({ code, useWebSuppliers: 1 }));
       const body = { code, brands: raw.map((b) => pick(b, PUBLIC_BRAND_FIELDS)) };
       if (debug) body.fieldsReturned = fieldNames(raw);
       res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=1800');
       return res.status(200).json(body);
     }
 
-    // Step 2: offers for this part number + brand
-    const raw = toArray(await callSearch({ code, brand, useWebSuppliers: 1, useAnalogs }));
+    // Step 2: offers for this part number + brand.
+    // For some part numbers with very large interchange lists, Tradesoft fails when asked to include
+    // interchangeable parts. In that case we still return every offer for the searched part number
+    // (asking again without interchanges) and tell the page the alternatives could not be loaded.
+    let raw;
+    let alternativesUnavailable = false;
+    if (useAnalogs) {
+      try {
+        raw = toArray(await callSearch({ code, brand, useWebSuppliers: 1, useAnalogs: 1 }));
+      } catch (err) {
+        console.error('store-search: interchanges failed, retrying without:', err.storeError || '', err.message);
+        alternativesUnavailable = true;
+        raw = toArray(await callSearchRetry({ code, brand, useWebSuppliers: 1, useAnalogs: 0 }));
+      }
+    } else {
+      raw = toArray(await callSearchRetry({ code, brand, useWebSuppliers: 1, useAnalogs: 0 }));
+    }
     const all = raw
       .map(toPublicOffer)
       .filter((o) => o.price > 0 && (o.availability === undefined || o.availability > 0))
@@ -175,7 +204,8 @@ export default async function handler(req, res) {
     // (only present when analogs=1).
     const offers = all.filter((o) => cleanCode(o.code) === code);
     const body = { code, brand, total: offers.length, offers: offers.slice(0, MAX_OFFERS) };
-    if (useAnalogs) {
+    if (alternativesUnavailable) body.alternativesUnavailable = true;
+    if (useAnalogs && !alternativesUnavailable) {
       // One entry per interchangeable part number (code + brand) with its cheapest and its
       // fastest offer, so every alternative is listed no matter how many offers each has.
       const groups = new Map();
@@ -198,10 +228,13 @@ export default async function handler(req, res) {
       body.alternatives = list.slice(0, MAX_ALT_PARTS);
     }
     if (debug) body.fieldsReturned = fieldNames(raw);
-    res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
+    // A fallback answer (without alternatives) is only cached briefly, so a later visit can try again.
+    res.setHeader('Cache-Control', alternativesUnavailable ? 'public, s-maxage=60' : 'public, s-maxage=300, stale-while-revalidate=900');
     return res.status(200).json(body);
   } catch (err) {
     console.error('store-search error:', err.storeError || '', err.message);
-    return res.status(err.status || 500).json({ error: err.message || 'Store search failed' });
+    const body = { error: err.message || 'Store search failed' };
+    if (err.storeError) body.storeError = err.storeError; // Tradesoft's own error code, to help diagnose
+    return res.status(err.status || 500).json(body);
   }
 }

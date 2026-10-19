@@ -295,7 +295,7 @@
           <h2 class="text-sm font-semibold text-slate-300">Brands for <span id="qLabel" class="font-display text-white"></span></h2>
           <span id="brandsCount" class="text-xs text-slate-500"></span>
         </div>
-        <div id="brands" class="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1" role="tablist" aria-label="Brands"></div>
+        <div id="brands" class="flex flex-wrap gap-2" role="tablist" aria-label="Brands"></div>
       </div>
 
       <!-- part summary + 3 clear choices -->
@@ -501,7 +501,7 @@
     const r = await fetch(url, { headers: { Accept: 'application/json' } });
     let data = {};
     try { data = await r.json(); } catch {}
-    if (!r.ok) throw new Error(data.error || ('Request failed (' + r.status + ')'));
+    if (!r.ok) { const e = new Error(data.error || ('Request failed (' + r.status + ')')); e.code = data.storeError || ('HTTP ' + r.status); throw e; }
     return data;
   }
 
@@ -641,7 +641,7 @@
       selectBrand(S.brands[0].brand);
     } catch (e) {
       if (id !== S.reqId) return;
-      renderError(e.message);
+      renderError(e.message, e.code);
     }
   }
 
@@ -656,10 +656,11 @@
       if (id !== S.reqId) return;
       S.offers = d.offers || []; S.total = d.total || S.offers.length;
       S.alternatives = d.alternatives || []; S.altTotal = d.alternativesTotal || S.alternatives.length;
+      S.altUnavailable = !!d.alternativesUnavailable;
       renderAll();
     } catch (e) {
       if (id !== S.reqId) return;
-      renderError(e.message);
+      renderError(e.message, e.code);
     }
   }
 
@@ -703,12 +704,13 @@
       </div>`;
   }
 
-  function renderError(msg) {
+  function renderError(msg, code) {
     $('partArea').innerHTML = `
       <div class="glass-card p-10 text-center fade-in">
         <i class="ri-error-warning-line text-4xl text-amber-300"></i>
         <h3 class="font-display text-xl font-bold text-white mt-3">Something went wrong</h3>
         <p class="text-sm text-slate-400 mt-2">${esc(msg || 'Please try again in a moment.')}</p>
+        <p class="text-xs text-slate-500 mt-3">If this keeps happening, try another brand above or <a class="underline text-teal-300" href="https://wa.me/66966688444?text=${encodeURIComponent('Hello, I am looking for part number ' + S.code + (S.brand ? ' (' + S.brand + ')' : '') + '.')}" target="_blank" rel="noopener">ask us on WhatsApp</a>.${code ? ` <span class="text-slate-600">· ref ${esc(code)}</span>` : ''}</p>
         <button class="btn-ghost inline-flex items-center gap-2 px-4 py-2 mt-5 text-sm" data-retry="1"><i class="ri-refresh-line"></i> Try again</button>
       </div>`;
   }
@@ -830,6 +832,12 @@
   // Each alternative from the API is one part number: { code, brand, description, offerCount, cheapest, fastest }
   function renderAlts() {
     const all = S.alternatives.filter((g) => g && g.cheapest);
+    if (S.altUnavailable) {
+      $('altWrap').hidden = false;
+      $('altFilters').innerHTML = ''; $('altCount').textContent = ''; $('moreAlts').hidden = true;
+      $('alts').innerHTML = `<div class="glass-card p-5 md:col-span-2 text-sm text-slate-400 flex items-center gap-3"><i class="ri-information-line text-xl text-amber-300"></i><span>Alternatives for this part number couldn't be loaded right now. All offers for ${esc(S.code)} are shown above. <button class="underline text-teal-300 ml-1" data-retry="1">Try again</button></span></div>`;
+      return;
+    }
     if (!all.length) { $('altWrap').hidden = true; return; }
     $('altWrap').hidden = false;
 
@@ -883,7 +891,7 @@
     }).join('');
     const more = list.length - S.altsVisible;
     $('moreAlts').hidden = more <= 0;
-    $('moreAlts').textContent = more <= MAX_ALTS_VISIBLE ? `Show ${more} more` : `Show ${MAX_ALTS_VISIBLE} more (${more} remaining)`;
+    $('moreAlts').textContent = `Show all ${more} remaining alternative${more === 1 ? '' : 's'}`;
   }
 
   // ---------------------------------------------------------------- cart
@@ -972,7 +980,7 @@
   $('scrim').addEventListener('click', () => openCart(false));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { openCart(false); if (!$('curPanel').hidden) openCurPanel(false); } });
   $('toggleAll').addEventListener('click', () => { S.showAll = !S.showAll; renderPart(); renderAllOffers(); });
-  $('moreAlts').addEventListener('click', () => { S.altsVisible += MAX_ALTS_VISIBLE; renderAlts(); });
+  $('moreAlts').addEventListener('click', () => { S.altsVisible = Infinity; renderAlts(); });
   $('altSort').addEventListener('change', () => { S.altSort = $('altSort').value; S.altsVisible = MAX_ALTS_VISIBLE; renderAlts(); });
   $('checkoutBtn').addEventListener('click', () => toast('Checkout is being set up and opens very soon.', 'ri-time-line text-teal-300'));
 
