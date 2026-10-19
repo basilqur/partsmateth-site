@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>PartsMate Store — Genuine Auto Parts, Live Prices</title>
   <meta name="description" content="Search any part number and get live prices and stock for genuine and aftermarket auto parts. Order online from PartsMateTH.">
-  <meta name="theme-color" content="#05070D">
+  <meta name="theme-color" content="#060912">
   <link rel="icon" type="image/png" sizes="32x32" href="/pwa-icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/pwa-icons/favicon-16x16.png">
   <link rel="apple-touch-icon" href="/pwa-icons/apple-touch-icon.png">
@@ -15,56 +15,67 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
   <script>
-    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] } } } };
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] },
+      colors: { brand: { blue: '#3B82F6', teal: '#42C2BA', dark: '#0A0F1C', darker: '#060912', card: '#111827', muted: '#1F2937' } }
+    } } };
+  </script>
+  <!-- Google tag (gtag.js), same property as the homepage -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LRCT5H3MP7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LRCT5H3MP7');
   </script>
   <style>
-    /* Same visual language as webapp.html (PartsMateTH NextGen UI) */
+    /* Same look as the PartsMateTH homepage (index.html): blue -> teal brand gradient */
     :root{
-      --bg-0:#05070D;
+      --bg-0:#060912;
       --line:rgba(255,255,255,0.06);
       --line-2:rgba(255,255,255,0.10);
       --text:#E6ECF7; --text-dim:#9AA7BE; --text-mute:#5C6A85; --text-faint:#3A4660;
-      --accent:#22D3EE; --accent-2:#A78BFA; --mint:#34D399; --amber:#FBBF24;
-      --grad-primary: linear-gradient(135deg,#22D3EE 0%,#6366F1 45%,#A78BFA 100%);
-      --grad-mesh: radial-gradient(1200px 800px at 12% 8%, rgba(99,102,241,.22), transparent 60%),
-                   radial-gradient(900px 700px at 88% 14%, rgba(34,211,238,.18), transparent 60%),
-                   radial-gradient(900px 700px at 50% 110%, rgba(244,114,182,.14), transparent 60%);
+      --accent:#42C2BA; --accent-2:#3B82F6; --mint:#34D399; --amber:#FBBF24;
+      --grad-primary: linear-gradient(135deg,#3B82F6 0%,#42C2BA 100%);
+      --grad-mesh: radial-gradient(1100px 700px at 10% 0%, rgba(59,130,246,.16), transparent 60%),
+                   radial-gradient(900px 650px at 90% 10%, rgba(66,194,186,.13), transparent 60%),
+                   radial-gradient(900px 700px at 50% 110%, rgba(59,130,246,.08), transparent 60%);
       --shadow-card: 0 1px 0 rgba(255,255,255,.04) inset, 0 10px 40px -16px rgba(0,0,0,.6);
       --shadow-pop: 0 30px 80px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset;
     }
     html { scroll-behavior:smooth; }
     * { -webkit-tap-highlight-color: transparent; }
     body { font-family:'Inter',sans-serif; background:var(--bg-0); color:var(--text); min-height:100vh; overflow-x:hidden; position:relative; }
-    body::before{ content:""; position:fixed; inset:-10vh -10vw; background:var(--grad-mesh), linear-gradient(180deg,#05070D 0%,#07091A 100%); z-index:-2; animation: meshDrift 28s ease-in-out infinite alternate; }
+    body::before{ content:""; position:fixed; inset:-10vh -10vw; background:var(--grad-mesh), linear-gradient(180deg,#060912 0%,#0A0F1C 100%); z-index:-2; animation: meshDrift 28s ease-in-out infinite alternate; }
     @keyframes meshDrift { from { transform: translate3d(0,0,0) } to { transform: translate3d(-2vw,1.5vh,0) scale(1.03) } }
     .font-display { font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em; }
     .grad-text { background:var(--grad-primary); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
     .glass-card { position:relative; background:linear-gradient(180deg, rgba(14,20,38,.66), rgba(10,14,28,.58)); backdrop-filter:blur(22px) saturate(1.2); -webkit-backdrop-filter:blur(22px) saturate(1.2); border:1px solid var(--line); border-radius:1rem; box-shadow:var(--shadow-card); transition:border-color .3s, box-shadow .3s, transform .3s; }
-    .glass-card.hoverable:hover { border-color:rgba(34,211,238,.22); box-shadow:var(--shadow-pop); transform:translateY(-2px); }
+    .glass-card.hoverable:hover { border-color:rgba(66,194,186,.22); box-shadow:var(--shadow-pop); transform:translateY(-2px); }
 
-    .btn-primary { position:relative; background:var(--grad-primary); background-size:200% 200%; color:#fff; font-weight:600; border-radius:.75rem; transition:transform .2s, box-shadow .2s, background-position .5s, opacity .2s; box-shadow:0 8px 24px -10px rgba(99,102,241,.55), inset 0 1px 0 rgba(255,255,255,.18); }
-    .btn-primary:hover { transform:translateY(-1px); background-position:100% 50%; box-shadow:0 14px 32px -10px rgba(34,211,238,.5), inset 0 1px 0 rgba(255,255,255,.25); }
+    .btn-primary { position:relative; background:var(--grad-primary); background-size:200% 200%; color:#fff; font-weight:600; border-radius:.75rem; transition:transform .2s, box-shadow .2s, background-position .5s, opacity .2s; box-shadow:0 8px 24px -10px rgba(59,130,246,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+    .btn-primary:hover { transform:translateY(-1px); background-position:100% 50%; box-shadow:0 14px 32px -10px rgba(66,194,186,.5), inset 0 1px 0 rgba(255,255,255,.25); }
     .btn-primary:active { transform:scale(.98); }
     .btn-primary:disabled { opacity:.45; cursor:not-allowed; transform:none; }
     .btn-ghost { background:rgba(255,255,255,.04); border:1px solid var(--line-2); color:var(--text-dim); border-radius:.75rem; transition:all .2s; }
-    .btn-ghost:hover { color:#fff; border-color:rgba(34,211,238,.35); background:rgba(34,211,238,.06); }
+    .btn-ghost:hover { color:#fff; border-color:rgba(66,194,186,.35); background:rgba(66,194,186,.06); }
 
     .search-shell { background:rgba(255,255,255,.035); border:1px solid var(--line-2); border-radius:1.1rem; transition:border-color .25s, box-shadow .25s; }
-    .search-shell:focus-within { border-color:rgba(34,211,238,.55); box-shadow:0 0 0 4px rgba(34,211,238,.10), 0 0 40px -10px rgba(34,211,238,.35); }
+    .search-shell:focus-within { border-color:rgba(66,194,186,.55); box-shadow:0 0 0 4px rgba(66,194,186,.10), 0 0 40px -10px rgba(66,194,186,.35); }
     .search-shell input { background:transparent; outline:none; color:var(--text); }
     .search-shell input::placeholder { color:var(--text-mute); }
 
     .chip { border:1px solid var(--line-2); background:rgba(255,255,255,.03); color:var(--text-dim); border-radius:999px; transition:all .2s; white-space:nowrap; }
-    .chip:hover { color:#fff; border-color:rgba(34,211,238,.35); }
-    .chip.active { color:#fff; border-color:rgba(34,211,238,.6); background:rgba(34,211,238,.10); box-shadow:0 0 0 3px rgba(34,211,238,.08); }
+    .chip:hover { color:#fff; border-color:rgba(66,194,186,.35); }
+    .chip.active { color:#fff; border-color:rgba(66,194,186,.6); background:rgba(66,194,186,.10); box-shadow:0 0 0 3px rgba(66,194,186,.08); }
     .tag-genuine { color:#6EE7B7; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.25); }
     .tag-after { color:#C4B5FD; background:rgba(167,139,250,.10); border:1px solid rgba(167,139,250,.25); }
     .badge { font-size:.68rem; font-weight:600; letter-spacing:.02em; padding:.2rem .55rem; border-radius:999px; display:inline-flex; align-items:center; gap:.3rem; }
 
     .choice { display:flex; flex-direction:column; }
     .choice .price { font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:-0.02em; }
-    .choice.primary { border-color:rgba(34,211,238,.35); background:linear-gradient(180deg, rgba(34,211,238,.08), rgba(10,14,28,.6)); }
+    .choice.primary { border-color:rgba(66,194,186,.35); background:linear-gradient(180deg, rgba(66,194,186,.08), rgba(10,14,28,.6)); }
 
     .stepper { display:inline-flex; align-items:center; border:1px solid var(--line-2); border-radius:.65rem; overflow:hidden; background:rgba(255,255,255,.03); }
     .stepper button { width:2rem; height:2.25rem; color:var(--text-dim); transition:background .15s, color .15s; }
@@ -75,7 +86,7 @@
     .tbl { width:100%; border-collapse:collapse; font-size:.85rem; }
     .tbl th { text-align:left; font-weight:600; color:var(--text-mute); font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; padding:.7rem .9rem; border-bottom:1px solid var(--line); white-space:nowrap; }
     .tbl td { padding:.65rem .9rem; border-bottom:1px solid var(--line); vertical-align:middle; }
-    .tbl tr:hover td { background:rgba(34,211,238,.035); }
+    .tbl tr:hover td { background:rgba(66,194,186,.035); }
     .sort-btn { cursor:pointer; user-select:none; }
     .sort-btn.on { color:var(--accent); }
 
@@ -97,40 +108,134 @@
     .fade-in { animation:fadeIn .35s ease both; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:none } }
     [hidden] { display:none !important; }
+    /* ===== From the homepage (index.html) ===== */
+    .gradient-text { background: linear-gradient(135deg, #3B82F6 0%, #42C2BA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    .btn-glow { position: relative; background: linear-gradient(135deg, #3B82F6, #42C2BA); transition: all 0.3s ease; }
+    .btn-glow::before { content: ''; position: absolute; inset: -2px; background: linear-gradient(135deg, #3B82F6, #42C2BA); border-radius: inherit; filter: blur(15px); opacity: 0; transition: opacity 0.3s ease; z-index: -1; }
+    .btn-glow:hover::before { opacity: 0.6; }
+    .btn-glow:hover { transform: translateY(-2px); }
+    .nav-link { position: relative; transition: color 0.3s ease; }
+    .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #3B82F6, #42C2BA); transition: width 0.3s ease; }
+    .nav-link:hover::after, .nav-link.is-active::after { width: 100%; }
+    .nav-link:hover { color: #42C2BA; }
+    .nav-link.is-active { color: #fff; }
+    body.cart-open .wa-widget, body.cart-open .wa-tab { display: none !important; }
+
     @media (prefers-reduced-motion: reduce) { *, *::before { animation:none !important; transition:none !important; } }
+
+    /* ===== WhatsApp chat widget (same as homepage) ===== */
+    .wa-widget { position: fixed; bottom: 24px; right: 24px; z-index: 9999; font-family: 'Inter', sans-serif; }
+    .wa-bubble { width: 60px; height: 60px; border-radius: 50%; background: #25D366; box-shadow: 0 8px 24px rgba(37,211,102,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; border: none; position: relative; }
+    .wa-bubble:hover { transform: scale(1.08); box-shadow: 0 12px 32px rgba(37,211,102,0.55); }
+    .wa-bubble::after { content: ''; position: absolute; top: 6px; right: 6px; width: 12px; height: 12px; background: #ef4444; border-radius: 50%; border: 2px solid #fff; }
+    .wa-bubble svg { width: 32px; height: 32px; fill: #fff; }
+    .wa-panel { position: absolute; bottom: 76px; right: 0; width: 320px; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.25); transform: translateY(10px) scale(0.95); opacity: 0; pointer-events: none; transition: all 0.25s ease; }
+    .wa-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+    .wa-header { background: #075E54; color: #fff; padding: 16px; display: flex; align-items: center; gap: 12px; }
+    .wa-avatar { width: 44px; height: 44px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; padding: 4px; }
+    .wa-avatar img { width: 100%; height: 100%; object-fit: contain; }
+    .wa-header-text { flex: 1; min-width: 0; }
+    .wa-name { font-weight: 600; font-size: 15px; line-height: 1.2; }
+    .wa-status { font-size: 12px; opacity: 0.85; display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+    .wa-status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+    .wa-close { background: none; border: none; color: #fff; cursor: pointer; padding: 4px; opacity: 0.8; }
+    .wa-close:hover { opacity: 1; }
+    .wa-body { background: #ECE5DD; padding: 20px 16px; min-height: 140px; background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 40%); }
+    .wa-msg { background: #fff; padding: 10px 12px; border-radius: 0 12px 12px 12px; font-size: 14px; color: #303030; max-width: 85%; box-shadow: 0 1px 1px rgba(0,0,0,0.08); margin-bottom: 8px; line-height: 1.4; }
+    .wa-msg-time { font-size: 10px; color: #999; text-align: right; margin-top: 4px; }
+    .wa-input-row { display: flex; align-items: center; gap: 8px; background: #fff; padding: 10px 12px; border-top: 1px solid #e5e7eb; }
+    .wa-input { flex: 1; border: none; outline: none; background: #f3f4f6; border-radius: 999px; padding: 10px 14px; font-size: 16px; color: #303030; font-family: inherit; min-width: 0; }
+    .wa-input::placeholder { color: #9ca3af; }
+    .wa-send { width: 40px; height: 40px; border-radius: 50%; background: #25D366; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.2s, transform 0.15s; }
+    .wa-send:hover { background: #1da851; transform: scale(1.05); }
+    .wa-send svg { width: 18px; height: 18px; fill: #fff; }
+    @media (max-width: 480px) { .wa-panel { width: calc(100vw - 32px); right: -8px; } }
+    .wa-min { position: absolute; top: -8px; left: -8px; width: 22px; height: 22px; border-radius: 50%; background: #1f2937; color: #fff; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: transform 0.15s; }
+    .wa-min:hover { transform: scale(1.12); }
+    .wa-min svg { width: 12px; height: 12px; stroke: #fff; }
+    .wa-widget.wa-hidden { display: none; }
+    .wa-tab { position: fixed; right: 0; z-index: 9999; width: 42px; height: 56px; border-radius: 12px 0 0 12px; background: #25D366; box-shadow: -4px 4px 16px rgba(37,211,102,0.4); display: none; flex-direction: column; align-items: center; justify-content: center; cursor: grab; border: none; padding: 0; touch-action: none; user-select: none; -webkit-user-select: none; gap: 5px; }
+    .wa-tab.show { display: flex; }
+    .wa-tab:active { cursor: grabbing; }
+    .wa-tab svg { width: 24px; height: 24px; fill: #fff; pointer-events: none; flex-shrink: 0; }
+    .wa-drag-hint { width: 18px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.55); flex-shrink: 0; pointer-events: none; }
   </style>
 </head>
 <body>
 
-  <!-- ===== HEADER ===== -->
-  <header class="sticky top-0 z-40 border-b border-white/5" style="background:rgba(5,7,13,.72); backdrop-filter:blur(16px);">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
-      <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="PartsMateTH home">
-        <img src="/app-tabs-images/partsmateth%20logo.png" alt="" class="h-8 w-auto">
-        <span class="font-display font-bold text-white text-lg hidden sm:inline">PartsMate<span class="grad-text">TH</span></span>
-        <span class="text-[0.65rem] font-semibold uppercase tracking-widest text-cyan-300/90 border border-cyan-300/25 rounded-full px-2 py-0.5 ml-1">Store</span>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 ml-6 text-sm text-slate-400">
-        <a href="/" class="hover:text-white transition">Home</a>
-        <a href="/plans.html" class="hover:text-white transition">PartsMate App</a>
-        <a href="/index.html#contact" class="hover:text-white transition">Contact</a>
-      </nav>
-      <div class="ml-auto flex items-center gap-2">
-        <label class="sr-only" for="currency">Currency</label>
-        <select id="currency" class="cur" title="Currency"></select>
-        <button id="cartBtn" class="btn-ghost relative h-10 px-3 flex items-center gap-2 text-sm" aria-label="Open cart">
-          <i class="ri-shopping-cart-2-line text-lg"></i>
-          <span class="hidden sm:inline">Cart</span>
-          <span id="cartCount" class="absolute -top-1.5 -right-1.5 min-w-[1.25rem] h-5 px-1 rounded-full text-[0.7rem] font-bold text-white flex items-center justify-center" style="background:var(--grad-primary)" hidden>0</span>
+  <!-- ===== NAVBAR (same as homepage, plus Store, currency and cart) ===== -->
+  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16 md:h-20 gap-3">
+
+        <!-- Logo -->
+        <a href="/index.html" class="flex items-center space-x-3 group shrink-0">
+          <img src="/app-tabs-images/partsmateth%20logo.png" alt="PartsMateTH Logo"
+               class="h-9 md:h-11 w-auto object-contain transition-transform duration-300 group-hover:scale-110">
+          <span class="font-display text-xl md:text-2xl font-bold gradient-text hidden sm:inline">PartsMateTH</span>
+          <span class="text-[0.6rem] font-semibold uppercase tracking-widest text-teal-300 border border-teal-300/30 rounded-full px-2 py-0.5">Store</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden lg:flex items-center space-x-7">
+          <a href="/index.html#home" class="nav-link text-gray-300 font-medium">Home</a>
+          <a href="/index.html#features" class="nav-link text-gray-300 font-medium">Features</a>
+          <a href="/index.html#about" class="nav-link text-gray-300 font-medium">About</a>
+          <a href="/store" class="nav-link is-active font-medium" aria-current="page">Store</a>
+          <a href="#contact" class="nav-link text-gray-300 font-medium">Contact</a>
+          <a href="/plans.html" class="nav-link text-gray-300 font-medium">Plans</a>
+          <a href="/profile.html" class="nav-link text-gray-300 font-medium">Profile</a>
+        </nav>
+
+        <div class="flex items-center gap-2">
+          <label class="sr-only" for="currency">Currency</label>
+          <select id="currency" class="cur" title="Currency"></select>
+          <button id="cartBtn" class="relative h-10 px-3 flex items-center gap-2 text-sm rounded-full glass text-gray-200 hover:bg-white/10 transition-all" aria-label="Open cart">
+            <i class="ri-shopping-cart-2-line text-lg"></i>
+            <span class="hidden sm:inline font-medium">Cart</span>
+            <span id="cartCount" class="absolute -top-1.5 -right-1.5 min-w-[1.25rem] h-5 px-1 rounded-full text-[0.7rem] font-bold text-white flex items-center justify-center" style="background:var(--grad-primary)" hidden>0</span>
+          </button>
+          <a href="/login.html" class="btn-glow hidden lg:inline-block px-5 py-2.5 rounded-full text-white font-semibold text-sm whitespace-nowrap">Login / Sign Up</a>
+          <!-- Mobile Menu Button -->
+          <button id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg glass">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu (same drawer as homepage) -->
+    <div id="mobileMenuOverlay" class="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"></div>
+    <div id="mobileMenu" class="fixed top-0 right-0 z-50 h-[100dvh] w-[82%] max-w-sm flex flex-col glass border-l border-white/10 translate-x-full transition-transform duration-300 ease-out lg:hidden">
+      <div class="flex items-center justify-between px-6 h-16 shrink-0 border-b border-white/10">
+        <span class="font-display text-lg font-bold gradient-text">PartsMateTH</span>
+        <button id="mobileMenuClose" aria-label="Close menu" class="w-10 h-10 flex items-center justify-center rounded-lg glass">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
         </button>
       </div>
+      <nav class="flex-1 overflow-y-auto overscroll-contain px-6 py-6 space-y-1">
+        <a href="/index.html#home" class="block text-gray-200 hover:text-white font-medium py-3 border-b border-white/5">Home</a>
+        <a href="/index.html#webapp" class="block text-gray-200 hover:text-white font-medium py-3 border-b border-white/5">Web App</a>
+        <a href="/index.html#features" class="block text-gray-200 hover:text-white font-medium py-3 border-b border-white/5">Features</a>
+        <a href="/index.html#about" class="block text-gray-200 hover:text-white font-medium py-3 border-b border-white/5">About</a>
+        <a href="/store" class="block text-white font-semibold py-3 border-b border-white/5"><span class="gradient-text">Store</span></a>
+        <a href="#contact" class="block text-gray-200 hover:text-white font-medium py-3 border-b border-white/5">Contact</a>
+        <a href="/plans.html" class="block text-gray-200 hover:text-white font-medium py-3 border-b border-white/5">Plans</a>
+        <a href="/profile.html" class="block text-gray-200 hover:text-white font-medium py-3 border-b border-white/5">Profile</a>
+        <a href="/login.html" class="btn-glow block text-center px-5 py-3 mt-4 rounded-full text-white font-semibold">Login / Sign Up</a>
+      </nav>
     </div>
   </header>
 
   <main class="max-w-6xl mx-auto px-4 sm:px-6">
 
     <!-- ===== HERO + SEARCH ===== -->
-    <section id="hero" class="pt-14 sm:pt-20 pb-8 text-center transition-all">
+    <section id="hero" class="pt-32 sm:pt-40 pb-8 text-center transition-all">
       <div id="heroIntro">
         <div class="inline-flex items-center gap-2 text-xs text-slate-400 border border-white/10 rounded-full px-3 py-1 mb-6">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live prices &amp; stock from verified suppliers
@@ -154,11 +259,6 @@
         <button class="chip px-3 py-1.5" data-q="178010C010">17801-0C010 · Air filter</button>
       </div>
 
-      <div id="trust" class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto text-left">
-        <div class="glass-card p-4 flex gap-3"><i class="ri-shield-check-line text-2xl text-emerald-300"></i><div><div class="text-sm font-semibold text-white">Genuine first</div><div class="text-xs text-slate-400">Original manufacturer parts are always listed at the top.</div></div></div>
-        <div class="glass-card p-4 flex gap-3"><i class="ri-flashlight-line text-2xl text-cyan-300"></i><div><div class="text-sm font-semibold text-white">Live availability</div><div class="text-xs text-slate-400">Real-time prices and stock, refreshed with every search.</div></div></div>
-        <div class="glass-card p-4 flex gap-3"><i class="ri-earth-line text-2xl text-violet-300"></i><div><div class="text-sm font-semibold text-white">Ships worldwide</div><div class="text-xs text-slate-400">From Thailand, Dubai and Japan to wherever you are.</div></div></div>
-      </div>
     </section>
 
     <!-- ===== RESULTS ===== -->
@@ -209,10 +309,76 @@
     </section>
   </main>
 
-  <footer class="border-t border-white/5 py-8 text-center text-xs text-slate-500">
-    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <span>© <span id="yr"></span> PartsMateTH · Siam B.K.K International General Trading LLC</span>
-      <span class="flex gap-4"><a class="hover:text-white" href="/policies.html">Policies</a><a class="hover:text-white" href="/faq.html">FAQ</a><a class="hover:text-white" href="/index.html#contact">Contact</a></span>
+
+  <!-- ===== WHY PARTSMATETH ===== -->
+  <section id="about" class="py-20 md:py-28 border-t border-white/5" style="background:rgba(6,9,18,.6)">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <span class="inline-block px-4 py-1.5 rounded-full glass text-sm text-teal-400 font-medium mb-6">Why PartsMateTH</span>
+        <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-5">Genuine parts from a <span class="gradient-text">trusted exporter</span></h2>
+        <p class="text-gray-400 text-base md:text-lg">PartsMateTH is the parts platform of Siam B.K.K International General Trading LLC, a wholesale exporter of genuine Toyota parts. From our head office in Thailand and our branches in Dubai, Riyadh, Australia and Japan, we supply customers across the Middle East, Africa and South America.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+        <div class="glass rounded-2xl p-6"><div class="w-12 h-12 rounded-xl bg-teal-500/15 flex items-center justify-center mb-4"><i class="ri-shield-check-line text-2xl text-teal-300"></i></div><h3 class="text-white font-semibold mb-1.5">Genuine first</h3><p class="text-gray-400 text-sm">Original manufacturer parts are always listed at the top, clearly labelled apart from aftermarket.</p></div>
+        <div class="glass rounded-2xl p-6"><div class="w-12 h-12 rounded-xl bg-blue-500/15 flex items-center justify-center mb-4"><i class="ri-flashlight-line text-2xl text-blue-300"></i></div><h3 class="text-white font-semibold mb-1.5">Live prices &amp; stock</h3><p class="text-gray-400 text-sm">Every search checks real-time prices and availability, so what you see is what we can supply.</p></div>
+        <div class="glass rounded-2xl p-6"><div class="w-12 h-12 rounded-xl bg-teal-500/15 flex items-center justify-center mb-4"><i class="ri-earth-line text-2xl text-teal-300"></i></div><h3 class="text-white font-semibold mb-1.5">Shipped worldwide</h3><p class="text-gray-400 text-sm">From Thailand, Dubai and Japan to wherever you are, with options for every budget and deadline.</p></div>
+        <div class="glass rounded-2xl p-6"><div class="w-12 h-12 rounded-xl bg-blue-500/15 flex items-center justify-center mb-4"><i class="ri-building-2-line text-2xl text-blue-300"></i></div><h3 class="text-white font-semibold mb-1.5">Trade buyers welcome</h3><p class="text-gray-400 text-sm">Garages, dealers and distributors can ask us about wholesale pricing and trade terms.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GET IN TOUCH (same contact details as homepage) ===== -->
+  <section id="contact" class="py-20 md:py-28 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+      <div>
+        <span class="inline-block px-4 py-1.5 rounded-full glass text-sm text-teal-400 font-medium mb-6">Get in Touch</span>
+        <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-5">Can't find a part? <span class="gradient-text">We'll source it.</span></h2>
+        <p class="text-gray-400 text-base md:text-lg">Send us the part number, your vehicle or a photo of the old part. Our team will find the right part and the best option for you.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a href="https://wa.me/66966688444" target="_blank" rel="noopener" class="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center shrink-0"><svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg></div>
+          <div><div class="text-white font-medium group-hover:text-teal-400 transition-colors">WhatsApp</div><div class="text-gray-400 text-sm">+66 96 668 8444</div></div>
+        </a>
+        <a href="mailto:support@partsmateth.com" class="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0"><svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg></div>
+          <div class="min-w-0"><div class="text-white font-medium group-hover:text-teal-400 transition-colors">Email</div><div class="text-gray-400 text-sm truncate">support@partsmateth.com</div></div>
+        </a>
+        <a href="/faq.html" class="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0"><i class="ri-question-line text-2xl text-blue-400"></i></div>
+          <div><div class="text-white font-medium group-hover:text-teal-400 transition-colors">FAQ</div><div class="text-gray-400 text-sm">Answers to common questions.</div></div>
+        </a>
+        <a href="/policies.html" class="flex items-center gap-4 p-4 rounded-xl glass hover:bg-white/10 transition-all duration-300 group">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0"><i class="ri-file-list-3-line text-2xl text-blue-400"></i></div>
+          <div><div class="text-white font-medium group-hover:text-teal-400 transition-colors">Terms &amp; Policies</div><div class="text-gray-400 text-sm">Privacy, billing and returns.</div></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER (same as homepage, plus Store) ===== -->
+  <footer class="py-12 bg-brand-darker border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center space-x-3">
+          <img src="/app-tabs-images/partsmateth%20logo.png" alt="PartsMateTH" class="h-8 w-auto">
+          <span class="font-display text-lg font-bold gradient-text">PartsMateTH</span>
+        </div>
+        <div class="text-gray-400 text-sm text-center">&copy; <span id="yr"></span> PartsMateTH. All rights reserved.</div>
+        <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
+          <a href="/store" class="text-gray-400 hover:text-white transition-colors text-sm">Store</a>
+          <a href="/policies.html" class="text-gray-400 hover:text-white transition-colors text-sm">All Policies</a>
+          <a href="/faq.html" class="text-gray-400 hover:text-white transition-colors text-sm">FAQs</a>
+          <a href="/plans.html" class="text-gray-400 hover:text-white transition-colors text-sm">Plans</a>
+          <a href="/profile.html" class="text-gray-400 hover:text-white transition-colors text-sm">Profile</a>
+          <a href="/login.html" class="text-gray-400 hover:text-white transition-colors text-sm">Web App</a>
+          <a href="/download.html" class="text-gray-400 hover:text-white transition-colors text-sm">Download</a>
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -339,6 +505,7 @@
     compactHero(true);
     $('results').hidden = false;
     $('qLabel').textContent = code;
+    window.__pmStorePart = code;
     $('brands').innerHTML = Array.from({ length: 4 }, () => '<div class="skeleton h-9 w-28 shrink-0"></div>').join('');
     $('brandsCount').textContent = '';
     renderPartLoading();
@@ -379,9 +546,9 @@
   }
 
   function compactHero(on) {
-    $('heroIntro').hidden = on; $('trust').hidden = on; $('examples').hidden = on;
-    $('hero').classList.toggle('pt-14', !on); $('hero').classList.toggle('sm:pt-20', !on);
-    $('hero').classList.toggle('pt-6', on); $('hero').classList.toggle('pb-8', !on); $('hero').classList.toggle('pb-6', on);
+    $('heroIntro').hidden = on; $('examples').hidden = on;
+    $('hero').classList.toggle('pt-32', !on); $('hero').classList.toggle('sm:pt-40', !on);
+    $('hero').classList.toggle('pt-24', on); $('hero').classList.toggle('md:pt-28', on); $('hero').classList.toggle('pb-8', !on); $('hero').classList.toggle('pb-6', on);
   }
 
   // ---------------------------------------------------------------- rendering
@@ -482,7 +649,7 @@
     const name = first.description || (S.brands.find((b) => b.brand === S.brand) || {}).description || 'Auto part';
     const cards = choices(S.offers).map((c, i) => `
       <article class="glass-card hoverable choice p-5 ${i === 0 ? 'primary' : ''} fade-in" style="animation-delay:${i * 60}ms">
-        <div class="flex flex-wrap gap-1.5 mb-4">${c.labels.map((l, j) => `<span class="badge ${j === 0 && i === 0 ? '' : ''}" style="background:rgba(34,211,238,.10);color:#67E8F9;border:1px solid rgba(34,211,238,.25)"><i class="${j === 0 ? c.icon : 'ri-check-line'}"></i>${esc(l)}</span>`).join('')}</div>
+        <div class="flex flex-wrap gap-1.5 mb-4">${c.labels.map((l, j) => `<span class="badge ${j === 0 && i === 0 ? '' : ''}" style="background:rgba(66,194,186,.10);color:#7EE0D9;border:1px solid rgba(66,194,186,.25)"><i class="${j === 0 ? c.icon : 'ri-check-line'}"></i>${esc(l)}</span>`).join('')}</div>
         <div class="price text-3xl text-white">${money(c.o.price)}</div>
         <div class="text-xs text-slate-500 mt-0.5">per piece${step(c.o) > 1 ? ' · sold in packs of ' + step(c.o) : ''}</div>
         <dl class="mt-4 space-y-2 text-sm">
@@ -497,7 +664,7 @@
 
     $('partArea').innerHTML = `
       <div class="glass-card p-5 sm:p-6 mb-4 flex flex-col sm:flex-row sm:items-center gap-4 fade-in">
-        <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style="background:linear-gradient(135deg, rgba(34,211,238,.18), rgba(167,139,250,.18))"><i class="ri-settings-5-line text-2xl text-cyan-200"></i></div>
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style="background:linear-gradient(135deg, rgba(59,130,246,.2), rgba(66,194,186,.2))"><i class="ri-settings-5-line text-2xl text-teal-200"></i></div>
         <div class="min-w-0 flex-1">
           <div class="flex flex-wrap items-center gap-2">
             <span class="badge ${g ? 'tag-genuine' : 'tag-after'}">${g ? '<i class="ri-verified-badge-fill"></i>Genuine part' : 'Aftermarket'}</span>
@@ -591,7 +758,7 @@
         </div>
         ${fasterOption ? `
         <div class="mt-3 pt-3 border-t border-white/5 flex items-center justify-between gap-3 text-xs">
-          <span class="text-slate-400"><i class="ri-flashlight-line text-cyan-300"></i> Faster: ready in <span class="text-white">${esc(delivery(f))}</span> for <span class="text-white font-semibold">${money(f.price)}</span></span>
+          <span class="text-slate-400"><i class="ri-flashlight-line text-teal-300"></i> Faster: ready in <span class="text-white">${esc(delivery(f))}</span> for <span class="text-white font-semibold">${money(f.price)}</span></span>
           <button class="btn-ghost h-7 px-2.5" data-add="${esc(f.offerId)}" aria-label="Add faster option to cart"><i class="ri-add-line"></i> Add</button>
         </div>` : ''}
       </div>`;
@@ -625,7 +792,7 @@
     else cart.push({ offerId: id, code: clean(o.code), brand: o.brand || S.brand, description: o.description || '', priceUSD: o.price, qty, packing: s, deliveryDaysMid: o.deliveryDaysMid, deliveryDaysMax: o.deliveryDaysMax, addedAt: Date.now() });
     saveCart();
     const badge = $('cartCount'); badge.classList.remove('bump'); void badge.offsetWidth; badge.classList.add('bump');
-    toast(`Added ${qty} × ${esc(clean(o.code))} to cart <button class="underline text-cyan-300 ml-1 pointer-events-auto" data-opencart="1">View</button>`);
+    toast(`Added ${qty} × ${esc(clean(o.code))} to cart <button class="underline text-teal-300 ml-1 pointer-events-auto" data-opencart="1">View</button>`);
   }
 
   function renderCart() {
@@ -670,6 +837,7 @@
     $('drawer').classList.toggle('open', on); $('scrim').classList.toggle('open', on);
     $('drawer').setAttribute('aria-hidden', String(!on));
     document.body.style.overflow = on ? 'hidden' : '';
+    document.body.classList.toggle('cart-open', on);
   }
 
   // ---------------------------------------------------------------- events
@@ -684,7 +852,7 @@
   $('toggleAll').addEventListener('click', () => { S.showAll = !S.showAll; renderPart(); renderAllOffers(); });
   $('moreAlts').addEventListener('click', () => { S.altsVisible += MAX_ALTS_VISIBLE; renderAlts(); });
   $('altSort').addEventListener('change', () => { S.altSort = $('altSort').value; S.altsVisible = MAX_ALTS_VISIBLE; renderAlts(); });
-  $('checkoutBtn').addEventListener('click', () => toast('Checkout is being set up and opens very soon.', 'ri-time-line text-cyan-300'));
+  $('checkoutBtn').addEventListener('click', () => toast('Checkout is being set up and opens very soon.', 'ri-time-line text-teal-300'));
 
   document.addEventListener('click', (e) => {
     const t = e.target;
@@ -746,5 +914,157 @@
   if (q0) search(q0, false); else $('q').focus();
 })();
 </script>
+
+  <script>
+    // Navbar + mobile menu (same behaviour as homepage)
+    (function () {
+      var navbar = document.getElementById('navbar');
+      function onScroll() { if (window.scrollY > 20) navbar.classList.add('glass', 'shadow-lg'); else navbar.classList.remove('glass', 'shadow-lg'); }
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+      var btn = document.getElementById('mobileMenuBtn'), menu = document.getElementById('mobileMenu');
+      var overlay = document.getElementById('mobileMenuOverlay'), closeBtn = document.getElementById('mobileMenuClose');
+      function open() { menu.classList.remove('translate-x-full'); overlay.classList.remove('opacity-0', 'pointer-events-none'); btn.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; }
+      function close() { menu.classList.add('translate-x-full'); overlay.classList.add('opacity-0', 'pointer-events-none'); btn.setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
+      btn.addEventListener('click', open); closeBtn.addEventListener('click', close); overlay.addEventListener('click', close);
+      menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', close); });
+    })();
+  </script>
+
+  <!-- ===== WhatsApp chat (same as homepage) ===== -->
+  <div class="wa-widget">
+    <div class="wa-panel" id="waPanel">
+      <div class="wa-header">
+        <div class="wa-avatar">
+          <img src="/app-tabs-images/partsmateth%20logo.png" alt="PartsMateTH Logo">
+        </div>
+        <div class="wa-header-text">
+          <div class="wa-name">PartsMateTH</div>
+          <div class="wa-status">Online</div>
+        </div>
+        <button class="wa-close" id="waClose" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="wa-body">
+        <div class="wa-msg">Hi there 👋<div class="wa-msg-time">Now</div></div>
+        <div class="wa-msg">How can we help you?<div class="wa-msg-time">Now</div></div>
+      </div>
+      <form class="wa-input-row" id="waForm">
+        <input type="text" class="wa-input" id="waInput" placeholder="Enter your message..." autocomplete="off">
+        <button type="submit" class="wa-send" aria-label="Send">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </form>
+    </div>
+    <button class="wa-min" id="waMin" aria-label="Minimize WhatsApp">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="wa-bubble" id="waBubble" aria-label="Open WhatsApp chat">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+    </button>
+  </div>
+  <button class="wa-tab" id="waTab" aria-label="Show WhatsApp chat">
+    <span class="wa-drag-hint"></span>
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+    <span class="wa-drag-hint"></span>
+  </button>
+  <script>
+    (function(){
+      var bubble = document.getElementById('waBubble');
+      var panel = document.getElementById('waPanel');
+      var close = document.getElementById('waClose');
+      var form = document.getElementById('waForm');
+      var input = document.getElementById('waInput');
+      var widget = document.querySelector('.wa-widget');
+      var min = document.getElementById('waMin');
+      var tab = document.getElementById('waTab');
+      bubble.addEventListener('click', function(){ panel.classList.toggle('open'); });
+      close.addEventListener('click', function(){ panel.classList.remove('open'); });
+      function minimize(){
+        panel.classList.remove('open');
+        widget.classList.add('wa-hidden');
+        tab.classList.add('show');
+        try { localStorage.setItem('pm_wa_min', '1'); } catch(e){}
+      }
+      function restore(){
+        widget.classList.remove('wa-hidden');
+        tab.classList.remove('show');
+        try { localStorage.setItem('pm_wa_min', '0'); } catch(e){}
+      }
+      min.addEventListener('click', function(e){ e.stopPropagation(); minimize(); });
+
+      // Draggable minimized tab along the right edge
+      var TAB_H = 56;
+      var MIN_DIST = 6;
+      var dragging = false, startY = 0, startBottom = 0, currentBottom = 90, moved = false;
+
+      function clampBottom(b){
+        var max = Math.max(window.innerHeight - TAB_H - 12, 12);
+        return Math.min(Math.max(b, 12), max);
+      }
+      function setTabBottom(b){
+        currentBottom = clampBottom(b);
+        tab.style.bottom = currentBottom + 'px';
+      }
+      function loadPos(){
+        try {
+          var saved = localStorage.getItem('pm_wa_pos');
+          if (saved) currentBottom = parseFloat(saved) || 90;
+        } catch(e){}
+      }
+      function savePos(){
+        try { localStorage.setItem('pm_wa_pos', String(currentBottom)); } catch(e){}
+      }
+      function getClientY(e){
+        if (e.clientY != null) return e.clientY;
+        if (e.touches && e.touches.length) return e.touches[0].clientY;
+        if (e.changedTouches && e.changedTouches.length) return e.changedTouches[0].clientY;
+        return 0;
+      }
+      function onStart(e){
+        dragging = true;
+        moved = false;
+        startY = getClientY(e);
+        startBottom = currentBottom;
+        tab.style.transition = 'none';
+        e.preventDefault();
+      }
+      function onMove(e){
+        if (!dragging) return;
+        var y = getClientY(e);
+        var dy = startY - y;
+        if (Math.abs(dy) > MIN_DIST) moved = true;
+        setTabBottom(startBottom + dy);
+        e.preventDefault();
+      }
+      function onEnd(e){
+        if (!dragging) return;
+        dragging = false;
+        tab.style.transition = '';
+        if (!moved) restore();
+        else savePos();
+      }
+      tab.addEventListener('mousedown', onStart);
+      tab.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('mouseup', onEnd);
+      window.addEventListener('touchend', onEnd);
+      window.addEventListener('resize', function(){ setTabBottom(currentBottom); });
+
+      loadPos();
+      setTabBottom(currentBottom);
+      try { if (localStorage.getItem('pm_wa_min') === '1') minimize(); } catch(e){}
+      
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var part = window.__pmStorePart;
+        var msg = (input.value || '').trim() || (part ? 'Hello, I am looking for part number ' + part + '. Can you help?' : 'Hello, I want to know more');
+        var url = 'https://api.whatsapp.com/send/?phone=%2B66966688444&text=' + encodeURIComponent(msg) + '&type=phone_number&app_absent=0';
+        window.open(url, '_blank', 'noopener');
+        input.value = '';
+      });
+    })();
+  </script>
 </body>
 </html>
