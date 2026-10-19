@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PartsMate Store — Genuine Auto Parts, Live Prices</title>
+  <meta name="description" content="Search any part number and get live prices and stock for genuine and aftermarket auto parts. Order online from PartsMateTH.">
+  <meta name="theme-color" content="#05070D">
+  <link rel="icon" type="image/png" sizes="32x32" href="/pwa-icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/pwa-icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/pwa-icons/apple-touch-icon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] } } } };
+  </script>
+  <style>
+    /* Same visual language as webapp.html (PartsMateTH NextGen UI) */
+    :root{
+      --bg-0:#05070D;
+      --line:rgba(255,255,255,0.06);
+      --line-2:rgba(255,255,255,0.10);
+      --text:#E6ECF7; --text-dim:#9AA7BE; --text-mute:#5C6A85; --text-faint:#3A4660;
+      --accent:#22D3EE; --accent-2:#A78BFA; --mint:#34D399; --amber:#FBBF24;
+      --grad-primary: linear-gradient(135deg,#22D3EE 0%,#6366F1 45%,#A78BFA 100%);
+      --grad-mesh: radial-gradient(1200px 800px at 12% 8%, rgba(99,102,241,.22), transparent 60%),
+                   radial-gradient(900px 700px at 88% 14%, rgba(34,211,238,.18), transparent 60%),
+                   radial-gradient(900px 700px at 50% 110%, rgba(244,114,182,.14), transparent 60%);
+      --shadow-card: 0 1px 0 rgba(255,255,255,.04) inset, 0 10px 40px -16px rgba(0,0,0,.6);
+      --shadow-pop: 0 30px 80px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset;
+    }
+    html { scroll-behavior:smooth; }
+    * { -webkit-tap-highlight-color: transparent; }
+    body { font-family:'Inter',sans-serif; background:var(--bg-0); color:var(--text); min-height:100vh; overflow-x:hidden; position:relative; }
+    body::before{ content:""; position:fixed; inset:-10vh -10vw; background:var(--grad-mesh), linear-gradient(180deg,#05070D 0%,#07091A 100%); z-index:-2; animation: meshDrift 28s ease-in-out infinite alternate; }
+    @keyframes meshDrift { from { transform: translate3d(0,0,0) } to { transform: translate3d(-2vw,1.5vh,0) scale(1.03) } }
+    .font-display { font-family:'Space Grotesk',sans-serif; letter-spacing:-0.01em; }
+    .grad-text { background:var(--grad-primary); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+    .glass-card { position:relative; background:linear-gradient(180deg, rgba(14,20,38,.66), rgba(10,14,28,.58)); backdrop-filter:blur(22px) saturate(1.2); -webkit-backdrop-filter:blur(22px) saturate(1.2); border:1px solid var(--line); border-radius:1rem; box-shadow:var(--shadow-card); transition:border-color .3s, box-shadow .3s, transform .3s; }
+    .glass-card.hoverable:hover { border-color:rgba(34,211,238,.22); box-shadow:var(--shadow-pop); transform:translateY(-2px); }
+
+    .btn-primary { position:relative; background:var(--grad-primary); background-size:200% 200%; color:#fff; font-weight:600; border-radius:.75rem; transition:transform .2s, box-shadow .2s, background-position .5s, opacity .2s; box-shadow:0 8px 24px -10px rgba(99,102,241,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+    .btn-primary:hover { transform:translateY(-1px); background-position:100% 50%; box-shadow:0 14px 32px -10px rgba(34,211,238,.5), inset 0 1px 0 rgba(255,255,255,.25); }
+    .btn-primary:active { transform:scale(.98); }
+    .btn-primary:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+    .btn-ghost { background:rgba(255,255,255,.04); border:1px solid var(--line-2); color:var(--text-dim); border-radius:.75rem; transition:all .2s; }
+    .btn-ghost:hover { color:#fff; border-color:rgba(34,211,238,.35); background:rgba(34,211,238,.06); }
+
+    .search-shell { background:rgba(255,255,255,.035); border:1px solid var(--line-2); border-radius:1.1rem; transition:border-color .25s, box-shadow .25s; }
+    .search-shell:focus-within { border-color:rgba(34,211,238,.55); box-shadow:0 0 0 4px rgba(34,211,238,.10), 0 0 40px -10px rgba(34,211,238,.35); }
+    .search-shell input { background:transparent; outline:none; color:var(--text); }
+    .search-shell input::placeholder { color:var(--text-mute); }
+
+    .chip { border:1px solid var(--line-2); background:rgba(255,255,255,.03); color:var(--text-dim); border-radius:999px; transition:all .2s; white-space:nowrap; }
+    .chip:hover { color:#fff; border-color:rgba(34,211,238,.35); }
+    .chip.active { color:#fff; border-color:rgba(34,211,238,.6); background:rgba(34,211,238,.10); box-shadow:0 0 0 3px rgba(34,211,238,.08); }
+    .tag-genuine { color:#6EE7B7; background:rgba(52,211,153,.10); border:1px solid rgba(52,211,153,.25); }
+    .tag-after { color:#C4B5FD; background:rgba(167,139,250,.10); border:1px solid rgba(167,139,250,.25); }
+    .badge { font-size:.68rem; font-weight:600; letter-spacing:.02em; padding:.2rem .55rem; border-radius:999px; display:inline-flex; align-items:center; gap:.3rem; }
+
+    .choice { display:flex; flex-direction:column; }
+    .choice .price { font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:-0.02em; }
+    .choice.primary { border-color:rgba(34,211,238,.35); background:linear-gradient(180deg, rgba(34,211,238,.08), rgba(10,14,28,.6)); }
+
+    .stepper { display:inline-flex; align-items:center; border:1px solid var(--line-2); border-radius:.65rem; overflow:hidden; background:rgba(255,255,255,.03); }
+    .stepper button { width:2rem; height:2.25rem; color:var(--text-dim); transition:background .15s, color .15s; }
+    .stepper button:hover { background:rgba(255,255,255,.06); color:#fff; }
+    .stepper input { width:2.75rem; height:2.25rem; text-align:center; background:transparent; color:var(--text); outline:none; font-weight:600; font-size:.9rem; -moz-appearance:textfield; }
+    .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+
+    .tbl { width:100%; border-collapse:collapse; font-size:.85rem; }
+    .tbl th { text-align:left; font-weight:600; color:var(--text-mute); font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; padding:.7rem .9rem; border-bottom:1px solid var(--line); white-space:nowrap; }
+    .tbl td { padding:.65rem .9rem; border-bottom:1px solid var(--line); vertical-align:middle; }
+    .tbl tr:hover td { background:rgba(34,211,238,.035); }
+    .sort-btn { cursor:pointer; user-select:none; }
+    .sort-btn.on { color:var(--accent); }
+
+    .skeleton { background:linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.09) 37%, rgba(255,255,255,.04) 63%); background-size:400% 100%; animation:shimmer 1.4s ease infinite; border-radius:.75rem; }
+    @keyframes shimmer { 0% { background-position:100% 0 } 100% { background-position:0 0 } }
+
+    .drawer { position:fixed; top:0; right:0; height:100%; width:min(440px,100vw); transform:translateX(105%); transition:transform .35s cubic-bezier(.4,0,.2,1); z-index:60; background:linear-gradient(180deg, rgba(11,16,32,.97), rgba(7,9,20,.98)); border-left:1px solid var(--line-2); backdrop-filter:blur(20px); display:flex; flex-direction:column; }
+    .drawer.open { transform:none; }
+    .scrim { position:fixed; inset:0; background:rgba(2,4,10,.6); backdrop-filter:blur(2px); opacity:0; pointer-events:none; transition:opacity .3s; z-index:55; }
+    .scrim.open { opacity:1; pointer-events:auto; }
+
+    .toast { position:fixed; left:50%; bottom:1.5rem; transform:translate(-50%, 1rem); opacity:0; transition:all .3s; z-index:70; pointer-events:none; }
+    .toast.show { transform:translate(-50%,0); opacity:1; }
+    .bump { animation:bump .4s ease; }
+    @keyframes bump { 0%{transform:scale(1)} 40%{transform:scale(1.25)} 100%{transform:scale(1)} }
+
+    select.cur { background:rgba(255,255,255,.04); border:1px solid var(--line-2); color:var(--text); border-radius:.65rem; padding:.45rem .6rem; outline:none; font-size:.85rem; }
+    select.cur option { background:#0B1020; }
+    .fade-in { animation:fadeIn .35s ease both; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:none } }
+    [hidden] { display:none !important; }
+    @media (prefers-reduced-motion: reduce) { *, *::before { animation:none !important; transition:none !important; } }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="sticky top-0 z-40 border-b border-white/5" style="background:rgba(5,7,13,.72); backdrop-filter:blur(16px);">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-3">
+      <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="PartsMateTH home">
+        <img src="/app-tabs-images/partsmateth%20logo.png" alt="" class="h-8 w-auto">
+        <span class="font-display font-bold text-white text-lg hidden sm:inline">PartsMate<span class="grad-text">TH</span></span>
+        <span class="text-[0.65rem] font-semibold uppercase tracking-widest text-cyan-300/90 border border-cyan-300/25 rounded-full px-2 py-0.5 ml-1">Store</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 ml-6 text-sm text-slate-400">
+        <a href="/" class="hover:text-white transition">Home</a>
+        <a href="/plans.html" class="hover:text-white transition">PartsMate App</a>
+        <a href="/index.html#contact" class="hover:text-white transition">Contact</a>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <label class="sr-only" for="currency">Currency</label>
+        <select id="currency" class="cur" title="Currency"></select>
+        <button id="cartBtn" class="btn-ghost relative h-10 px-3 flex items-center gap-2 text-sm" aria-label="Open cart">
+          <i class="ri-shopping-cart-2-line text-lg"></i>
+          <span class="hidden sm:inline">Cart</span>
+          <span id="cartCount" class="absolute -top-1.5 -right-1.5 min-w-[1.25rem] h-5 px-1 rounded-full text-[0.7rem] font-bold text-white flex items-center justify-center" style="background:var(--grad-primary)" hidden>0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6">
+
+    <!-- ===== HERO + SEARCH ===== -->
+    <section id="hero" class="pt-14 sm:pt-20 pb-8 text-center transition-all">
+      <div id="heroIntro">
+        <div class="inline-flex items-center gap-2 text-xs text-slate-400 border border-white/10 rounded-full px-3 py-1 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live prices &amp; stock from verified suppliers
+        </div>
+        <h1 class="font-display text-3xl sm:text-5xl font-bold text-white leading-tight">Find the right part.<br class="hidden sm:block"> <span class="grad-text">Order it in seconds.</span></h1>
+        <p class="text-slate-400 mt-4 max-w-xl mx-auto text-sm sm:text-base">Search any OEM or aftermarket part number. Genuine parts first, with the best price and fastest delivery highlighted for you.</p>
+      </div>
+
+      <form id="searchForm" class="search-shell mt-8 max-w-2xl mx-auto flex items-center p-1.5 pl-4" autocomplete="off">
+        <i class="ri-search-line text-slate-500 text-xl"></i>
+        <input id="q" name="q" type="text" inputmode="text" spellcheck="false" class="flex-1 min-w-0 px-3 py-3 text-base sm:text-lg font-medium tracking-wide" placeholder="Enter part number, e.g. 04152-31090" aria-label="Part number">
+        <button id="clearQ" type="button" class="text-slate-500 hover:text-white px-2" aria-label="Clear" hidden><i class="ri-close-circle-fill text-lg"></i></button>
+        <button type="submit" class="btn-primary px-5 sm:px-7 py-3 text-sm sm:text-base"><span class="hidden sm:inline">Search</span><i class="ri-arrow-right-line sm:hidden"></i></button>
+      </form>
+
+      <div id="examples" class="mt-4 flex flex-wrap justify-center gap-2 text-xs">
+        <span class="text-slate-500 py-1.5">Try:</span>
+        <button class="chip px-3 py-1.5" data-q="0415231090">04152-31090 · Oil filter</button>
+        <button class="chip px-3 py-1.5" data-q="90915YZZE1">90915-YZZE1 · Oil filter</button>
+        <button class="chip px-3 py-1.5" data-q="044650K290">04465-0K290 · Brake pads</button>
+        <button class="chip px-3 py-1.5" data-q="178010C010">17801-0C010 · Air filter</button>
+      </div>
+
+      <div id="trust" class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto text-left">
+        <div class="glass-card p-4 flex gap-3"><i class="ri-shield-check-line text-2xl text-emerald-300"></i><div><div class="text-sm font-semibold text-white">Genuine first</div><div class="text-xs text-slate-400">Original manufacturer parts are always listed at the top.</div></div></div>
+        <div class="glass-card p-4 flex gap-3"><i class="ri-flashlight-line text-2xl text-cyan-300"></i><div><div class="text-sm font-semibold text-white">Live availability</div><div class="text-xs text-slate-400">Real-time prices and stock, refreshed with every search.</div></div></div>
+        <div class="glass-card p-4 flex gap-3"><i class="ri-earth-line text-2xl text-violet-300"></i><div><div class="text-sm font-semibold text-white">Ships worldwide</div><div class="text-xs text-slate-400">From Thailand, Dubai and Japan to wherever you are.</div></div></div>
+      </div>
+    </section>
+
+    <!-- ===== RESULTS ===== -->
+    <section id="results" class="pb-24" hidden>
+
+      <!-- brands for this part number -->
+      <div id="brandsWrap" class="mb-6">
+        <div class="flex items-baseline justify-between gap-3 mb-3">
+          <h2 class="text-sm font-semibold text-slate-300">Brands for <span id="qLabel" class="font-display text-white"></span></h2>
+          <span id="brandsCount" class="text-xs text-slate-500"></span>
+        </div>
+        <div id="brands" class="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1" role="tablist" aria-label="Brands"></div>
+      </div>
+
+      <!-- part summary + 3 clear choices -->
+      <div id="partArea"></div>
+
+      <!-- every offer -->
+      <div id="allOffersWrap" class="mt-6" hidden>
+        <button id="toggleAll" class="btn-ghost w-full sm:w-auto px-4 py-2.5 text-sm inline-flex items-center justify-center gap-2">
+          <i class="ri-list-check-3"></i><span id="toggleAllLabel">See all offers</span><i id="toggleAllIcon" class="ri-arrow-down-s-line"></i>
+        </button>
+        <div id="allOffers" class="glass-card mt-3 overflow-x-auto" hidden></div>
+      </div>
+
+      <!-- interchangeable part numbers -->
+      <div id="altWrap" class="mt-12" hidden>
+        <div class="flex items-end justify-between gap-3 mb-4">
+          <div>
+            <h3 class="font-display text-xl font-bold text-white">Alternatives</h3>
+            <p class="text-xs text-slate-400 mt-1">Interchangeable part numbers that fit the same application. Please confirm fitment for your vehicle.</p>
+          </div>
+          <span id="altCount" class="text-xs text-slate-500 shrink-0"></span>
+        </div>
+        <div id="alts" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        <div class="text-center mt-4"><button id="moreAlts" class="btn-ghost px-4 py-2 text-sm" hidden>Show more alternatives</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/5 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>© <span id="yr"></span> PartsMateTH · Siam B.K.K International General Trading LLC</span>
+      <span class="flex gap-4"><a class="hover:text-white" href="/policies.html">Policies</a><a class="hover:text-white" href="/faq.html">FAQ</a><a class="hover:text-white" href="/index.html#contact">Contact</a></span>
+    </div>
+  </footer>
+
+  <!-- ===== CART DRAWER ===== -->
+  <div id="scrim" class="scrim"></div>
+  <aside id="drawer" class="drawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="flex items-center justify-between px-5 h-16 border-b border-white/5">
+      <h2 class="font-display text-lg font-bold text-white flex items-center gap-2"><i class="ri-shopping-cart-2-line"></i> Your cart</h2>
+      <button id="closeCart" class="text-slate-400 hover:text-white p-2" aria-label="Close cart"><i class="ri-close-line text-2xl"></i></button>
+    </div>
+    <div id="cartItems" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
+    <div id="cartFoot" class="border-t border-white/5 p-5 space-y-3">
+      <div class="flex justify-between text-sm"><span class="text-slate-400">Subtotal</span><span id="cartSubtotal" class="font-display font-bold text-white text-lg"></span></div>
+      <p class="text-[0.7rem] text-slate-500 leading-relaxed">Shipping is calculated at checkout. Prices and availability are confirmed again when you place your order.</p>
+      <button id="checkoutBtn" class="btn-primary w-full py-3.5 text-base"><span class="inline-flex items-center gap-2">Proceed to checkout <i class="ri-arrow-right-line"></i></span></button>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast glass-card px-4 py-3 text-sm text-white flex items-center gap-2" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------------------------------------------------------------- config
+  const API = '/api/store-search';
+  const CART_KEY = 'pmCart';           // shared with webapp.html (same site)
+  const CURRENCY_KEY = 'pmCurrency';
+  const CURRENCIES = ['USD','AED','SAR','QAR','KWD','BHD','OMR','THB','EUR','GBP','JPY','INR','PKR','AUD','SGD','MYR','EGP','NGN','KES','ZAR','BRL','CLP','PEN','COP'];
+  const GENUINE = new Set(['TOYOTA','LEXUS','TOYOTA LEXUS','DAIHATSU','HINO','SCION','NISSAN','INFINITI','NISSAN INFINITI','HONDA','ACURA','MITSUBISHI','MAZDA','SUBARU','SUZUKI','ISUZU','HYUNDAI','KIA','HYUNDAI KIA','HYUNDAI/KIA','MOBIS','GENERAL MOTORS','GM','CHEVROLET','FORD','MOTORCRAFT','VAG','VW','VOLKSWAGEN','AUDI','SKODA','BMW','MINI','MERCEDES','MERCEDES-BENZ','MERCEDES BENZ','PORSCHE','VOLVO','RENAULT','PEUGEOT','CITROEN','PEUGEOT CITROEN','PSA','FIAT','LAND ROVER','JAGUAR','CHRYSLER','MOPAR','JEEP','DODGE','SSANGYONG','OPEL','TESLA','PROTON','PERODUA','GREAT WALL','HAVAL','CHERY','GEELY','BYD','MG','FUSO','MITSUBISHI FUSO','UD TRUCKS']);
+  const MAX_ALTS_VISIBLE = 8;
+
+  // ---------------------------------------------------------------- state
+  const S = {
+    code: '', brands: [], brand: '', offers: [], total: 0, alternatives: [], altTotal: 0,
+    currency: 'USD', rates: { USD: 1 }, sort: 'price', showAll: false, altsVisible: MAX_ALTS_VISIBLE,
+    reqId: 0,
+  };
+
+  // ---------------------------------------------------------------- helpers
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  const clean = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const isGenuine = (b) => GENUINE.has(String(b || '').toUpperCase().trim());
+  // Our speciality brands are opened first when a part number has several brands
+  const FAVOURITES = ['TOYOTA', 'TOYOTA LEXUS', 'LEXUS'];
+  const brandRank = (b) => { const u = String(b || '').toUpperCase().trim(); const f = FAVOURITES.indexOf(u); return f >= 0 ? f : (isGenuine(u) ? 10 : 20); };
+
+  function money(usd, cur = S.currency) {
+    const rate = S.rates[cur] || (cur === 'USD' ? 1 : null);
+    if (rate == null) return money(usd, 'USD');
+    const v = usd * rate;
+    const big = ['JPY','KES','NGN','CLP','COP','PKR','INR','THB'].includes(cur) && v >= 100;
+    try {
+      return new Intl.NumberFormat('en', { style: 'currency', currency: cur, minimumFractionDigits: big ? 0 : 2, maximumFractionDigits: big ? 0 : 2 }).format(v);
+    } catch { return cur + ' ' + v.toFixed(2); }
+  }
+  function delivery(o) {
+    const a = Number.isFinite(o.deliveryDaysMid) ? o.deliveryDaysMid : o.deliveryDaysMax;
+    const b = Number.isFinite(o.deliveryDaysMax) ? o.deliveryDaysMax : a;
+    if (!Number.isFinite(b)) return '—';
+    if (b === 0) return 'Today';
+    if (a === b || !Number.isFinite(a)) return b === 1 ? '1 day' : b + ' days';
+    return a + '–' + b + ' days';
+  }
+  const days = (o) => Number.isFinite(o.deliveryDaysMax) ? o.deliveryDaysMax : (Number.isFinite(o.deliveryDaysMid) ? o.deliveryDaysMid : 999);
+  function stock(o) {
+    const n = o.availability;
+    if (!Number.isFinite(n)) return 'In stock';
+    if (n >= 1000) return '1,000+ in stock';
+    if (n >= 100) return '100+ in stock';
+    return n + ' in stock';
+  }
+  const step = (o) => Math.max(1, Math.round(o.packing || 1));
+
+  let toastTimer;
+  function toast(html, icon = 'ri-check-line text-emerald-300') {
+    const t = $('toast');
+    t.innerHTML = `<i class="${icon} text-lg"></i><span>${html}</span>`;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  async function getJSON(url) {
+    const r = await fetch(url, { headers: { Accept: 'application/json' } });
+    let data = {};
+    try { data = await r.json(); } catch {}
+    if (!r.ok) throw new Error(data.error || ('Request failed (' + r.status + ')'));
+    return data;
+  }
+
+  // ---------------------------------------------------------------- currency
+  function initCurrency() {
+    let saved = 'USD';
+    try { saved = localStorage.getItem(CURRENCY_KEY) || 'USD'; } catch {}
+    S.currency = CURRENCIES.includes(saved) ? saved : 'USD';
+    const sel = $('currency');
+    sel.innerHTML = CURRENCIES.map((c) => `<option value="${c}">${c}</option>`).join('');
+    sel.value = S.currency;
+    sel.addEventListener('change', () => {
+      S.currency = sel.value;
+      try { localStorage.setItem(CURRENCY_KEY, S.currency); } catch {}
+      renderAll();
+    });
+    // Live exchange rates (USD based) from the existing PartsMate backend
+    getJSON('/api/proxy?path=' + encodeURIComponent('/exchange-rates')).then((d) => {
+      if (d && d.conversion_rates) { S.rates = { ...d.conversion_rates, USD: 1 }; renderAll(); }
+    }).catch(() => {
+      if (S.currency !== 'USD') toast('Live exchange rates unavailable, showing USD', 'ri-information-line text-amber-300');
+      S.currency = 'USD'; $('currency').value = 'USD';
+    });
+  }
+
+  // ---------------------------------------------------------------- search flow
+  async function search(raw, push = true) {
+    const code = clean(raw);
+    if (code.length < 3) { toast('Please enter a part number', 'ri-information-line text-amber-300'); $('q').focus(); return; }
+    const id = ++S.reqId;
+    Object.assign(S, { code, brands: [], brand: '', offers: [], total: 0, alternatives: [], altTotal: 0, showAll: false, altsVisible: MAX_ALTS_VISIBLE, sort: 'price' });
+    $('q').value = raw.trim(); $('clearQ').hidden = false;
+    if (push) history.pushState({ q: code }, '', '?q=' + encodeURIComponent(code));
+    document.title = code + ' — PartsMate Store';
+    compactHero(true);
+    $('results').hidden = false;
+    $('qLabel').textContent = code;
+    $('brands').innerHTML = Array.from({ length: 4 }, () => '<div class="skeleton h-9 w-28 shrink-0"></div>').join('');
+    $('brandsCount').textContent = '';
+    renderPartLoading();
+    $('allOffersWrap').hidden = true; $('altWrap').hidden = true;
+
+    try {
+      const d = await getJSON(`${API}?code=${encodeURIComponent(code)}`);
+      if (id !== S.reqId) return;
+      const seen = new Set();
+      S.brands = (d.brands || []).filter((b) => b.brand && !seen.has(b.brand) && seen.add(b.brand));
+      // Toyota family first, then other genuine brands, then aftermarket (store order kept within each group)
+      S.brands.sort((a, b) => brandRank(a.brand) - brandRank(b.brand));
+      if (!S.brands.length) return renderEmpty();
+      renderBrands();
+      selectBrand(S.brands[0].brand);
+    } catch (e) {
+      if (id !== S.reqId) return;
+      renderError(e.message);
+    }
+  }
+
+  async function selectBrand(brand) {
+    const id = ++S.reqId;
+    S.brand = brand; S.showAll = false; S.altsVisible = MAX_ALTS_VISIBLE;
+    renderBrands();
+    renderPartLoading();
+    $('allOffersWrap').hidden = true; $('altWrap').hidden = true;
+    try {
+      const d = await getJSON(`${API}?code=${encodeURIComponent(S.code)}&brand=${encodeURIComponent(brand)}&analogs=1`);
+      if (id !== S.reqId) return;
+      S.offers = d.offers || []; S.total = d.total || S.offers.length;
+      S.alternatives = d.alternatives || []; S.altTotal = d.alternativesTotal || S.alternatives.length;
+      renderAll();
+    } catch (e) {
+      if (id !== S.reqId) return;
+      renderError(e.message);
+    }
+  }
+
+  function compactHero(on) {
+    $('heroIntro').hidden = on; $('trust').hidden = on; $('examples').hidden = on;
+    $('hero').classList.toggle('pt-14', !on); $('hero').classList.toggle('sm:pt-20', !on);
+    $('hero').classList.toggle('pt-6', on); $('hero').classList.toggle('pb-8', !on); $('hero').classList.toggle('pb-6', on);
+  }
+
+  // ---------------------------------------------------------------- rendering
+  function renderAll() {
+    if (!$('results').hidden && S.brand) { renderPart(); renderAllOffers(); renderAlts(); }
+    renderCart();
+  }
+
+  function renderBrands() {
+    $('brandsCount').textContent = S.brands.length + (S.brands.length === 1 ? ' brand' : ' brands');
+    $('brands').innerHTML = S.brands.map((b) => {
+      const g = isGenuine(b.brand);
+      return `<button role="tab" aria-selected="${b.brand === S.brand}" class="chip shrink-0 px-3.5 py-2 text-sm inline-flex items-center gap-2 ${b.brand === S.brand ? 'active' : ''}" data-brand="${esc(b.brand)}">
+        <span class="font-semibold">${esc(b.brand)}</span>
+        <span class="badge ${g ? 'tag-genuine' : 'tag-after'}">${g ? '<i class="ri-verified-badge-fill"></i>Genuine' : 'Aftermarket'}</span>
+      </button>`;
+    }).join('');
+  }
+
+  function renderPartLoading() {
+    $('partArea').innerHTML = `
+      <div class="skeleton h-24 mb-4"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="skeleton h-60"></div><div class="skeleton h-60"></div><div class="skeleton h-60"></div></div>`;
+  }
+
+  function renderEmpty() {
+    $('brands').innerHTML = ''; $('brandsCount').textContent = '';
+    $('partArea').innerHTML = `
+      <div class="glass-card p-10 text-center fade-in">
+        <i class="ri-search-eye-line text-4xl text-slate-500"></i>
+        <h3 class="font-display text-xl font-bold text-white mt-3">No results for ${esc(S.code)}</h3>
+        <p class="text-sm text-slate-400 mt-2 max-w-md mx-auto">Check the part number and try again. You can type it with or without dashes and spaces.</p>
+        <a href="/index.html#contact" class="btn-ghost inline-flex items-center gap-2 px-4 py-2 mt-5 text-sm"><i class="ri-customer-service-2-line"></i> Ask us to source it</a>
+      </div>`;
+  }
+
+  function renderError(msg) {
+    $('partArea').innerHTML = `
+      <div class="glass-card p-10 text-center fade-in">
+        <i class="ri-error-warning-line text-4xl text-amber-300"></i>
+        <h3 class="font-display text-xl font-bold text-white mt-3">Something went wrong</h3>
+        <p class="text-sm text-slate-400 mt-2">${esc(msg || 'Please try again in a moment.')}</p>
+        <button class="btn-ghost inline-flex items-center gap-2 px-4 py-2 mt-5 text-sm" data-retry="1"><i class="ri-refresh-line"></i> Try again</button>
+      </div>`;
+  }
+
+  // Pick up to three clear choices: Best price, Fastest delivery, Best value
+  function choices(offers) {
+    if (!offers.length) return [];
+    const byPrice = offers[0];
+    const byDays = [...offers].sort((a, b) => days(a) - days(b) || a.price - b.price)[0];
+    const quick = offers.filter((o) => days(o) <= 3);
+    const reliable = [...offers].sort((a, b) => (b.availabilityRate || 0) - (a.availabilityRate || 0) || a.price - b.price)[0];
+    const value = quick.length ? quick[0] : reliable;
+    const list = [];
+    const add = (o, label, icon, note) => {
+      const hit = list.find((x) => x.o === o);
+      if (hit) { hit.labels.push(label); return; }
+      list.push({ o, labels: [label], icon, note });
+    };
+    add(byPrice, 'Best price', 'ri-price-tag-3-line', 'Lowest price available');
+    add(byDays, 'Fastest', 'ri-flashlight-line', 'Quickest to dispatch');
+    add(value, 'Best value', 'ri-medal-line', 'Low price, ready in 3 days or less');
+    // When one offer wins several titles, fill the free slots with other useful options
+    const unused = () => offers.filter((o) => !list.some((x) => x.o === o));
+    if (list.length < 3) {
+      const most = unused().sort((a, b) => (b.availability || 0) - (a.availability || 0) || a.price - b.price)[0];
+      if (most && (most.availability || 0) > (list[0].o.availability || 0)) list.push({ o: most, labels: ['More in stock'], icon: 'ri-stack-line' });
+    }
+    while (list.length < 3 && unused().length) {
+      list.push({ o: unused()[0], labels: ['Next best price'], icon: 'ri-price-tag-3-line' });
+    }
+    return list;
+  }
+
+  function qtyControl(o, key) {
+    const s = step(o);
+    return `<div class="stepper" data-step="${s}">
+      <button type="button" data-qty="-" aria-label="Decrease">−</button>
+      <input type="number" inputmode="numeric" min="${s}" step="${s}" value="${s}" data-qtyinput="${esc(key)}" aria-label="Quantity">
+      <button type="button" data-qty="+" aria-label="Increase">+</button>
+    </div>`;
+  }
+
+  function renderPart() {
+    if (!S.offers.length) {
+      $('partArea').innerHTML = `
+        <div class="glass-card p-8 text-center fade-in">
+          <i class="ri-inbox-2-line text-3xl text-slate-500"></i>
+          <h3 class="font-display text-lg font-bold text-white mt-2">${esc(S.brand)} ${esc(S.code)} is currently unavailable</h3>
+          <p class="text-sm text-slate-400 mt-1">Try another brand above${S.alternatives.length ? ', or one of the alternatives below' : ''}.</p>
+        </div>`;
+      $('allOffersWrap').hidden = true;
+      return;
+    }
+    const first = S.offers[0];
+    const g = isGenuine(S.brand);
+    const name = first.description || (S.brands.find((b) => b.brand === S.brand) || {}).description || 'Auto part';
+    const cards = choices(S.offers).map((c, i) => `
+      <article class="glass-card hoverable choice p-5 ${i === 0 ? 'primary' : ''} fade-in" style="animation-delay:${i * 60}ms">
+        <div class="flex flex-wrap gap-1.5 mb-4">${c.labels.map((l, j) => `<span class="badge ${j === 0 && i === 0 ? '' : ''}" style="background:rgba(34,211,238,.10);color:#67E8F9;border:1px solid rgba(34,211,238,.25)"><i class="${j === 0 ? c.icon : 'ri-check-line'}"></i>${esc(l)}</span>`).join('')}</div>
+        <div class="price text-3xl text-white">${money(c.o.price)}</div>
+        <div class="text-xs text-slate-500 mt-0.5">per piece${step(c.o) > 1 ? ' · sold in packs of ' + step(c.o) : ''}</div>
+        <dl class="mt-4 space-y-2 text-sm">
+          <div class="flex items-center justify-between"><dt class="text-slate-400 flex items-center gap-1.5"><i class="ri-time-line"></i>Ready in</dt><dd class="text-white font-medium">${esc(delivery(c.o))}</dd></div>
+          <div class="flex items-center justify-between"><dt class="text-slate-400 flex items-center gap-1.5"><i class="ri-stack-line"></i>Availability</dt><dd class="text-emerald-300 font-medium">${esc(stock(c.o))}</dd></div>
+        </dl>
+        <div class="mt-auto pt-5 flex items-center gap-2">
+          ${qtyControl(c.o, c.o.offerId)}
+          <button class="btn-primary flex-1 py-2.5 text-sm" data-add="${esc(c.o.offerId)}"><span class="inline-flex items-center gap-1.5"><i class="ri-shopping-cart-2-line"></i>Add to cart</span></button>
+        </div>
+      </article>`).join('');
+
+    $('partArea').innerHTML = `
+      <div class="glass-card p-5 sm:p-6 mb-4 flex flex-col sm:flex-row sm:items-center gap-4 fade-in">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style="background:linear-gradient(135deg, rgba(34,211,238,.18), rgba(167,139,250,.18))"><i class="ri-settings-5-line text-2xl text-cyan-200"></i></div>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="badge ${g ? 'tag-genuine' : 'tag-after'}">${g ? '<i class="ri-verified-badge-fill"></i>Genuine part' : 'Aftermarket'}</span>
+            <span class="text-xs text-slate-500">${esc(S.brand)}</span>
+          </div>
+          <h2 class="font-display text-xl sm:text-2xl font-bold text-white mt-1 truncate">${esc(name)}</h2>
+          <div class="text-sm text-slate-400 mt-0.5">Part number <span class="font-mono text-slate-200">${esc(S.code)}</span>${first.weight ? ' · ' + esc(first.weight) + ' kg' : ''}</div>
+        </div>
+        <div class="sm:text-right shrink-0">
+          <div class="text-xs text-slate-500">${S.total} offer${S.total === 1 ? '' : 's'} from</div>
+          <div class="font-display text-2xl font-bold grad-text">${money(first.price)}</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">${cards}</div>`;
+
+    $('allOffersWrap').hidden = S.offers.length <= 1;
+    $('toggleAllLabel').textContent = S.showAll ? 'Hide all offers' : `See all ${S.offers.length}${S.total > S.offers.length ? '+' : ''} offers`;
+    $('toggleAllIcon').className = S.showAll ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line';
+  }
+
+  function renderAllOffers() {
+    const box = $('allOffers');
+    box.hidden = !S.showAll;
+    if (!S.showAll) return;
+    const rows = [...S.offers].sort((a, b) => S.sort === 'days' ? (days(a) - days(b) || a.price - b.price) : (a.price - b.price || days(a) - days(b)));
+    box.innerHTML = `
+      <table class="tbl">
+        <thead><tr>
+          <th class="sort-btn ${S.sort === 'price' ? 'on' : ''}" data-sort="price">Price <i class="ri-arrow-up-down-line"></i></th>
+          <th class="sort-btn ${S.sort === 'days' ? 'on' : ''}" data-sort="days">Ready in <i class="ri-arrow-up-down-line"></i></th>
+          <th>Availability</th><th class="hidden sm:table-cell">Pack</th><th class="text-right">Quantity</th>
+        </tr></thead>
+        <tbody>${rows.map((o) => `
+          <tr>
+            <td class="font-display font-semibold text-white whitespace-nowrap">${money(o.price)}</td>
+            <td class="whitespace-nowrap">${esc(delivery(o))}</td>
+            <td class="text-emerald-300 whitespace-nowrap">${esc(stock(o))}</td>
+            <td class="hidden sm:table-cell text-slate-400">${step(o)}</td>
+            <td class="text-right"><div class="inline-flex items-center gap-2">${qtyControl(o, o.offerId)}<button class="btn-primary w-10 h-9" data-add="${esc(o.offerId)}" aria-label="Add to cart"><i class="ri-add-line"></i></button></div></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  function renderAlts() {
+    if (!S.alternatives.length) { $('altWrap').hidden = true; return; }
+    // One card per alternative part number: cheapest offer + fastest delivery
+    const groups = new Map();
+    for (const o of S.alternatives) {
+      const k = clean(o.code) + '|' + (o.brand || '');
+      const g = groups.get(k) || { code: clean(o.code), brand: o.brand || '', description: o.description || '', offers: [] };
+      g.offers.push(o); groups.set(k, g);
+    }
+    const list = [...groups.values()].map((g) => {
+      g.offers.sort((a, b) => a.price - b.price || days(a) - days(b));
+      g.best = g.offers[0];
+      g.fastest = Math.min(...g.offers.map(days));
+      return g;
+    }).sort((a, b) => (brandRank(a.brand) >= 20) - (brandRank(b.brand) >= 20) || a.best.price - b.best.price);
+
+    $('altWrap').hidden = false;
+    $('altCount').textContent = list.length + ' part number' + (list.length === 1 ? '' : 's');
+    $('alts').innerHTML = list.slice(0, S.altsVisible).map((g) => {
+      const gen = isGenuine(g.brand);
+      return `
+      <div class="glass-card hoverable p-4 flex items-center gap-4 fade-in">
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="font-mono text-sm text-white">${esc(g.code)}</span>
+            <span class="badge ${gen ? 'tag-genuine' : 'tag-after'}">${gen ? '<i class="ri-verified-badge-fill"></i>' : ''}${esc(g.brand || 'Other')}</span>
+          </div>
+          <div class="text-xs text-slate-400 mt-1 truncate">${esc(g.description || 'Interchangeable part')}</div>
+          <div class="text-xs text-slate-500 mt-1">${g.offers.length} offer${g.offers.length === 1 ? '' : 's'} · ready in ${esc(delivery(g.best))}</div>
+        </div>
+        <div class="text-right shrink-0">
+          <div class="text-[0.65rem] text-slate-500">from</div>
+          <div class="font-display font-bold text-white">${money(g.best.price)}</div>
+          <div class="flex gap-1.5 mt-2 justify-end">
+            <button class="btn-ghost h-8 px-2.5 text-xs" data-view="${esc(g.code)}">View</button>
+            <button class="btn-primary h-8 px-2.5 text-xs" data-add="${esc(g.best.offerId)}" data-alt="1" aria-label="Add cheapest to cart"><i class="ri-add-line"></i></button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    $('moreAlts').hidden = list.length <= S.altsVisible;
+  }
+
+  // ---------------------------------------------------------------- cart
+  function loadCart() { try { const c = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); return Array.isArray(c) ? c : []; } catch { return []; } }
+  let cart = loadCart();
+  function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch {} renderCart(); }
+
+  function findOffer(id) {
+    return S.offers.find((o) => o.offerId === id) || S.alternatives.find((o) => o.offerId === id);
+  }
+  function addToCart(id, qty) {
+    const o = findOffer(id);
+    if (!o) return;
+    const s = step(o);
+    qty = Math.max(s, Math.round(qty / s) * s || s);
+    const line = cart.find((l) => l.offerId === id);
+    if (line) { line.qty += qty; line.addedAt = Date.now(); }
+    else cart.push({ offerId: id, code: clean(o.code), brand: o.brand || S.brand, description: o.description || '', priceUSD: o.price, qty, packing: s, deliveryDaysMid: o.deliveryDaysMid, deliveryDaysMax: o.deliveryDaysMax, addedAt: Date.now() });
+    saveCart();
+    const badge = $('cartCount'); badge.classList.remove('bump'); void badge.offsetWidth; badge.classList.add('bump');
+    toast(`Added ${qty} × ${esc(clean(o.code))} to cart <button class="underline text-cyan-300 ml-1 pointer-events-auto" data-opencart="1">View</button>`);
+  }
+
+  function renderCart() {
+    const count = cart.reduce((n, l) => n + l.qty, 0);
+    const badge = $('cartCount');
+    badge.hidden = count === 0; badge.textContent = count > 99 ? '99+' : String(count);
+    const box = $('cartItems');
+    if (!cart.length) {
+      box.innerHTML = `<div class="text-center py-16"><i class="ri-shopping-cart-line text-4xl text-slate-600"></i><p class="text-sm text-slate-400 mt-3">Your cart is empty</p><p class="text-xs text-slate-500 mt-1">Search a part number to get started.</p></div>`;
+      $('cartFoot').hidden = true;
+      return;
+    }
+    $('cartFoot').hidden = false;
+    const day = 24 * 3600 * 1000;
+    box.innerHTML = cart.map((l, i) => `
+      <div class="glass-card p-3.5">
+        <div class="flex gap-3">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="font-mono text-sm text-white">${esc(l.code)}</span>
+              <span class="badge ${isGenuine(l.brand) ? 'tag-genuine' : 'tag-after'}">${esc(l.brand)}</span>
+            </div>
+            <div class="text-xs text-slate-400 truncate mt-0.5">${esc(l.description || 'Auto part')}</div>
+            <div class="text-[0.7rem] text-slate-500 mt-0.5">Ready in ${esc(delivery(l))} · ${money(l.priceUSD)} each</div>
+            ${Date.now() - (l.addedAt || 0) > day ? '<div class="text-[0.7rem] text-amber-300 mt-1"><i class="ri-information-line"></i> Added over a day ago, price will be re-checked</div>' : ''}
+          </div>
+          <button class="text-slate-500 hover:text-rose-300 self-start p-1" data-remove="${i}" aria-label="Remove"><i class="ri-delete-bin-6-line"></i></button>
+        </div>
+        <div class="flex items-center justify-between mt-3">
+          <div class="stepper" data-step="${l.packing || 1}">
+            <button type="button" data-cartqty="${i}" data-d="-1" aria-label="Decrease">−</button>
+            <input type="number" min="${l.packing || 1}" step="${l.packing || 1}" value="${l.qty}" data-cartinput="${i}" aria-label="Quantity">
+            <button type="button" data-cartqty="${i}" data-d="1" aria-label="Increase">+</button>
+          </div>
+          <div class="font-display font-bold text-white">${money(l.priceUSD * l.qty)}</div>
+        </div>
+      </div>`).join('');
+    $('cartSubtotal').textContent = money(cart.reduce((s, l) => s + l.priceUSD * l.qty, 0));
+  }
+
+  function openCart(on) {
+    $('drawer').classList.toggle('open', on); $('scrim').classList.toggle('open', on);
+    $('drawer').setAttribute('aria-hidden', String(!on));
+    document.body.style.overflow = on ? 'hidden' : '';
+  }
+
+  // ---------------------------------------------------------------- events
+  $('searchForm').addEventListener('submit', (e) => { e.preventDefault(); search($('q').value); });
+  $('q').addEventListener('input', () => { $('clearQ').hidden = !$('q').value; });
+  $('clearQ').addEventListener('click', () => { $('q').value = ''; $('clearQ').hidden = true; $('q').focus(); });
+  $('examples').addEventListener('click', (e) => { const b = e.target.closest('[data-q]'); if (b) search(b.dataset.q); });
+  $('cartBtn').addEventListener('click', () => openCart(true));
+  $('closeCart').addEventListener('click', () => openCart(false));
+  $('scrim').addEventListener('click', () => openCart(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') openCart(false); });
+  $('toggleAll').addEventListener('click', () => { S.showAll = !S.showAll; renderPart(); renderAllOffers(); });
+  $('moreAlts').addEventListener('click', () => { S.altsVisible += MAX_ALTS_VISIBLE; renderAlts(); });
+  $('checkoutBtn').addEventListener('click', () => toast('Checkout is being set up and opens very soon.', 'ri-time-line text-cyan-300'));
+
+  document.addEventListener('click', (e) => {
+    const t = e.target;
+    const brandBtn = t.closest('[data-brand]');
+    if (brandBtn && brandBtn.dataset.brand !== S.brand) return selectBrand(brandBtn.dataset.brand);
+    const sortBtn = t.closest('[data-sort]');
+    if (sortBtn) { S.sort = sortBtn.dataset.sort; return renderAllOffers(); }
+    const qtyBtn = t.closest('[data-qty]');
+    if (qtyBtn) {
+      const wrap = qtyBtn.closest('.stepper'); const inp = wrap.querySelector('input'); const s = +wrap.dataset.step || 1;
+      inp.value = Math.max(s, (+inp.value || s) + (qtyBtn.dataset.qty === '+' ? s : -s));
+      return;
+    }
+    const addBtn = t.closest('[data-add]');
+    if (addBtn) {
+      const row = addBtn.parentElement; const inp = row.querySelector('[data-qtyinput]');
+      return addToCart(addBtn.dataset.add, inp ? +inp.value : step(findOffer(addBtn.dataset.add) || {}));
+    }
+    const view = t.closest('[data-view]');
+    if (view) { window.scrollTo({ top: 0, behavior: 'smooth' }); return search(view.dataset.view); }
+    if (t.closest('[data-retry]')) return S.brand ? selectBrand(S.brand) : search(S.code, false);
+    if (t.closest('[data-opencart]')) return openCart(true);
+    const rm = t.closest('[data-remove]');
+    if (rm) { cart.splice(+rm.dataset.remove, 1); return saveCart(); }
+    const cq = t.closest('[data-cartqty]');
+    if (cq) {
+      const l = cart[+cq.dataset.cartqty]; const s = l.packing || 1;
+      l.qty = l.qty + (+cq.dataset.d) * s;
+      if (l.qty < s) cart.splice(+cq.dataset.cartqty, 1);
+      return saveCart();
+    }
+  });
+  document.addEventListener('change', (e) => {
+    const ci = e.target.closest('[data-cartinput]');
+    if (ci) {
+      const l = cart[+ci.dataset.cartinput]; const s = l.packing || 1;
+      const v = Math.round((+ci.value || 0) / s) * s;
+      if (v < s) cart.splice(+ci.dataset.cartinput, 1); else l.qty = v;
+      saveCart();
+    }
+    const qi = e.target.closest('[data-qtyinput]');
+    if (qi) { const s = +qi.closest('.stepper').dataset.step || 1; qi.value = Math.max(s, Math.round((+qi.value || s) / s) * s); }
+  });
+  // keep cart in sync with other tabs (store page and web app)
+  window.addEventListener('storage', (e) => { if (e.key === CART_KEY) { cart = loadCart(); renderCart(); } });
+  window.addEventListener('popstate', () => {
+    const q = new URLSearchParams(location.search).get('q');
+    if (q) search(q, false);
+    else { compactHero(false); $('results').hidden = true; $('q').value = ''; document.title = 'PartsMate Store — Genuine Auto Parts, Live Prices'; }
+  });
+
+  // ---------------------------------------------------------------- start
+  $('yr').textContent = new Date().getFullYear();
+  initCurrency();
+  renderCart();
+  const q0 = new URLSearchParams(location.search).get('q');
+  if (q0) search(q0, false); else $('q').focus();
+})();
+</script>
+</body>
+</html>

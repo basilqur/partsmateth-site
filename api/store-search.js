@@ -13,6 +13,7 @@
 // Usage from the web app:
 //   /api/store-search?code=0415231090            -> { brands: [...] }
 //   /api/store-search?code=0415231090&brand=TOYOTA -> { total, offers: [...] } (cheapest first)
+//   add &analogs=1 to also get { alternativesTotal, alternatives: [...] } (interchangeable part numbers)
 //   add &debug=1 to also get the list of field NAMES the store returned (no values),
 //   which we use once to confirm the real response format.
 
@@ -112,6 +113,21 @@ async function callSearch(params) {
   }
 }
 
+// Simple per-visitor limit, so one visitor (or a bot) cannot flood our suppliers with
+// searches. Each server instance keeps its own count; repeated identical searches are
+// also answered from Vercel's cache without reaching this code at all.
+const RATE_WINDOW_MS = 60 * 1000;
+const RATE_MAX = 40; // store requests per visitor per minute
+const hits = new Map();
+function rateLimited(ip) {
+  const now = Date.now();
+  const recent = (hits.get(ip) || []).filter((t) => now - t < RATE_WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  if (hits.size > 5000) for (const [k, v] of hits) if (now - v[v.length - 1] > RATE_WINDOW_MS) hits.delete(k);
+  return recent.length > RATE_MAX;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');
@@ -119,6 +135,12 @@ export default async function handler(req, res) {
   }
   if (!TOKEN) {
     return res.status(500).json({ error: 'Store connection is not configured' });
+  }
+
+  const ip = String(req.headers?.['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+  if (rateLimited(ip)) {
+    res.setHeader('Retry-After', '60');
+    return res.status(429).json({ error: 'Too many searches. Please wait a minute and try again.' });
   }
 
   const code = cleanCode(req.query.code);
@@ -142,11 +164,19 @@ export default async function handler(req, res) {
 
     // Step 2: offers for this part number + brand
     const raw = toArray(await callSearch({ code, brand, useWebSuppliers: 1, useAnalogs }));
-    const offers = raw
+    const all = raw
       .map(toPublicOffer)
       .filter((o) => o.price > 0 && (o.availability === undefined || o.availability > 0))
       .sort((a, b) => a.price - b.price || (a.deliveryDaysMax ?? 999) - (b.deliveryDaysMax ?? 999));
+    // Offers for the exact part number searched vs. interchangeable part numbers
+    // (only present when analogs=1).
+    const offers = all.filter((o) => cleanCode(o.code) === code);
+    const alternatives = all.filter((o) => cleanCode(o.code) !== code);
     const body = { code, brand, total: offers.length, offers: offers.slice(0, MAX_OFFERS) };
+    if (useAnalogs) {
+      body.alternativesTotal = alternatives.length;
+      body.alternatives = alternatives.slice(0, MAX_OFFERS);
+    }
     if (debug) body.fieldsReturned = fieldNames(raw);
     res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=900');
     return res.status(200).json(body);
